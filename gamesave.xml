@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<game>
+	<currentScene value="1" />
+	<time value="4" />
+	<player xSpawn="70" ySpawn="809" x="60" y="800" lives="3" coins="0" hasItem1="true" hasItem2="false" />
+	<enemies>
+		<enemy x="720" y="280" enType="0" />
+		<enemy x="720" y="800" enType="1" />
+		<enemy x="900" y="720" enType="1" />
+		<enemy x="1120" y="140" enType="0" />
+		<enemy x="1120" y="720" enType="1" />
+		<enemy x="1640" y="720" enType="1" />
+		<enemy x="1780" y="720" enType="1" />
+		<enemy x="1880" y="680" enType="0" />
+		<enemy x="1940" y="720" enType="1" />
+		<enemy x="2060" y="660" enType="0" />
+		<enemy x="3530" y="346" enType="2" />
+		<enemy x="3690" y="586" enType="2" />
+		<enemy x="3810" y="386" enType="2" />
+		<enemy x="4050" y="686" enType="2" />
+		<enemy x="4190" y="406" enType="2" />
+		<enemy x="4530" y="606" enType="2" />
+		<enemy x="4650" y="406" enType="2" />
+		<enemy x="4890" y="346" enType="2" />
+	</enemies>
+	<items>
+		<item x="550" y="150" type="1" />
+		<item x="550" y="250" type="3" />
+		<item x="550" y="430" type="3" />
+		<item x="550" y="650" type="3" />
+		<item x="570" y="330" type="3" />
+		<item x="570" y="530" type="3" />
+		<item x="630" y="670" type="3" />
+		<item x="690" y="230" type="3" />
+		<item x="690" y="250" type="3" />
+		<item x="710" y="230" type="3" />
+		<item x="710" y="250" type="3" />
+		<item x="810" y="450" type="2" />
+		<item x="910" y="370" type="3" />
+		<item x="930" y="290" type="3" />
+		<item x="1010" y="250" type="2" />
+		<item x="1010" y="530" type="3" />
+		<item x="1110" y="430" type="3" />
+		<item x="1150" y="350" type="3" />
+		<item x="1190" y="110" type="3" />
+		<item x="1290" y="710" type="2" />
+		<item x="1310" y="590" type="3" />
+		<item x="1330" y="530" type="3" />
+		<item x="1370" y="490" type="3" />
+		<item x="1390" y="190" type="3" />
+		<item x="1450" y="470" type="3" />
+		<item x="1510" y="150" type="3" />
+		<item x="1510" y="290" type="3" />
+		<item x="1510" y="530" type="3" />
+		<item x="1530" y="150" type="3" />
+		<item x="1530" y="290" type="3" />
+		<item x="1630" y="410" type="3" />
+		<item x="1690" y="130" type="3" />
+		<item x="1690" y="250" type="3" />
+		<item x="1730" y="310" type="3" />
+		<item x="1810" y="430" type="3" />
+		<item x="1810" y="470" type="3" />
+		<item x="1890" y="170" type="3" />
+		<item x="1910" y="350" type="3" />
+		<item x="1930" y="270" type="3" />
+		<item x="1930" y="430" type="3" />
+		<item x="2130" y="150" type="5" />
+		<item x="2230" y="330" type="5" />
+		<item x="2510" y="210" type="5" />
+		<item x="2830" y="270" type="4" />
+		<item x="2990" y="310" type="4" />
+		<item x="3150" y="350" type="4" />
+		<item x="3230" y="270" type="4" />
+		<item x="3350" y="170" type="4" />
+		<item x="3470" y="350" type="2" />
+		<item x="3510" y="470" type="3" />
+		<item x="3550" y="590" type="3" />
+		<item x="4010" y="350" type="2" />
+		<item x="4390" y="350" type="2" />
+		<item x="4850" y="590" type="3" />
+		<item x="4890" y="470" type="3" />
+		<item x="4930" y="350" type="2" />
+	</items>
+</game>

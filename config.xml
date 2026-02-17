@@ -1,0 +1,51 @@
+<!-- Config file for the engine -->
+<config>
+  <engine>
+    <title>My platformer game</title>
+    <targetFrameRate value="60"/>
+  </engine>
+
+  <render>
+    <vsync value="false"/>
+  </render>
+
+  <window>
+    <resolution width="1280" height="720" scale="1"/>
+    <fullscreen value="false"/>
+    <borderless value="false"/>
+    <resizable value="false"/>
+    <fullscreen_window value="false"/>
+  </window>
+
+  <scene>
+	<maps>
+	  <map path="Assets/Maps/" name="MapTemplate.tmx" music="Assets/Audio/Music/map1.wav"/>
+	  <map path="Assets/Maps/" name="MapTemplate1.tmx" music="Assets/Audio/Music/map2.wav"/>
+	</maps>
+	<textures menuBackground="Assets/Textures/menuBackground.png"/>
+	<helpText path="Assets/Textures/keys.png"/>
+	<background path="Assets/Textures/clouds.jpg"/>
+	<ui life="Assets/Textures/heart.png" coin="Assets/Textures/goldCoin.png" power="Assets/Textures/item.png" 
+      bossbar8="Assets/Textures/Bossbar/bossbar8.png" 
+      bossbar7="Assets/Textures/Bossbar/bossbar7.png" 
+      bossbar6="Assets/Textures/Bossbar/bossbar6.png"
+      bossbar5="Assets/Textures/Bossbar/bossbar5.png"
+      bossbar4="Assets/Textures/Bossbar/bossbar4.png"
+      bossbar3="Assets/Textures/Bossbar/bossbar3.png"
+      bossbar2="Assets/Textures/Bossbar/bossbar2.png"
+      bossbar1="Assets/Textures/Bossbar/bossbar1.png"
+      bossbar0="Assets/Textures/Bossbar/bossbar0.png"/>
+	<music mainMenu="Assets/Audio/Music/menu_music.wav"
+         boss="Assets/Audio/Music/final_boss.wav"   
+         />
+	<audios damage="Assets/Audio/Fx/grunt.wav" life="Assets/Audio/Fx/life.wav" coin="Assets/Audio/Fx/coin.wav" hover="Assets/Audio/Fx/hover.wav" click="Assets/Audio/Fx/click.wav" jump="Assets/Audio/Fx/Jump.wav" dash="Assets/Audio/Fx/Dash.wav" walk="Assets/Audio/Fx/Step.wav" throw="Assets/Audio/Fx/Throw.wav" death="Assets/Audio/Fx/Death.wav"
+          spawn="Assets/Audio/Fx/Respawn.wav" nextLevel="Assets/Audio/Fx/Respawn.wav" autosave ="Assets/Audio/Fx/Autosave.wav" save="Assets/Audio/Fx/Save.wav" load="Assets/Audio/Fx/Load.wav"
+          flap="Assets/Audio/Fx/BatFlap.wav" batAttack="Assets/Audio/Fx/BatAttack.wav"
+          slimeWalk="Assets/Audio/Fx/SlimeWalk.wav" slimeJump="Assets/Audio/Fx/SlimeJump.wav"
+          bossSpawn="Assets/Audio/Fx/BossSpawn.wav"
+          door="Assets/Audio/Fx/Door.wav" key="Assets/Audio/Fx/Key.wav" item="Assets/Audio/Fx/Item.wav" recharge="Assets/Audio/Fx/Recharge.wav"
+          />
+	<player speed="3.0" animationSet="Assets/Textures/AnimationSheet_Character.tsx" texture="Assets/Textures/AnimationSheet_Character.png" textureDamaged="Assets/Textures/AnimationSheet_Character (damaged).png" itemChargeTexture0="Assets/Textures/ItemCharge/0.png" itemChargeTexture1="Assets/Textures/ItemCharge/1.png" itemChargeTexture2="Assets/Textures/ItemCharge/2.png"/>
+  </scene>
+  
+</config>
