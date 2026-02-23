@@ -27,8 +27,8 @@ public:
 
 	bool CleanUp();
 
-	void OnCollision(Collider* physA, Collider* physB);
-	void OnCollisionEnd(Collider* physA, Collider* physB);
+	void OnCollision(PhysBody* physA, PhysBody* physB);
+	void OnCollisionEnd(PhysBody* physA, PhysBody* physB);
 
 	Vector2D GetPosition();
 	Vector2D GetPositionCenter();
@@ -91,7 +91,7 @@ public:
 	Timer deathTimer;
 	Timer coyoteTimer;
 	float coyoteMS = 200.0f;
-	Collider* pbody = nullptr;
+	PhysBody* pbody = nullptr;
 	float jumpForce = 0.9f; // The force to apply when jumping
 	bool isJumping = false; // Flag to check if the player is currently jumping
 	float dashForce = 1.f; // The force to apply when dashing

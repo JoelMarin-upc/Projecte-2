@@ -10,7 +10,6 @@
 #include "Window.h"
 #include <vector>
 #include <box2d/box2d.h>
-#include "tracy/Tracy.hpp"
 
 Physics::Physics() : Module()
 {
@@ -49,7 +48,6 @@ void Physics::CreateWorld() {
 // 
 bool Physics::PreUpdate()
 {
-    ZoneScoped;
     bool ret = true;
 
     // Step (update) the World
@@ -91,7 +89,7 @@ bool Physics::PreUpdate()
     return ret;
 }
 
-PhysBody* Physics::CreateRectangle(int x, int y, int width, int height, bodyType type, uint16_t categoryBits, uint16_t maskBits)
+Collider* Physics::CreateRectangle(int x, int y, int width, int height, bodyType type, uint16_t categoryBits, uint16_t maskBits)
 {
     b2BodyDef def = b2DefaultBodyDef();
     def.type = ToB2Type(type);
@@ -111,13 +109,13 @@ PhysBody* Physics::CreateRectangle(int x, int y, int width, int height, bodyType
 
     b2CreatePolygonShape(b, &sdef, &box);
 
-    PhysBody* pbody = new PhysBody();
+    Collider* pbody = new Collider();
     pbody->body = b;
     b2Body_SetUserData(b, ToUserData(pbody));
     return pbody;
 }
 
-PhysBody* Physics::CreateCircle(int x, int y, int radious, bodyType type, uint16_t categoryBits, uint16_t maskBits)
+Collider* Physics::CreateCircle(int x, int y, int radious, bodyType type, uint16_t categoryBits, uint16_t maskBits)
 {
     b2BodyDef def = b2DefaultBodyDef();
     def.type = ToB2Type(type);
@@ -138,13 +136,13 @@ PhysBody* Physics::CreateCircle(int x, int y, int radious, bodyType type, uint16
 
     b2CreateCircleShape(b, &sdef, &circle);
 
-    PhysBody* pbody = new PhysBody();
+    Collider* pbody = new Collider();
     pbody->body = b;
     b2Body_SetUserData(b, ToUserData(pbody));
     return pbody;
 }
 
-PhysBody* Physics::CreateRectangleSensor(int x, int y, int width, int height, bodyType type, uint16_t categoryBits, uint16_t maskBits)
+Collider* Physics::CreateRectangleSensor(int x, int y, int width, int height, bodyType type, uint16_t categoryBits, uint16_t maskBits)
 {
     b2BodyDef def = b2DefaultBodyDef();
     def.type = ToB2Type(type);
@@ -164,13 +162,13 @@ PhysBody* Physics::CreateRectangleSensor(int x, int y, int width, int height, bo
 
     b2CreatePolygonShape(b, &sdef, &box);
 
-    PhysBody* pbody = new PhysBody();
+    Collider* pbody = new Collider();
     pbody->body = b;
     b2Body_SetUserData(b, ToUserData(pbody));
     return pbody;
 }
 
-PhysBody* Physics::CreateCircleSensor(int x, int y, int radious, bodyType type, uint16_t categoryBits, uint16_t maskBits)
+Collider* Physics::CreateCircleSensor(int x, int y, int radious, bodyType type, uint16_t categoryBits, uint16_t maskBits)
 {
     b2BodyDef def = b2DefaultBodyDef();
     def.type = ToB2Type(type);
@@ -192,13 +190,13 @@ PhysBody* Physics::CreateCircleSensor(int x, int y, int radious, bodyType type, 
 
     b2CreateCircleShape(b, &sdef, &circle);
 
-    PhysBody* pbody = new PhysBody();
+    Collider* pbody = new Collider();
     pbody->body = b;
     b2Body_SetUserData(b, ToUserData(pbody));
     return pbody;
 }
 
-PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType type, uint16_t categoryBits, uint16_t maskBits)
+Collider* Physics::CreateChain(int x, int y, int* points, int size, bodyType type, uint16_t categoryBits, uint16_t maskBits)
 {
     b2BodyDef def = b2DefaultBodyDef();
     def.type = ToB2Type(type);
@@ -226,7 +224,7 @@ PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType typ
 
     b2CreateChain(b, &cdef); // creates internal chain segment shapes
 
-    PhysBody* pbody = new PhysBody();
+    Collider* pbody = new Collider();
     pbody->body = b;
     b2Body_SetUserData(b, ToUserData(pbody));
     return pbody;
@@ -235,7 +233,6 @@ PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType typ
 // 
 bool Physics::PostUpdate(float dt)
 {
-    ZoneScoped;
     bool ret = true;
 
     // Activate or deactivate debug mode
@@ -279,7 +276,7 @@ bool Physics::PostUpdate(float dt)
     }
 
     // Process bodies to delete after the world step
-    for (PhysBody* physBody : bodiesToDelete) {
+    for (Collider* physBody : bodiesToDelete) {
         DestroyBody(physBody);
     }
     bodiesToDelete.clear();
@@ -309,8 +306,8 @@ void Physics::BeginContact(b2ShapeId shapeA, b2ShapeId shapeB)
     b2BodyId bodyB = b2Shape_GetBody(shapeB);
     if (B2_IS_NULL(bodyA) || B2_IS_NULL(bodyB)) return;
 
-    PhysBody* physA = BodyToPhys(bodyA);
-    PhysBody* physB = BodyToPhys(bodyB);
+    Collider* physA = BodyToPhys(bodyA);
+    Collider* physB = BodyToPhys(bodyB);
     if (!physA || !physB) return;                  // user data cleared
 
     if (physA->listener && !IsPendingToDelete(physA)) physA->listener->OnCollision(physA, physB);
@@ -325,8 +322,8 @@ void Physics::EndContact(b2ShapeId shapeA, b2ShapeId shapeB)
     b2BodyId bodyB = b2Shape_GetBody(shapeB);
     if (B2_IS_NULL(bodyA) || B2_IS_NULL(bodyB)) return;
 
-    PhysBody* physA = BodyToPhys(bodyA);
-    PhysBody* physB = BodyToPhys(bodyB);
+    Collider* physA = BodyToPhys(bodyA);
+    Collider* physB = BodyToPhys(bodyB);
     if (!physA || !physB) return;
     if (IsPendingToDelete(physA) || IsPendingToDelete(physB)) return;
 
@@ -336,7 +333,7 @@ void Physics::EndContact(b2ShapeId shapeA, b2ShapeId shapeB)
 
 
 
-void Physics::DeletePhysBody(PhysBody* physBody)
+void Physics::DeletePhysBody(Collider* physBody)
 {
 	if (B2_IS_NULL(world) || !physBody) return; // world already destroyed
     if (physBody && !B2_IS_NULL(physBody->body) && physBody->listener && physBody->listener->active)
@@ -350,9 +347,9 @@ void Physics::DeletePhysBody(PhysBody* physBody)
 
 
 
-bool Physics::IsPendingToDelete(PhysBody* physBody) {
+bool Physics::IsPendingToDelete(Collider* physBody) {
     bool pendingToDelete = false;
-    for (PhysBody* _physBody : bodiesToDelete) {
+    for (Collider* _physBody : bodiesToDelete) {
         if (_physBody == physBody) {
             pendingToDelete = true;
             break;
@@ -362,40 +359,40 @@ bool Physics::IsPendingToDelete(PhysBody* physBody) {
 }
 
 // --- Velocity helpers
-b2Vec2 Physics::GetLinearVelocity(const PhysBody* p) const
+b2Vec2 Physics::GetLinearVelocity(const Collider* p) const
 {
     return b2Body_GetLinearVelocity(p->body);
 }
 
-float Physics::GetXVelocity(const PhysBody* p) const
+float Physics::GetXVelocity(const Collider* p) const
 {
     return b2Body_GetLinearVelocity(p->body).x;
 }
 
-float Physics::GetYVelocity(const PhysBody* p) const
+float Physics::GetYVelocity(const Collider* p) const
 {
     return b2Body_GetLinearVelocity(p->body).y;
 }
 
-void Physics::SetLinearVelocity(PhysBody* p, const b2Vec2& v) const
+void Physics::SetLinearVelocity(Collider* p, const b2Vec2& v) const
 {
     b2Body_SetLinearVelocity(p->body, v);
 }
 
-void Physics::SetLinearVelocity(PhysBody* p, float vx, float vy) const
+void Physics::SetLinearVelocity(Collider* p, float vx, float vy) const
 {
     b2Vec2 v = { vx, vy };
     b2Body_SetLinearVelocity(p->body, v);
 }
 
-void Physics::SetXVelocity(PhysBody* p, float vx) const
+void Physics::SetXVelocity(Collider* p, float vx) const
 {
     b2Vec2 v = b2Body_GetLinearVelocity(p->body);
     v.x = vx;
     b2Body_SetLinearVelocity(p->body, v);
 }
 
-void Physics::SetYVelocity(PhysBody* p, float vy) const
+void Physics::SetYVelocity(Collider* p, float vy) const
 {
     b2Vec2 v = b2Body_GetLinearVelocity(p->body);
     v.y = vy;
@@ -403,94 +400,32 @@ void Physics::SetYVelocity(PhysBody* p, float vy) const
 }
 
 // --- Impulse helper
-void Physics::ApplyLinearImpulseToCenter(PhysBody* p, float ix, float iy, bool wake) const
+void Physics::ApplyLinearImpulseToCenter(Collider* p, float ix, float iy, bool wake) const
 {
     b2Vec2 imp = { ix, iy };
     b2Body_ApplyLinearImpulseToCenter(p->body, imp, wake);
 }
 
-void Physics::DestroyBody(PhysBody* p) const
+void Physics::DestroyBody(Collider* p) const
 {
     if (p) b2DestroyBody(p->body);
     p = nullptr;
 }
 
-b2Transform Physics::GetTransform(PhysBody * p)
+b2Transform Physics::GetTransform(Collider * p)
 {
     return b2Body_GetTransform(p->body);
 }
 
-void Physics::MoveBody(PhysBody* p, b2Vec2 pos, b2Rot rot)
+void Physics::MoveBody(Collider* p, b2Vec2 pos, b2Rot rot)
 {
     b2Body_SetTransform(p->body, pos, rot);
 }
 
-void Physics::SetGravityScale(PhysBody* p, float scale)
+void Physics::SetGravityScale(Collider* p, float scale)
 {
     b2Body_SetGravityScale(p->body, scale);
 }
-
-
-//
-//--------------- PhysBody --------------------
-//
-
-void PhysBody::GetPosition(int& x, int& y) const
-{
-    b2Vec2 pos = b2Body_GetPosition(body);
-    x = METERS_TO_PIXELS(pos.x);
-    y = METERS_TO_PIXELS(pos.y);
-}
-
-float PhysBody::GetRotation() const
-{
-    b2Transform xf = b2Body_GetTransform(body);
-    return RADTODEG * b2Rot_GetAngle(xf.q);
-}
-
-bool PhysBody::Contains(int x, int y) const
-{
-    // World-space point in meters
-    const b2Vec2 p = { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) };
-
-    // Get all shapes attached to this body
-    const int shapeCount = b2Body_GetShapeCount(body);
-    if (shapeCount == 0) return false;
-
-    std::vector<b2ShapeId> shapes(shapeCount);
-    b2Body_GetShapes(body, shapes.data(), shapeCount);
-
-    // Test point against each shape
-    for (int i = 0; i < shapeCount; ++i)
-    {
-        if (b2Shape_TestPoint(shapes[i], p))
-            return true;
-    }
-    return false;
-}
-
-int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& normal_y) const
-{
-    const b2Vec2 p1 = { PIXEL_TO_METERS(x1), PIXEL_TO_METERS(y1) };
-    const b2Vec2 p2 = { PIXEL_TO_METERS(x2), PIXEL_TO_METERS(y2) };
-    const b2Vec2 d = { p2.x - p1.x, p2.y - p1.y };
-
-    b2WorldId world = b2Body_GetWorld(body);
-    b2QueryFilter qf = { 0x0004,0x0001 }; //b2DefaultQueryFilter();
-
-    const b2RayResult res = b2World_CastRayClosest(world, p1, d, qf);
-    if (!res.hit) return -1;
-
-    normal_x = res.normal.x;
-    normal_y = res.normal.y;
-
-    const float fx = float(x2 - x1);
-    const float fy = float(y2 - y1);
-    const float distPixels = sqrtf(fx * fx + fy * fy);
-    return int(floorf(res.fraction * distPixels));
-}
-
-// --- helpers
 
 b2BodyType Physics::ToB2Type(bodyType t)
 {

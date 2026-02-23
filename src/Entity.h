@@ -18,7 +18,7 @@ enum class EntityType
 	UNKNOWN
 };
 
-class PhysBody;
+class Collider;
 
 class Entity : public std::enable_shared_from_this<Entity>
 {
@@ -73,11 +73,11 @@ public:
 	}
 
 
-	virtual void OnCollision(PhysBody* physA, PhysBody* physB) {
+	virtual void OnCollision(Collider* physA, Collider* physB) {
 
 	};
 
-	virtual void OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
+	virtual void OnCollisionEnd(Collider* physA, Collider* physB) {
 
 	};
 

@@ -149,38 +149,65 @@
     <None Include="Assets\Textures\bat32.tsx" />
     <None Include="Assets\Textures\Boss.tsx" />
     <None Include="Assets\Textures\Multi_Slime_Spritesheet.tsx" />
+    <None Include="packages.config" />
     <None Include="vcpkg-configuration.json" />
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AirEnemy.cpp" />
+    <ClCompile Include="src\AICharacter.cpp" />
+    <ClCompile Include="src\Animal.cpp" />
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Audio.cpp" />
-    <ClCompile Include="src\Boss.cpp" />
-    <ClCompile Include="src\Coin.cpp" />
+    <ClCompile Include="src\BreakableObstacle.cpp" />
+    <ClCompile Include="src\Building.cpp" />
+    <ClCompile Include="src\CollectMission.cpp" />
+    <ClCompile Include="src\Collider.cpp" />
+    <ClCompile Include="src\Combat.cpp" />
+    <ClCompile Include="src\Consumable.cpp" />
+    <ClCompile Include="src\DialogManager.cpp" />
+    <ClCompile Include="src\DynamicEntity.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\EnemyParty.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\EntityManager.cpp" />
-    <ClCompile Include="src\GroundEnemy.cpp" />
-    <ClCompile Include="src\Heart.cpp" />
+    <ClCompile Include="src\Equipable.cpp" />
+    <ClCompile Include="src\Gear.cpp" />
     <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\InteractableBuilding.cpp" />
+    <ClCompile Include="src\InteractableItem.cpp" />
+    <ClCompile Include="src\Inventory.cpp" />
     <ClCompile Include="src\Item.cpp" />
-    <ClCompile Include="src\Key.cpp" />
+    <ClCompile Include="src\KillMission.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\Mission.cpp" />
+    <ClCompile Include="src\MissionManager.cpp" />
+    <ClCompile Include="src\NonInteractableBuilding.cpp" />
+    <ClCompile Include="src\NonInteractableItem.cpp" />
+    <ClCompile Include="src\NPC.cpp" />
+    <ClCompile Include="src\Obstacle.cpp" />
+    <ClCompile Include="src\Party.cpp" />
     <ClCompile Include="src\Pathfinding.cpp" />
     <ClCompile Include="src\PerfTimer.cpp" />
-    <ClCompile Include="src\Persistence.cpp" />
-    <ClCompile Include="src\Physics.cpp" />
-    <ClCompile Include="src\PlatformGame.cpp" />
     <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\Recharge.cpp" />
+    <ClCompile Include="src\ReachMission.cpp" />
+    <ClCompile Include="src\RecuitCenter.cpp" />
+    <ClCompile Include="src\SceneManager.cpp" />
+    <ClCompile Include="src\Shop.cpp" />
+    <ClCompile Include="src\Soldier.cpp" />
+    <ClCompile Include="src\Stat.cpp" />
+    <ClCompile Include="src\StaticEntity.cpp" />
+    <ClCompile Include="src\Stats.cpp" />
+    <ClCompile Include="src\TalkMission.cpp" />
+    <ClCompile Include="src\UnbreakableObstacle.cpp" />
+    <ClCompile Include="src\Weapon.cpp" />
+    <ClCompile Include="src\XMLHandler.cpp" />
+    <ClCompile Include="src\Physics.cpp" />
+    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Render.cpp" />
     <ClCompile Include="src\Scene.cpp" />
-    <ClCompile Include="src\Spear.cpp" />
     <ClCompile Include="src\Textures.cpp" />
     <ClCompile Include="src\Timer.cpp" />
-    <ClCompile Include="src\TracyMemory.cpp" />
     <ClCompile Include="src\UIButton.cpp" />
     <ClCompile Include="src\UICheckbox.cpp" />
     <ClCompile Include="src\UILabel.cpp" />
@@ -188,34 +215,62 @@
     <ClCompile Include="src\UISlider.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AirEnemy.h" />
+    <ClInclude Include="src\AICharacter.h" />
+    <ClInclude Include="src\Animal.h" />
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Audio.h" />
-    <ClInclude Include="src\Boss.h" />
-    <ClInclude Include="src\Coin.h" />
+    <ClInclude Include="src\BreakableObstacle.h" />
+    <ClInclude Include="src\Building.h" />
+    <ClInclude Include="src\CollectMission.h" />
+    <ClInclude Include="src\Collider.h" />
+    <ClInclude Include="src\Combat.h" />
+    <ClInclude Include="src\Consumable.h" />
+    <ClInclude Include="src\DialogManager.h" />
+    <ClInclude Include="src\DynamicEntity.h" />
     <ClInclude Include="src\Enemy.h" />
+    <ClInclude Include="src\EnemyParty.h" />
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\EntityManager.h" />
-    <ClInclude Include="src\GroundEnemy.h" />
-    <ClInclude Include="src\Heart.h" />
+    <ClInclude Include="src\Equipable.h" />
+    <ClInclude Include="src\Gear.h" />
     <ClInclude Include="src\Input.h" />
+    <ClInclude Include="src\InteractableBuilding.h" />
+    <ClInclude Include="src\InteractableItem.h" />
+    <ClInclude Include="src\Inventory.h" />
     <ClInclude Include="src\Item.h" />
-    <ClInclude Include="src\Key.h" />
+    <ClInclude Include="src\KillMission.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Map.h" />
+    <ClInclude Include="src\Mission.h" />
+    <ClInclude Include="src\MissionManager.h" />
     <ClInclude Include="src\Module.h" />
+    <ClInclude Include="src\NonInteractableBuilding.h" />
+    <ClInclude Include="src\NonInteractableItem.h" />
+    <ClInclude Include="src\NPC.h" />
+    <ClInclude Include="src\Obstacle.h" />
+    <ClInclude Include="src\Party.h" />
     <ClInclude Include="src\Pathfinding.h" />
     <ClInclude Include="src\PerfTimer.h" />
-    <ClInclude Include="src\Persistence.h" />
-    <ClInclude Include="src\Physics.h" />
     <ClInclude Include="src\Player.h" />
-    <ClInclude Include="src\Recharge.h" />
+    <ClInclude Include="src\ReachMission.h" />
+    <ClInclude Include="src\RecuitCenter.h" />
+    <ClInclude Include="src\SceneManager.h" />
+    <ClInclude Include="src\Shop.h" />
+    <ClInclude Include="src\Soldier.h" />
+    <ClInclude Include="src\Stat.h" />
+    <ClInclude Include="src\StaticEntity.h" />
+    <ClInclude Include="src\Stats.h" />
+    <ClInclude Include="src\TalkMission.h" />
+    <ClInclude Include="src\UnbreakableObstacle.h" />
+    <ClInclude Include="src\Weapon.h" />
+    <ClInclude Include="src\XMLHandler.h" />
+    <ClInclude Include="src\Physics.h" />
     <ClInclude Include="src\Render.h" />
     <ClInclude Include="src\Scene.h" />
-    <ClInclude Include="src\Spear.h" />
     <ClInclude Include="src\Textures.h" />
     <ClInclude Include="src\Timer.h" />
     <ClInclude Include="src\UIButton.h" />
@@ -226,6 +281,7 @@
     <ClInclude Include="src\UISlider.h" />
     <ClInclude Include="src\Vector2D.h" />
     <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\Zombie.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />
@@ -233,5 +289,12 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\pugixml.1.15.0\build\native\pugixml.targets" Condition="Exists('packages\pugixml.1.15.0\build\native\pugixml.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\pugixml.1.15.0\build\native\pugixml.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\pugixml.1.15.0\build\native\pugixml.targets'))" />
+  </Target>
 </Project>

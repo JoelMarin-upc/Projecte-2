@@ -222,32 +222,32 @@ bool Map::Load(std::string path, std::string fileName)
                         int gid = mapLayer->Get(i, j);
                         Vector2D mapCoord = MapToWorld(i, j);            
                         if (gid == 626) {
-                            PhysBody* c1 = Engine::GetInstance().physics->CreateRectangle(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
+                            Collider* c1 = Engine::GetInstance().physics->CreateRectangle(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
                             c1->ctype = ColliderType::DEATHZONE;
                         }
                         else if (gid == 627) {
-                            PhysBody* c1 = Engine::GetInstance().physics->CreateRectangleSensor(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
+                            Collider* c1 = Engine::GetInstance().physics->CreateRectangleSensor(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
                             c1->ctype = ColliderType::RESPAWNPOINT;
                         }
                         else if (gid == 628) {
-                            PhysBody* c1 = Engine::GetInstance().physics->CreateRectangleSensor(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
+                            Collider* c1 = Engine::GetInstance().physics->CreateRectangleSensor(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
                             c1->ctype = ColliderType::NEXTLEVEL;
                         }
                         else if (gid == 629) {            
-                            PhysBody* c1 = Engine::GetInstance().physics->CreateRectangleSensor(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
+                            Collider* c1 = Engine::GetInstance().physics->CreateRectangleSensor(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
                             c1->ctype = ColliderType::RESPAWNPOINT;
                             playerStartPos = new Vector2D(mapCoord);
                         }
                         else if (gid == 630) {
-                            PhysBody* c1 = Engine::GetInstance().physics->CreateRectangleSensor(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
+                            Collider* c1 = Engine::GetInstance().physics->CreateRectangleSensor(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
                             c1->ctype = ColliderType::ITEMDESTROYER;
                         }
                         else if (gid == 631) {
-                            PhysBody* c1 = Engine::GetInstance().physics->CreateRectangleSensor(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
+                            Collider* c1 = Engine::GetInstance().physics->CreateRectangleSensor(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
                             c1->ctype = ColliderType::BOSSSTART;
                         }
                         else if (gid == 632) {
-                            PhysBody* c1 = Engine::GetInstance().physics->CreateRectangle(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight*3, STATIC, 0x0002, 0X003);
+                            Collider* c1 = Engine::GetInstance().physics->CreateRectangle(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight*3, STATIC, 0x0002, 0X003);
                             c1->ctype = ColliderType::DOOR;
                         }
                     }
@@ -320,7 +320,7 @@ bool Map::Load(std::string path, std::string fileName)
         for (const auto& objectGroup : mapData.objectlayers) {
             if (objectGroup->name == "Collisions") {
                 for (const auto& object : objectGroup->objects) {
-                    PhysBody* c1 = Engine::GetInstance().physics->CreateRectangle(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC, 0x0001, 0X0007);
+                    Collider* c1 = Engine::GetInstance().physics->CreateRectangle(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC, 0x0001, 0X0007);
                     c1->ctype = ColliderType::PLATFORM;
                 }
             }

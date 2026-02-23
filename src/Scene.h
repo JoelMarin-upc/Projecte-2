@@ -145,7 +145,7 @@ private:
 	SDL_Texture* bossbar2;
 	SDL_Texture* bossbar1;
 	SDL_Texture* bossbar0;
-	Persistence* persistance = new Persistence();
+	XMLHandler* persistance = new XMLHandler();
 	Timer gameTimer;
 	int savedTime = 0;
 	int pausedTime = 0;

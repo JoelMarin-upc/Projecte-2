@@ -1,7 +1,6 @@
 #include "Animation.h"
 #include <pugixml.hpp>
 #include <cstdio>
-#include "tracy/Tracy.hpp"
 
 // ---------- Animation ----------
 
@@ -24,7 +23,6 @@ void Animation::Reset() {
 bool Animation::HasFinishedOnce() const { return finishedOnce_ && !loop_; }
 
 void Animation::Update(float dt) {
-    ZoneScoped;
     if (frames_.empty()) return;
 
     timeInFrameMs_ += static_cast<int>(dt);

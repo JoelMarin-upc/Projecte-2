@@ -17,11 +17,44 @@
     <Filter Include="Source Files\Game">
       <UniqueIdentifier>{eaf9226b-488a-4c6a-9d1a-2222fdb48e0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game\Items">
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{c97b2a75-0c3c-490a-b6e6-e9e4ca0fb17e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Scene">
+      <UniqueIdentifier>{51bc0aca-78fe-417f-8d61-1131750cced9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities">
+      <UniqueIdentifier>{3bd63dfe-36f2-4626-8ad9-06c3e839cd40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities\Items">
       <UniqueIdentifier>{7cb36070-712e-4021-b5c6-7abd506bdae9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game\Enemies">
+    <Filter Include="Source Files\Game\Missions">
+      <UniqueIdentifier>{90bbd731-b1b4-427a-8326-3cca0cc32247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities\Characters">
       <UniqueIdentifier>{32339b1c-3c03-47ba-9eb3-e8a16e58a2ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities\Characters\Enemies">
+      <UniqueIdentifier>{67c80c3f-fb29-48a4-bdc0-df1af52b9653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities\Parties">
+      <UniqueIdentifier>{d6b75d78-fcf8-4765-ba12-bc0c28df7928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities\Static">
+      <UniqueIdentifier>{4650127a-26eb-4195-9df2-fa2b6c379151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities\Static\Buildings">
+      <UniqueIdentifier>{edff35b9-1ed2-4b72-bd13-dd33d17437b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities\Static\Obstacles">
+      <UniqueIdentifier>{2440a828-eb68-46a1-bd80-c11ed8d5cfed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities\Stats">
+      <UniqueIdentifier>{748f5be0-3a02-4ca2-b5ad-976aa6259d14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities\Misc">
+      <UniqueIdentifier>{22468b03-dfd3-48e9-b9e4-21525ffbdd13}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +88,7 @@
     <None Include="Assets\Textures\Boss.tsx">
       <Filter>Configuration FIles</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio.cpp">
@@ -66,7 +100,7 @@
     <ClCompile Include="src\Input.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\PlatformGame.cpp">
+    <ClCompile Include="src\Game.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="src\Render.cpp">
@@ -84,23 +118,11 @@
     <ClCompile Include="src\Vector2D.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\Timer.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\PerfTimer.cpp">
       <Filter>Source Files\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EntityManager.cpp">
-      <Filter>Source Files\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Player.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Map.cpp">
-      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="src\Physics.cpp">
       <Filter>Source Files\Engine</Filter>
@@ -108,56 +130,152 @@
     <ClCompile Include="src\Animation.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Spear.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\Pathfinding.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Persistence.cpp">
+    <ClCompile Include="src\XMLHandler.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\Item.cpp">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClCompile>
     <ClCompile Include="src\UIButton.cpp">
-      <Filter>Source Files\Engine</Filter>
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UICheckbox.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UILabel.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UISlider.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="src\UIManager.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\UILabel.cpp">
+    <ClCompile Include="src\SceneManager.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\UICheckbox.cpp">
-      <Filter>Source Files\Engine</Filter>
+    <ClCompile Include="src\Scene.cpp">
+      <Filter>Source Files\Game\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\UISlider.cpp">
-      <Filter>Source Files\Engine</Filter>
+    <ClCompile Include="src\DialogManager.cpp">
+      <Filter>Source Files\Game\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Coin.cpp">
-      <Filter>Source Files\Game\Items</Filter>
+    <ClCompile Include="src\MissionManager.cpp">
+      <Filter>Source Files\Game\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Heart.cpp">
-      <Filter>Source Files\Game\Items</Filter>
+    <ClCompile Include="src\EntityManager.cpp">
+      <Filter>Source Files\Game\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Item.cpp">
-      <Filter>Source Files\Game\Items</Filter>
+    <ClCompile Include="src\Map.cpp">
+      <Filter>Source Files\Game\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Recharge.cpp">
-      <Filter>Source Files\Game\Items</Filter>
+    <ClCompile Include="src\CollectMission.cpp">
+      <Filter>Source Files\Game\Missions</Filter>
     </ClCompile>
-    <ClCompile Include="src\AirEnemy.cpp">
-      <Filter>Source Files\Game\Enemies</Filter>
+    <ClCompile Include="src\KillMission.cpp">
+      <Filter>Source Files\Game\Missions</Filter>
     </ClCompile>
-    <ClCompile Include="src\Boss.cpp">
-      <Filter>Source Files\Game\Enemies</Filter>
+    <ClCompile Include="src\Mission.cpp">
+      <Filter>Source Files\Game\Missions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ReachMission.cpp">
+      <Filter>Source Files\Game\Missions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TalkMission.cpp">
+      <Filter>Source Files\Game\Missions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>Source Files\Game\Entities\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AICharacter.cpp">
+      <Filter>Source Files\Game\Entities\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NPC.cpp">
+      <Filter>Source Files\Game\Entities\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Animal.cpp">
+      <Filter>Source Files\Game\Entities\Characters\Enemies</Filter>
     </ClCompile>
     <ClCompile Include="src\Enemy.cpp">
-      <Filter>Source Files\Game\Enemies</Filter>
+      <Filter>Source Files\Game\Entities\Characters\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="src\GroundEnemy.cpp">
-      <Filter>Source Files\Game\Enemies</Filter>
+    <ClCompile Include="src\Soldier.cpp">
+      <Filter>Source Files\Game\Entities\Characters\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="src\Key.cpp">
-      <Filter>Source Files\Game\Items</Filter>
+    <ClCompile Include="src\Zombie.cpp">
+      <Filter>Source Files\Game\Entities\Characters\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Combat.cpp">
+      <Filter>Source Files\Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EnemyParty.cpp">
+      <Filter>Source Files\Game\Entities\Parties</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Party.cpp">
+      <Filter>Source Files\Game\Entities\Parties</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DynamicEntity.cpp">
+      <Filter>Source Files\Game\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StaticEntity.cpp">
+      <Filter>Source Files\Game\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Consumable.cpp">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gear.cpp">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Weapon.cpp">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Equipable.cpp">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InteractableItem.cpp">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NonInteractableItem.cpp">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Building.cpp">
+      <Filter>Source Files\Game\Entities\Static\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InteractableBuilding.cpp">
+      <Filter>Source Files\Game\Entities\Static\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RecuitCenter.cpp">
+      <Filter>Source Files\Game\Entities\Static\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shop.cpp">
+      <Filter>Source Files\Game\Entities\Static\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NonInteractableBuilding.cpp">
+      <Filter>Source Files\Game\Entities\Static\Buildings</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BreakableObstacle.cpp">
+      <Filter>Source Files\Game\Entities\Static\Obstacles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Obstacle.cpp">
+      <Filter>Source Files\Game\Entities\Static\Obstacles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UnbreakableObstacle.cpp">
+      <Filter>Source Files\Game\Entities\Static\Obstacles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Stats.cpp">
+      <Filter>Source Files\Game\Entities\Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Stat.cpp">
+      <Filter>Source Files\Game\Entities\Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Collider.cpp">
+      <Filter>Source Files\Game\Entities\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Inventory.cpp">
+      <Filter>Source Files\Game\Entities\Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,26 +306,11 @@
     <ClInclude Include="src\Vector2D.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene.h">
-      <Filter>Source Files\Game</Filter>
-    </ClInclude>
     <ClInclude Include="src\Timer.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\PerfTimer.h">
       <Filter>Source Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity.h">
-      <Filter>Source Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EntityManager.h">
-      <Filter>Source Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Player.h">
-      <Filter>Source Files\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Map.h">
-      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="src\Physics.h">
       <Filter>Source Files\Engine</Filter>
@@ -215,59 +318,158 @@
     <ClInclude Include="src\Animation.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\Spear.h">
-      <Filter>Source Files\Game</Filter>
-    </ClInclude>
     <ClInclude Include="src\Pathfinding.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\Persistence.h">
+    <ClInclude Include="src\XMLHandler.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\Item.h">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UISlider.h">
+      <Filter>Source Files\UI</Filter>
+    </ClInclude>
     <ClInclude Include="src\UIButton.h">
-      <Filter>Source Files\Engine</Filter>
+      <Filter>Source Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UICheckbox.h">
+      <Filter>Source Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="src\UIElement.h">
-      <Filter>Source Files\Engine</Filter>
+      <Filter>Source Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UILabel.h">
+      <Filter>Source Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="src\UIManager.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\UILabel.h">
+    <ClInclude Include="src\SceneManager.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\UICheckbox.h">
-      <Filter>Source Files\Engine</Filter>
+    <ClInclude Include="src\Scene.h">
+      <Filter>Source Files\Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\UISlider.h">
-      <Filter>Source Files\Engine</Filter>
+    <ClInclude Include="src\DialogManager.h">
+      <Filter>Source Files\Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Coin.h">
-      <Filter>Source Files\Game\Items</Filter>
+    <ClInclude Include="src\MissionManager.h">
+      <Filter>Source Files\Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Heart.h">
-      <Filter>Source Files\Game\Items</Filter>
+    <ClInclude Include="src\Entity.h">
+      <Filter>Source Files\Game\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="src\Item.h">
-      <Filter>Source Files\Game\Items</Filter>
+    <ClInclude Include="src\EntityManager.h">
+      <Filter>Source Files\Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Recharge.h">
-      <Filter>Source Files\Game\Items</Filter>
+    <ClInclude Include="src\Map.h">
+      <Filter>Source Files\Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\AirEnemy.h">
-      <Filter>Source Files\Game\Enemies</Filter>
+    <ClInclude Include="src\CollectMission.h">
+      <Filter>Source Files\Game\Missions</Filter>
     </ClInclude>
-    <ClInclude Include="src\Boss.h">
-      <Filter>Source Files\Game\Enemies</Filter>
+    <ClInclude Include="src\KillMission.h">
+      <Filter>Source Files\Game\Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mission.h">
+      <Filter>Source Files\Game\Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ReachMission.h">
+      <Filter>Source Files\Game\Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TalkMission.h">
+      <Filter>Source Files\Game\Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Player.h">
+      <Filter>Source Files\Game\Entities\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AICharacter.h">
+      <Filter>Source Files\Game\Entities\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NPC.h">
+      <Filter>Source Files\Game\Entities\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Animal.h">
+      <Filter>Source Files\Game\Entities\Characters\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="src\Enemy.h">
-      <Filter>Source Files\Game\Enemies</Filter>
+      <Filter>Source Files\Game\Entities\Characters\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="src\GroundEnemy.h">
-      <Filter>Source Files\Game\Enemies</Filter>
+    <ClInclude Include="src\Soldier.h">
+      <Filter>Source Files\Game\Entities\Characters\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="src\Key.h">
-      <Filter>Source Files\Game\Items</Filter>
+    <ClInclude Include="src\Zombie.h">
+      <Filter>Source Files\Game\Entities\Characters\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Combat.h">
+      <Filter>Source Files\Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EnemyParty.h">
+      <Filter>Source Files\Game\Entities\Parties</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Party.h">
+      <Filter>Source Files\Game\Entities\Parties</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DynamicEntity.h">
+      <Filter>Source Files\Game\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StaticEntity.h">
+      <Filter>Source Files\Game\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Consumable.h">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Gear.h">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Weapon.h">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Equipable.h">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InteractableItem.h">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NonInteractableItem.h">
+      <Filter>Source Files\Game\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Building.h">
+      <Filter>Source Files\Game\Entities\Static\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InteractableBuilding.h">
+      <Filter>Source Files\Game\Entities\Static\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RecuitCenter.h">
+      <Filter>Source Files\Game\Entities\Static\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shop.h">
+      <Filter>Source Files\Game\Entities\Static\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NonInteractableBuilding.h">
+      <Filter>Source Files\Game\Entities\Static\Buildings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BreakableObstacle.h">
+      <Filter>Source Files\Game\Entities\Static\Obstacles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Obstacle.h">
+      <Filter>Source Files\Game\Entities\Static\Obstacles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UnbreakableObstacle.h">
+      <Filter>Source Files\Game\Entities\Static\Obstacles</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Stats.h">
+      <Filter>Source Files\Game\Entities\Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Stat.h">
+      <Filter>Source Files\Game\Entities\Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Collider.h">
+      <Filter>Source Files\Game\Entities\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Inventory.h">
+      <Filter>Source Files\Game\Entities\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

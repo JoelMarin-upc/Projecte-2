@@ -131,7 +131,7 @@ private:
 	int targetFrameRate = 60;
 	int currentTargetFrameRate;
 
-	std::string gameTitle = "Platformer Game";
+	std::string gameTitle = "The Graveyard";
 
 	//L05 TODO 2: Declare a xml_document to load the config file
 	pugi::xml_document configFile;

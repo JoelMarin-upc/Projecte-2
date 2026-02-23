@@ -3,7 +3,6 @@
 #include "Textures.h"
 #include "Audio.h"
 #include <string>
-#include "tracy/Tracy.hpp"
 
 UIManager::UIManager() :Module()
 {
@@ -105,7 +104,6 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 
 bool UIManager::PostUpdate(float dt)
 {
-	ZoneScoped;
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
 		debug = !debug;
 

@@ -25,46 +25,6 @@ enum bodyType {
     KINEMATIC
 };
 
-enum class ColliderType {
-    PLAYER,
-    ITEM,
-    HEART,
-    COIN,
-    RECHARGE,
-    KEY,
-    SPEAR,
-    PLATFORM,
-    DEATHZONE,
-    ITEMDESTROYER,
-    RESPAWNPOINT,
-    BOSSSTART,
-    DOOR,
-    NEXTLEVEL,
-    ENEMY,
-    UNKNOWN,
-    ATTACK,
-    SEMIRIGID
-    // ..
-};
-
-// Small class to return to other modules to track position and rotation of physics bodies
-class PhysBody
-{
-public:
-    PhysBody() : listener(NULL), body(b2_nullBodyId), ctype(ColliderType::UNKNOWN) {}
-    ~PhysBody() {}
-
-    void  GetPosition(int& x, int& y) const;
-    float GetRotation() const;
-    bool  Contains(int x, int y) const;
-    int   RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& normal_y) const;
-
-public:
-    b2BodyId body;              // id instead of pointer (v3.x)
-    Entity* listener;
-    ColliderType ctype;
-};
-
 // Module --------------------------------------
 class Physics : public Module
 {
@@ -83,45 +43,45 @@ public:
     void CreateWorld();
 
     // Create basic physics objects
-    PhysBody* CreateRectangle(int x, int y, int width, int height, bodyType type, uint16_t categoryBits, uint16_t maskBits);
-    PhysBody* CreateCircle(int x, int y, int radious, bodyType type, uint16_t categoryBits, uint16_t maskBits);
-    PhysBody* CreateRectangleSensor(int x, int y, int width, int height, bodyType type, uint16_t categoryBits, uint16_t maskBits);
-    PhysBody* CreateCircleSensor(int x, int y, int radious, bodyType type, uint16_t categoryBits, uint16_t maskBits);
-    PhysBody* CreateChain(int x, int y, int* points, int size, bodyType type, uint16_t categoryBits, uint16_t maskBits);
+    Collider* CreateRectangle(int x, int y, int width, int height, bodyType type, uint16_t categoryBits, uint16_t maskBits);
+    Collider* CreateCircle(int x, int y, int radious, bodyType type, uint16_t categoryBits, uint16_t maskBits);
+    Collider* CreateRectangleSensor(int x, int y, int width, int height, bodyType type, uint16_t categoryBits, uint16_t maskBits);
+    Collider* CreateCircleSensor(int x, int y, int radious, bodyType type, uint16_t categoryBits, uint16_t maskBits);
+    Collider* CreateChain(int x, int y, int* points, int size, bodyType type, uint16_t categoryBits, uint16_t maskBits);
 
     // Invoked from our event processing
     void BeginContact(b2ShapeId shapeA, b2ShapeId shapeB);
     void EndContact(b2ShapeId shapeA, b2ShapeId shapeB);
 
-    void DeletePhysBody(PhysBody* physBody);
-    bool IsPendingToDelete(PhysBody* physBody);
+    void DeletePhysBody(Collider* physBody);
+    bool IsPendingToDelete(Collider* physBody);
 
     // --- Velocity helpers (thin wrappers over Box2D 3.x C API)
-    b2Vec2 GetLinearVelocity(const PhysBody* p) const;
-    float  GetXVelocity(const PhysBody* p) const;
-    float  GetYVelocity(const PhysBody* p) const;
+    b2Vec2 GetLinearVelocity(const Collider* p) const;
+    float  GetXVelocity(const Collider* p) const;
+    float  GetYVelocity(const Collider* p) const;
 
-    void   SetLinearVelocity(PhysBody* p, const b2Vec2& v) const;
-    void   SetLinearVelocity(PhysBody* p, float vx, float vy) const;
-    void   SetXVelocity(PhysBody* p, float vx) const;
-    void   SetYVelocity(PhysBody* p, float vy) const;
+    void   SetLinearVelocity(Collider* p, const b2Vec2& v) const;
+    void   SetLinearVelocity(Collider* p, float vx, float vy) const;
+    void   SetXVelocity(Collider* p, float vx) const;
+    void   SetYVelocity(Collider* p, float vy) const;
 
     // --- Impulse helper (handy for jumps/dashes)
-    void   ApplyLinearImpulseToCenter(PhysBody* p, float ix, float iy, bool wake = true) const;
+    void   ApplyLinearImpulseToCenter(Collider* p, float ix, float iy, bool wake = true) const;
 
-    void   DestroyBody(PhysBody* p) const;
+    void   DestroyBody(Collider* p) const;
 
-    b2Transform GetTransform(PhysBody* p);
-    void MoveBody(PhysBody* p, b2Vec2 pos, b2Rot rot);
+    b2Transform GetTransform(Collider* p);
+    void MoveBody(Collider* p, b2Vec2 pos, b2Rot rot);
     
-    void SetGravityScale(PhysBody* p, float scale);
+    void SetGravityScale(Collider* p, float scale);
 
 private:
     // helpers
     static b2BodyType ToB2Type(bodyType t);
-    static void* ToUserData(PhysBody* p) { return (void*)p; }
-    static PhysBody* FromUserData(void* ud) { return (PhysBody*)ud; }
-    static PhysBody* BodyToPhys(b2BodyId b) { return FromUserData(b2Body_GetUserData(b)); }
+    static void* ToUserData(Collider* p) { return (void*)p; }
+    static Collider* FromUserData(void* ud) { return (Collider*)ud; }
+    static Collider* BodyToPhys(b2BodyId b) { return FromUserData(b2Body_GetUserData(b)); }
 
     // --- Debug draw callbacks (Box2D 3.1 signatures)
     static void DrawSegmentCb(b2Vec2 p1, b2Vec2 p2, b2HexColor color, void* ctx);
@@ -149,5 +109,5 @@ private:
     b2WorldId world;
 
     // List of physics bodies
-    std::unordered_set<PhysBody*> bodiesToDelete;
+    std::unordered_set<Collider*> bodiesToDelete;
 };
