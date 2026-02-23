@@ -24,6 +24,7 @@
     <ProjectGuid>{a9c663a5-00a3-466d-94be-bc98bc72effe}</ProjectGuid>
     <RootNamespace>PlatformGame</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>TheGraveyard</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
