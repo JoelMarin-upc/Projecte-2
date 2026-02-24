@@ -501,7 +501,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::NEXTLEVEL:
 		Engine::GetInstance().audio->PlayFx(nextlevelFxId);
-		Engine::GetInstance().scene->NextScene();
+		Engine::GetInstance().scene->EndScene();
 		break;
 	case ColliderType::BOSSSTART:
 		inBoss = true;
