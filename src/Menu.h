@@ -7,6 +7,8 @@
 #include <box2d/box2d.h>
 #include <SDL3/SDL.h>
 
+constexpr auto PI = 3.14159265;
+struct SDL_Texture;
 
 class Player : public Entity
 {

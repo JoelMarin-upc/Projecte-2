@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Module.h"
-#include "Persistence.h"
+#include "XMLHandler.h"
 #include "Player.h"
-#include "Persistence.h"
 #include <list>
 #include <vector>
 
@@ -125,7 +124,7 @@ struct MapData
     std::list<ObjectGroup*> objectlayers;
 };
 
-class Map : public Module
+class Map
 {
 public:
 
@@ -148,8 +147,6 @@ public:
 
     // Load new map
     bool Load(std::string path, std::string mapFileName);
-    std::vector<EnemyData> GetEnemies() const;
-    std::vector<ItemData> GetItems() const;
 
     Vector2D MapToWorld(int x, int y) const;
     Vector2D WorldToMap(int x, int y);
@@ -178,16 +175,12 @@ public:
         return mapData.tileHeight;
     }
 
-    void DrawDoor();
-
 public: 
     SDL_Texture* bgtexture;
     std::string mapFileName;
     std::string mapPath;
     Vector2D* playerStartPos = nullptr;
     MapData mapData;
-    std::vector<EnemyData> enemies;
-    std::vector<ItemData> items;
 
 private:
     bool mapLoaded;

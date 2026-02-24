@@ -150,7 +150,6 @@
     <None Include="Assets\Textures\bat32.tsx" />
     <None Include="Assets\Textures\Boss.tsx" />
     <None Include="Assets\Textures\Multi_Slime_Spritesheet.tsx" />
-    <None Include="packages.config" />
     <None Include="vcpkg-configuration.json" />
     <None Include="vcpkg.json" />
   </ItemGroup>
@@ -289,13 +288,5 @@
     <Xml Include="gamesave.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="packages\pugixml.1.15.0\build\native\pugixml.targets" Condition="Exists('packages\pugixml.1.15.0\build\native\pugixml.targets')" />
-  </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('packages\pugixml.1.15.0\build\native\pugixml.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\pugixml.1.15.0\build\native\pugixml.targets'))" />
-  </Target>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

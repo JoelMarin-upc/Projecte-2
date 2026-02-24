@@ -35,8 +35,6 @@ public:
 public:
 
 	std::list<std::shared_ptr<Entity>> entities;
-	int maxTentacles = 0;
-	int aliveTentacles = 0;
 	bool paused = false;
 
 };

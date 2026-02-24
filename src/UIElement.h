@@ -4,7 +4,7 @@
 #include "Render.h"
 #include "Module.h"
 #include "Vector2D.h"
-#include <SDL3/SDL.h>s
+#include <SDL3/SDL.h>
 
 enum class UIElementType
 {

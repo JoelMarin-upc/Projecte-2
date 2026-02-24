@@ -1,19 +1,10 @@
 #include "EntityManager.h"
 #include "Player.h"
-#include "AirEnemy.h"
-#include "GroundEnemy.h"
-#include "Boss.h"
-#include "Spear.h"
 #include "Engine.h"
 #include "Textures.h"
 #include "Scene.h"
 #include "Log.h"
 #include "Item.h"
-#include "Coin.h"
-#include "Heart.h"
-#include "Recharge.h"
-#include "Key.h"
-#include "tracy/Tracy.hpp"
 
 EntityManager::EntityManager() : Module()
 {
@@ -84,30 +75,6 @@ std::shared_ptr<Entity> EntityManager::CreateEntity(EntityType type)
 	case EntityType::ITEM:
 		entity = std::make_shared<Item>();
 		break;
-	case EntityType::SPEAR:
-		entity = std::make_shared<Spear>();
-		break;
-	case EntityType::ENEMY_AIR:
-		entity = std::make_shared<AirEnemy>();
-		break;
-	case EntityType::ENEMY_GROUND:
-		entity = std::make_shared<GroundEnemy>();
-		break;
-	case EntityType::BOSS:
-		entity = std::make_shared<Boss>();
-		break;
-	case EntityType::COIN:
-		entity = std::make_shared<Coin>();
-		break;
-	case EntityType::HEART:
-		entity = std::make_shared<Heart>();
-		break;
-	case EntityType::RECHARGE:
-		entity = std::make_shared<Recharge>();
-		break;
-	case EntityType::KEY:
-		entity = std::make_shared<Key>();
-		break;
 	default:
 		break;
 	}
@@ -130,7 +97,6 @@ void EntityManager::AddEntity(std::shared_ptr<Entity> entity)
 
 bool EntityManager::Update(float dt)
 {
-	ZoneScoped;
 	bool ret = true;
 	for(const auto entity : entities)
 	{

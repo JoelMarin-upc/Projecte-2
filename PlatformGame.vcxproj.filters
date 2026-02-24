@@ -88,7 +88,6 @@
     <None Include="Assets\Textures\Boss.tsx">
       <Filter>Configuration FIles</Filter>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio.cpp">

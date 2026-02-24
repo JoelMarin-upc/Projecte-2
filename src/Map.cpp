@@ -4,15 +4,12 @@
 #include "Textures.h"
 #include "Map.h"
 #include "Log.h"
-#include "Physics.h"
-#include "EntityManager.h"
-#include "tracy/Tracy.hpp"
 
 #include <math.h>
 
-Map::Map() : Module(), mapLoaded(false)
+Map::Map() : mapLoaded(false)
 {
-    name = "map";
+
 }
 
 // Destructor
@@ -22,7 +19,6 @@ Map::~Map()
 // Called before render is available
 bool Map::Awake()
 {
-    name = "map";
     LOG("Loading Map Parser");
 
     return true;
@@ -34,7 +30,6 @@ bool Map::Start() {
 
 bool Map::Update(float dt)
 {
-    ZoneScoped;
     bool ret = true;
 
     if (mapLoaded) {
@@ -212,8 +207,6 @@ bool Map::Load(std::string path, std::string fileName)
         // L08 TODO 3: Create colliders
         // L08 TODO 7: Assign collider type
         // Later you can create a function here to load and create the colliders from the map
-        enemies.clear();
-        items.clear();
         //Iterate the layer and create colliders
         for (const auto& mapLayer : mapData.layers) {
             if (mapLayer->name == "Logic") {
@@ -255,7 +248,6 @@ bool Map::Load(std::string path, std::string fileName)
             }
 
             if (mapLayer->name == "Enemy") {
-                Engine::GetInstance().entityManager->maxTentacles = 0;
                 for (int i = 0; i < mapData.width; i++) {
                     for (int j = 0; j < mapData.height; j++) {
                         int gid = mapLayer->Get(i, j);
@@ -267,7 +259,6 @@ bool Map::Load(std::string path, std::string fileName)
                         if (gid == 630) {
                             enType = 2;
                             enemy.position = { mapCoord.getX()+10,mapCoord.getY() - 64+10 };
-                            Engine::GetInstance().entityManager->maxTentacles++;
                         }
                         else {     
                             if (gid == 627) enType = 0;
@@ -362,10 +353,6 @@ bool Map::Load(std::string path, std::string fileName)
     return ret;
 }
 
-std::vector<EnemyData> Map::GetEnemies() const { return enemies; }
-
-std::vector<ItemData> Map::GetItems() const { return items; }
-
 // L07: TODO 8: Create a method that translates x,y coordinates from map positions to world positions
 Vector2D Map::MapToWorld(int i, int j) const
 {
@@ -449,12 +436,4 @@ Vector2D Map::GetCameraLimitsInTiles(Vector2D camPosTile) {
     if (limits.getY() > mapData.height) limits.setY(mapData.height);
 
     return limits;
-}
-
-void Map::DrawDoor() {
-    for (const auto& mapLayer : mapData.layers) {
-        if (mapLayer->name == "DoorOpen") {
-            mapLayer->properties.ChangePorperty("Draw");
-        }
-    }
 }

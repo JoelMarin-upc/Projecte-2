@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Module.h"
-#include "Entity.h"
+#include "Mission.h"
 #include <list>
+#include <memory>
 
-class EntityManager : public Module
+class MissionManager
 {
 public:
 
-	EntityManager();
+	MissionManager();
 
 	// Destructor
-	virtual ~EntityManager();
+	virtual ~MissionManager();
 
 	// Called before render is available
 	bool Awake();
@@ -26,17 +26,11 @@ public:
 	bool CleanUp();
 
 	// Additional methods
-	std::shared_ptr<Entity> CreateEntity(EntityType type);
-
-	void DestroyEntity(std::shared_ptr<Entity> entity);
-
-	void AddEntity(std::shared_ptr<Entity> entity);
+	std::shared_ptr<Entity> CreateMission(Mission* mission);
 
 public:
 
-	std::list<std::shared_ptr<Entity>> entities;
-	int maxTentacles = 0;
-	int aliveTentacles = 0;
+	std::list<std::shared_ptr<Mission>> missions;
 	bool paused = false;
 
 };

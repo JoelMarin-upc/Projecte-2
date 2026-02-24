@@ -1,11 +1,8 @@
-#ifndef __LOG_H__
-#define __LOG_H__
+#include "Mission.h"
 
-#include <cstdio>
-#include <cstdarg>
+class KillMission : public Mission {
+public:
 
-#define LOG(format, ...) Log(__FILE__, __LINE__, format, ##__VA_ARGS__)
+private:
 
-void Log(const char file[], int line, const char* format, ...);
-
-#endif  // __LOG_H__
+};

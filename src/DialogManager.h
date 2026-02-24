@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Module.h"
-#include "Entity.h"
+#include "DialogTree.h"
 #include <list>
+#include <memory>
 
-class EntityManager : public Module
+class DialogManager
 {
 public:
 
-	EntityManager();
+	DialogManager();
 
 	// Destructor
-	virtual ~EntityManager();
+	virtual ~DialogManager();
 
 	// Called before render is available
 	bool Awake();
@@ -25,18 +25,9 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	// Additional methods
-	std::shared_ptr<Entity> CreateEntity(EntityType type);
+	void CreateDialog(DialogTree* dialog);
 
-	void DestroyEntity(std::shared_ptr<Entity> entity);
-
-	void AddEntity(std::shared_ptr<Entity> entity);
-
-public:
-
-	std::list<std::shared_ptr<Entity>> entities;
-	int maxTentacles = 0;
-	int aliveTentacles = 0;
+	std::list<std::shared_ptr<DialogTree>> dialogues;
 	bool paused = false;
 
 };
