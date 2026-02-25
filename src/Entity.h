@@ -1,7 +1,10 @@
 #pragma once
 
+#include <list>
 #include "Input.h"
 #include "Render.h"
+#include "Collider.h"
+#include <SDL3/SDL.h>
 
 enum class EntityType
 {
@@ -18,14 +21,12 @@ enum class EntityType
 	UNKNOWN
 };
 
-class Collider;
-
 class Entity : public std::enable_shared_from_this<Entity>
 {
 public:
 
 	Entity() {}
-	Entity(EntityType type) : type(type), active(true) {}
+	Entity(EntityType _type, SDL_Texture _texture) : type(_type), texture(_texture), active(true) {}
 
 	virtual bool Awake()
 	{
@@ -94,5 +95,7 @@ public:
 	bool renderable = true;
 	bool started = false;
 
+	std::list<Collider*> colliders;
+	SDL_Texture texture;
 	
 };
