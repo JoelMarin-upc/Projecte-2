@@ -68,3 +68,13 @@ Each expedition becomes more dangerous than the last.
 - **Engine:** Custom-built engine
 - **Rendering:** SDL3
 - **Physics:** Box2D
+
+---
+
+## Contributors
+
+- **Sofia Barja**: Technical artist, artist, designer
+- **Joel Marin**: Engine programmer, mechanics programmer
+- **Kirsten Neubauer**: Narrative Designer, artist
+- **Clara Sanchez**: Mechanics and narrative designer, artist
+- **Yin Ye**: Programmer, systems and narrative designer, artist
