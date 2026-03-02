@@ -1,11 +1,11 @@
-#ifndef __LOG_H__
-#define __LOG_H__
+#include <iostream>
+#include <vector>
+#include "Stat.h"
 
-#include <cstdio>
-#include <cstdarg>
-
-#define LOG(format, ...) Log(__FILE__, __LINE__, format, ##__VA_ARGS__)
-
-void Log(const char file[], int line, const char* format, ...);
-
-#endif  // __LOG_H__
+class Stats {
+public:
+	std::vector<Stat> stats;
+	
+	void ApplyModifierMultiplier(std::string statname, float multiplier);
+	void ApplyModifierAddition(std::string statname, float addition);
+};

@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Render.h"
 #include "Collider.h"
+#include "Stats.h"
 #include <SDL3/SDL.h>
 
 enum class EntityType
@@ -97,5 +98,6 @@ public:
 
 	std::list<Collider*> colliders;
 	SDL_Texture texture;
+	Stats stats;
 	
 };

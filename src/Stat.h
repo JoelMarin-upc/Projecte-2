@@ -1,11 +1,10 @@
-#ifndef __LOG_H__
-#define __LOG_H__
+#include <iostream>
 
-#include <cstdio>
-#include <cstdarg>
+class Stat {
+public: 
+	std::string name;
+	float value;
+	float maxValue;
 
-#define LOG(format, ...) Log(__FILE__, __LINE__, format, ##__VA_ARGS__)
-
-void Log(const char file[], int line, const char* format, ...);
-
-#endif  // __LOG_H__
+	float setValue(float v);
+};
