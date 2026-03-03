@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="46" tilewidth="20" tileheight="20" infinite="0" nextlayerid="19" nextobjectid="141">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="46" tilewidth="20" tileheight="20" infinite="0" nextlayerid="19" nextobjectid="145">
  <tileset firstgid="1" name="AutumnHillsTileset_8" tilewidth="20" tileheight="20" tilecount="625" columns="25">
   <image source="AutumnHillsTileset_8.png" width="500" height="500"/>
  </tileset>
@@ -9246,7 +9246,6 @@
   <object id="137" x="820" y="760" width="20" height="60"/>
   <object id="138" x="860" y="760" width="20" height="60"/>
   <object id="139" x="840" y="820" width="20" height="60"/>
-  <object id="140" x="320" y="-210"/>
  </objectgroup>
  <layer id="12" name="Navigation" width="50" height="46">
   <properties>
