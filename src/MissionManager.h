@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Mission.h"
+#include "Entity.h"
 #include <list>
 #include <memory>
 

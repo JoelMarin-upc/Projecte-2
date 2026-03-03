@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Entity.h"
+#include "Collider.h"
 #include <list>
 #include <cmath>           // for floor in METERS_TO_PIXELS
 #include <box2d/box2d.h>   // Box2D 3.x single header

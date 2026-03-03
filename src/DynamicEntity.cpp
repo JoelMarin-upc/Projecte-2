@@ -1,6 +1,6 @@
 #include "DynamicEntity.h"
 
-void DynamicEntity::AddCollider(ColliderType type, float xOffset, float yOffset, float wOffset, float hOffset, uint16_t categoryBits, uint16_t maskBits, int* points = nullptr, int size = 0)
+void DynamicEntity::AddCollider(ColliderType type, float xOffset, float yOffset, float wOffset, float hOffset, uint16_t categoryBits, uint16_t maskBits, int* points, int size)
 {
 	Collider* c = nullptr;
 	switch (type)

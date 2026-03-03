@@ -9,7 +9,7 @@
 #include "Physics.h"
 #include "EntityManager.h"
 
-Item::Item() : Entity(EntityType::ITEM)
+Item::Item(SDL_Texture tex) : Entity(EntityType::ITEM, tex)
 {
 	name = "item";
 }
@@ -21,20 +21,6 @@ bool Item::Awake() {
 }
 
 bool Item::Start() {
-	if (started) return true;
-	started = true;
-
-	texture = Engine::GetInstance().textures->Load("Assets/Textures/item.png");
-	
-	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
-
-	//if (pbody) Engine::GetInstance().physics->DeletePhysBody(pbody);
-	pbody = Engine::GetInstance().physics->CreateCircleSensor((int)position.getX(), (int)position.getY(), texH / 2, bodyType::STATIC, 0x0002, 0X003);
-
-	pbody->ctype = ColliderType::ITEM;
-
-	pbody->listener = this;
-
 	return true;
 }
 
@@ -48,12 +34,12 @@ bool Item::Update(float dt)
 void Item::Draw(float dt) {
 	if (!active) return;
 
-	int x, y;
-	pbody->GetPosition(x, y);
-	position.setX((float)x);
-	position.setY((float)y);
+	//int x, y;
+	//pbody->GetPosition(x, y);
+	//position.setX((float)x);
+	//position.setY((float)y);
 
-	Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2);
+	//Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2);
 }
 
 bool Item::CleanUp()

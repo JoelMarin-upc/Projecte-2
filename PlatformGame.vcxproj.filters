@@ -285,6 +285,9 @@
     <ClCompile Include="src\Combat.cpp">
       <Filter>Source Files\Scene\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="src\Character.cpp">
+      <Filter>Source Files\Scene\Entities\Characters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio.h">
@@ -487,6 +490,9 @@
     </ClInclude>
     <ClInclude Include="src\Combat.h">
       <Filter>Source Files\Scene\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Character.h">
+      <Filter>Source Files\Scene\Entities\Characters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

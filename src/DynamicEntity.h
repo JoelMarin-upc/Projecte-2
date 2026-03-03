@@ -2,6 +2,7 @@
 
 #include <list>
 #include "Physics.h"
+#include "Collider.h"
 #include "Engine.h"
 
 class DynamicEntity : public Entity

@@ -214,7 +214,7 @@ bool Map::Load(std::string path, std::string fileName)
                     for (int j = 0; j < mapData.height; j++) {
                         int gid = mapLayer->Get(i, j);
                         Vector2D mapCoord = MapToWorld(i, j);            
-                        if (gid == 626) {
+                        /*if (gid == 626) {
                             Collider* c1 = Engine::GetInstance().physics->CreateRectangle(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 0x0002, 0X003);
                             c1->ctype = ColliderType::DEATHZONE;
                         }
@@ -242,7 +242,7 @@ bool Map::Load(std::string path, std::string fileName)
                         else if (gid == 632) {
                             Collider* c1 = Engine::GetInstance().physics->CreateRectangle(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight*3, STATIC, 0x0002, 0X003);
                             c1->ctype = ColliderType::DOOR;
-                        }
+                        }*/
                     }
                 }
             }
@@ -266,7 +266,6 @@ bool Map::Load(std::string path, std::string fileName)
                             enemy.position = mapCoord;
                         }
                         enemy.enType = enType;
-                        enemies.push_back(enemy);
                     }
                 }
             }
@@ -288,7 +287,6 @@ bool Map::Load(std::string path, std::string fileName)
                         
                         item.type = (int)type;
                         item.position = {mapCoord.getX() + 10, mapCoord.getY()+ 10 };
-                        items.push_back(item);
                     }
                 }
             }
@@ -311,8 +309,8 @@ bool Map::Load(std::string path, std::string fileName)
         for (const auto& objectGroup : mapData.objectlayers) {
             if (objectGroup->name == "Collisions") {
                 for (const auto& object : objectGroup->objects) {
-                    Collider* c1 = Engine::GetInstance().physics->CreateRectangle(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC, 0x0001, 0X0007);
-                    c1->ctype = ColliderType::PLATFORM;
+                    /*Collider* c1 = Engine::GetInstance().physics->CreateRectangle(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC, 0x0001, 0X0007);
+                    c1->ctype = ColliderType::PLATFORM;*/
                 }
             }
         }

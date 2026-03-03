@@ -11,7 +11,7 @@
 #include "EntityManager.h"
 #include "tracy/Tracy.hpp"
 
-Player::Player() : Entity(EntityType::PLAYER)
+Player::Player(SDL_Texture tex) : Character()
 {
 	name = "Player";
 }
@@ -28,7 +28,7 @@ bool Player::Awake() {
 
 bool Player::Start() {
 
-	if (!hasRespawn) respawnPos = *Engine::GetInstance().map->playerStartPos;
+	//if (!hasRespawn) respawnPos = *Engine::GetInstance().map->playerStartPos;
 
 	// load
 	texture = Engine::GetInstance().textures->Load(texturePath);
@@ -38,7 +38,6 @@ bool Player::Start() {
 
 	texW = 32;
 	texH = 32;
-	Respawn();
 
 	itemChargeTexture0 = Engine::GetInstance().textures->Load(itemChargeTexture0Path);
 	itemChargeTexture1 = Engine::GetInstance().textures->Load(itemChargeTexture1Path);
@@ -73,11 +72,7 @@ bool Player::Update(float dt)
 	CheckTimers();
 	if (isActive) {
 		GetPhysicsValues();
-		CheckGround();
 		Move();
-		Jump();
-		CheckThrow();
-		Dash();
 		ApplyPhysics();
 		HandleAnimations();
 	}
@@ -96,65 +91,7 @@ void Player::GodMode()
 }
 
 void Player::CheckTimers() {
-	if (throwTimer1.ReadMSec() >= throwMS || spearCol1) {
-		if (isThrow1) {
-			isThrow1 = false;
-			if (spear1->destroyed == false) spear1->Destroy();
-			spearCol1 = false;
-		}
-	}
-	if (throwTimer2.ReadMSec() >= throwMS || spearCol2) {
-		if (isThrow2) {
-			isThrow2 = false;
-			if (spear2->destroyed == false) spear2->Destroy();
-			spearCol2 = false;
-		}
-	}
-	if (throwCDBack1 && !isThrow1) {
-		canThrow1 = true;
-		dashed1 = false;
-		throwCDBack1 = false;
-	}
-	if (throwCDBack2 && !isThrow2) {
-		canThrow2 = true;
-		dashed2 = false;
-		throwCDBack2 = false;
-	}
-	if (isDashing && dashTimer.ReadMSec() >= dashMS) {
-		isDashing = false;
-	}
-	if (damaged && damageTimer.ReadMSec() >= damageMS) {
-		damaged = false;
-	}
-	if (!isActive && deathTimer.ReadMSec() >= deathMS) {
-		Engine::GetInstance().scene->ToggleDeathScreen();
-		draw = false;
-	}
-
-}
-
-void Player::CheckGround()
-{
-	float verticalVel = std::abs(velocity.y);
-	if (verticalVel < 0.3)
-	{
-		int x, y;
-		pbody->GetPosition(x, y);
-		b2Vec2 feetPos{ x, y + 20 + texH / 2 };
-		float _;
-		int dist = pbody->RayCast(x, y, feetPos.x, feetPos.y, _, _);
-		int distLeft = pbody->RayCast(x - texW / 2, y, feetPos.x - texW / 2, feetPos.y, _, _);
-		int distRight = pbody->RayCast(x + texW / 2, y, feetPos.x + texW / 2, feetPos.y, _, _);
-		if (dist != -1 || distLeft != -1 || distRight != -1) {
-			isJumping = false;
-			if (!canThrow1) throwCDBack1 = true;
-			if (!canThrow2) throwCDBack2 = true;
-		}
-	}
-	else {
-		if (!isJumping) coyoteTimer.Start();
-		isJumping = true;
-	}
+	
 }
 
 void Player::GetPhysicsValues() {
@@ -200,115 +137,6 @@ void Player::Move() {
 	}
 }
 
-void Player::Jump() {
-	if (godMode) return;
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && (isJumping == false || coyoteTimer.ReadMSec() < coyoteMS)) {
-		Engine::GetInstance().physics->SetLinearVelocity(pbody, { velocity.x,0 });
-		Engine::GetInstance().physics->ApplyLinearImpulseToCenter(pbody, 0.0f, -jumpForce, true);
-		anims.PlayOnce("jump");
-		isJumping = true;
-		Engine::GetInstance().audio->PlayFx(jumpFxId);
-	}
-}
-
-void Player::CheckThrow() {
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
-		if (hasItem1 && canThrow1) {
-			isThrow1 = true;
-			canThrow1 = false;
-			throwTimer1 = Timer();
-			if (spear1!= NULL && spear1->active == true) spear1->Destroy();
-			Throw(spear1);
-		}
-		else if (hasItem2 && canThrow2) {
-			isThrow2 = true;
-			canThrow2 = false;
-			throwTimer2 = Timer();
-			if (spear2 != NULL && spear2->active == true) spear2->Destroy();
-			Throw(spear2);
-		}
-	}
-}
-
-void Player::Throw(std::shared_ptr<Spear>& spear) {
-	spear = std::dynamic_pointer_cast<Spear>(Engine::GetInstance().entityManager->CreateEntity(EntityType::SPEAR));
-	float angle;
-	Vector2D initialPos;
-	if (facingRight) {
-		angle = 0;
-		initialPos = Vector2D(spearOffset, 0);
-	}
-	else {
-		angle = PI;
-		initialPos = Vector2D(-spearOffset, 0);
-	}
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) {
-			angle = PI / 4;
-			initialPos = Vector2D(0, -spearOffset);
-		}
-		else if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
-			angle = 7 * PI / 4;
-			initialPos = Vector2D(spearOffset, 0);
-		}
-		else {
-			angle = 0;
-			initialPos = Vector2D(spearOffset, 0);
-		}
-	}
-	else if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) {
-			angle = 3 * PI / 4;
-			initialPos = Vector2D(0, -spearOffset);
-		}
-		else if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
-			angle = 5 * PI / 4;
-			initialPos = Vector2D(0, spearOffset);
-		}
-	}
-	else if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) {
-		angle = PI / 2;
-		initialPos = Vector2D(0, -spearOffset);
-	}
-	else if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
-		angle = 3 * PI / 2;
-		initialPos = Vector2D(0, spearOffset);
-	}
-	anims.PlayOnce("throw");
-	spear->position = position + initialPos + Vector2D{ (float)-texW / 4, (float)-texH / 2 };
-	spear->Initialize(angle);
-	Engine::GetInstance().audio->PlayFx(throwFxId);
-}
-
-void Player::Dash() {
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
-		float x, y;
-		if (dashed2 == false && isThrow2 == true) {
-			if (spear2->destroyed == true) return;
-			x = spear2->position.getX() - position.getX();
-			y = spear2->position.getY() - position.getY();
-			dashed1 = true;
-			dashed2 = true;
-		}
-		else if (dashed1 == false && isThrow1 == true) {
-			if (spear1->destroyed == true) return;
-			x = spear1->position.getX() - position.getX();
-			y = spear1->position.getY() - position.getY();
-			dashed1 = true;
-		}
-		else return;
-		float aux = sqrt(pow(x, 2) + pow(y, 2));
-		x = x / aux;
-		y = y / aux;
-		Engine::GetInstance().physics->SetLinearVelocity(pbody,0, 0);
-		Engine::GetInstance().physics->ApplyLinearImpulseToCenter(pbody, x * dashForce, y * dashForce, true);
-		anims.PlayOnce("jump");
-		isDashing = true;
-		dashTimer = Timer();
-		Engine::GetInstance().audio->PlayFx(dashFxId);
-	}
-}
-
 void Player::ApplyPhysics() {
 	// Preserve vertical speed while jumping
 	if (isJumping == true || isDashing == true) {
@@ -321,47 +149,6 @@ void Player::ApplyPhysics() {
 
 	// Apply velocity via helper
 	Engine::GetInstance().physics->SetLinearVelocity(pbody, velocity);
-}
-
-void Player::Damage()
-{
-	if (damaged) return;
-	lives--;
-	damaged = true;
-	if (lives <= 0) Die();
-	else {
-		damageTimer.Start();
-		Engine::GetInstance().audio->PlayFx(damageFxId);
-	}
-}
-
-void Player::Die()
-{
-	anims.PlayOnce("death");
-	isActive = false;
-	deathTimer = Timer();
-	Engine::GetInstance().physics->DeletePhysBody(pbody);
-	pbody = nullptr;
-	pbody = Engine::GetInstance().physics->CreateCircle((int)position.getX(), (int)position.getY(), texW / 2, bodyType::STATIC, 0x0002, 0xFFFF);
-	Engine::GetInstance().audio->PlayFx(damageFxId);
-	Engine::GetInstance().audio->PlayFx(deathFxId);
-	inBoss = false;
-	keyCount = 0;
-}
-
-void Player::Respawn() {
-	isActive = true;
-	draw = true;
-	position = respawnPos;
-	Engine::GetInstance().physics->DeletePhysBody(pbody);
-	pbody = nullptr;
-	pbody = Engine::GetInstance().physics->CreateCircle((int)position.getX(), (int)position.getY(), texW / 2.5, bodyType::DYNAMIC, 0x0002, 0xFFFF);
-	pbody->listener = this;
-	pbody->ctype = ColliderType::PLAYER;
-	Engine::GetInstance().audio->PlayFx(spawnFxId);
-	if (!hasLivesSet) lives = maxLives;
-	hasLivesSet = false;
-	Engine::GetInstance().entityManager->aliveTentacles = Engine::GetInstance().entityManager->maxTentacles;
 }
 
 void Player::HandleAnimations()
@@ -416,130 +203,12 @@ bool Player::CleanUp()
 }
 
 void Player::OnCollision(Collider* physA, Collider* physB) {
-	switch (physB->ctype)
-	{
-	case ColliderType::PLATFORM:
-		break;
-	case ColliderType::ITEM:
-		physB->listener->Destroy();
-		if (!hasItem1) hasItem1 = true;
-		else if (!hasItem2) hasItem2 = true;
-		Engine::GetInstance().audio->PlayFx(itemFxId);
-		break;
-	case ColliderType::HEART:
-		if (lives < maxLives)
-		{
-			physB->listener->Destroy();
-			Engine::GetInstance().audio->PlayFx(lifeFxId);
-			lives++;
-		}
-		break;
-	case ColliderType::COIN:
-		physB->listener->Destroy();
-		Engine::GetInstance().audio->PlayFx(coinFxId);
-		coins++;
-		break;
-	case ColliderType::RECHARGE:
-		throwCDBack1 = true;
-		canThrow1 = true;
-		throwCDBack2 = true;
-		canThrow2 = true;
-		Engine::GetInstance().audio->PlayFx(rechargeFxId);
-		break;
-	case ColliderType::KEY:
-		keyCount++;
-		Engine::GetInstance().audio->PlayFx(keyFxId);
-		break;
-	case ColliderType::SPEAR:
-		//spearCol1 = true;
-		break;
-	case ColliderType::DEATHZONE:
-		Die();
-		break;
-	case ColliderType::ENEMY:
-		Damage();
-		break;
-	case ColliderType::ATTACK:
-		Damage();
-		break;
-	case ColliderType::RESPAWNPOINT:
-		int x, y;
-		physB->GetPosition(x,y);
-		newRespawnPos = Vector2D( x, y );
-		if (respawnPos != newRespawnPos) {
-			respawnPos = newRespawnPos;
-			Engine::GetInstance().audio->PlayFx(autosaveFxId);
-			Engine::GetInstance().scene->SaveGame();
-			//CheckCheckpointPositions;
-			bool isIn = false;
-			if (Engine::GetInstance().scene->currentScene == 0) {
-				for (int i = 0; i < checkpointPositions0.size(); ++i) {
-					if (checkpointPositions0[i].x == x && checkpointPositions0[i].y == y) {
-						isIn = true;
-						break;
-					}
-				}
-				if (!isIn) {
-					b2Vec2 newPos = { x,y };
-					checkpointPositions0.emplace_back(newPos);
-				}
-			}
-			else if (Engine::GetInstance().scene->currentScene == 1) {
-				for (int i = 0; i < checkpointPositions1.size(); ++i) {
-					if (checkpointPositions1[i].x == x && checkpointPositions1[i].y == y) {
-						isIn = true;
-						break;
-					}
-				}
-				if (!isIn) {
-					b2Vec2 newPos = { x,y };
-					checkpointPositions1.emplace_back(newPos);
-				}
-			}
-			
-		}
-		break;
-	case ColliderType::NEXTLEVEL:
-		Engine::GetInstance().audio->PlayFx(nextlevelFxId);
-		Engine::GetInstance().scene->EndScene();
-		break;
-	case ColliderType::BOSSSTART:
-		inBoss = true;
-		Engine::GetInstance().scene->currentMusic = (char*)Engine::GetInstance().scene->configParameters.child("music").attribute("boss").as_string();
-		Engine::GetInstance().audio->PlayMusic(Engine::GetInstance().scene->currentMusic.c_str());
-		break;
-	case ColliderType::DOOR:
-		if (keyCount == 3) {
-			doorOpen = true;
-			b2DestroyBody(physB->body);
-			Engine::GetInstance().map->DrawDoor();
-			Engine::GetInstance().audio->PlayFx(doorFxId);
-		}
-		break;
-	case ColliderType::UNKNOWN:
-		LOG("Collision UNKNOWN");
-		break;
-	default:
-		break;
-	}
+	
 }
 
 void Player::OnCollisionEnd(Collider* physA, Collider* physB)
 {
-	switch (physB->ctype)
-	{
-	case ColliderType::PLATFORM:
-		LOG("End Collision PLATFORM");
-		break;
-	case ColliderType::ITEM:
-		LOG("End Collision ITEM");
-		break;
-	case ColliderType::UNKNOWN:
-		LOG("End Collision UNKNOWN");
-		break;
-	default:
-		break;
-	}
+	
 }
 
 Vector2D Player::GetPosition() {

@@ -1,20 +1,21 @@
 #pragma once
 
-#include "Entity.h"
+#include "Character.h"
 #include "Animation.h"
 #include "Timer.h"
-#include "Spear.h"
 #include <box2d/box2d.h>
 #include <SDL3/SDL.h>
 
 constexpr auto PI = 3.14159265;
 struct SDL_Texture;
 
-class Player : public Entity
+class Player : public Character
 {
 public:
 
 	Player();
+
+	Player(SDL_Texture tex);
 	
 	virtual ~Player();
 
@@ -33,21 +34,13 @@ public:
 	Vector2D GetPosition();
 	Vector2D GetPositionCenter();
 
-	void Respawn();
 
 private:
 	void GodMode();
 	void CheckTimers();
-	void CheckGround();
 	void GetPhysicsValues();
 	void Move();
-	void Jump();
-	void CheckThrow();
-	void Throw(std::shared_ptr<Spear>& spear);
-	void Dash();
 	void ApplyPhysics();
-	void Damage();
-	void Die();
 	void HandleAnimations();
 
 public:
@@ -138,8 +131,6 @@ public:
 	bool doorOpen = false;
 
 private:
-	std::shared_ptr<Spear> spear1;
-	std::shared_ptr<Spear> spear2;
 	b2Vec2 velocity;
 	AnimationSet anims;
 	int auxX, auxY;

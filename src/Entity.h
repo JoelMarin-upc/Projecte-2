@@ -3,8 +3,6 @@
 #include <list>
 #include "Input.h"
 #include "Render.h"
-#include "Collider.h"
-#include "Stats.h"
 #include <SDL3/SDL.h>
 
 enum class EntityType
@@ -21,6 +19,8 @@ enum class EntityType
 	BOSS,
 	UNKNOWN
 };
+
+class Collider;
 
 class Entity : public std::enable_shared_from_this<Entity>
 {
@@ -98,6 +98,5 @@ public:
 
 	std::list<Collider*> colliders;
 	SDL_Texture texture;
-	Stats stats;
 	
 };

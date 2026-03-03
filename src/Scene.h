@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Module.h"
+#include "Map.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Timer.h"
@@ -99,6 +100,8 @@ public:
 	void LoadScene();
 	void LoadMap();
 	void EndScene();
+
+	Vector2D GetPlayerPosition();
 
 	bool hasEnded;
 

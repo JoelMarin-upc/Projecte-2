@@ -11,7 +11,7 @@ Pathfinding::Pathfinding() {
      //Loads texture to draw the path
     pathTex = Engine::GetInstance().textures.get()->Load("Assets/Maps/MapMetadata.png");
     tileX = Engine::GetInstance().textures.get()->Load("Assets/Textures/x.png");
-    map = Engine::GetInstance().map.get();
+    //map = Engine::GetInstance().map.get();
     layerNav = map->GetNavigationLayer();
 
     // Initialize the costSoFar with all elements set to 0
@@ -59,7 +59,7 @@ void Pathfinding::DrawPath() {
     if (!debug) return;
 
     Vector2D point;
-	Map* map = Engine::GetInstance().map.get();
+	//Map* map = Engine::GetInstance().map.get();
 
     // Draw visited
     for (const auto& pathTile : visited) {
@@ -165,8 +165,8 @@ void Pathfinding::PropagateBFS() {
     bool foundDestination = false;
     if (!frontier.empty()) {
         Vector2D frontierTile = frontier.front();
-		Vector2D playerPos = Engine::GetInstance().scene->GetPlayerPosition();
-        Vector2D playerPosTile = Engine::GetInstance().map->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
+        Vector2D playerPos = { 0, 0 };// Engine::GetInstance().scene->GetPlayerPosition();
+        Vector2D playerPosTile = {0, 0};// Engine::GetInstance().map->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
 
         if (frontierTile == playerPosTile) {
             foundDestination = true;
@@ -224,8 +224,8 @@ void Pathfinding::PropagateDijkstra() {
     bool foundDestination = false;
     if (frontierDijkstra.size() > 0) {
         Vector2D frontierTile = frontierDijkstra.top().second;
-        Vector2D playerPos = Engine::GetInstance().scene.get()->GetPlayerPosition();
-        Vector2D playerPosTile = Engine::GetInstance().map.get()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
+        Vector2D playerPos = { 0, 0 };// Engine::GetInstance().scene.get()->GetPlayerPosition();
+        Vector2D playerPosTile = {0, 0};// Engine::GetInstance().map.get()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
 
         if (frontierTile == playerPosTile) {
             foundDestination = true;
@@ -275,8 +275,8 @@ void Pathfinding::PropagateDijkstra() {
 }
 
 Vector2D* Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {    
-    Vector2D playerPos = Engine::GetInstance().scene.get()->GetPlayerPosition();
-    Vector2D playerPosTile = Engine::GetInstance().map.get()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
+    Vector2D playerPos = { 0, 0 };// Engine::GetInstance().scene.get()->GetPlayerPosition();
+    Vector2D playerPosTile = { 0, 0 }; //Engine::GetInstance().map.get()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
 
     bool foundDestination = false;
     if (frontierAStar.size() > 0) {

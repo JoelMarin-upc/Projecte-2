@@ -58,7 +58,7 @@ void Scene::TogglePause()
 {
 	paused = !paused;
 	entityManager->paused = paused;
-	Engine::GetInstance().physics->paused = paused;
+	//Engine::GetInstance().physics->paused = paused;
 }
 
 void Scene::SaveGame()
