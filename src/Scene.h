@@ -67,11 +67,11 @@ struct SceneData {
 	std::string musicPath;
 };
 
-class Scene : public Module
+class Scene
 {
 public:
 
-	Scene();
+	Scene(std::string mapName);
 
 	// Destructor
 	virtual ~Scene();
@@ -105,8 +105,10 @@ public:
 
 	bool hasEnded;
 
-private:
+	std::string id;
+	std::string name;
 
+private:
 	EntityManager* entityManager;
 	MissionManager* missionManager;
 	DialogManager* dialogManager;

@@ -19,8 +19,12 @@ public:
 	// Called after Awake
 	bool Start();
 
+	bool PreUpdate();
+
 	// Called every frame
 	bool Update(float dt);
+
+	bool PostUpdate(float dt);
 
 	// Called before quitting
 	bool CleanUp();
@@ -31,8 +35,8 @@ public:
 
 public:
 
-	std::list<std::shared_ptr<Scene>> scenes;
-	std::shared_ptr<Scene> currentScene = nullptr;
+	std::list<Scene*> scenes;
+	Scene* currentScene = nullptr;
 	bool paused = false;
 
 };

@@ -44,22 +44,7 @@ bool Player::Start() {
 	itemChargeTexture2 = Engine::GetInstance().textures->Load(itemChargeTexture2Path);
 
 	//initialize audio effect
-	jumpFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("jump").as_string());
-	dashFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("dash").as_string());
-	walkFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("walk").as_string());
-	throwFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("throw").as_string());
-	deathFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("death").as_string());
-	spawnFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("spawn").as_string());
-	nextlevelFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("nextlevel").as_string());
-	autosaveFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("autosave").as_string());
-	lifeFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("life").as_string());
-	coinFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("coin").as_string());
-	keyFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("key").as_string());
-	doorFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("door").as_string());
-	rechargeFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("recharge").as_string());
-	itemFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("item").as_string());
-	damageFxId = Engine::GetInstance().audio->LoadFx(Engine::GetInstance().scene->configParameters.child("audios").attribute("damage").as_string());
-
+	
 	checkpointPositions0 = std::vector<b2Vec2>(0);
 	checkpointPositions1 = std::vector<b2Vec2>(0);
 	return true;

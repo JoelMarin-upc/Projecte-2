@@ -2,7 +2,7 @@
 #include "Log.h"
 #include "Engine.h"
 
-Scene::Scene() : Module()
+Scene::Scene(std::string mapName)
 {
 	name = "scene";
 }
