@@ -11,6 +11,7 @@ Scene::Scene(std::string mapName)
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
 	entityManager->CreateEntity(EntityType::PLAYER);
+	entityManager->CreateEntity(EntityType::NPC);
 	//map->Load("base map path", mapName);
 	/*entityManager->Load(entities);
 	missionManager->Load(missions);

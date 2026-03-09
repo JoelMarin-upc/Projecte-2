@@ -43,7 +43,6 @@ private:
 
 public:
 
-	const char* texturePath;
 	const char* textureDamagedPath;
 	const char* animationsPath;
 	const char* itemChargeTexture0Path;
@@ -58,8 +57,6 @@ public:
 	SDL_Texture* itemChargeTexture1 = NULL;
 	SDL_Texture* itemChargeTexture2 = NULL;
 	bool facingRight = true;
-
-	int texW, texH;
 
 	//Audio fx
 	int jumpFxId;

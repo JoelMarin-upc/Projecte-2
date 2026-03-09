@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Item.h"
+#include "NPC.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -72,6 +73,9 @@ std::shared_ptr<Entity> EntityManager::CreateEntity(EntityType type)
 	{
 	case EntityType::PLAYER:
 		entity = std::make_shared<Player>();
+		break;
+	case EntityType::NPC:
+		entity = std::make_shared<NPC>();
 		break;
 	case EntityType::ITEM:
 		entity = std::make_shared<Item>();

@@ -8,6 +8,7 @@
 enum class EntityType
 {
 	PLAYER,
+	NPC,
 	ITEM,
 	HEART,
 	COIN,
@@ -96,8 +97,10 @@ public:
 	bool renderable = true;
 	bool started = false;
 
+	int texW, texH;
+
 	std::vector<Collider*> colliders;
 	SDL_Texture* texture;
-	std::string texturePath;
+	const char* texturePath;
 	
 };
