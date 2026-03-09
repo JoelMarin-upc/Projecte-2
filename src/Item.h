@@ -10,7 +10,7 @@ class Item : public Entity
 public:
 
 	Item();
-	Item(SDL_Texture tex);
+	Item(std::string tex);
 	virtual ~Item();
 
 	bool Awake();

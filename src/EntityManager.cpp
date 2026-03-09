@@ -1,3 +1,4 @@
+#include "Entity.h"
 #include "EntityManager.h"
 #include "Player.h"
 #include "Engine.h"
@@ -69,17 +70,19 @@ std::shared_ptr<Entity> EntityManager::CreateEntity(EntityType type)
 	//L04: TODO 3a: Instantiate entity according to the type and add the new entity to the list of Entities
 	switch (type)
 	{
-	/*case EntityType::PLAYER:
+	case EntityType::PLAYER:
 		entity = std::make_shared<Player>();
 		break;
 	case EntityType::ITEM:
 		entity = std::make_shared<Item>();
-		break;*/
+		break;
 	default:
 		break;
 	}
 
 	entities.push_back(entity);
+
+	entity->Start();
 
 	return entity;
 }

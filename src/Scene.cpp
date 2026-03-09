@@ -4,7 +4,17 @@
 
 Scene::Scene(std::string mapName)
 {
+	id = "SC-001";
 	name = "scene";
+	map = new Map();
+	entityManager = new EntityManager();
+	missionManager = new MissionManager();
+	dialogManager = new DialogManager();
+	entityManager->CreateEntity(EntityType::PLAYER);
+	//map->Load("base map path", mapName);
+	/*entityManager->Load(entities);
+	missionManager->Load(missions);
+	dialogManager->Load(dialogs);*/
 }
 
 // Destructor
@@ -37,6 +47,10 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	map->Update(dt);
+	entityManager->Update(dt);
+	missionManager->Update(dt);
+	dialogManager->Update(dt);
 	return true;
 }
 

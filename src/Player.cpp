@@ -9,9 +9,8 @@
 #include "Log.h"
 #include "Physics.h"
 #include "EntityManager.h"
-#include "tracy/Tracy.hpp"
 
-Player::Player(SDL_Texture tex) : Character()
+Player::Player() : Character(EntityType::PLAYER)
 {
 	name = "Player";
 }
@@ -31,28 +30,22 @@ bool Player::Start() {
 	//if (!hasRespawn) respawnPos = *Engine::GetInstance().map->playerStartPos;
 
 	// load
+	//texture = Engine::GetInstance().textures->Load("Assets/Textures/goldCoin.png");
+	//textureDamaged = Engine::GetInstance().textures->Load(textureDamagedPath);
+	//std::unordered_map<int, std::string> aliases = { {0,"idle"},{24,"move"},{40,"jump"},{32,"fall"},{48,"death"},{64,"throw"},{45,"falling"}};
+	//anims.LoadFromTSX(animationsPath, aliases);
+	texturePath = "Assets/Textures/goldCoin.png";
 	texture = Engine::GetInstance().textures->Load(texturePath);
-	textureDamaged = Engine::GetInstance().textures->Load(textureDamagedPath);
-	std::unordered_map<int, std::string> aliases = { {0,"idle"},{24,"move"},{40,"jump"},{32,"fall"},{48,"death"},{64,"throw"},{45,"falling"}};
-	anims.LoadFromTSX(animationsPath, aliases);
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 0, 0);
 
 	texW = 32;
 	texH = 32;
 
-	itemChargeTexture0 = Engine::GetInstance().textures->Load(itemChargeTexture0Path);
-	itemChargeTexture1 = Engine::GetInstance().textures->Load(itemChargeTexture1Path);
-	itemChargeTexture2 = Engine::GetInstance().textures->Load(itemChargeTexture2Path);
-
-	//initialize audio effect
-	
-	checkpointPositions0 = std::vector<b2Vec2>(0);
-	checkpointPositions1 = std::vector<b2Vec2>(0);
 	return true;
 }
 
 bool Player::Update(float dt)
 {
-	ZoneScoped;
 	GodMode();
 	CheckTimers();
 	if (isActive) {
@@ -60,6 +53,7 @@ bool Player::Update(float dt)
 		Move();
 		ApplyPhysics();
 		HandleAnimations();
+		Draw(dt);
 	}
 
 	return true;
@@ -70,8 +64,8 @@ void Player::GodMode()
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
 		godMode = !godMode;
-		if (godMode) b2Body_Disable(pbody->body);
-		else b2Body_Enable(pbody->body);
+		if (godMode) b2Body_Disable(colliders[0]->body);
+		else b2Body_Enable(colliders[0]->body);
 	}
 }
 
@@ -81,25 +75,25 @@ void Player::CheckTimers() {
 
 void Player::GetPhysicsValues() {
 	// Read current velocity
-	velocity = Engine::GetInstance().physics->GetLinearVelocity(pbody);
+	velocity = Engine::GetInstance().physics->GetLinearVelocity(colliders[0]);
 	velocity = { 0, velocity.y };
 }
 
 void Player::Move() {
 	// Move left/right
 	if (godMode) {
-		b2Transform t = Engine::GetInstance().physics->GetTransform(pbody);
+		b2Transform t = Engine::GetInstance().physics->GetTransform(colliders[0]);
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
-			Engine::GetInstance().physics->MoveBody(pbody, b2Vec2{ t.p.x - godModeSpeed, t.p.y }, t.q);
+			Engine::GetInstance().physics->MoveBody(colliders[0], b2Vec2{ t.p.x - godModeSpeed, t.p.y }, t.q);
 		}
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
-			Engine::GetInstance().physics->MoveBody(pbody, b2Vec2{ t.p.x + godModeSpeed, t.p.y }, t.q);
+			Engine::GetInstance().physics->MoveBody(colliders[0], b2Vec2{ t.p.x + godModeSpeed, t.p.y }, t.q);
 		}
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) {
-			Engine::GetInstance().physics->MoveBody(pbody, b2Vec2{ t.p.x, t.p.y - godModeSpeed }, t.q);
+			Engine::GetInstance().physics->MoveBody(colliders[0], b2Vec2{ t.p.x, t.p.y - godModeSpeed }, t.q);
 		}
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
-			Engine::GetInstance().physics->MoveBody(pbody, b2Vec2{ t.p.x, t.p.y + godModeSpeed }, t.q);
+			Engine::GetInstance().physics->MoveBody(colliders[0], b2Vec2{ t.p.x, t.p.y + godModeSpeed }, t.q);
 		}
 	}
 	else {
@@ -125,15 +119,15 @@ void Player::Move() {
 void Player::ApplyPhysics() {
 	// Preserve vertical speed while jumping
 	if (isJumping == true || isDashing == true) {
-		velocity.y = Engine::GetInstance().physics->GetYVelocity(pbody);
+		velocity.y = Engine::GetInstance().physics->GetYVelocity(colliders[0]);
 	}
 
 	if (isDashing == true) {
-		velocity.x = Engine::GetInstance().physics->GetXVelocity(pbody);
+		velocity.x = Engine::GetInstance().physics->GetXVelocity(colliders[0]);
 	}
 
 	// Apply velocity via helper
-	Engine::GetInstance().physics->SetLinearVelocity(pbody, velocity);
+	Engine::GetInstance().physics->SetLinearVelocity(colliders[0], velocity);
 }
 
 void Player::HandleAnimations()
@@ -158,17 +152,16 @@ void Player::HandleAnimations()
 }
 
 void Player::Draw(float dt) {
-	ZoneScoped;
 	if (!draw) return;
-	anims.Update(dt);
-	const SDL_Rect& animFrame = anims.GetCurrentFrame();
+	/*anims.Update(dt);
+	const SDL_Rect& animFrame = anims.GetCurrentFrame();*/
 
 	int x, y;
-	pbody->GetPosition(x, y);
+	colliders[0]->GetPosition(x, y);
 	position.setX((float)x);
 	position.setY((float)y);
 	SDL_Texture* tex = damaged ? textureDamaged : texture;
-	Engine::GetInstance().render->DrawTexture(tex, x - texW / 2, y - 6 - texH / 2, &animFrame, facingRight);
+	Engine::GetInstance().render->DrawTexture(tex, x - texW / 2, y - 6 - texH / 2/*, &animFrame, facingRight*/);
 
 	if (!isActive) return;
 	tex = itemChargeTexture0;
@@ -198,14 +191,14 @@ void Player::OnCollisionEnd(Collider* physA, Collider* physB)
 
 Vector2D Player::GetPosition() {
 	int x, y;
-	pbody->GetPosition(x, y);
+	colliders[0]->GetPosition(x, y);
 	// Adjust for center
 	return Vector2D((float)x, (float)y);
 }
 
 Vector2D Player::GetPositionCenter() {
 	int x, y;
-	pbody->GetPosition(x, y);
+	colliders[0]->GetPosition(x, y);
 	// Adjust for center
 	return Vector2D((float)x + texW / 2, (float)y + texH / 2);
 }

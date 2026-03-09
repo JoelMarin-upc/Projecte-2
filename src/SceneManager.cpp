@@ -23,6 +23,8 @@ bool SceneManager::Awake()
 
 bool SceneManager::Start() 
 {
+	LoadScenes();
+	SetCurrentScene("SC-001");
 	return true;
 }
 
@@ -36,7 +38,7 @@ void SceneManager::LoadScenes()
 {
 	// load from xml
 	scenes = std::list<Scene*>();
-	scenes.push_back(new Scene());
+	scenes.push_back(new Scene("testmap.tmx"));
 }
 
 void SceneManager::SetCurrentScene(std::string sceneID)
@@ -46,18 +48,18 @@ void SceneManager::SetCurrentScene(std::string sceneID)
 
 bool SceneManager::PreUpdate()
 {
-	if (currentScene = nullptr) return true;
+	if (currentScene == nullptr) return true;
 	return currentScene->PreUpdate();
 }
 
 bool SceneManager::Update(float dt)
 {
-	if (currentScene = nullptr) return true;
+	if (currentScene == nullptr) return true;
 	return currentScene->Update(dt);
 }
 
 bool SceneManager::PostUpdate(float dt)
 {
-	if (currentScene = nullptr) return true;
+	if (currentScene == nullptr) return true;
 	return currentScene->PostUpdate(dt);
 }

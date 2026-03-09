@@ -72,6 +72,8 @@ class Scene
 public:
 
 	Scene(std::string mapName);
+	
+	Scene();
 
 	// Destructor
 	virtual ~Scene();

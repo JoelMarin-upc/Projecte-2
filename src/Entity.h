@@ -1,6 +1,6 @@
 #pragma once
 
-#include <list>
+#include <vector>
 #include "Input.h"
 #include "Render.h"
 #include <SDL3/SDL.h>
@@ -27,7 +27,7 @@ class Entity : public std::enable_shared_from_this<Entity>
 public:
 
 	Entity() {}
-	Entity(EntityType _type, SDL_Texture _texture) : type(_type), texture(_texture), active(true) {}
+	Entity(EntityType _type) : type(_type), active(true) {}
 
 	virtual bool Awake()
 	{
@@ -96,7 +96,8 @@ public:
 	bool renderable = true;
 	bool started = false;
 
-	std::list<Collider*> colliders;
-	SDL_Texture texture;
+	std::vector<Collider*> colliders;
+	SDL_Texture* texture;
+	std::string texturePath;
 	
 };

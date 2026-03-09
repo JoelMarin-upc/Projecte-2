@@ -7,7 +7,7 @@
 
 class Inventory {
 public:
-	std::list<Item*> items;
+	std::vector<Item*> items;
 	Gear armor;
 	Weapon weapon;
 };

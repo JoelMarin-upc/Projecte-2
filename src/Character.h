@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Entity.h"
+#include "DynamicEntity.h"
 
-class Character : public Entity {
-
+class Character : public DynamicEntity {
+public:
+	Character() {}
+	Character(EntityType type) : DynamicEntity(type) {}
 };

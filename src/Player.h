@@ -14,14 +14,12 @@ class Player : public Character
 public:
 
 	Player();
-
-	Player(SDL_Texture tex);
 	
 	virtual ~Player();
 
 	bool Awake();
 
-	bool Start();
+	bool Start() override;
 
 	bool Update(float dt);
 	void Draw(float dt);
@@ -54,7 +52,7 @@ public:
 
 	//Declare player parameters
 	float speed = 3.0f;
-	SDL_Texture* texture = NULL;
+	SDL_Texture* texture;
 	SDL_Texture* textureDamaged = NULL;
 	SDL_Texture* itemChargeTexture0 = NULL;
 	SDL_Texture* itemChargeTexture1 = NULL;
@@ -105,7 +103,7 @@ public:
 	float spearOffset = 25.0f;
 	bool spearCol1 = false;
 	bool spearCol2 = false;
-	bool godMode = false;
+	bool godMode = true;
 	float godModeSpeed = 0.1f;
 	std::string currentAnimation = "";
 	float deathMS = 600.0f;

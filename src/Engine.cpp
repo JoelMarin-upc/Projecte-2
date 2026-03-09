@@ -14,6 +14,7 @@
 #include "Physics.h"
 #include "Log.h"
 #include "UIManager.h"
+#include "SceneManager.h"
 
 // Constructor
 Engine::Engine() {
@@ -37,7 +38,7 @@ Engine::Engine() {
     audio = std::make_shared<Audio>();
     // L08: TODO 2: Add Physics module
     physics = std::make_shared<Physics>();
-    entityManager = std::make_shared<EntityManager>();
+    sceneManager = std::make_shared<SceneManager>();
     uiManager = std::make_shared<UIManager>();
 
     // Ordered for awake / Start / Update
@@ -48,7 +49,7 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(audio));
     // L08: TODO 2: Add Physics module
     AddModule(std::static_pointer_cast<Module>(physics));
-    AddModule(std::static_pointer_cast<Module>(entityManager));
+    AddModule(std::static_pointer_cast<Module>(sceneManager));
     AddModule(std::static_pointer_cast<Module>(uiManager));
 
     // Render last 

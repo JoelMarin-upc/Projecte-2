@@ -9,7 +9,7 @@
 #include "Physics.h"
 #include "EntityManager.h"
 
-Item::Item(SDL_Texture tex) : Entity(EntityType::ITEM, tex)
+Item::Item() : Entity(EntityType::ITEM)
 {
 	name = "item";
 }
@@ -53,6 +53,6 @@ bool Item::Destroy()
 {
 	LOG("Destroying item");
 	active = false;
-	Engine::GetInstance().entityManager->DestroyEntity(shared_from_this());
+	//Engine::GetInstance().entityManager->DestroyEntity(shared_from_this());
 	return true;
 }
