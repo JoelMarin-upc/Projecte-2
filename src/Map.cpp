@@ -271,6 +271,19 @@ bool Map::Load(std::string path, std::string fileName)
                 }
             }
 
+            if (mapLayer->name == "NPC") {
+                for (int i = 0; i < mapData.width; i++) {
+                    for (int j = 0; j < mapData.height; j++) {
+                        int gid = mapLayer->Get(i, j);
+                        if (gid == 0) continue;
+                        NPCData npc;
+
+                        Vector2D mapCoord = MapToWorld(i, j);
+                        npcs.push_back(npc);
+                    }
+                }
+            }
+
             if (mapLayer->name == "Items") {
                 for (int i = 0; i < mapData.width; i++) {
                     for (int j = 0; j < mapData.height; j++) {

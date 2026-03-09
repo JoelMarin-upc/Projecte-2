@@ -10,6 +10,12 @@ public:
     int enType;
 };
 
+struct NPCData {
+public:
+    Vector2D position;
+    int npcType;
+};
+
 struct ItemData {
 public:
     Vector2D position;
@@ -34,6 +40,7 @@ public:
     Vector2D playerPosition; 
     Vector2D playerRespawnPoint;
     std::vector<EnemyData> enemies;
+    std::vector<NPCData> npcs;
     std::vector<ItemData> items;
 };
 
