@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Module.h"
+#include "Map.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Timer.h"
@@ -66,10 +67,12 @@ struct SceneData {
 	std::string musicPath;
 };
 
-class Scene : public Module
+class Scene
 {
 public:
 
+	Scene(std::string mapName);
+	
 	Scene();
 
 	// Destructor
@@ -100,10 +103,14 @@ public:
 	void LoadMap();
 	void EndScene();
 
+	Vector2D GetPlayerPosition();
+
 	bool hasEnded;
 
-private:
+	std::string id;
+	std::string name;
 
+private:
 	EntityManager* entityManager;
 	MissionManager* missionManager;
 	DialogManager* dialogManager;

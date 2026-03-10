@@ -147,9 +147,9 @@ void Render::CameraFollow()
 	//camera.x = std::clamp(camera.x, -worldWidth + (float)camera.w, 0.0f);
 	//camera.y = std::clamp(camera.y, -worldHeight + (float)camera.h, 0.0f);
 
-	int mapWidth = Engine::GetInstance().map->mapData.width * Engine::GetInstance().map->mapData.tileWidth;
+	/*int mapWidth = Engine::GetInstance().map->mapData.width * Engine::GetInstance().map->mapData.tileWidth;
 	if (camera.x > 0) camera.x = 0;
-	if (std::abs(camera.x) + camera.w > mapWidth) camera.x = -(mapWidth - camera.w);
+	if (std::abs(camera.x) + camera.w > mapWidth) camera.x = -(mapWidth - camera.w);*/
 }
 
 void Render::SetViewPort(const SDL_Rect& rect)

@@ -10,6 +10,7 @@ class Item : public Entity
 public:
 
 	Item();
+	Item(std::string tex);
 	virtual ~Item();
 
 	bool Awake();

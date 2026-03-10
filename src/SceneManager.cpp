@@ -18,12 +18,13 @@ SceneManager::~SceneManager()
 // Called before render is available
 bool SceneManager::Awake()
 {
-	
 	return true;
 }
 
-bool SceneManager::Start() {
-
+bool SceneManager::Start() 
+{
+	LoadScenes();
+	SetCurrentScene("SC-001");
 	return true;
 }
 
@@ -35,15 +36,30 @@ bool SceneManager::CleanUp()
 
 void SceneManager::LoadScenes()
 {
-
+	// load from xml
+	scenes = std::list<Scene*>();
+	scenes.push_back(new Scene("testmap.tmx"));
 }
 
 void SceneManager::SetCurrentScene(std::string sceneID)
 {
+	for (Scene* s : scenes) if (s->id == sceneID) currentScene = s;
+}
 
+bool SceneManager::PreUpdate()
+{
+	if (currentScene == nullptr) return true;
+	return currentScene->PreUpdate();
 }
 
 bool SceneManager::Update(float dt)
 {
-	return true;
+	if (currentScene == nullptr) return true;
+	return currentScene->Update(dt);
+}
+
+bool SceneManager::PostUpdate(float dt)
+{
+	if (currentScene == nullptr) return true;
+	return currentScene->PostUpdate(dt);
 }

@@ -267,9 +267,9 @@ bool Physics::PostUpdate(float dt)
             dd.DrawTransformFcn = &Physics::DrawTransformStub;
 
             //dd.drawGraphColors;
-            for (auto& enemy : Engine::GetInstance().entityManager->entities) {
-               // enemy->pathfinding->DrawPath();
-            }
+            //for (auto& enemy : Engine::GetInstance().entityManager->entities) {
+            //   // enemy->pathfinding->DrawPath();
+            //}
 
             b2World_Draw(world, &dd);
         }

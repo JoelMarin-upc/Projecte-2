@@ -1,16 +1,15 @@
 #pragma once
 
-#include "Entity.h"
+#include "Character.h"
 #include "Animation.h"
 #include "Timer.h"
-#include "Spear.h"
 #include <box2d/box2d.h>
 #include <SDL3/SDL.h>
 
 constexpr auto PI = 3.14159265;
 struct SDL_Texture;
 
-class Player : public Entity
+class Player : public Character
 {
 public:
 
@@ -20,7 +19,7 @@ public:
 
 	bool Awake();
 
-	bool Start();
+	bool Start() override;
 
 	bool Update(float dt);
 	void Draw(float dt);
@@ -33,26 +32,17 @@ public:
 	Vector2D GetPosition();
 	Vector2D GetPositionCenter();
 
-	void Respawn();
 
 private:
 	void GodMode();
 	void CheckTimers();
-	void CheckGround();
 	void GetPhysicsValues();
 	void Move();
-	void Jump();
-	void CheckThrow();
-	void Throw(std::shared_ptr<Spear>& spear);
-	void Dash();
 	void ApplyPhysics();
-	void Damage();
-	void Die();
 	void HandleAnimations();
 
 public:
 
-	const char* texturePath;
 	const char* textureDamagedPath;
 	const char* animationsPath;
 	const char* itemChargeTexture0Path;
@@ -61,14 +51,12 @@ public:
 
 	//Declare player parameters
 	float speed = 3.0f;
-	SDL_Texture* texture = NULL;
+	SDL_Texture* texture;
 	SDL_Texture* textureDamaged = NULL;
 	SDL_Texture* itemChargeTexture0 = NULL;
 	SDL_Texture* itemChargeTexture1 = NULL;
 	SDL_Texture* itemChargeTexture2 = NULL;
 	bool facingRight = true;
-
-	int texW, texH;
 
 	//Audio fx
 	int jumpFxId;
@@ -112,7 +100,7 @@ public:
 	float spearOffset = 25.0f;
 	bool spearCol1 = false;
 	bool spearCol2 = false;
-	bool godMode = false;
+	bool godMode = true;
 	float godModeSpeed = 0.1f;
 	std::string currentAnimation = "";
 	float deathMS = 600.0f;
@@ -138,8 +126,6 @@ public:
 	bool doorOpen = false;
 
 private:
-	std::shared_ptr<Spear> spear1;
-	std::shared_ptr<Spear> spear2;
 	b2Vec2 velocity;
 	AnimationSet anims;
 	int auxX, auxY;

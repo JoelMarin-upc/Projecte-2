@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Entity.h"
-#include "Animation.h"
 #include "Timer.h"
 #include <box2d/box2d.h>
 

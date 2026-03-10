@@ -3,5 +3,5 @@
 
 class EnemyParty {
 public:
-	std::list<Enemy> members;
+	std::vector<Enemy> members;
 };
