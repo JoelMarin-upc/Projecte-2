@@ -10,6 +10,7 @@
 #include "EntityManager.h"
 #include "MissionManager.h"
 #include "DialogManager.h"
+#include "InteractableItem.h"
 
 struct SDL_Texture;
 
@@ -116,6 +117,7 @@ private:
 	DialogManager* dialogManager;
 	Map* map;
 
+	std::shared_ptr<InteractableItem> testItem;
 	std::shared_ptr<Player> player;
 	SceneData data;
 	XMLHandler* persistance = new XMLHandler();

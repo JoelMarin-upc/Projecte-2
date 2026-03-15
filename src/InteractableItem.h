@@ -10,7 +10,7 @@ enum class InteractionType {
 
 class InteractableItem : public StaticEntity {
 public:
-
+	InteractableItem() {}
 	InteractableItem(InteractionType type);
 	virtual ~InteractableItem();
 

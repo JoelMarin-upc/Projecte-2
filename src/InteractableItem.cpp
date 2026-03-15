@@ -28,8 +28,9 @@ bool InteractableItem::Start() {
 	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 0, 0, 0, 0);
 	texW = 30;
 	texH = 30;
+	colliders[1]->etype = EntityType::ITEM;
+	colliders[1] = sensorCollider;
 	sensorCollider->listener = this;
-	sensorCollider->etype = EntityType::ITEM;
 
 	return true;
 }
@@ -124,4 +125,5 @@ void InteractableItem::Toggle()
 
 void InteractableItem::Dialogue()
 {
+	LOG("Dialogue triggered");
 }

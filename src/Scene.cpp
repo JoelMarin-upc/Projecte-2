@@ -12,6 +12,7 @@ Scene::Scene(std::string mapName)
 	dialogManager = new DialogManager();
 	entityManager->CreateEntity(EntityType::PLAYER);
 	entityManager->CreateEntity(EntityType::NPC);
+	entityManager->CreateEntity(EntityType::INTERACTABLE_ITEM);
 	//map->Load("base map path", mapName);
 	/*entityManager->Load(entities);
 	missionManager->Load(missions);
@@ -36,6 +37,12 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
+	testItem = std::make_shared<InteractableItem>(InteractionType::TOGGLE);
+	testItem->position.setX(200);
+	testItem->position.setY(200);
+	entityManager->AddEntity(testItem);
+	testItem->Start();
+
 	return true;
 }
 
