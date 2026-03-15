@@ -44,6 +44,8 @@ public:
     bool SaveFileExists();
     SaveData Load();
     void Save(SaveData data);
-    
+
+    static pugi::xml_node LoadFile(const char* filePath);
+
     const char* saveFileName = "gamesave.xml";
 };

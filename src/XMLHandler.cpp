@@ -100,3 +100,11 @@ void XMLHandler::Save(SaveData data)
 
     doc.save_file(saveFileName);
 }
+
+pugi::xml_node XMLHandler::LoadFile(const char* filePath)
+{
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_file(saveFileName);
+    if (result.status == pugi::xml_parse_status::status_ok) return doc.first_child();
+    else return pugi::xml_node();
+}

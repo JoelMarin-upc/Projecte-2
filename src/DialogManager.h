@@ -7,7 +7,7 @@
 #include "UILabel.h"
 #include "UIButton.h"
 
-class DialogManager
+class DialogManager : public Module
 {
 public:
 	DialogManager();
@@ -31,19 +31,28 @@ public:
 
 	void SetCurrentDialog(std::string characterId);
 
-	void ShowDialog(DialogTree* dialog);
+	void ShowDialog();
 
-	std::list<std::shared_ptr<DialogTree>> dialogs;
+	bool OnUIMouseClickEvent(UIElement* uiElement);
+
+	std::list<DialogTree*> dialogs;
 	bool paused = false;
 
 private:
 
 	DialogTree* currentDialog;
 	SDL_Texture dialogBox;
-	UILabel dialogText;
-	UIButton answer1;
-	UIButton answer2;
-	UIButton answer3;
-	UIButton answer4;
+	std::shared_ptr<UILabel> dialogText;
+	std::shared_ptr<UIButton> answer1;
+	std::shared_ptr<UIButton> answer2;
+	std::shared_ptr<UIButton> answer3;
+	std::shared_ptr<UIButton> answer4;
 
+	enum DIALOG_UIID {
+		LABEL,
+		ANSWER1,
+		ANSWER2,
+		ANSWER3,
+		ANSWER4
+	};
 };

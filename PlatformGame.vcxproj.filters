@@ -288,6 +288,9 @@
     <ClCompile Include="src\Character.cpp">
       <Filter>Source Files\Scene\Entities\Characters</Filter>
     </ClCompile>
+    <ClCompile Include="src\DialogAnswer.cpp">
+      <Filter>Source Files\Scene\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio.h">
@@ -494,11 +497,17 @@
     <ClInclude Include="src\Character.h">
       <Filter>Source Files\Scene\Entities\Characters</Filter>
     </ClInclude>
+    <ClInclude Include="src\DialogAnswer.h">
+      <Filter>Source Files\Scene\Dialog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml">
       <Filter>Configuration FIles</Filter>
     </Xml>
     <Xml Include="gamesave.xml" />
+    <Xml Include="Assets\Dialogues\test.xml">
+      <Filter>Configuration FIles</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

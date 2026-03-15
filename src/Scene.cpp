@@ -10,8 +10,8 @@ Scene::Scene(std::string mapName)
 	entityManager = new EntityManager();
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
-	entityManager->CreateEntity(EntityType::PLAYER);
-	entityManager->CreateEntity(EntityType::NPC);
+	entityManager->CreateEntity("player", EntityType::PLAYER);
+	entityManager->CreateEntity("CH-001", EntityType::NPC);
 	//map->Load("base map path", mapName);
 	/*entityManager->Load(entities);
 	missionManager->Load(missions);
@@ -99,4 +99,15 @@ void Scene::LoadMap()
 void Scene::EndScene()
 {
 	
+}
+
+void Scene::StartDialog(std::string characterId)
+{
+	entityManager->paused = true;
+	dialogManager->SetCurrentDialog(characterId);
+}
+
+void Scene::EndDialog()
+{
+	entityManager->paused = false;
 }

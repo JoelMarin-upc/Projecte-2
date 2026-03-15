@@ -33,6 +33,12 @@ public:
 
 	void SetCurrentScene(std::string sceneID);
 
+	EntityManager* GetEntityManager() const;
+
+	MissionManager* GetMissionManager() const;
+
+	DialogManager* GetDialogManager() const;
+
 public:
 
 	std::list<Scene*> scenes;

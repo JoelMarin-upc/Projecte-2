@@ -103,6 +103,9 @@ public:
 	void LoadMap();
 	void EndScene();
 
+	void StartDialog(std::string characterId);
+	void EndDialog();
+
 	Vector2D GetPlayerPosition();
 
 	bool hasEnded;
@@ -110,10 +113,12 @@ public:
 	std::string id;
 	std::string name;
 
-private:
 	EntityManager* entityManager;
 	MissionManager* missionManager;
 	DialogManager* dialogManager;
+
+private:
+	
 	Map* map;
 
 	std::shared_ptr<Player> player;
@@ -121,5 +126,6 @@ private:
 	XMLHandler* persistance = new XMLHandler();
 	Timer gameTimer;
 	bool paused = false;
+	bool stopped = false;
 
 };

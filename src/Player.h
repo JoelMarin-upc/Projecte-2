@@ -13,7 +13,7 @@ class Player : public Character
 {
 public:
 
-	Player();
+	Player(std::string id);
 	
 	virtual ~Player();
 

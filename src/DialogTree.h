@@ -10,6 +10,8 @@ public:
 	std::vector<DialogNode*> nodes;
 	bool done;
 	int order;
+	DialogNode* currentNode;
+
 private:
 	
 };

@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Entity.h"
+#include "DynamicEntity.h"
 #include <SDL3/SDL.h>
 
 struct SDL_Texture;
 
-class Item : public Entity
+class Item : public DynamicEntity
 {
 public:
 
 	Item();
-	Item(std::string tex);
+	Item(std::string id) : DynamicEntity(id, EntityType::ITEM);
 	virtual ~Item();
 
 	bool Awake();
