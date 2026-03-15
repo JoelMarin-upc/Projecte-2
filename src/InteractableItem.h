@@ -1,40 +1,55 @@
 #pragma once
 
-#include "Item.h"
+#include "StaticEntity.h"
 
-class InteractableItem : Item {
+enum class InteractionType {
+	PICKUP,
+	TOGGLE,
+	DIALOGUE
+};
+
+class InteractableItem : public StaticEntity {
 public:
 
-	InteractableItem();
+	InteractableItem(InteractionType type);
 	virtual ~InteractableItem();
 
-	bool Awake();
+	virtual bool Awake() override;
 
-	bool Start();
+	virtual bool Start() override;
 
-	bool Update(float dt);
+	virtual bool Update(float dt) override;
 
-	void Draw(float dt);
+	virtual void Draw(float dt) override;
 
-	bool CleanUp();
+	virtual bool CleanUp() override;
 
-	bool Destroy();
+	virtual void OnCollision(Collider* physA, Collider* physB) override;
 
-	void Interact();
+	virtual void OnCollisionEnd(Collider* physA, Collider* physB) override;
+
+protected:
+	virtual void Interact();
+
+	virtual void Pickup();
+
+	virtual void Toggle();
+
+	virtual void Dialogue();
 
 public:
-
+	bool isPlayerInRange = false;
 	bool isPicked = false;
 
-private:
+protected:
+	//Dialogue type by default
+	InteractionType interactionType = InteractionType::DIALOGUE;
 
-	SDL_Texture* texture;
-	SDL_Texture* pickupTexture;
-	const char* texturePath;
-	const char* pickupTexturePath;
-	int texW, texH;
-	int pickupTexW, pickupTexH;
+	SDL_Texture* pickupIcon;
+	const char* pickupIconPath;
+	int pickupIconW = 16;
+	int pickupIconH = 16;
 
 	//L08 TODO 4: Add a physics to an item
-	Collider* pbody;
+	Collider* sensorCollider;
 };
