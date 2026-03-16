@@ -25,12 +25,18 @@ bool InteractableItem::Start() {
 	pickupIconPath = "Assets/Textures/item.png";
 	texture = Engine::GetInstance().textures->Load(texturePath);
 	pickupIcon = Engine::GetInstance().textures->Load(pickupIconPath);
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 0, 0);
 	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 0, 0, 0, 0);
 	texW = 30;
 	texH = 30;
-	colliders[1]->etype = EntityType::ITEM;
-	colliders[1] = sensorCollider;
-	sensorCollider->listener = this;
+	pbody = colliders[0];
+	colliders[0]->etype = EntityType::INTERACTABLE_ITEM;
+
+	//pbody->listener = this;
+	sensorCollider = colliders[1];
+	colliders[1]->etype = EntityType::INTERACTABLE_ITEM;
+
+	//sensorCollider->listener = this;
 
 	return true;
 }
@@ -53,7 +59,7 @@ void InteractableItem::Draw(float dt) {
 	}
 
 	int x, y;
-	sensorCollider->GetPosition(x, y);
+	pbody->GetPosition(x, y);
 	Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2);
 
 	//To draw pick up icon next to the item sprite, adjustable later

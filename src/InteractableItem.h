@@ -51,5 +51,6 @@ protected:
 	int pickupIconH = 16;
 
 	//L08 TODO 4: Add a physics to an item
+	Collider* pbody;
 	Collider* sensorCollider;
 };
