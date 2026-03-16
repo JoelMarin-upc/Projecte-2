@@ -30,7 +30,7 @@ bool Player::Start() {
 	//if (!hasRespawn) respawnPos = *Engine::GetInstance().map->playerStartPos;
 
 	// load
-	//texture = Engine::GetInstance().textures->Load("Assets/Textures/goldCoin.png");
+	texture = Engine::GetInstance().textures->Load("Assets/Textures/goldCoin.png");
 	//textureDamaged = Engine::GetInstance().textures->Load(textureDamagedPath);
 	//std::unordered_map<int, std::string> aliases = { {0,"idle"},{24,"move"},{40,"jump"},{32,"fall"},{48,"death"},{64,"throw"},{45,"falling"}};
 	//anims.LoadFromTSX(animationsPath, aliases);
@@ -82,37 +82,73 @@ void Player::GetPhysicsValues() {
 void Player::Move() {
 	// Move left/right
 	if (godMode) {
-		b2Transform t = Engine::GetInstance().physics->GetTransform(colliders[0]);
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
-			Engine::GetInstance().physics->MoveBody(colliders[0], b2Vec2{ t.p.x - godModeSpeed, t.p.y }, t.q);
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+			velocity.y = -speed;
+			currentFacingDirection = UP;
 		}
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
-			Engine::GetInstance().physics->MoveBody(colliders[0], b2Vec2{ t.p.x + godModeSpeed, t.p.y }, t.q);
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			velocity.x = -speed;
+			currentFacingDirection = LEFT;
 		}
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) {
-			Engine::GetInstance().physics->MoveBody(colliders[0], b2Vec2{ t.p.x, t.p.y - godModeSpeed }, t.q);
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+			velocity.y = speed;
+			currentFacingDirection = DOWN;
 		}
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
-			Engine::GetInstance().physics->MoveBody(colliders[0], b2Vec2{ t.p.x, t.p.y + godModeSpeed }, t.q);
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			velocity.x = speed;
+			currentFacingDirection = RIGHT;
+		}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) != KEY_REPEAT &&
+			Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) != KEY_REPEAT){
+			velocity.y = 0;
+		}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) != KEY_REPEAT &&
+			Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) != KEY_REPEAT) {
+			velocity.x = 0;
 		}
 	}
+
 	else {
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
-			velocity.x = -speed;
-			facingRight = false;
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+			velocity.y = -speed;
+			currentFacingDirection = UP;
 			if (!isJumping && walkTimer.ReadMSec() > walkMS) {
 				Engine::GetInstance().audio->PlayFx(walkFxId);
 				walkTimer = Timer();
 			}
 		}
-			if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
-				velocity.x = speed;
-				facingRight = true;
-				if (!isJumping && walkTimer.ReadMSec() > walkMS) {
-					Engine::GetInstance().audio->PlayFx(walkFxId);
-					walkTimer = Timer();
-				}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			velocity.x = -speed;
+			currentFacingDirection = LEFT;
+			if (!isJumping && walkTimer.ReadMSec() > walkMS) {
+				Engine::GetInstance().audio->PlayFx(walkFxId);
+				walkTimer = Timer();
 			}
+		}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+			velocity.y = speed;
+			currentFacingDirection = DOWN;
+			if (!isJumping && walkTimer.ReadMSec() > walkMS) {
+				Engine::GetInstance().audio->PlayFx(walkFxId);
+				walkTimer = Timer();
+			}
+		}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			velocity.x = speed;
+			currentFacingDirection = RIGHT;
+			if (!isJumping && walkTimer.ReadMSec() > walkMS) {
+				Engine::GetInstance().audio->PlayFx(walkFxId);
+				walkTimer = Timer();
+			}
+		}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) != KEY_REPEAT &&
+			Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) != KEY_REPEAT) {
+			velocity.y = 0;
+		}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) != KEY_REPEAT &&
+			Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) != KEY_REPEAT) {
+			velocity.x = 0;
+		}
 	}
 }
 
