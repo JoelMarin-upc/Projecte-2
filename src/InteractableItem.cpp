@@ -21,22 +21,24 @@ bool InteractableItem::Awake() {
 }
 
 bool InteractableItem::Start() {
-	texturePath = "Assets/Textures/heart.png";
+	texturePath = "Assets/Textures/door_open.png";
 	pickupIconPath = "Assets/Textures/item.png";
 	texture = Engine::GetInstance().textures->Load(texturePath);
 	pickupIcon = Engine::GetInstance().textures->Load(pickupIconPath);
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 0, 0);
-	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 0, 0, 0, 0);
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 1, 1);
+	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 50, 50, 1, 1);
 	texW = 30;
 	texH = 30;
+
 	pbody = colliders[0];
 	colliders[0]->etype = EntityType::INTERACTABLE_ITEM;
+	pbody->listener = this;
+	//pbody->listener->type = EntityType::INTERACTABLE_ITEM;
 
-	//pbody->listener = this;
 	sensorCollider = colliders[1];
 	colliders[1]->etype = EntityType::INTERACTABLE_ITEM;
-
-	//sensorCollider->listener = this;
+	sensorCollider->listener = this;
+	//sensorCollider->listener->type = EntityType::INTERACTABLE_ITEM;
 
 	return true;
 }
@@ -46,7 +48,7 @@ bool InteractableItem::Update(float dt) {
 		return true;
 	}
 	if (isPlayerInRange) {
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
 			Interact();
 		}
 	}
