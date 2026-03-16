@@ -18,7 +18,8 @@ enum class EntityType
 	ENEMY_AIR,
 	ENEMY_GROUND,
 	BOSS,
-	UNKNOWN
+	UNKNOWN,
+	WALL
 };
 
 class Collider;

@@ -4,25 +4,27 @@
 #include <vector>
 #include "Vector2D.h"
 
-struct EnemyData {
+struct NPCData {
 public:
     Vector2D position;
-    int enType;
+    std::string id;
+    int type;
 };
 
 struct ItemData {
 public:
     Vector2D position;
+    std::string id;
     char type;
 };
 
 class SaveData {
 public:
-    SaveData(int _currentScene, int _time, int _lives, int _coins, bool _hasItem1, bool _hasItem2, Vector2D _playerPosition, Vector2D _playerRespawnPoint, std::vector<EnemyData> _enemies, std::vector<ItemData> _items)
-        : currentScene(_currentScene), time(_time), lives(_lives), coins(_coins), hasItem1(_hasItem1), hasItem2(_hasItem2), playerPosition(_playerPosition), playerRespawnPoint(_playerRespawnPoint), enemies(_enemies), items(_items), exists(true) { };
+    SaveData(int _currentScene, int _time, int _lives, int _coins, bool _hasItem1, bool _hasItem2, Vector2D _playerPosition, Vector2D _playerRespawnPoint, std::vector<NPCData> _npcs, std::vector<ItemData> _items)
+        : currentScene(_currentScene), time(_time), lives(_lives), coins(_coins), hasItem1(_hasItem1), hasItem2(_hasItem2), playerPosition(_playerPosition), playerRespawnPoint(_playerRespawnPoint), npcs(_npcs), items(_items), exists(true) { };
 
     SaveData()
-        : currentScene(0), time(0), lives(0), coins(0), hasItem1(0), hasItem2(0), playerPosition({0, 0}), playerRespawnPoint({0, 0}), enemies({}), items({}), exists(false) { };
+        : currentScene(0), time(0), lives(0), coins(0), hasItem1(0), hasItem2(0), playerPosition({0, 0}), playerRespawnPoint({0, 0}), npcs({}), items({}), exists(false) { };
 
     bool exists;
     int currentScene;
@@ -33,7 +35,7 @@ public:
     bool hasItem2;
     Vector2D playerPosition; 
     Vector2D playerRespawnPoint;
-    std::vector<EnemyData> enemies;
+    std::vector<NPCData> npcs;
     std::vector<ItemData> items;
 };
 
