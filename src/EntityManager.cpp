@@ -64,7 +64,7 @@ bool EntityManager::CleanUp()
 	return ret;
 }
 
-std::shared_ptr<Entity> EntityManager::CreateEntity(EntityType type)
+std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, EntityType type)
 {
 	std::shared_ptr<Entity> entity = std::make_shared<Entity>();
 
@@ -72,13 +72,13 @@ std::shared_ptr<Entity> EntityManager::CreateEntity(EntityType type)
 	switch (type)
 	{
 	case EntityType::PLAYER:
-		entity = std::make_shared<Player>();
+		entity = std::make_shared<Player>(id);
 		break;
 	case EntityType::NPC:
-		entity = std::make_shared<NPC>();
+		entity = std::make_shared<NPC>(id);
 		break;
 	case EntityType::ITEM:
-		entity = std::make_shared<Item>();
+		entity = std::make_shared<Item>(id);
 		break;
 	default:
 		break;

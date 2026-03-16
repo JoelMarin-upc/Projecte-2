@@ -26,7 +26,7 @@ public:
 	bool CleanUp();
 
 	// Additional methods
-	std::shared_ptr<Entity> CreateEntity(EntityType type);
+	std::shared_ptr<Entity> CreateEntity(std::string id, EntityType type);
 
 	void DestroyEntity(std::shared_ptr<Entity> entity);
 

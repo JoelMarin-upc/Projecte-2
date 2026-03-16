@@ -9,7 +9,7 @@
 #include "Physics.h"
 #include "EntityManager.h"
 
-Item::Item() : Entity(EntityType::ITEM)
+Item::Item(std::string id) : DynamicEntity(id, EntityType::ITEM)
 {
 	name = "item";
 }

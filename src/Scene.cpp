@@ -10,8 +10,8 @@ Scene::Scene(std::string mapName)
 	entityManager = new EntityManager();
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
-	entityManager->CreateEntity(EntityType::PLAYER);
-	entityManager->CreateEntity(EntityType::NPC);
+	entityManager->CreateEntity("player", EntityType::PLAYER);
+	entityManager->CreateEntity("CH-001", EntityType::NPC);
 	//map->Load("base map path", mapName);
 	/*entityManager->Load(entities);
 	missionManager->Load(missions);
@@ -28,7 +28,9 @@ bool Scene::Awake()
 	LOG("Loading Scene");
 	bool ret = true;
 
-	
+	entityManager->Awake();
+	missionManager->Awake();
+	dialogManager->Awake();
 
 	return ret;
 }
@@ -36,6 +38,10 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
+	entityManager->Start();
+	missionManager->Start();
+	dialogManager->Start();
+
 	return true;
 }
 
@@ -48,6 +54,7 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("CH-001");
 	map->Update(dt);
 	entityManager->Update(dt);
 	missionManager->Update(dt);
@@ -99,4 +106,18 @@ void Scene::LoadMap()
 void Scene::EndScene()
 {
 	
+}
+
+void Scene::StartDialog(std::string characterId)
+{
+	if (isOnDialog) return;
+	if (!dialogManager->SetCurrentDialog(characterId)) return;
+	isOnDialog = true;
+	entityManager->paused = true;
+}
+
+void Scene::EndDialog()
+{
+	isOnDialog = false;
+	entityManager->paused = false;
 }

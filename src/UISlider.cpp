@@ -137,7 +137,7 @@ bool UISlider::Update(float dt)
 		else
 		{
 			if (mouseOverSlider) {
-				if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED) Engine::GetInstance().audio->PlayFx(hoverFxId);
+				if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED && hoverFxId != -1) Engine::GetInstance().audio->PlayFx(hoverFxId);
 				state = UIElementState::FOCUSED;
 			}
 			else
@@ -146,7 +146,7 @@ bool UISlider::Update(float dt)
 			if (mouseOverSlider &&
 				Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 			{
-				Engine::GetInstance().audio->PlayFx(clickFxId);
+				if (clickFxId != -1) Engine::GetInstance().audio->PlayFx(clickFxId);
 				state = UIElementState::PRESSED;
 			}
 		}

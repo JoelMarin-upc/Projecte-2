@@ -1,0 +1,63 @@
+<dialogs>
+	<tree id="DT-001" characterId="CH-001" order="1" done="false">
+		<node id="DN-001" first="true">
+			Hi this is my test dialog
+			<answer leadsToNodeId="DN-002">
+				Answer 1
+			</answer>
+			<answer leadsToNodeId="DN-003">
+				Answer 2
+			</answer>
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			This is my test reply 1
+			<answer leadsToNodeId="DN-004">
+				Single answer 1
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			This is my test reply 2
+			<answer leadsToNodeId="DN-004">
+				Single answer 2
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			This is the last reply
+			<answer leadsToNodeId="">
+				End conversarion
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-001" characterId="CH-001" order="2" done="false">
+		<node id="DN-001" first="true">
+			Hi this is my test dialog num 2
+			<answer leadsToNodeId="DN-002">
+				Answer 1
+			</answer>
+			<answer leadsToNodeId="DN-003">
+				Answer 2
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			This is my test reply 1
+			<answer leadsToNodeId="DN-004">
+				Single answer 1
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			This is my test reply 2
+			<answer leadsToNodeId="DN-004">
+				Single answer 2
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			This is the last reply
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+	</tree>
+</dialogs>
