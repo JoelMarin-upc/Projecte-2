@@ -56,7 +56,13 @@ public:
 	SDL_Texture* itemChargeTexture0 = NULL;
 	SDL_Texture* itemChargeTexture1 = NULL;
 	SDL_Texture* itemChargeTexture2 = NULL;
-	bool facingRight = true;
+	enum FacingDirection {
+		UP,
+		LEFT,
+		DOWN,
+		RIGHT
+	};
+	FacingDirection currentFacingDirection;
 
 	//Audio fx
 	int jumpFxId;
