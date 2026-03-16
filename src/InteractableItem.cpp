@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Physics.h"
 #include "EntityManager.h"
+#include "SceneManager.h"
 
 InteractableItem::InteractableItem(InteractionType type)
 {
@@ -105,6 +106,7 @@ void InteractableItem::OnCollisionEnd(Collider* physA, Collider* physB)
 
 void InteractableItem::Interact()
 {
+	Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
 	switch (interactionType)
 	{
 	case InteractionType::PICKUP:   
@@ -112,9 +114,6 @@ void InteractableItem::Interact()
 		break;
 	case InteractionType::TOGGLE:   
 		Toggle();   
-		break;
-	case InteractionType::DIALOGUE: 
-		Dialogue(); 
 		break;
 	default:
 		break;
@@ -129,9 +128,4 @@ void InteractableItem::Pickup()
 void InteractableItem::Toggle()
 {
 	LOG("'%s' toggled", name.c_str());
-}
-
-void InteractableItem::Dialogue()
-{
-	LOG("Dialogue triggered");
 }

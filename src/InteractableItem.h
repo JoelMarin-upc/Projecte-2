@@ -5,7 +5,6 @@
 enum class InteractionType {
 	PICKUP,
 	TOGGLE,
-	DIALOGUE
 };
 
 class InteractableItem : public StaticEntity {
@@ -35,15 +34,13 @@ protected:
 
 	virtual void Toggle();
 
-	virtual void Dialogue();
-
 public:
 	bool isPlayerInRange = false;
 	bool isPicked = false;
 
 protected:
 	//Dialogue type by default
-	InteractionType interactionType = InteractionType::DIALOGUE;
+	InteractionType interactionType = InteractionType::TOGGLE;
 
 	SDL_Texture* pickupIcon;
 	const char* pickupIconPath;
