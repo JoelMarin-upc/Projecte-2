@@ -126,6 +126,6 @@ private:
 	XMLHandler* persistance = new XMLHandler();
 	Timer gameTimer;
 	bool paused = false;
-	bool stopped = false;
+	bool isOnDialog = false;
 
 };

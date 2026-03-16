@@ -29,7 +29,7 @@ public:
 
 	void LoadDialogs();
 
-	void SetCurrentDialog(std::string characterId);
+	bool SetCurrentDialog(std::string characterId = "");
 
 	void ShowDialog();
 
@@ -41,7 +41,7 @@ public:
 private:
 
 	DialogTree* currentDialog;
-	SDL_Texture dialogBox;
+	SDL_Texture* dialogBox;
 	std::shared_ptr<UILabel> dialogText;
 	std::shared_ptr<UIButton> answer1;
 	std::shared_ptr<UIButton> answer2;

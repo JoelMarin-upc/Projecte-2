@@ -72,13 +72,13 @@ std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, EntityType t
 	switch (type)
 	{
 	case EntityType::PLAYER:
-		entity = std::make_shared<Player>(id, type);
+		entity = std::make_shared<Player>(id);
 		break;
 	case EntityType::NPC:
-		entity = std::make_shared<NPC>(id, type);
+		entity = std::make_shared<NPC>(id);
 		break;
 	case EntityType::ITEM:
-		entity = std::make_shared<Item>(id, type);
+		entity = std::make_shared<Item>(id);
 		break;
 	default:
 		break;

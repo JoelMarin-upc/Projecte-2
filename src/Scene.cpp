@@ -28,7 +28,9 @@ bool Scene::Awake()
 	LOG("Loading Scene");
 	bool ret = true;
 
-	
+	entityManager->Awake();
+	missionManager->Awake();
+	dialogManager->Awake();
 
 	return ret;
 }
@@ -36,6 +38,10 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
+	entityManager->Start();
+	missionManager->Start();
+	dialogManager->Start();
+
 	return true;
 }
 
@@ -48,6 +54,7 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("CH-001");
 	map->Update(dt);
 	entityManager->Update(dt);
 	missionManager->Update(dt);
@@ -103,11 +110,14 @@ void Scene::EndScene()
 
 void Scene::StartDialog(std::string characterId)
 {
+	if (isOnDialog) return;
+	if (!dialogManager->SetCurrentDialog(characterId)) return;
+	isOnDialog = true;
 	entityManager->paused = true;
-	dialogManager->SetCurrentDialog(characterId);
 }
 
 void Scene::EndDialog()
 {
+	isOnDialog = false;
 	entityManager->paused = false;
 }

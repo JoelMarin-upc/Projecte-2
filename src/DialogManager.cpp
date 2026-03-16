@@ -1,8 +1,12 @@
 #include "DialogManager.h"
 #include "XMLHandler.h"
 #include <limits>
+#include <algorithm>
 #include "Engine.h"
 #include "UIManager.h"
+#include "Window.h"
+#include "SceneManager.h"
+#include "Textures.h"
 
 DialogManager::DialogManager()
 {
@@ -18,11 +22,20 @@ bool DialogManager::Awake() {
 
 // Called after Awake
 bool DialogManager::Start() {
-	dialogText = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)LABEL, { 0, 0, 200, 200 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
-	answer1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER1, { 0, 0, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	answer2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER2, { 0, 0, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	answer3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER3, { 0, 0, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	answer4 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER4, { 0, 0, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+
+	LoadDialogs();
+
+	int sw = Engine::GetInstance().window->width;
+	int sh = Engine::GetInstance().window->height;
+
+	dialogBox = Engine::GetInstance().textures->Load("Assets/Dialogue/back.png");
+	dialogText = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)LABEL, { sw / 2 - 110, sh - 140, 220, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
+	answer1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER1, { sw / 2 - 110, sh - 80, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	answer2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER2, { sw / 2 + 10, sh - 80, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	answer3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER3, { sw / 2 - 110, sh - 40, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	answer4 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER4, { sw / 2 + 10, sh - 40, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+
+	SetCurrentDialog();
 
 	return true;
 }
@@ -37,8 +50,10 @@ bool DialogManager::CleanUp() {
 
 void DialogManager::LoadDialogs()
 {
-	pugi::xml_node root = XMLHandler::LoadFile("Assets/Dialogues/test.xml"); // get all dialogues from Assets/Dialogues/...
-	for (pugi::xml_node treeNode = root.child("tree"); treeNode != NULL; treeNode = root.next_sibling("tree")) {
+	dialogs = std::list<DialogTree*>();
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Dialogues/test.xml"); // get all dialogues from Assets/Dialogues/...
+	pugi::xml_node root = doc.child("dialogs");
+	for (pugi::xml_node treeNode = root.child("tree"); treeNode != NULL; treeNode = treeNode.next_sibling("tree")) {
 		DialogTree* tree = new DialogTree();
 		tree->id = treeNode.attribute("id").as_string();
 		tree->characterId = treeNode.attribute("characterId").as_string();
@@ -46,28 +61,33 @@ void DialogManager::LoadDialogs()
 		tree->done = treeNode.attribute("done").as_bool();
 		tree->nodes = std::vector<DialogNode*>();
 
-		for (pugi::xml_node nodeXml = treeNode.child("node"); nodeXml != NULL; nodeXml = treeNode.next_sibling("node")) {
+		for (pugi::xml_node nodeXml = treeNode.child("node"); nodeXml != NULL; nodeXml = nodeXml.next_sibling("node")) {
 			DialogNode* node = new DialogNode();
 			node->id = nodeXml.attribute("id").as_string();
 			node->first = nodeXml.attribute("first").as_bool();
-			node->text = nodeXml.value();
+			node->text = nodeXml.child_value();
+			node->text.erase(std::remove(node->text.begin(), node->text.end(), '\n'), node->text.end());
+			node->text.erase(std::remove(node->text.begin(), node->text.end(), '\t'), node->text.end());
 			node->answers = std::vector<DialogAnswer*>();
 
 			if (node->first) tree->currentNode = node;
 
-			for (pugi::xml_node answerNode = nodeXml.child("answer"); answerNode != NULL; answerNode = nodeXml.next_sibling("answer")) {
+			for (pugi::xml_node answerNode = nodeXml.child("answer"); answerNode != NULL; answerNode = answerNode.next_sibling("answer")) {
 				DialogAnswer* answer = new DialogAnswer();
 				answer->leadsToNodeId = answerNode.attribute("leadsToNodeId").as_string();
-				answer->text = answerNode.value();
+				answer->text = answerNode.child_value();
+				answer->text.erase(std::remove(answer->text.begin(), answer->text.end(), '\n'), answer->text.end());
+				answer->text.erase(std::remove(answer->text.begin(), answer->text.end(), '\t'), answer->text.end());
 				node->answers.push_back(answer);
 			}
 
 			tree->nodes.push_back(node);
 		}
+		dialogs.push_back(tree);
 	}
 }
 
-void DialogManager::SetCurrentDialog(std::string characterId)
+bool DialogManager::SetCurrentDialog(std::string characterId)
 {
 	if (characterId == "")
 	{
@@ -82,7 +102,7 @@ void DialogManager::SetCurrentDialog(std::string characterId)
 		answer2->active = false;
 		answer3->active = false;
 		answer4->active = false;
-		return;
+		return false;
 	}
 
 	DialogTree* dialog = nullptr;
@@ -101,6 +121,8 @@ void DialogManager::SetCurrentDialog(std::string characterId)
 	}
 
 	currentDialog = dialog;
+	ShowDialog();
+	return currentDialog != nullptr;
 }
 
 void DialogManager::ShowDialog()
@@ -111,7 +133,11 @@ void DialogManager::ShowDialog()
 
 	if (!node) return;
 
+	//Engine dialogBox
+
 	dialogText->text = node->text;
+	dialogText->active = true;
+
 	if (node->answers.size() > 0) {
 		answer1->active = true;
 		answer1->text = node->answers[0]->text;
@@ -173,10 +199,23 @@ bool DialogManager::OnUIMouseClickEvent(UIElement* uiElement)
 
 	std::string nextId = currentDialog->currentNode->answers[answerNum]->leadsToNodeId;
 
+	if (nextId == "") {
+		currentDialog->done = true;
+		SetCurrentDialog();
+		Engine::GetInstance().sceneManager->currentScene->EndDialog();
+		return true;
+	}
+
 	for (DialogNode* n : currentDialog->nodes)
 	{
-		if (n->id == nextId) currentDialog->currentNode = n;
+		if (n->id == nextId)
+		{
+			currentDialog->currentNode = n;
+			break;
+		}
 	}
+
+	ShowDialog();
 
 	return true;
 }

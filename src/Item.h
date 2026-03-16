@@ -10,7 +10,7 @@ class Item : public DynamicEntity
 public:
 
 	Item();
-	Item(std::string id) : DynamicEntity(id, EntityType::ITEM);
+	Item(std::string id);
 	virtual ~Item();
 
 	bool Awake();
