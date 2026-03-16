@@ -36,7 +36,7 @@ bool UIButton::Update(float dt)
 		//If the position of the mouse if inside the bounds of the button 
 		if (mousePos.getX() > bounds.x && mousePos.getX() < bounds.x + bounds.w && mousePos.getY() > bounds.y && mousePos.getY() < bounds.y + bounds.h) {
 			
-			if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED) Engine::GetInstance().audio->PlayFx(hoverFxId);
+			if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED && hoverFxId != -1) Engine::GetInstance().audio->PlayFx(hoverFxId);
 
 			state = UIElementState::FOCUSED;
 
@@ -45,7 +45,7 @@ bool UIButton::Update(float dt)
 			}
 
 			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
-				Engine::GetInstance().audio->PlayFx(clickFxId);
+				if (clickFxId != -1) Engine::GetInstance().audio->PlayFx(clickFxId);
 				NotifyObserver();
 			}
 		}

@@ -10,7 +10,7 @@
 #include "Physics.h"
 #include "EntityManager.h"
 
-Player::Player() : Character(EntityType::PLAYER)
+Player::Player(std::string id) : Character(id, EntityType::PLAYER)
 {
 	name = "Player";
 }

@@ -165,6 +165,7 @@
     <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\Combat.cpp" />
     <ClCompile Include="src\Consumable.cpp" />
+    <ClCompile Include="src\DialogAnswer.cpp" />
     <ClCompile Include="src\DialogManager.cpp" />
     <ClCompile Include="src\DialogNode.cpp" />
     <ClCompile Include="src\DialogTree.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="src\Collider.h" />
     <ClInclude Include="src\Combat.h" />
     <ClInclude Include="src\Consumable.h" />
+    <ClInclude Include="src\DialogAnswer.h" />
     <ClInclude Include="src\DialogManager.h" />
     <ClInclude Include="src\DialogNode.h" />
     <ClInclude Include="src\DialogTree.h" />
@@ -292,6 +294,7 @@
     <ClInclude Include="src\Zombie.h" />
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="Assets\Dialogues\test.xml" />
     <Xml Include="config.xml" />
     <Xml Include="gamesave.xml" />
   </ItemGroup>

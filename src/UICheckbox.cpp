@@ -46,13 +46,13 @@ bool UICheckbox::Update(float dt)
 		//If the position of the mouse if inside the bounds of the button 
 		if (mouseOver) {
 
-			if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED) Engine::GetInstance().audio->PlayFx(hoverFxId);
+			if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED && hoverFxId != -1) Engine::GetInstance().audio->PlayFx(hoverFxId);
 			state = UIElementState::FOCUSED;
 
 			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
 				checked = !checked;
 				state = checked ? UIElementState::PRESSED : UIElementState::FOCUSED;
-				Engine::GetInstance().audio->PlayFx(clickFxId);
+				if (clickFxId != -1) Engine::GetInstance().audio->PlayFx(clickFxId);
 				NotifyObserver();
 			}
 		}

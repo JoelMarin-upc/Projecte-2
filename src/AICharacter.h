@@ -5,5 +5,5 @@
 class AICharacter : public Character {
 public:
 	AICharacter() {}
-	AICharacter(EntityType type) : Character(type) {}
+	AICharacter(std::string id, EntityType type) : Character(id, type) {}
 };

@@ -44,6 +44,22 @@ void SceneManager::LoadScenes()
 void SceneManager::SetCurrentScene(std::string sceneID)
 {
 	for (Scene* s : scenes) if (s->id == sceneID) currentScene = s;
+	if (currentScene) currentScene->Start();
+}
+
+EntityManager* SceneManager::GetEntityManager() const
+{
+	return currentScene->entityManager;
+}
+
+MissionManager* SceneManager::GetMissionManager() const
+{
+	return currentScene->missionManager;
+}
+
+DialogManager* SceneManager::GetDialogManager() const
+{
+	return currentScene->dialogManager;
 }
 
 bool SceneManager::PreUpdate()

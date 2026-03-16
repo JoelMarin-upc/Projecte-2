@@ -3,11 +3,11 @@
 #include "InteractableItem.h"
 #include "Stats.h"
 
-class Equipable
+class Equipable : InteractableItem
 {
 public:
-	Equipable();
-	~Equipable();
+	Equipable() : InteractableItem() {}
+	~Equipable() {}
 
 	Stats stats;
 
