@@ -2,7 +2,7 @@
 #include "Engine.h"
 #include "SceneManager.h"
 
-NPC::NPC(std::string id, NPCInteractionType type)
+NPC::NPC(std::string id, NPCInteractionType type) : AICharacter(id, EntityType::NPC)
 {
 	npcID = id;
 	name = "interactableNPC";
