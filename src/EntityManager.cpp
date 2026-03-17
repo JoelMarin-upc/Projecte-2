@@ -7,6 +7,7 @@
 #include "Log.h"
 #include "Item.h"
 #include "NPC.h"
+#include "InteractableItem.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -79,6 +80,9 @@ std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, EntityType t
 		break;
 	case EntityType::ITEM:
 		entity = std::make_shared<Item>(id);
+		break;
+	case EntityType::INTERACTABLE_ITEM:
+		entity = std::make_shared<InteractableItem>();
 		break;
 	default:
 		break;

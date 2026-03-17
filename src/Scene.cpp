@@ -10,8 +10,12 @@ Scene::Scene(std::string mapName)
 	entityManager = new EntityManager();
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
+
+	entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
+
 	entityManager->CreateEntity("player", EntityType::PLAYER);
 	entityManager->CreateEntity("CH-001", EntityType::NPC);
+
 	//map->Load("base map path", mapName);
 	/*entityManager->Load(entities);
 	missionManager->Load(missions);
@@ -42,6 +46,12 @@ bool Scene::Start()
 	missionManager->Start();
 	dialogManager->Start();
 
+	testItem = std::make_shared<InteractableItem>(InteractionType::TOGGLE);
+	testItem->position.setX(500);
+	testItem->position.setY(500);
+	entityManager->AddEntity(testItem);
+	testItem->Start();
+	
 	return true;
 }
 

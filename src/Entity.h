@@ -18,6 +18,7 @@ enum class EntityType
 	ENEMY_AIR,
 	ENEMY_GROUND,
 	BOSS,
+	INTERACTABLE_ITEM,
 	UNKNOWN
 };
 

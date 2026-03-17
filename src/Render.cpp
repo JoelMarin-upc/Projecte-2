@@ -183,7 +183,7 @@ bool Render::DrawTexture(SDL_Texture* texture, int x, int y, const SDL_Rect* sec
 		float tw = 0.0f, th = 0.0f;
 		if (!SDL_GetTextureSize(texture, &tw, &th))
 		{
-			LOG("SDL_GetTextureSize failed: %s", SDL_GetError());
+			//LOG("SDL_GetTextureSize failed: %s", SDL_GetError());
 			return false;
 		}
 		rect.w = tw * scale;

@@ -36,7 +36,11 @@ bool Player::Start() {
 	//anims.LoadFromTSX(animationsPath, aliases);
 	texturePath = "Assets/Textures/goldCoin.png";
 	texture = Engine::GetInstance().textures->Load(texturePath);
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 0, 0);
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 1, 1);
+
+	colliders[0]->etype = EntityType::PLAYER;
+	pbody = colliders[0];
+	pbody->listener = this;
 
 	texW = 32;
 	texH = 32;
@@ -217,7 +221,11 @@ bool Player::CleanUp()
 }
 
 void Player::OnCollision(Collider* physA, Collider* physB) {
-	
+	switch (physB->etype) {
+	case EntityType::INTERACTABLE_ITEM:
+		LOG("Player is in range of interadctable item");
+		break;
+	}
 }
 
 void Player::OnCollisionEnd(Collider* physA, Collider* physB)
