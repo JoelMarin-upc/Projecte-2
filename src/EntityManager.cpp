@@ -84,6 +84,9 @@ std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, EntityType t
 	case EntityType::INTERACTABLE_ITEM:
 		entity = std::make_shared<InteractableItem>();
 		break;
+	case EntityType::ENEMY_GROUND:
+		entity = std::make_shared<Enemy>(id);
+		break;
 	default:
 		break;
 	}

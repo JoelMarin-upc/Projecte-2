@@ -15,6 +15,8 @@ Scene::Scene(std::string mapName)
 
 	entityManager->CreateEntity("player", EntityType::PLAYER);
 	entityManager->CreateEntity("CH-001", EntityType::NPC);
+	entityManager->CreateEntity("enemy", EntityType::ENEMY_GROUND);
+
 
 	//map->Load("base map path", mapName);
 	/*entityManager->Load(entities);
