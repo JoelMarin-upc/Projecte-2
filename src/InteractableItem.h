@@ -3,8 +3,10 @@
 #include "StaticEntity.h"
 
 enum class InteractionType {
+	DEFAULT,
 	PICKUP,
 	TOGGLE,
+	DIALOGUE
 };
 
 class InteractableItem : public StaticEntity {
@@ -40,7 +42,7 @@ public:
 
 protected:
 	//Dialogue type by default
-	InteractionType interactionType = InteractionType::TOGGLE;
+	InteractionType interactionType;
 
 	SDL_Texture* pickupIcon;
 	const char* pickupIconPath;

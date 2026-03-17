@@ -13,6 +13,7 @@
 InteractableItem::InteractableItem(InteractionType type)
 {
 	name = "interactableItem";
+	interactionType = type;
 }
 
 InteractableItem::~InteractableItem() {}
@@ -63,7 +64,7 @@ void InteractableItem::Draw(float dt) {
 
 	int x, y;
 	pbody->GetPosition(x, y);
-	Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2);
+	Engine::GetInstance().render->DrawTexture(texture, x - texW, y - texH);
 
 	//To draw pick up icon next to the item sprite, adjustable later
 	if (isPlayerInRange) {
@@ -101,19 +102,22 @@ void InteractableItem::OnCollisionEnd(Collider* physA, Collider* physB)
 	default:
 		break;
 	}
-
 }
 
 void InteractableItem::Interact()
 {
-	Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
 	switch (interactionType)
 	{
 	case InteractionType::PICKUP:   
+		Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
 		Pickup();  
 		break;
 	case InteractionType::TOGGLE:   
+		Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
 		Toggle();   
+		break;
+	case InteractionType::DIALOGUE:
+		Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
 		break;
 	default:
 		break;
