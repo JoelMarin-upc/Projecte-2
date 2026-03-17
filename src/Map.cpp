@@ -42,8 +42,8 @@ bool Map::Update(float dt)
                 Vector2D camPosTile = GetCameraPositionInTiles();
                 Vector2D limits = GetCameraLimitsInTiles(camPosTile);
                 
-                for (int i = camPosTile.getX(); i <= limits.getX(); i++) {
-                    for (int j = camPosTile.getY(); j <= limits.getY(); j++) {
+                for (int i = camPosTile.getX(); i < limits.getX(); i++) {
+                    for (int j = camPosTile.getY(); j < limits.getY(); j++) {
 						// L07 TODO 9: Complete the draw function
                         //Get the gid from tile
                         int gid = mapLayer->Get(i, j);
@@ -207,62 +207,75 @@ bool Map::Load(std::string path, std::string fileName)
         // Later you can create a function here to load and create the colliders from the map
         //Iterate the layer and create colliders
         for (const auto& mapLayer : mapData.layers) {
-            if (mapLayer->name == "Logic") {
-                for (int i = 0; i < mapData.width; i++) {
-                    for (int j = 0; j < mapData.height; j++) {
-                        int gid = mapLayer->Get(i, j);
-                        Vector2D mapCoord = MapToWorld(i, j);            
-                        if (gid == 626) {
-                            Collider* c1 = Engine::GetInstance().physics->CreateRectangle(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 1, 1);
-                            //c1->etype = EntityType::DEATHZONE;
-                        }
-                    }
-                }
-            }
+            //if (mapLayer->name == "Logic") {
+            //    for (int i = 0; i < mapData.width; i++) {
+            //        for (int j = 0; j < mapData.height; j++) {
+            //            int gid = mapLayer->Get(i, j);
+            //            Vector2D mapCoord = MapToWorld(i, j);            
+            //            if (gid == 626) {
+            //                Collider* c1 = Engine::GetInstance().physics->CreateRectangle(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 1, 1);
+            //                //c1->etype = EntityType::DEATHZONE;
+            //            }
+            //        }
+            //    }
+            //}
 
-            if (mapLayer->name == "NPC") {
-                for (int i = 0; i < mapData.width; i++) {
-                    for (int j = 0; j < mapData.height; j++) {
-                        int gid = mapLayer->Get(i, j);
-                        if (gid == 0) continue;
-                        NPCData npc;
-                        
-                        Vector2D mapCoord = MapToWorld(i, j);
-                        int enType = 2;
-                        if (gid == 630) {
-                            enType = 2;
-                            npc.position = { mapCoord.getX()+10,mapCoord.getY() - 64+10 };
-                        }
-                        else {     
-                            if (gid == 627) enType = 0;
-                            else if (gid == 628) enType = 1;
-                            npc.position = mapCoord;
-                        }
-                        npc.type = enType;
-                    }
-                }
-            }
+            //if (mapLayer->name == "NPC") {
+            //    for (int i = 0; i < mapData.width; i++) {
+            //        for (int j = 0; j < mapData.height; j++) {
+            //            int gid = mapLayer->Get(i, j);
+            //            if (gid == 0) continue;
+            //            NPCData npc;
+            //            
+            //            Vector2D mapCoord = MapToWorld(i, j);
+            //            int enType = 2;
+            //            if (gid == 630) {
+            //                enType = 2;
+            //                npc.position = { mapCoord.getX()+10,mapCoord.getY() - 64+10 };
+            //            }
+            //            else {     
+            //                if (gid == 627) enType = 0;
+            //                else if (gid == 628) enType = 1;
+            //                npc.position = mapCoord;
+            //            }
+            //            npc.type = enType;
+            //        }
+            //    }
+            //}
 
-            if (mapLayer->name == "Items") {
-                for (int i = 0; i < mapData.width; i++) {
-                    for (int j = 0; j < mapData.height; j++) {
-                        int gid = mapLayer->Get(i, j);
-                        if (gid == 0) continue;
-                        ItemData item;
+            //if (mapLayer->name == "Buildings") {
+            //    for (int i = 0; i < mapData.width; i++) {
+            //        for (int j = 0; j < mapData.height; j++) {
+            //            int gid = mapLayer->Get(i, j);
+            //            Vector2D mapCoord = MapToWorld(i, j);
+            //            if (gid == 626) {
+            //                Collider* c1 = Engine::GetInstance().physics->CreateRectangle(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 1, 1);
+            //                //c1->etype = EntityType::SHOP;
+            //            }
+            //        }
+            //    }
+            //}
 
-                        Vector2D mapCoord = MapToWorld(i, j);
-                        EntityType type = EntityType::UNKNOWN;
-                        if (gid == 627) type = EntityType::HEART;
-                        else if (gid == 628) type = EntityType::COIN;
-                        else if (gid == 629) type = EntityType::ITEM;
-                        else if (gid == 630) type = EntityType::KEY;
-                        else if (gid == 631) type = EntityType::RECHARGE;
-                        
-                        item.type = (int)type;
-                        item.position = {mapCoord.getX() + 10, mapCoord.getY()+ 10 };
-                    }
-                }
-            }
+            //if (mapLayer->name == "Items") {
+            //    for (int i = 0; i < mapData.width; i++) {
+            //        for (int j = 0; j < mapData.height; j++) {
+            //            int gid = mapLayer->Get(i, j);
+            //            if (gid == 0) continue;
+            //            ItemData item;
+
+            //            Vector2D mapCoord = MapToWorld(i, j);
+            //            EntityType type = EntityType::UNKNOWN;
+            //            if (gid == 627) type = EntityType::HEART;
+            //            else if (gid == 628) type = EntityType::COIN;
+            //            else if (gid == 629) type = EntityType::ITEM;
+            //            else if (gid == 630) type = EntityType::KEY;
+            //            else if (gid == 631) type = EntityType::RECHARGE;
+            //            
+            //            item.type = (int)type;
+            //            item.position = {mapCoord.getX() + 10, mapCoord.getY()+ 10 };
+            //        }
+            //    }
+            //}
         }
 
 

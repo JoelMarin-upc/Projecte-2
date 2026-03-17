@@ -35,15 +35,15 @@ SaveData XMLHandler::Load()
     int hasItem1 = root.child("player").attribute("hasItem1").as_bool();
     int hasItem2 = root.child("player").attribute("hasItem2").as_bool();
 
-    std::vector<EnemyData> enemies;
+    std::vector<NPCData> enemies;
     for (pugi::xml_node enemyNode = root.child("enemies").child("enemy"); enemyNode != NULL; enemyNode = enemyNode.next_sibling("enemy"))
     {
-        EnemyData enemy;
+        NPCData enemy;
         float xEnemy = enemyNode.attribute("x").as_float();
         float yEnemy = enemyNode.attribute("y").as_float();
         Vector2D enemyPos(xEnemy, yEnemy);
         enemy.position = enemyPos;
-        enemy.enType = enemyNode.attribute("enType").as_int();
+        enemy.type = enemyNode.attribute("enType").as_int();
         enemies.push_back(enemy);
     }
 
@@ -83,11 +83,11 @@ void XMLHandler::Save(SaveData data)
     playerNode.append_attribute("hasItem2").set_value(data.hasItem2);
 
     pugi::xml_node enemyList = root.append_child("enemies");
-    for (EnemyData e : data.enemies) {
+    for (NPCData e : data.npcs) {
         pugi::xml_node enemy = enemyList.append_child("enemy");
         enemy.append_attribute("x").set_value(e.position.getX());
         enemy.append_attribute("y").set_value(e.position.getY());
-        enemy.append_attribute("enType").set_value(e.enType);
+        enemy.append_attribute("enType").set_value(e.type);
     }
 
     pugi::xml_node itemList = root.append_child("items");

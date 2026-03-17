@@ -2,7 +2,7 @@
 #include "Log.h"
 #include "Engine.h"
 
-Scene::Scene(std::string mapName)
+Scene::Scene(std::string mapPath, std::string mapName)
 {
 	id = "SC-001";
 	name = "scene";
@@ -12,7 +12,7 @@ Scene::Scene(std::string mapName)
 	dialogManager = new DialogManager();
 	entityManager->CreateEntity("player", EntityType::PLAYER);
 	entityManager->CreateEntity("CH-001", EntityType::NPC);
-	//map->Load("base map path", mapName);
+	map->Load(mapPath, mapName);
 	/*entityManager->Load(entities);
 	missionManager->Load(missions);
 	dialogManager->Load(dialogs);*/

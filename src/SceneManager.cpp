@@ -38,7 +38,7 @@ void SceneManager::LoadScenes()
 {
 	// load from xml
 	scenes = std::list<Scene*>();
-	scenes.push_back(new Scene("testmap.tmx"));
+	scenes.push_back(new Scene(mapsPath, "RebelRefuge.tmx"));
 }
 
 void SceneManager::SetCurrentScene(std::string sceneID)

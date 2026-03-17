@@ -71,7 +71,7 @@ class Scene
 {
 public:
 
-	Scene(std::string mapName);
+	Scene(std::string mapPath, std::string mapName);
 	
 	Scene();
 
