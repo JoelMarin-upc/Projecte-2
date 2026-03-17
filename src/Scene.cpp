@@ -2,20 +2,17 @@
 #include "Log.h"
 #include "Engine.h"
 
-Scene::Scene(std::string mapPath, std::string mapName)
+Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 {
-	id = "SC-001";
+	id = _id;
 	name = "scene";
-	map = new Map();
+	
 	entityManager = new EntityManager();
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
-	entityManager->CreateEntity("player", EntityType::PLAYER);
-	entityManager->CreateEntity("CH-001", EntityType::NPC);
-	map->Load(mapPath, mapName);
-	/*entityManager->Load(entities);
-	missionManager->Load(missions);
-	dialogManager->Load(dialogs);*/
+
+	LoadMap(mapPath, mapName);
+	LoadScene();
 }
 
 // Destructor
@@ -93,14 +90,45 @@ void Scene::LoadGame()
 	
 }
 
-void Scene::LoadScene()
+void Scene::LoadMap(std::string mapPath, std::string mapName)
 {
-	// Load entities
+	map = new Map();
+	map->Load(mapPath, mapName);
+	mapData = map->gameData;
 }
 
-void Scene::LoadMap()
+void Scene::LoadScene()
 {
+	std::string baseTexturePath = "Assets/Textures/";
 
+	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+	pugi::xml_node characters = charactersDoc.child("characters");
+	pugi::xml_document itemsDoc = XMLHandler::LoadFile("Assets/Entities/items.xml");
+	pugi::xml_node items = charactersDoc.child("items");
+
+	pugi::xml_node pNode = characters.child("player");
+	std::string id = pNode.attribute("id").as_string();
+	std::string name = pNode.attribute("name").as_string();
+	std::string texture = pNode.attribute("texture").as_string();
+	player = std::dynamic_pointer_cast<Player>(entityManager->CreateEntity(id, name, baseTexturePath + texture, mapData.playerStartPosition, EntityType::PLAYER));
+
+	for (NPCData npc : mapData.npcs) {
+		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
+			if (cNode.attribute("id").as_string() != npc.id) continue;
+			std::string name = cNode.attribute("name").as_string();
+			std::string texture = cNode.attribute("texture").as_string();
+			entityManager->CreateEntity(npc.id, name, baseTexturePath + texture, npc.position, EntityType::NPC);
+		}
+	}
+
+	for (ItemData item : mapData.items) {
+		for (pugi::xml_node iNode = items.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
+			if (iNode.attribute("id").as_string() != item.id) continue;
+			std::string name = iNode.attribute("name").as_string();
+			std::string texture = iNode.attribute("texture").as_string();
+			entityManager->CreateEntity(item.id, name, baseTexturePath + texture, item.position, EntityType::ITEM);
+		}
+	}
 }
 
 void Scene::EndScene()

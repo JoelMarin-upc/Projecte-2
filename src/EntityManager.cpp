@@ -39,11 +39,11 @@ bool EntityManager::Start() {
 	bool ret = true; 
 
 	//Iterates over the entities and calls Start
-	for(const auto entity : entities)
+	/*for(const auto entity : entities)
 	{
 		if (entity->active == false) continue;
 		ret = entity->Start();
-	}
+	}*/
 
 	return ret;
 }
@@ -64,7 +64,7 @@ bool EntityManager::CleanUp()
 	return ret;
 }
 
-std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, EntityType type)
+std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type)
 {
 	std::shared_ptr<Entity> entity = std::make_shared<Entity>();
 
@@ -72,19 +72,21 @@ std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, EntityType t
 	switch (type)
 	{
 	case EntityType::PLAYER:
-		entity = std::make_shared<Player>(id);
+		entity = std::make_shared<Player>(id, name, texturePath);
 		break;
 	case EntityType::NPC:
-		entity = std::make_shared<NPC>(id);
+		entity = std::make_shared<NPC>(id, name, texturePath);
 		break;
 	case EntityType::ITEM:
-		entity = std::make_shared<Item>(id);
+		entity = std::make_shared<Item>(id, name, texturePath);
 		break;
 	default:
 		break;
 	}
 
 	entities.push_back(entity);
+
+	entity->position = position;
 
 	entity->Start();
 

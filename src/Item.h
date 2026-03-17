@@ -10,7 +10,7 @@ class Item : public DynamicEntity
 public:
 
 	Item();
-	Item(std::string id);
+	Item(std::string id, std::string name, std::string texturePath);
 	virtual ~Item();
 
 	bool Awake();

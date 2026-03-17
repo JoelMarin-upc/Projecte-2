@@ -6,7 +6,7 @@
 
 class NPC : public AICharacter {
 public:
-	NPC(std::string id) : AICharacter(id, EntityType::NPC) {}
+	NPC(std::string id, std::string name, std::string texturePath) : AICharacter(id, name, texturePath, EntityType::NPC) {}
 
 	bool Start() override;
 

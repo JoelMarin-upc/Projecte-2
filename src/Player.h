@@ -13,7 +13,7 @@ class Player : public Character
 {
 public:
 
-	Player(std::string id);
+	Player(std::string id, std::string name, std::string texturePath);
 	
 	virtual ~Player();
 

@@ -38,7 +38,7 @@ bool Map::Update(float dt)
         // iterate all tiles in a layer
         for (const auto& mapLayer : mapData.layers) {
             //L09 TODO 7: Check if the property Draw exist get the value, if it's true draw the lawyer
-            if (mapLayer->properties.GetProperty("Draw") != NULL && mapLayer->properties.GetProperty("Draw")->value == true) {
+            if (mapLayer->properties.GetProperty("Draw") != NULL && mapLayer->properties.GetProperty("Draw")->value_b == true) {
                 Vector2D camPosTile = GetCameraPositionInTiles();
                 Vector2D limits = GetCameraLimitsInTiles(camPosTile);
                 
@@ -116,6 +116,8 @@ bool Map::Load(std::string path, std::string fileName)
 {
     //bgtexture = Engine::GetInstance().textures->Load("Assets/Maps/forest1.png"); <-- background image
     bool ret = false;
+
+    gameData = GameData();
 
     // Assigns the name of the map file and the path
     mapFileName = fileName;
@@ -198,6 +200,9 @@ bool Map::Load(std::string path, std::string fileName)
                 object->y = objectNode.attribute("y").as_int();
                 object->width = objectNode.attribute("width").as_int();
                 object->height = objectNode.attribute("height").as_int();
+
+                LoadProperties(objectNode, object->properties);
+
                 objectGroup->objects.push_back(object);
             }
 
@@ -207,41 +212,64 @@ bool Map::Load(std::string path, std::string fileName)
         // Later you can create a function here to load and create the colliders from the map
         //Iterate the layer and create colliders
         for (const auto& mapLayer : mapData.layers) {
-            //if (mapLayer->name == "Logic") {
-            //    for (int i = 0; i < mapData.width; i++) {
-            //        for (int j = 0; j < mapData.height; j++) {
-            //            int gid = mapLayer->Get(i, j);
-            //            Vector2D mapCoord = MapToWorld(i, j);            
-            //            if (gid == 626) {
-            //                Collider* c1 = Engine::GetInstance().physics->CreateRectangle(mapCoord.getX() + mapData.tileWidth / 2, mapCoord.getY() + mapData.tileHeight / 2, mapData.tileWidth, mapData.tileHeight, STATIC, 1, 1);
-            //                //c1->etype = EntityType::DEATHZONE;
-            //            }
-            //        }
-            //    }
-            //}
+            if (mapLayer->name == "Logic") {
+                for (int i = 0; i < mapData.width; i++) {
+                    for (int j = 0; j < mapData.height; j++) {
+                        int gid = mapLayer->Get(i, j);
+                        Vector2D mapCoord = MapToWorld(i, j);        
+                        switch (gid)
+                        {
+                        case 626:
 
-            //if (mapLayer->name == "NPC") {
-            //    for (int i = 0; i < mapData.width; i++) {
-            //        for (int j = 0; j < mapData.height; j++) {
-            //            int gid = mapLayer->Get(i, j);
-            //            if (gid == 0) continue;
-            //            NPCData npc;
-            //            
-            //            Vector2D mapCoord = MapToWorld(i, j);
-            //            int enType = 2;
-            //            if (gid == 630) {
-            //                enType = 2;
-            //                npc.position = { mapCoord.getX()+10,mapCoord.getY() - 64+10 };
-            //            }
-            //            else {     
-            //                if (gid == 627) enType = 0;
-            //                else if (gid == 628) enType = 1;
-            //                npc.position = mapCoord;
-            //            }
-            //            npc.type = enType;
-            //        }
-            //    }
-            //}
+                            break;
+                        case 627:
+                            gameData.playerStartPosition = mapCoord;
+                            break;
+                        case 628:
+
+                            break;
+                        case 629:
+
+                            break;
+                        case 630:
+
+                            break;
+                        case 631:
+
+                            break;
+                        case 632:
+
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                }
+            }
+
+            /*if (mapLayer->name == "NPC") {
+                for (int i = 0; i < mapData.width; i++) {
+                    for (int j = 0; j < mapData.height; j++) {
+                        int gid = mapLayer->Get(i, j);
+                        if (gid == 0) continue;
+                        NPCData npc;
+                        
+                        Vector2D mapCoord = MapToWorld(i, j);
+                        int enType = 2;
+                        if (gid == 630) {
+                            enType = 2;
+                            npc.position = { mapCoord.getX()+10,mapCoord.getY() - 64+10 };
+                        }
+                        else {     
+                            if (gid == 627) enType = 0;
+                            else if (gid == 628) enType = 1;
+                            npc.position = mapCoord;
+                        }
+                        npc.type = enType;
+                        gameData.npcs.push_back(npc);
+                    }
+                }
+            }*/
 
             //if (mapLayer->name == "Buildings") {
             //    for (int i = 0; i < mapData.width; i++) {
@@ -280,10 +308,29 @@ bool Map::Load(std::string path, std::string fileName)
 
 
         for (const auto& objectGroup : mapData.objectlayers) {
+            
             if (objectGroup->name == "Boundaries" || objectGroup->name == "Obstacles") {
                 for (const auto& object : objectGroup->objects) {
                     Collider* c1 = Engine::GetInstance().physics->CreateRectangle(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC, 1, 1);
                     c1->etype = EntityType::WALL;
+                }
+            }
+
+            if (objectGroup->name == "NPC") {
+                for (const auto& object : objectGroup->objects) {
+                    NPCData npc;
+                    npc.id = object->properties.GetProperty("id")->value_s;
+                    npc.position = Vector2D(object->x, object->y);
+                    gameData.npcs.push_back(npc);
+                }
+            }
+
+            if (objectGroup->name == "Items") {
+                for (const auto& object : objectGroup->objects) {
+                    ItemData item;
+                    item.id = object->properties.GetProperty("id")->value_s;
+                    item.position = Vector2D(object->x, object->y);
+                    gameData.items.push_back(item);
                 }
             }
         }
@@ -347,13 +394,17 @@ Vector2D Map::WorldToMap(int x, int y) {
 // L09: TODO 6: Load a group of properties from a node and fill a list with it
 bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 {
-    bool ret = false;
+    bool ret = true;
 
     for (pugi::xml_node propertieNode = node.child("properties").child("property"); propertieNode; propertieNode = propertieNode.next_sibling("property"))
     {
         Properties::Property* p = new Properties::Property();
         p->name = propertieNode.attribute("name").as_string();
-        p->value = propertieNode.attribute("value").as_bool(); // (!!) I'm assuming that all values are bool !!
+        p->type = propertieNode.attribute("type").as_string("string");
+        if (p->type == "bool") p->value_b = propertieNode.attribute("value").as_bool();
+        if (p->type == "string") p->value_s = propertieNode.attribute("value").as_string();
+        if (p->type == "int") p->value_i = propertieNode.attribute("value").as_int();
+        if (p->type == "float") p->value_f = propertieNode.attribute("value").as_float();
 
         properties.propertyList.push_back(p);
     }
@@ -378,7 +429,7 @@ Vector2D Map::GetMapSizeInTiles()
 MapLayer* Map::GetNavigationLayer() {
     for (const auto& layer : mapData.layers) {
         if (layer->properties.GetProperty("Navigation") != NULL &&
-            layer->properties.GetProperty("Navigation")->value) {
+            layer->properties.GetProperty("Navigation")->value_b) {
             return layer;
         }
     }

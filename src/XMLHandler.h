@@ -8,14 +8,12 @@ struct NPCData {
 public:
     Vector2D position;
     std::string id;
-    int type;
 };
 
 struct ItemData {
 public:
     Vector2D position;
     std::string id;
-    char type;
 };
 
 class SaveData {
