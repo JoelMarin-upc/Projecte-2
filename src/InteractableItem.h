@@ -2,7 +2,7 @@
 
 #include "StaticEntity.h"
 
-enum class InteractionType {
+enum class ItemInteractionType {
 	DEFAULT,
 	PICKUP,
 	TOGGLE,
@@ -12,7 +12,7 @@ enum class InteractionType {
 class InteractableItem : public StaticEntity {
 public:
 	InteractableItem() {}
-	InteractableItem(InteractionType type);
+	InteractableItem(ItemInteractionType type);
 	virtual ~InteractableItem();
 
 	virtual bool Awake() override;
@@ -42,7 +42,7 @@ public:
 
 protected:
 	//Dialogue type by default
-	InteractionType interactionType;
+	ItemInteractionType itemInteractionType;
 
 	SDL_Texture* pickupIcon;
 	const char* pickupIconPath;

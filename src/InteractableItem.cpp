@@ -10,10 +10,10 @@
 #include "EntityManager.h"
 #include "SceneManager.h"
 
-InteractableItem::InteractableItem(InteractionType type)
+InteractableItem::InteractableItem(ItemInteractionType type)
 {
 	name = "interactableItem";
-	interactionType = type;
+	itemInteractionType = type;
 }
 
 InteractableItem::~InteractableItem() {}
@@ -106,17 +106,17 @@ void InteractableItem::OnCollisionEnd(Collider* physA, Collider* physB)
 
 void InteractableItem::Interact()
 {
-	switch (interactionType)
+	switch (itemInteractionType)
 	{
-	case InteractionType::PICKUP:   
+	case ItemInteractionType::PICKUP:   
 		Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
 		Pickup();  
 		break;
-	case InteractionType::TOGGLE:   
+	case ItemInteractionType::TOGGLE:   
 		Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
 		Toggle();   
 		break;
-	case InteractionType::DIALOGUE:
+	case ItemInteractionType::DIALOGUE:
 		Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
 		break;
 	default:
