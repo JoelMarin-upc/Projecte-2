@@ -13,6 +13,17 @@ Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 
 	LoadMap(mapPath, mapName);
 	LoadScene();
+
+	entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
+
+	//entityManager->CreateEntity("player", EntityType::PLAYER);
+	//entityManager->CreateEntity("CH-001", EntityType::NPC);
+
+	//map->Load("base map path", mapName);
+	/*entityManager->Load(entities);
+	missionManager->Load(missions);
+	dialogManager->Load(dialogs);*/
+
 }
 
 // Destructor
@@ -39,6 +50,12 @@ bool Scene::Start()
 	missionManager->Start();
 	dialogManager->Start();
 
+	testItem = std::make_shared<InteractableItem>(InteractionType::TOGGLE);
+	testItem->position.setX(500);
+	testItem->position.setY(500);
+	entityManager->AddEntity(testItem);
+	testItem->Start();
+	
 	return true;
 }
 
