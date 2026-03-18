@@ -14,7 +14,7 @@ Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 	LoadMap(mapPath, mapName);
 	LoadScene();
 
-	entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
+	//entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
 
 	//entityManager->CreateEntity("player", EntityType::PLAYER);
 	//entityManager->CreateEntity("CH-001", EntityType::NPC);
@@ -50,11 +50,11 @@ bool Scene::Start()
 	missionManager->Start();
 	dialogManager->Start();
 
-	testItem = std::make_shared<InteractableItem>(InteractionType::TOGGLE);
+	/*testItem = std::make_shared<InteractableItem>(InteractionType::TOGGLE);
 	testItem->position.setX(500);
 	testItem->position.setY(500);
 	entityManager->AddEntity(testItem);
-	testItem->Start();
+	testItem->Start();*/
 	
 	return true;
 }
@@ -121,7 +121,7 @@ void Scene::LoadScene()
 	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
 	pugi::xml_node characters = charactersDoc.child("characters");
 	pugi::xml_document itemsDoc = XMLHandler::LoadFile("Assets/Entities/items.xml");
-	pugi::xml_node items = charactersDoc.child("items");
+	pugi::xml_node items = itemsDoc.child("items");
 
 	pugi::xml_node pNode = characters.child("player");
 	std::string id = pNode.attribute("id").as_string();
@@ -134,7 +134,8 @@ void Scene::LoadScene()
 			if (cNode.attribute("id").as_string() != npc.id) continue;
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
-			entityManager->CreateEntity(npc.id, name, baseTexturePath + texture, npc.position, EntityType::NPC);
+			int type = cNode.attribute("type").as_int();
+			entityManager->CreateEntity(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type);
 		}
 	}
 
@@ -143,7 +144,9 @@ void Scene::LoadScene()
 			if (iNode.attribute("id").as_string() != item.id) continue;
 			std::string name = iNode.attribute("name").as_string();
 			std::string texture = iNode.attribute("texture").as_string();
-			entityManager->CreateEntity(item.id, name, baseTexturePath + texture, item.position, EntityType::ITEM);
+			int type = iNode.attribute("type").as_int();
+			int interactionType = iNode.attribute("interactionType").as_int();
+			entityManager->CreateEntity(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (InteractionType)interactionType);
 		}
 	}
 }

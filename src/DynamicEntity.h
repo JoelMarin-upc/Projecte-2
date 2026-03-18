@@ -4,6 +4,7 @@
 #include "Physics.h"
 #include "Collider.h"
 #include "Engine.h"
+#include "Entity.h"
 
 class DynamicEntity : public Entity
 {

@@ -7,19 +7,10 @@
 
 enum class EntityType
 {
-	PLAYER,
-	NPC,
-	ITEM,
-	HEART,
-	COIN,
-	RECHARGE,
-	KEY,
-	SPEAR,
-	ENEMY_AIR,
-	ENEMY_GROUND,
-	BOSS,
-	WALL,
-	INTERACTABLE_ITEM,
+	PLAYER = 1,
+	WALL = 2,
+	NPC = 3,
+	INTERACTABLE_ITEM = 4,
 	UNKNOWN
 };
 

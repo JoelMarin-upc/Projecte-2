@@ -10,9 +10,8 @@
 #include "EntityManager.h"
 #include "SceneManager.h"
 
-InteractableItem::InteractableItem(InteractionType type)
+InteractableItem::InteractableItem(std::string id, std::string name, std::string texturePath, InteractionType type) : Item(id, name, texturePath, EntityType::INTERACTABLE_ITEM)
 {
-	name = "interactableItem";
 	interactionType = type;
 }
 
@@ -23,9 +22,9 @@ bool InteractableItem::Awake() {
 }
 
 bool InteractableItem::Start() {
-	texturePath = "Assets/Textures/door_open.png";
+	//texturePath = "Assets/Textures/door_open.png";
 	pickupIconPath = "Assets/Textures/item.png";
-	texture = Engine::GetInstance().textures->Load(texturePath);
+	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
 	pickupIcon = Engine::GetInstance().textures->Load(pickupIconPath);
 	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 1, 1);
 	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 50, 50, 1, 1);

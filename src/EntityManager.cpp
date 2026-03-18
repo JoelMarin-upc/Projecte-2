@@ -65,7 +65,7 @@ bool EntityManager::CleanUp()
 	return ret;
 }
 
-std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type)
+std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, InteractionType interactionType)
 {
 	std::shared_ptr<Entity> entity = std::make_shared<Entity>();
 
@@ -78,11 +78,8 @@ std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, std::string 
 	case EntityType::NPC:
 		entity = std::make_shared<NPC>(id, name, texturePath);
 		break;
-	case EntityType::ITEM:
-		entity = std::make_shared<Item>(id, name, texturePath);
-		break;
 	case EntityType::INTERACTABLE_ITEM:
-		entity = std::make_shared<InteractableItem>();
+		entity = std::make_shared<InteractableItem>(id, name, texturePath, interactionType);
 		break;
 	default:
 		break;
