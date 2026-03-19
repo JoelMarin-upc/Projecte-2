@@ -54,6 +54,7 @@ bool InteractableItem::Update(float dt) {
 			Interact();
 		}
 	}
+	Draw(dt);
 	return true;
 }
 

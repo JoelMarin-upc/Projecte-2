@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Engine.h"
+#include "NPC.h"
 
 Scene::Scene(std::string mapName)
 {
@@ -64,7 +65,6 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("CH-001");
 	map->Update(dt);
 	entityManager->Update(dt);
 	missionManager->Update(dt);
@@ -123,6 +123,7 @@ void Scene::StartDialog(std::string characterId)
 	if (isOnDialog) return;
 	if (!dialogManager->SetCurrentDialog(characterId)) return;
 	isOnDialog = true;
+	activeDialogId = characterId;
 	entityManager->paused = true;
 }
 
@@ -130,4 +131,16 @@ void Scene::EndDialog()
 {
 	isOnDialog = false;
 	entityManager->paused = false;
+
+	if (!activeDialogId.empty()) {
+		for (const auto& entity : entityManager->entities) {
+			if (entity->id == activeDialogId) {
+				if (auto npc = std::dynamic_pointer_cast<NPC>(entity)) {
+					npc->OnDialogEnd();
+					break;
+				}
+			}
+		}
+		activeDialogId = "";
+	}
 }

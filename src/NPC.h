@@ -6,15 +6,15 @@
 
 enum class NPCInteractionType {
 	DEFAULT,
-	RECRUIT,
-	SHOP,
-	DIALOGUE
+	RECRUIT, //Talk, then recruit into the team
+	SHOP, //Talk, then open shop
+	DIALOGUE //Talk only
 };
 
 class NPC : public AICharacter {
 public:
 	NPC(){}
-	NPC(std::string id, NPCInteractionType type);
+	NPC(std::string id, NPCInteractionType type = NPCInteractionType::DEFAULT);
 	virtual ~NPC();
 
 	bool Awake() override;
@@ -23,10 +23,14 @@ public:
 	bool Update(float dt);
 	void Draw(float dt);
 	void Interact();
+	void OnDialogEnd();
+	void Recruit();
+	void OpenShop();
 	void OnCollision(Collider* physA, Collider* physB) override;
 	void OnCollisionEnd(Collider* physA, Collider* physB) override;
 public:
 	bool isPlayerInRange = false;
+	bool isRecruitConditionFulfilled = false;
 private:
 	std::string npcID;
 	NPCInteractionType npcInteractionType;

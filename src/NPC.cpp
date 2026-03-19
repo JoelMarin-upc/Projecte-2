@@ -1,6 +1,7 @@
 #include "NPC.h"
 #include "Engine.h"
 #include "SceneManager.h"
+#include "Log.h"
 
 NPC::NPC(std::string id, NPCInteractionType type) : AICharacter(id, EntityType::NPC)
 {
@@ -21,8 +22,16 @@ bool NPC::Start()
 	texture = Engine::GetInstance().textures->Load(texturePath);
 	position.setX(200);
 	position.setY(200);
+
 	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 1, 1);
-	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 10, 10, 1, 1);
+	pbody = colliders[0];
+	pbody->listener = this;
+	pbody->etype = EntityType::NPC;
+
+	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 50, 50, 1, 1);
+	sensorCollider = colliders[1];
+	sensorCollider->listener = this;
+	sensorCollider->etype = EntityType::NPC;
 
 	texW = 32;
 	texH = 32;
@@ -35,10 +44,11 @@ bool NPC::Update(float dt)
 		return true;
 	}
 	if (isPlayerInRange) {
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
-			
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
+			Interact();
 		}
 	}
+	Draw(dt);
     return true;
 }
 
@@ -53,20 +63,39 @@ void NPC::Draw(float dt)
 
 void NPC::Interact()
 {
+	Engine::GetInstance().sceneManager->currentScene->StartDialog(npcID);
+}
+
+void NPC::OnDialogEnd()
+{
 	switch (npcInteractionType)
 	{
 	case NPCInteractionType::RECRUIT:
-		Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
+		Recruit();
 		break;
 	case NPCInteractionType::SHOP:
-		Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
+		OpenShop();
 		break;
 	case NPCInteractionType::DIALOGUE:
-		Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
 		break;
 	default:
 		break;
 	}
+}
+
+void NPC::Recruit()
+{
+	if (isRecruitConditionFulfilled) {
+		LOG("%s joined the party!", name.c_str());
+	}
+	else {
+
+	}
+}
+
+void NPC::OpenShop()
+{
+	LOG("Opening shop for '%s'", name.c_str());
 }
 
 void NPC::OnCollision(Collider* physA, Collider* physB)

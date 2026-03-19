@@ -129,5 +129,5 @@ private:
 	Timer gameTimer;
 	bool paused = false;
 	bool isOnDialog = false;
-
+	std::string  activeDialogId = "";
 };
