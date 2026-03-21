@@ -44,5 +44,6 @@ public:
 	std::list<Scene*> scenes;
 	Scene* currentScene = nullptr;
 	bool paused = false;
+	std::string mapsPath = "Assets/Maps/";
 
 };

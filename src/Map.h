@@ -12,7 +12,11 @@ struct Properties
     struct Property
     {
         std::string name;
-        bool value; //We assume that we are going to work only with bool for the moment
+        std::string type;
+        bool value_b;
+        std::string value_s;
+        int value_i;
+        float value_f;
     };
 
     std::list<Property*> propertyList;
@@ -39,10 +43,40 @@ struct Properties
         return nullptr;
     }
 
-    void ChangePorperty(const char* name) {
+    void ChangePorperty(const char* name, bool value) {
         for (const auto& property : propertyList) {
             if (property->name == name) {
-                property->value = true;
+                property->value_b = value;
+            }
+        }
+
+        return;
+    }
+
+    void ChangePorperty(const char* name, std::string value) {
+        for (const auto& property : propertyList) {
+            if (property->name == name) {
+                property->value_s = value;
+            }
+        }
+
+        return;
+    }
+
+    void ChangePorperty(const char* name, int value) {
+        for (const auto& property : propertyList) {
+            if (property->name == name) {
+                property->value_i = value;
+            }
+        }
+
+        return;
+    }
+
+    void ChangePorperty(const char* name, float value) {
+        for (const auto& property : propertyList) {
+            if (property->name == name) {
+                property->value_f = value;
             }
         }
 
@@ -101,6 +135,7 @@ struct TileSet
 struct Object
 {
     int id, x, y, width, height;
+    Properties properties;
 };
 
 struct ObjectGroup
@@ -122,6 +157,12 @@ struct MapData
     // L07: TODO 2: Add the info to the MapLayer Struct
     std::list<MapLayer*> layers;
     std::list<ObjectGroup*> objectlayers;
+};
+
+struct GameData {
+    Vector2D playerStartPosition;
+    std::vector<NPCData> npcs;
+    std::vector<ItemData> items;
 };
 
 class Map
@@ -181,6 +222,7 @@ public:
     std::string mapPath;
     Vector2D* playerStartPos = nullptr;
     MapData mapData;
+    GameData gameData;
 
 private:
     bool mapLoaded;

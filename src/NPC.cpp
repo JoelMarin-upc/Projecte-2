@@ -2,11 +2,9 @@
 
 bool NPC::Start()
 {
-	texturePath = "Assets/Textures/heart.png";
-	texture = Engine::GetInstance().textures->Load(texturePath);
-	position.setX(200);
-	position.setY(200);
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 0, 0);
+	//texturePath = "Assets/Textures/heart.png";
+	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 1, 1);
 
 	texW = 32;
 	texH = 32;

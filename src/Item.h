@@ -10,7 +10,7 @@ class Item : public DynamicEntity
 public:
 
 	Item();
-	Item(std::string id);
+	Item(std::string id, std::string name, std::string texturePath, EntityType type);
 	virtual ~Item();
 
 	bool Awake();
@@ -29,10 +29,8 @@ public:
 
 	bool isPicked = false;
 
-private:
+protected:
 
-	SDL_Texture* texture;
-	const char* texturePath;
 	int texW, texH;
 
 	//L08 TODO 4: Add a physics to an item
