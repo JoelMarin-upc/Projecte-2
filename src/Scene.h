@@ -108,6 +108,7 @@ public:
 	void EndDialog();
 
 	Vector2D GetPlayerPosition();
+	Map* GetMap() const { return map; }
 
 	bool hasEnded;
 

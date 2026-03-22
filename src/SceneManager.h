@@ -33,6 +33,8 @@ public:
 
 	void SetCurrentScene(std::string sceneID);
 
+	Scene* GetCurrentScene() const;
+
 	EntityManager* GetEntityManager() const;
 
 	MissionManager* GetMissionManager() const;

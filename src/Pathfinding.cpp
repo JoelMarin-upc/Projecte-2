@@ -4,6 +4,8 @@
 #include "Map.h"
 #include "Render.h"
 #include "Scene.h"
+#include "SceneManager.h"
+
 
 Pathfinding::Pathfinding() {
     
@@ -12,10 +14,12 @@ Pathfinding::Pathfinding() {
     pathTex = Engine::GetInstance().textures.get()->Load("Assets/Maps/MapMetadata.png");
     tileX = Engine::GetInstance().textures.get()->Load("Assets/Textures/x.png");
     //map = Engine::GetInstance().map.get();
-    layerNav = map->GetNavigationLayer();
+    //layerNav = map->GetNavigationLayer();
+
+    map = nullptr;
 
     // Initialize the costSoFar with all elements set to 0
-    costSoFar = std::vector<std::vector<int>>(map->GetMapSizeInTiles().getX(), std::vector<int>(map->GetMapSizeInTiles().getY(), 0));
+    //costSoFar = std::vector<std::vector<int>>(map->GetMapSizeInTiles().getX(), std::vector<int>(map->GetMapSizeInTiles().getY(), 0));
 }
 
 Pathfinding::~Pathfinding() {
@@ -138,11 +142,13 @@ void Pathfinding::DrawPath() {
 
 bool Pathfinding::IsWalkable(int x, int y) {
 
+    // we will have to change after adding navigation layer!!!!!
     bool isWalkable = false;
 
     // L11: TODO 3: return true only if x and y are within map limits
     // and the tile is walkable (not blocked)
-    if(layerNav != nullptr) {
+
+    /*if (layerNav != nullptr) {
 
 		//Check map limits
         if (x >= 0 && x < map->GetMapSizeInTiles().getX() &&
@@ -155,9 +161,21 @@ bool Pathfinding::IsWalkable(int x, int y) {
                 isWalkable = true;
             }
         }
-	}
+	}*/
+    if (map == nullptr) return false;
 
-    return isWalkable;
+    if (x < 0 || x >= map->GetMapSizeInTiles().getX() ||
+        y < 0 || y >= map->GetMapSizeInTiles().getY())
+        return false;
+
+    if (layerNav == nullptr)
+        return true; // fallback: everything walkable
+
+    int gid = layerNav->Get(x, y);
+
+    return gid != blockedGid;
+
+    //return isWalkable;
 }
 
 void Pathfinding::PropagateBFS() {
@@ -275,8 +293,8 @@ void Pathfinding::PropagateDijkstra() {
 }
 
 Vector2D* Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {    
-    Vector2D playerPos = { 0, 0 };// Engine::GetInstance().scene.get()->GetPlayerPosition();
-    Vector2D playerPosTile = { 0, 0 }; //Engine::GetInstance().map.get()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
+    Vector2D playerPos = Engine::GetInstance().sceneManager->currentScene->GetPlayerPosition();
+    Vector2D playerPosTile = Engine::GetInstance().sceneManager->GetCurrentScene()->GetMap()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
 
     bool foundDestination = false;
     if (frontierAStar.size() > 0) {
@@ -353,16 +371,16 @@ Vector2D* Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
 
 int Pathfinding::MovementCost(int x, int y)
 {
-    int ret = -1;
+    int ret = 1;
 
-    if ((x >= 0) && (x < map->GetMapSizeInTiles().getX()) && (y >= 0) && (y < map->GetMapSizeInTiles().getY()))
-    {
-        int gid = layerNav->Get(x, y);
-        if (gid == highCostGid) {
-            ret = 5;
-        }
-        else ret = 1;
-    }
+    //if ((x >= 0) && (x < map->GetMapSizeInTiles().getX()) && (y >= 0) && (y < map->GetMapSizeInTiles().getY()))
+    //{
+    //    int gid = layerNav->Get(x, y);
+    //    if (gid == highCostGid) {
+    //        ret = 5;
+    //    }
+    //    else ret = 1;
+    //}
 
     return ret;
 }
@@ -422,4 +440,48 @@ int Pathfinding::Find(std::list<Vector2D> vector, Vector2D elem)
     if (found) return index;
     else return -1;
 
+}
+
+void Pathfinding::SetMap(Map* m)
+{
+    map = m;
+    layerNav = map->GetNavigationLayer();
+    costSoFar = std::vector<std::vector<int>>(map->GetMapSizeInTiles().getX(), std::vector<int>(map->GetMapSizeInTiles().getY(), 0));
+}
+
+void Pathfinding::ComputePath(Vector2D start, Vector2D end)
+{
+    ResetPath(start);
+
+    // run A* fully (no per-frame propagation anymore)
+    for (int i = 0; i < 200; i++)
+    {
+        PropagateAStar(ASTAR_HEURISTICS::SQUARED);
+        if (!pathTiles.empty()) break;
+    }
+
+    // reverse so first = next step
+    path.clear();
+    path.assign(pathTiles.begin(), pathTiles.end());
+    std::reverse(path.begin(), path.end());
+}
+
+bool Pathfinding::HasPath() const
+{
+    return !path.empty();
+}
+
+Vector2D Pathfinding::GetNextTile()
+{
+    if (path.empty()) return { -1, -1 };
+
+    Vector2D next = path.front();
+    path.erase(path.begin());
+    return next;
+}
+
+Vector2D Pathfinding::GetNextWorld(Map* map)
+{
+    Vector2D t = GetNextTile();
+    return map->MapToWorld((int)t.getX(), (int)t.getY());
 }

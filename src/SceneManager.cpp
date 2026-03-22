@@ -47,6 +47,10 @@ void SceneManager::SetCurrentScene(std::string sceneID)
 	if (currentScene) currentScene->Start();
 }
 
+Scene* SceneManager::GetCurrentScene() const { 
+	return currentScene; 
+}
+
 EntityManager* SceneManager::GetEntityManager() const
 {
 	return currentScene->entityManager;

@@ -14,9 +14,7 @@ Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 	LoadMap(mapPath, mapName);
 	LoadScene();
 
-	entityManager->CreateEntity("player", EntityType::PLAYER);
-	entityManager->CreateEntity("CH-001", EntityType::NPC);
-	entityManager->CreateEntity("enemy", EntityType::ENEMY_GROUND);
+	//entityManager->CreateEntity("enemy", EntityType::ENEMY_GROUND);
 
 	//entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
 
@@ -153,6 +151,20 @@ void Scene::LoadScene()
 			entityManager->CreateEntity(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (InteractionType)interactionType);
 		}
 	}
+
+	for (EnemyData enemy : mapData.enemies) {
+		for (pugi::xml_node eNode = characters.child("character"); eNode != NULL; eNode = eNode.next_sibling("character")) {
+			if (eNode.attribute("id").as_string() != enemy.id) continue;
+			std::string name = eNode.attribute("name").as_string();
+			std::string texture = eNode.attribute("texture").as_string();
+			int type = eNode.attribute("type").as_int();
+			auto e = entityManager->CreateEntity(enemy.id, name, baseTexturePath + texture, enemy.position, (EntityType)type);
+			auto enemyPtr = std::dynamic_pointer_cast<Enemy>(e);
+			if (enemyPtr) {
+				enemyPtr->SetMap(map);
+			}
+		}
+	}
 }
 
 void Scene::EndScene()
@@ -172,4 +184,12 @@ void Scene::EndDialog()
 {
 	isOnDialog = false;
 	entityManager->paused = false;
+}
+
+Vector2D Scene::GetPlayerPosition() 
+{
+	if (player)
+		return player->GetPosition();
+
+	return Vector2D(0, 0);
 }

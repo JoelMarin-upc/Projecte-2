@@ -333,6 +333,15 @@ bool Map::Load(std::string path, std::string fileName)
                     gameData.items.push_back(item);
                 }
             }
+
+            if (objectGroup->name == "Enemies") {
+                for (const auto& object : objectGroup->objects) {
+                    EnemyData enemies;
+                    enemies.id = object->properties.GetProperty("id")->value_s;
+                    enemies.position = Vector2D(object->x, object->y);
+                    gameData.enemies.push_back(enemies);
+                }
+            }
         }
 
         ret = true;

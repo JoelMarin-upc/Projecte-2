@@ -9,4 +9,6 @@
 			<!--some items-->
 		</inventory>
 	</character>
+	<character id="EN-001" name="enemy" texture="goldCoin.png" type="5">
+	</character>
 </characters>

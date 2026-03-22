@@ -16,6 +16,12 @@ public:
     std::string id;
 };
 
+struct EnemyData {
+public:
+    Vector2D position;
+    std::string id;
+};
+
 class SaveData {
 public:
     SaveData(int _currentScene, int _time, int _lives, int _coins, bool _hasItem1, bool _hasItem2, Vector2D _playerPosition, Vector2D _playerRespawnPoint, std::vector<NPCData> _npcs, std::vector<ItemData> _items)

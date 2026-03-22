@@ -163,6 +163,7 @@ struct GameData {
     Vector2D playerStartPosition;
     std::vector<NPCData> npcs;
     std::vector<ItemData> items;
+    std::vector<EnemyData> enemies;
 };
 
 class Map
