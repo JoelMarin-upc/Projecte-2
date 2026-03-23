@@ -17,6 +17,7 @@ class Audio;
 class Physics;
 class UIManager;
 class SceneManager;
+class MenuManager;
 
 class Engine
 {
@@ -97,8 +98,9 @@ public:
 	std::shared_ptr<Audio> audio;
 	// L08: TODO 2: Add Physics module
 	std::shared_ptr<Physics> physics;
-	std::shared_ptr<UIManager> uiManager;
 	std::shared_ptr<SceneManager> sceneManager;
+	std::shared_ptr<MenuManager> menuManager;
+	std::shared_ptr<UIManager> uiManager;
 
 	int frameCount = 0;
 

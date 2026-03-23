@@ -64,18 +64,18 @@ DialogManager* SceneManager::GetDialogManager() const
 
 bool SceneManager::PreUpdate()
 {
-	if (currentScene == nullptr) return true;
+	if (currentScene == nullptr || paused) return true;
 	return currentScene->PreUpdate();
 }
 
 bool SceneManager::Update(float dt)
 {
-	if (currentScene == nullptr) return true;
+	if (currentScene == nullptr || paused) return true;
 	return currentScene->Update(dt);
 }
 
 bool SceneManager::PostUpdate(float dt)
 {
-	if (currentScene == nullptr) return true;
+	if (currentScene == nullptr || paused) return true;
 	return currentScene->PostUpdate(dt);
 }
