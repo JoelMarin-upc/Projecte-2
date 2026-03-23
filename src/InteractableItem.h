@@ -12,7 +12,7 @@ enum class InteractionType {
 class InteractableItem : public Item {
 public:
 	InteractableItem() {}
-	InteractableItem(std::string id, std::string name, std::string texturePath, InteractionType type);
+	InteractableItem(std::string id, std::string name, std::string texturePath, InteractionType type, bool canStack);
 	virtual ~InteractableItem();
 
 	virtual bool Awake() override;
@@ -39,6 +39,7 @@ protected:
 public:
 	bool isPlayerInRange = false;
 	bool isPicked = false;
+	bool canStack = false;
 
 protected:
 	//Dialogue type by default

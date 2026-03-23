@@ -10,9 +10,10 @@
 #include "EntityManager.h"
 #include "SceneManager.h"
 
-InteractableItem::InteractableItem(std::string id, std::string name, std::string texturePath, InteractionType type) : Item(id, name, texturePath, EntityType::INTERACTABLE_ITEM)
+InteractableItem::InteractableItem(std::string id, std::string name, std::string texturePath, InteractionType type, bool canStack) : Item(id, name, texturePath, EntityType::INTERACTABLE_ITEM)
 {
 	interactionType = type;
+	this->canStack = canStack;
 }
 
 InteractableItem::~InteractableItem() {}

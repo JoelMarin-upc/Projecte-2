@@ -27,7 +27,7 @@ public:
 	bool CleanUp();
 
 	// Additional methods
-	std::shared_ptr<Entity> CreateEntity(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, InteractionType interactionType = InteractionType::DEFAULT);
+	std::shared_ptr<Entity> CreateEntity(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, InteractionType interactionType = InteractionType::DEFAULT, bool canStack = false);
 
 	void DestroyEntity(std::shared_ptr<Entity> entity);
 
