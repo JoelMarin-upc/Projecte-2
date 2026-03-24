@@ -1,0 +1,12 @@
+<characters>
+	<player id="player" name="main character" texture="goldCoin.png">
+		<inventory>
+			<!--some items-->
+		</inventory>
+	</player>
+	<character id="CH-001" name="test character" texture="heart.png" type="3" npcInteractionType="1">
+		<inventory>
+			<!--some items-->
+		</inventory>
+	</character>
+</characters>

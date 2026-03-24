@@ -7,18 +7,10 @@
 
 enum class EntityType
 {
-	PLAYER,
-	NPC,
-	ITEM,
-	HEART,
-	COIN,
-	RECHARGE,
-	KEY,
-	SPEAR,
-	ENEMY_AIR,
-	ENEMY_GROUND,
-	BOSS,
-	INTERACTABLE_ITEM,
+	PLAYER = 1,
+	WALL = 2,
+	NPC = 3,
+	INTERACTABLE_ITEM = 4,
 	UNKNOWN
 };
 
@@ -29,7 +21,7 @@ class Entity : public std::enable_shared_from_this<Entity>
 public:
 
 	Entity() {}
-	Entity(std::string _id, EntityType _type) : id(_id), type(_type), active(true) {}
+	Entity(std::string _id, std::string _name, std::string _texturePath, EntityType _type) : id(_id), name(_name), texturePath(_texturePath), type(_type), active(true) {}
 
 	virtual bool Awake()
 	{
@@ -103,6 +95,6 @@ public:
 
 	std::vector<Collider*> colliders;
 	SDL_Texture* texture;
-	const char* texturePath;
+	std::string texturePath;
 	
 };

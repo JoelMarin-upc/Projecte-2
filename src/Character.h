@@ -5,5 +5,5 @@
 class Character : public DynamicEntity {
 public:
 	Character() {}
-	Character(std::string id, EntityType type) : DynamicEntity(id, type) {}
+	Character(std::string id, std::string name, std::string texturePath, EntityType type) : DynamicEntity(id, name, texturePath, type) {}
 };

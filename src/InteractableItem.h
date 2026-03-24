@@ -1,18 +1,21 @@
 #pragma once
 
-#include "StaticEntity.h"
+#include "Item.h"
 
 enum class ItemInteractionType {
 	DEFAULT,
 	PICKUP,
 	TOGGLE,
 	DIALOGUE
+
 };
 
-class InteractableItem : public StaticEntity {
+class InteractableItem : public Item {
 public:
 	InteractableItem() {}
-	InteractableItem(ItemInteractionType type);
+
+	InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type);
+
 	virtual ~InteractableItem();
 
 	virtual bool Awake() override;

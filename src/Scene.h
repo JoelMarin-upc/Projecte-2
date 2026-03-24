@@ -72,7 +72,7 @@ class Scene
 {
 public:
 
-	Scene(std::string mapName);
+	Scene(std::string _id, std::string mapPath, std::string mapName);
 	
 	Scene();
 
@@ -100,8 +100,8 @@ public:
 	void TogglePause();
 	void SaveGame();
 	void LoadGame();
+	void LoadMap(std::string mapPath, std::string mapName);
 	void LoadScene();
-	void LoadMap();
 	void EndScene();
 
 	void StartDialog(std::string characterId);
@@ -129,5 +129,9 @@ private:
 	Timer gameTimer;
 	bool paused = false;
 	bool isOnDialog = false;
+
 	std::string  activeDialogId = "";
+
+	GameData mapData;
+
 };

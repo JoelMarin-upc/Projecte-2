@@ -3,7 +3,7 @@
 #include "SceneManager.h"
 #include "Log.h"
 
-NPC::NPC(std::string id, NPCInteractionType type) : AICharacter(id, EntityType::NPC)
+NPC::NPC(std::string id, std::string name, std::string texturePath, NPCInteractionType type)
 {
 	npcID = id;
 	name = "interactableNPC";

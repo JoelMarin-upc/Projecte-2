@@ -104,7 +104,7 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 
 bool UIManager::PostUpdate(float dt)
 {
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 		debug = !debug;
 
 	for (const auto& control : UIElementsList)

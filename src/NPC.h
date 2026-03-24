@@ -14,7 +14,7 @@ enum class NPCInteractionType {
 class NPC : public AICharacter {
 public:
 	NPC(){}
-	NPC(std::string id, NPCInteractionType type = NPCInteractionType::DEFAULT);
+	NPC(std::string id, std::string name, std::string texturePath, NPCInteractionType type = NPCInteractionType::DEFAULT) : AICharacter(id, name, texturePath, EntityType::NPC);
 	virtual ~NPC();
 
 	bool Awake() override;

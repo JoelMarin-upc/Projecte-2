@@ -94,6 +94,8 @@ Collider* Physics::CreateRectangle(int x, int y, int width, int height, bodyType
     b2BodyDef def = b2DefaultBodyDef();
     def.type = ToB2Type(type);
     def.position = { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) };
+    def.linearDamping = 5.f;
+    def.angularDamping = 5.f;
 
     b2BodyId b = b2CreateBody(world, &def);
 
@@ -120,6 +122,8 @@ Collider* Physics::CreateCircle(int x, int y, int radious, bodyType type, uint16
     b2BodyDef def = b2DefaultBodyDef();
     def.type = ToB2Type(type);
     def.position = { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) };
+    def.linearDamping = 5.f;
+    def.angularDamping = 5.f;
 
     b2BodyId b = b2CreateBody(world, &def);
 
@@ -201,6 +205,8 @@ Collider* Physics::CreateChain(int x, int y, int* points, int size, bodyType typ
     b2BodyDef def = b2DefaultBodyDef();
     def.type = ToB2Type(type);
     def.position = { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) };
+    def.linearDamping = 5.f;
+    def.angularDamping = 5.f;
 
     b2BodyId b = b2CreateBody(world, &def);
 
@@ -236,7 +242,7 @@ bool Physics::PostUpdate(float dt)
     bool ret = true;
 
     // Activate or deactivate debug mode
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
         debug = !debug;
 
     // Debug draw via Box2D 3.x callbacks

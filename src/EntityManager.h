@@ -2,6 +2,7 @@
 
 #include "Module.h"
 #include "Entity.h"
+#include "InteractableItem.h"
 #include <list>
 
 class EntityManager : public Module
@@ -26,7 +27,8 @@ public:
 	bool CleanUp();
 
 	// Additional methods
-	std::shared_ptr<Entity> CreateEntity(std::string id, EntityType type);
+	std::shared_ptr<Entity> CreateEntity(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, 
+		ItemInteractionType interactionType = ItemInteractionType::DEFAULT, NPCInteractionType npcInteractionType = NPCInteractionType::DEFAULT);
 
 	void DestroyEntity(std::shared_ptr<Entity> entity);
 

@@ -3,24 +3,28 @@
 #include "Engine.h"
 #include "NPC.h"
 
-Scene::Scene(std::string mapName)
+Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 {
-	id = "SC-001";
+	id = _id;
 	name = "scene";
-	map = new Map();
+	
 	entityManager = new EntityManager();
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
 
-	entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
+	LoadMap(mapPath, mapName);
+	LoadScene();
 
-	entityManager->CreateEntity("player", EntityType::PLAYER);
-	entityManager->CreateEntity("CH-001", EntityType::NPC);
+	//entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
+
+	//entityManager->CreateEntity("player", EntityType::PLAYER);
+	//entityManager->CreateEntity("CH-001", EntityType::NPC);
 
 	//map->Load("base map path", mapName);
 	/*entityManager->Load(entities);
 	missionManager->Load(missions);
 	dialogManager->Load(dialogs);*/
+
 }
 
 // Destructor
@@ -47,11 +51,15 @@ bool Scene::Start()
 	missionManager->Start();
 	dialogManager->Start();
 
+<<<<<<< HEAD
 	testItem = std::make_shared<InteractableItem>(ItemInteractionType::TOGGLE);
+=======
+	/*testItem = std::make_shared<InteractableItem>(ItemInteractionType::TOGGLE);
+>>>>>>> develop
 	testItem->position.setX(500);
 	testItem->position.setY(500);
 	entityManager->AddEntity(testItem);
-	testItem->Start();
+	testItem->Start();*/
 	
 	return true;
 }
@@ -103,14 +111,49 @@ void Scene::LoadGame()
 	
 }
 
-void Scene::LoadScene()
+void Scene::LoadMap(std::string mapPath, std::string mapName)
 {
-	// Load entities
+	map = new Map();
+	map->Load(mapPath, mapName);
+	mapData = map->gameData;
 }
 
-void Scene::LoadMap()
+void Scene::LoadScene()
 {
+	std::string baseTexturePath = "Assets/Textures/";
 
+	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+	pugi::xml_node characters = charactersDoc.child("characters");
+	pugi::xml_document itemsDoc = XMLHandler::LoadFile("Assets/Entities/items.xml");
+	pugi::xml_node items = itemsDoc.child("items");
+
+	pugi::xml_node pNode = characters.child("player");
+	std::string id = pNode.attribute("id").as_string();
+	std::string name = pNode.attribute("name").as_string();
+	std::string texture = pNode.attribute("texture").as_string();
+	player = std::dynamic_pointer_cast<Player>(entityManager->CreateEntity(id, name, baseTexturePath + texture, mapData.playerStartPosition, EntityType::PLAYER));
+
+	for (NPCData npc : mapData.npcs) {
+		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
+			if (cNode.attribute("id").as_string() != npc.id) continue;
+			std::string name = cNode.attribute("name").as_string();
+			std::string texture = cNode.attribute("texture").as_string();
+			int type = cNode.attribute("type").as_int();
+			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
+			entityManager->CreateEntity(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, ItemInteractionType::DEFAULT, (NPCInteractionType)npcInteractionType);
+		}
+	}
+
+	for (ItemData item : mapData.items) {
+		for (pugi::xml_node iNode = items.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
+			if (iNode.attribute("id").as_string() != item.id) continue;
+			std::string name = iNode.attribute("name").as_string();
+			std::string texture = iNode.attribute("texture").as_string();
+			int type = iNode.attribute("type").as_int();
+			int interactionType = iNode.attribute("interactionType").as_int();
+			entityManager->CreateEntity(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType);
+		}
+	}
 }
 
 void Scene::EndScene()
