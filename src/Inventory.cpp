@@ -28,15 +28,25 @@ bool Inventory::Cleanup()
 
 bool Inventory::AddItem(InteractableItem* item)
 {
+	if (items.size() == MAX_SLOTS) {
+		LOG("The inventory is full, the item could not be added");
+		return false;
+	}
+
 	if (item->canStack) {
-		int existingStack = FindItemStack(item->id);
+		int existingStack = FindItem(item->name);
 		if (existingStack != -1) {
 			items[existingStack]->count += item->count;
+		}
+		else {
+			items.push_back(item);
 		}
 	}
 
 	else {
-		int firstFreeSlot = FindFreeSlot();
+		items.push_back(item);
+
+		/*int firstFreeSlot = FindFreeSlot();
 		if (firstFreeSlot != -1) {
 			items[firstFreeSlot] = item;
 			LOG("Added %s to inventory space %d", item->name.c_str(), firstFreeSlot);
@@ -44,15 +54,48 @@ bool Inventory::AddItem(InteractableItem* item)
 		else {
 			LOG("Inventory full");
 			return false;
-		}
+		}*/
 	}
 	return true;
 }
 
-int Inventory::FindItemStack(std::string id)
+bool Inventory::RemoveItem(InteractableItem* item)
+{
+	if (item->canStack) {
+		int existingStack = FindItem(item->id);
+		if (existingStack != -1) {
+			items[existingStack]->count -= item->count;
+			if (item->count <= 0) {
+				for (int i = 0; i < items.size(); ++i) {
+					if (items[i]->name == item->name) {
+						items[i]->Destroy();
+						items.erase(items.begin() + i);
+					}
+				}
+			}
+		}
+		else {
+			LOG("This item isn't in the inventory");
+		}
+	}
+
+	else {
+		int itemInInventory = FindItem(item->name);
+		for (int i = 0; i < items.size(); ++i) {
+			if (items[i]->name == item->name) {
+				items[i]->Destroy();
+				items.erase(items.begin() + i);
+			}
+		}
+	}
+
+	return true;
+}
+
+int Inventory::FindItem(std::string itemName)
 {
 	for (int i = 0; i < items.size(); ++i) {
-		if (items[i]->id == id) {
+		if (items[i]->name == itemName) {
 			return i;
 		}
 	}

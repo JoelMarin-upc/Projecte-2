@@ -18,7 +18,9 @@ class Inventory {
 	bool Cleanup();
 
 	bool AddItem(InteractableItem* item);
-	int FindItemStack(std::string id);
+	bool RemoveItem(InteractableItem* item);
+
+	int FindItem(std::string itemName);
 	int FindFreeSlot();
 
 public:
