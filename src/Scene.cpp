@@ -1,6 +1,9 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Engine.h"
+#include "Audio.h"
+#include "Window.h"
+#include "SceneManager.h"
 
 Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 {
@@ -46,6 +49,8 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
+	Engine::GetInstance().menuManager->SetObserver(this);
+
 	entityManager->Start();
 	missionManager->Start();
 	dialogManager->Start();
@@ -95,6 +100,9 @@ void Scene::TogglePause()
 	paused = !paused;
 	entityManager->paused = paused;
 	//Engine::GetInstance().physics->paused = paused;
+
+	if (paused) Engine::GetInstance().menuManager->ShowPauseMenu();
+	else Engine::GetInstance().menuManager->HideMenu();
 }
 
 void Scene::SaveGame()
@@ -168,4 +176,51 @@ void Scene::EndDialog()
 {
 	isOnDialog = false;
 	entityManager->paused = false;
+}
+
+bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
+	float musicVol;
+	float fxVol;
+	switch ((UIID)uiElement->id)
+	{
+	case START_GAME:
+		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001");
+		break;
+	case CONTINUE_GAME:
+		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001"); // take the last scene from the save data
+		break;
+	case RESUME_GAME:
+		TogglePause();
+		break;
+	case SETTINGS_BUTTON:
+		Engine::GetInstance().menuManager->ShowSettingsMenu();
+		break;
+	case CREDITS_BUTTON:
+		Engine::GetInstance().menuManager->ShowCreditsMenu();
+		break;
+	case MUSIC_VOLUME:
+		musicVol = ((UISlider*)uiElement)->GetValue() / 10;
+		Engine::GetInstance().audio->SetMusicVolume(musicVol);
+		break;
+	case FX_VOLUME:
+		fxVol = ((UISlider*)uiElement)->GetValue() / 10;
+		Engine::GetInstance().audio->SetFxVolume(fxVol);
+		break;
+	case FULLSCREEN:
+		Engine::GetInstance().window->SetFullscreen(((UICheckbox*)uiElement)->checked);
+		Engine::GetInstance().menuManager->Load(true);
+		break;
+	case BACK_MENU:
+		Engine::GetInstance().menuManager->ShowPreviousMenu();
+		break;
+	case BACK_MAIN_MENU:
+		Engine::GetInstance().menuManager->ShowMainMenu();
+		gameStarted = false;
+		break;
+	case EXIT:
+		shouldExit = true;
+		break;
+	default:
+		break;
+	}
 }
