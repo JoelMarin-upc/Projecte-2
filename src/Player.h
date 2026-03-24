@@ -3,6 +3,7 @@
 #include "Character.h"
 #include "Animation.h"
 #include "Timer.h"
+#include "Inventory.h"
 #include <box2d/box2d.h>
 #include <SDL3/SDL.h>
 
@@ -130,6 +131,11 @@ public:
 	bool inBoss = false;
 	int keyCount = 0;
 	bool doorOpen = false;
+
+
+
+
+	Inventory* inventory;
 
 private:
 	b2Vec2 velocity;
