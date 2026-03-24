@@ -33,23 +33,14 @@ bool Enemy::Start() {
 	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 1, 1);
 
 	colliders[0]->etype = EntityType::ENEMY;
-	pbody = colliders[0];
-	pbody->listener = this;
+	enemyBody = colliders[0];
+	enemyBody->listener = this;
 
 	texW = 32;
 	texH = 32;
 
+	map = Engine::GetInstance().sceneManager->GetCurrentScene()->GetMap();
 	pathfinding = std::make_shared<Pathfinding>();
-	auto scene = Engine::GetInstance().sceneManager->GetCurrentScene();
-	if (map == nullptr) {
-		auto scene = Engine::GetInstance().sceneManager->GetCurrentScene();
-		if (scene != nullptr) {
-			map = scene->GetMap();
-			if (map != nullptr) {
-				pathfinding->SetMap(map);
-			}
-		}
-	}
 
 	return true;
 }
@@ -64,6 +55,54 @@ bool Enemy::Update(float dt)
 	}
 
 	return true;
+}
+
+void Enemy::PerformPathfinding()
+{
+	Vector2D pos = GetPosition();
+	Vector2D tilePos = map->WorldToMap((int)pos.getX(), (int)pos.getY() + 8);
+	pathfinding->ResetPath(tilePos);
+
+	int ctr = 0;
+
+	while (pathfinding->pathTiles.empty() && ctr < 100) {
+		ctr++;
+		pathfinding->PropagateAStar(SQUARED);
+	}
+
+	if (!pathfinding->pathTiles.empty()) {
+		pathfinding->pathTiles.reverse();
+	}
+
+	// Reset pathfinding with R key
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
+		//Get the position of the enemy
+		Vector2D pos = GetPosition();
+		//Convert to tile coordinates
+		Vector2D tilePos = map->WorldToMap((int)pos.getX(), (int)pos.getY() + 1);
+		//Reset pathfinding
+		pathfinding->ResetPath(tilePos);
+	}
+
+	// L13: TODO 3:	Add the key inputs to propagate the A* algorithm with different heuristics (Manhattan, Euclidean, Squared)
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_M) == KEY_DOWN) {
+		pathfinding->PropagateAStar(MANHATTAN);
+	}
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_M) == KEY_REPEAT &&
+		Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
+		pathfinding->PropagateAStar(MANHATTAN);
+	}
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_N) == KEY_DOWN) {
+		pathfinding->PropagateAStar(EUCLIDEAN);
+	}
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_N) == KEY_REPEAT &&
+		Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
+		pathfinding->PropagateAStar(EUCLIDEAN);
+	}
+
 }
 
 void Enemy::UpdateState(float dt)
@@ -84,7 +123,6 @@ void Enemy::UpdateState(float dt)
 
 	case EnemyState::CHASING:
 	{
-		if (map == nullptr) return;
 		LOG("chasing");
 
 		Vector2D playerTile = map->WorldToMap(playerPos.getX(), playerPos.getY());
@@ -92,25 +130,15 @@ void Enemy::UpdateState(float dt)
 
 		if (playerTile != lastPlayerTile) {
 			lastPlayerTile = playerTile;
+			PerformPathfinding();
 
-			pathfinding->ComputePath(enemyTile, playerTile);
+			/*pathfinding->ComputePath(enemyTile, playerTile);
 
 			if (pathfinding->HasPath())
-				currentTarget = pathfinding->GetNextWorld(map);
+				currentTarget = pathfinding->GetNextWorld(map);*/
 		}
 
 		Move(currentTarget);
-
-		float dx = currentTarget.getX() - position.getX();
-		float dy = currentTarget.getY() - position.getY();
-
-		if (sqrtf(dx * dx + dy * dy) < 8.0f)
-		{
-			if (pathfinding->HasPath())
-				currentTarget = pathfinding->GetNextWorld(map);
-		}
-
-		LOG("HasPath: %d", pathfinding->HasPath());
 
 		if (DistanceTo(playerPos) > chaseDistance)
 			state = EnemyState::IDLE;
@@ -137,19 +165,49 @@ float Enemy::DistanceTo(const Vector2D& v) const
 
 void Enemy::Move(const Vector2D& target) {
 	LOG("moving");
-	float dx = target.getX() - position.getX();
-	float dy = target.getY() - position.getY();
+	Vector2D currentPos = GetPosition();
+	std::vector<Vector2D> tiles(pathfinding->pathTiles.begin(), pathfinding->pathTiles.end());
+	int targetIndex = 1;
 
-	float length = sqrtf(dx * dx + dy * dy);
-
-	if (length > 0.0f)
-	{
-		dx /= length;
-		dy /= length;
+	//Checks a bit ahead in the tiles vector
+	if (tiles.size() - 1 > 2) {
+		targetIndex = 2;
 	}
 
-	velocity.x = dx * speed;
-	velocity.y = dy * speed;
+	Vector2D nextTile = tiles[targetIndex];
+
+	Vector2D nextWorldPos = map->MapToWorld((int)nextTile.getX(), (int)nextTile.getY());
+	int tileWidth = map->GetTileWidth();
+	int tileHeight = map->GetTileHeight();
+
+	nextWorldPos.setX(nextWorldPos.getX() + tileWidth / 2.0f);
+	nextWorldPos.setY(nextWorldPos.getY() + tileHeight / 2.0f);
+
+	float distanceX = nextWorldPos.getX() - currentPos.getX();
+	float distanceY = nextWorldPos.getY() - currentPos.getY();
+
+	float deadZone = 1.0f;
+
+	if (distanceX > deadZone) {
+		velocity.x = speed;
+		//facingDirection = SDL_FLIP_HORIZONTAL;
+	}
+	else if (distanceX < -deadZone) {
+		velocity.x = -speed;
+		//facingDirection = SDL_FLIP_NONE;
+	}
+	else if (distanceY > deadZone) {
+		velocity.y = speed;
+		//facingDirection = SDL_FLIP_NONE;
+	}
+	else if (distanceY < deadZone) {
+		velocity.y = -speed;
+		//facingDirection = SDL_FLIP_NONE;
+	}
+	else {
+		pathfinding->pathTiles.pop_front();
+		velocity.x = 0;
+	}
 }
 
 void Enemy::ApplyPhysics() {
@@ -163,20 +221,23 @@ void Enemy::Draw(float dt) {
 		return;
 	}
 
+	if (pathfinding)
+	{
+		pathfinding->DrawPath();
+	}
 	int x, y;
-	pbody->GetPosition(x, y);
+	enemyBody->GetPosition(x, y);
 	position.setX((float)x);
 	position.setY((float)y);
 	Engine::GetInstance().render->DrawTexture(texture, x - texW, y - texH);
 
 }
 
-void Enemy::SetMap(Map* m)
-{
-	map = m;
-	if (pathfinding) {
-		pathfinding->SetMap(m);
-	}
+Vector2D Enemy::GetPosition() {
+	int x, y;
+	enemyBody->GetPosition(x, y);
+	// Adjust for center
+	return Vector2D((float)x - texW / 2, (float)y - texH / 2);
 }
 
 

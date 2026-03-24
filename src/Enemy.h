@@ -24,11 +24,12 @@ public:
 	void Draw(float dt);
 
 	bool CleanUp();
-	void SetMap(Map* m);
+	Vector2D GetPosition();
 
 	//void OnCollision(Collider* physA, Collider* physB);
 	//void OnCollisionEnd(Collider* physA, Collider* physB);
 private:
+	void PerformPathfinding();
 	void GetPhysicsValues();
 	void Move(const Vector2D& target);
 	void UpdateState(float dt);
@@ -41,7 +42,8 @@ public:
 	std::vector<Vector2D> currentPath;
 	SDL_Texture* texture;
 	bool isActive = true;
-	Collider* pbody = nullptr;
+	bool isDead = false;
+	Collider* enemyBody = nullptr;
 	Vector2D lastPlayerTile;
 	Vector2D lastEnemyTile;
 	Vector2D currentTarget;

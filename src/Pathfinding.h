@@ -34,12 +34,6 @@ public:
     // L13: A* Pathfinding methods
     Vector2D* PropagateAStar(ASTAR_HEURISTICS heuristic);
 
-    void SetMap(Map* m);
-    void ComputePath(Vector2D start, Vector2D end);
-    bool HasPath() const;
-    Vector2D GetNextTile();
-    Vector2D GetNextWorld(Map* map);
-
 
 private:
     int Find(std::list<Vector2D> vector, Vector2D elem);

@@ -14,6 +14,7 @@ Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 	LoadMap(mapPath, mapName);
 	LoadScene();
 
+	
 	//entityManager->CreateEntity("enemy", EntityType::ENEMY_GROUND);
 
 	//entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
@@ -37,6 +38,7 @@ bool Scene::Awake()
 {
 	LOG("Loading Scene");
 	bool ret = true;
+
 
 	entityManager->Awake();
 	missionManager->Awake();
@@ -118,6 +120,7 @@ void Scene::LoadMap(std::string mapPath, std::string mapName)
 
 void Scene::LoadScene()
 {
+
 	std::string baseTexturePath = "Assets/Textures/";
 
 	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
@@ -158,11 +161,11 @@ void Scene::LoadScene()
 			std::string name = eNode.attribute("name").as_string();
 			std::string texture = eNode.attribute("texture").as_string();
 			int type = eNode.attribute("type").as_int();
-			auto e = entityManager->CreateEntity(enemy.id, name, baseTexturePath + texture, enemy.position, (EntityType)type);
-			auto enemyPtr = std::dynamic_pointer_cast<Enemy>(e);
+			entityManager->CreateEntity(enemy.id, name, baseTexturePath + texture, enemy.position, (EntityType)type);
+			/*auto enemyPtr = std::dynamic_pointer_cast<Enemy>(e);
 			if (enemyPtr) {
 				enemyPtr->SetMap(map);
-			}
+			}*/
 		}
 	}
 }

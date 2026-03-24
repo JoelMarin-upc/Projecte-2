@@ -5,18 +5,18 @@
 #include "Render.h"
 #include "Scene.h"
 #include "SceneManager.h"
+#include "Log.h"
 
 
 Pathfinding::Pathfinding() {
     
     debug = false;
      //Loads texture to draw the path
-    pathTex = Engine::GetInstance().textures.get()->Load("Assets/Maps/MapMetadata.png");
+    pathTex = Engine::GetInstance().textures.get()->Load("Assets/Maps/metadata.png");
     tileX = Engine::GetInstance().textures.get()->Load("Assets/Textures/x.png");
     //map = Engine::GetInstance().map.get();
     //layerNav = map->GetNavigationLayer();
-
-    map = nullptr;
+    map = Engine::GetInstance().sceneManager->currentScene->GetMap();
 
     // Initialize the costSoFar with all elements set to 0
     //costSoFar = std::vector<std::vector<int>>(map->GetMapSizeInTiles().getX(), std::vector<int>(map->GetMapSizeInTiles().getY(), 0));
@@ -440,48 +440,4 @@ int Pathfinding::Find(std::list<Vector2D> vector, Vector2D elem)
     if (found) return index;
     else return -1;
 
-}
-
-void Pathfinding::SetMap(Map* m)
-{
-    map = m;
-    layerNav = map->GetNavigationLayer();
-    costSoFar = std::vector<std::vector<int>>(map->GetMapSizeInTiles().getX(), std::vector<int>(map->GetMapSizeInTiles().getY(), 0));
-}
-
-void Pathfinding::ComputePath(Vector2D start, Vector2D end)
-{
-    ResetPath(start);
-
-    // run A* fully (no per-frame propagation anymore)
-    for (int i = 0; i < 200; i++)
-    {
-        PropagateAStar(ASTAR_HEURISTICS::SQUARED);
-        if (!pathTiles.empty()) break;
-    }
-
-    // reverse so first = next step
-    path.clear();
-    path.assign(pathTiles.begin(), pathTiles.end());
-    std::reverse(path.begin(), path.end());
-}
-
-bool Pathfinding::HasPath() const
-{
-    return !path.empty();
-}
-
-Vector2D Pathfinding::GetNextTile()
-{
-    if (path.empty()) return { -1, -1 };
-
-    Vector2D next = path.front();
-    path.erase(path.begin());
-    return next;
-}
-
-Vector2D Pathfinding::GetNextWorld(Map* map)
-{
-    Vector2D t = GetNextTile();
-    return map->MapToWorld((int)t.getX(), (int)t.getY());
 }
