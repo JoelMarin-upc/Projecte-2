@@ -14,8 +14,13 @@ Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
 
-	LoadMap(mapPath, mapName);
-	LoadScene();
+	gameStarted = id != "main menu";
+
+	if (gameStarted)
+	{
+		LoadMap(mapPath, mapName);
+		LoadScene();
+	}
 
 	//entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
 
@@ -51,6 +56,8 @@ bool Scene::Start()
 {
 	Engine::GetInstance().menuManager->SetObserver(this);
 
+	if (!gameStarted) Engine::GetInstance().menuManager->ShowMainMenu();
+
 	entityManager->Start();
 	missionManager->Start();
 	dialogManager->Start();
@@ -73,6 +80,7 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	if (!gameStarted) return true;
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("CH-001");
 	map->Update(dt);
 	entityManager->Update(dt);
@@ -97,6 +105,7 @@ bool Scene::CleanUp()
 
 void Scene::TogglePause()
 {
+	if (!gameStarted) return;
 	paused = !paused;
 	entityManager->paused = paused;
 	//Engine::GetInstance().physics->paused = paused;
@@ -166,6 +175,7 @@ void Scene::EndScene()
 
 void Scene::StartDialog(std::string characterId)
 {
+	if (!gameStarted) return;
 	if (isOnDialog) return;
 	if (!dialogManager->SetCurrentDialog(characterId)) return;
 	isOnDialog = true;
@@ -174,6 +184,7 @@ void Scene::StartDialog(std::string characterId)
 
 void Scene::EndDialog()
 {
+	if (!gameStarted) return;
 	isOnDialog = false;
 	entityManager->paused = false;
 }
@@ -184,9 +195,11 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	switch ((UIID)uiElement->id)
 	{
 	case START_GAME:
+		Engine::GetInstance().menuManager->HideMenu();
 		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001");
 		break;
 	case CONTINUE_GAME:
+		Engine::GetInstance().menuManager->HideMenu();
 		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001"); // take the last scene from the save data
 		break;
 	case RESUME_GAME:
@@ -214,13 +227,13 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		Engine::GetInstance().menuManager->ShowPreviousMenu();
 		break;
 	case BACK_MAIN_MENU:
-		Engine::GetInstance().menuManager->ShowMainMenu();
-		gameStarted = false;
+		Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
 		break;
 	case EXIT:
-		shouldExit = true;
+		exit(0);
 		break;
 	default:
 		break;
 	}
+	return true;
 }

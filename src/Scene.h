@@ -82,6 +82,7 @@ private:
 	SceneData data;
 	XMLHandler* persistance = new XMLHandler();
 	Timer gameTimer;
+	bool gameStarted = false;
 	bool paused = false;
 	bool isOnDialog = false;
 	GameData mapData;
