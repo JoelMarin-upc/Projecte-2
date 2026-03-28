@@ -48,7 +48,10 @@ public:
 
 	static UIParameters Image(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex) {
 		UIParameters p = UIParameters();
-
+		p.disabledTex = disabledTex;
+		p.normalTex = normalTex;
+		p.focusedTex = focusedTex;
+		p.pressedTex = pressedTex;
 		return p;
 	}
 

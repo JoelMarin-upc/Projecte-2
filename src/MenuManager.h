@@ -25,6 +25,7 @@ enum UIID {
 	RESUME_GAME,
 	CREDITS_BUTTON,
 	CREDITS_LABEL,
+	GAME_OVER_LABEL,
 	SETTINGS_BUTTON,
 	SETTINGS_LABEL,
 	MUSIC_VOLUME_LABEL,
@@ -85,13 +86,15 @@ public:
 	std::shared_ptr<UIImage> gameTitle;
 	std::shared_ptr<UIImage> studioLogo;
 	std::shared_ptr<UILabel> pausedLabel;
+	std::shared_ptr<UILabel> gameOverLabel;
 	std::shared_ptr<UIButton> startGame;
 	std::shared_ptr<UIButton> continueGame;
 	std::shared_ptr<UIButton> resumeGame;
 	std::shared_ptr<UIButton> settingsButton;
 	std::shared_ptr<UIButton> creditsButton;
 	std::shared_ptr<UILabel> settingsLabel;
-	std::shared_ptr<UILabel> creditsLabel;
+	std::shared_ptr<UILabel> creditsLabel1;
+	std::shared_ptr<UILabel> creditsLabel2;
 	std::shared_ptr<UILabel> musicVolumeLabel;
 	std::shared_ptr<UISlider> musicVolumeSlider;
 	std::shared_ptr<UILabel> fxVolumeLabel;
@@ -101,4 +104,6 @@ public:
 	std::shared_ptr<UIButton> backMenu;
 	std::shared_ptr<UIButton> backMainMenu;
 	std::shared_ptr<UIButton> exit;
+
+	int uiLockFrame = -1;
 };

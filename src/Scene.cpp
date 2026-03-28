@@ -54,6 +54,8 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
+	paused = false;
+
 	Engine::GetInstance().menuManager->SetObserver(this);
 
 	if (!gameStarted) Engine::GetInstance().menuManager->ShowMainMenu();
@@ -81,6 +83,10 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	if (!gameStarted) return true;
+	///////////// FOR TESTING (remove) /////////////
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) Engine::GetInstance().menuManager->ShowDeathScreen();
+	////////////////////////////////////////////////
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN || Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) TogglePause();
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("CH-001");
 	map->Update(dt);
 	entityManager->Update(dt);
@@ -190,6 +196,9 @@ void Scene::EndDialog()
 }
 
 bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
+	
+	if (Engine::GetInstance().menuManager->uiLockFrame == Engine::GetInstance().frameCount) return true;
+
 	float musicVol;
 	float fxVol;
 	switch ((UIID)uiElement->id)
