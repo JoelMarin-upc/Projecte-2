@@ -51,11 +51,11 @@ bool Scene::Start()
 	missionManager->Start();
 	dialogManager->Start();
 
-<<<<<<< HEAD
-	testItem = std::make_shared<InteractableItem>(ItemInteractionType::TOGGLE);
-=======
+
+	//testItem = std::make_shared<InteractableItem>(ItemInteractionType::TOGGLE);
+
 	/*testItem = std::make_shared<InteractableItem>(ItemInteractionType::TOGGLE);
->>>>>>> develop
+
 	testItem->position.setX(500);
 	testItem->position.setY(500);
 	entityManager->AddEntity(testItem);

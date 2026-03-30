@@ -3,6 +3,7 @@
 #include "Module.h"
 #include "Entity.h"
 #include "InteractableItem.h"
+#include "NPC.h"
 #include <list>
 
 class EntityManager : public Module

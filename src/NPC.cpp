@@ -3,13 +3,6 @@
 #include "SceneManager.h"
 #include "Log.h"
 
-NPC::NPC(std::string id, std::string name, std::string texturePath, NPCInteractionType type)
-{
-	npcID = id;
-	name = "interactableNPC";
-	npcInteractionType = type;
-}
-
 NPC::~NPC() {}
 
 bool NPC::Awake() {
@@ -19,7 +12,7 @@ bool NPC::Awake() {
 bool NPC::Start()
 {
 	texturePath = "Assets/Textures/heart.png";
-	texture = Engine::GetInstance().textures->Load(texturePath);
+	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
 	position.setX(200);
 	position.setY(200);
 
