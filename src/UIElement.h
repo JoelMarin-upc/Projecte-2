@@ -18,7 +18,8 @@ enum class UIElementType
 	DROPDOWNBOX,
 	INPUTBOX,
 	VALUEBOX,
-	SPINNER
+	SPINNER,
+	IMAGE
 };
 
 enum class UIElementState

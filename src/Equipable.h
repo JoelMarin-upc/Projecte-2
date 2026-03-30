@@ -7,7 +7,7 @@ class Equipable : InteractableItem
 {
 public:
 	Equipable() : InteractableItem() {}
-	Equipable(std::string id, std::string name, std::string texturePath, InteractionType type = InteractionType::PICKUP, bool canStack = false) : InteractableItem(id, name, texturePath, type, canStack){}
+	Equipable(std::string id, std::string name, std::string texturePath, ItemInteractionType type = ItemInteractionType::PICKUP, bool canStack = false) : InteractableItem(id, name, texturePath, type, canStack){}
 	~Equipable() {}
 
 	virtual void OnEquip() {

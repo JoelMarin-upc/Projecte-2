@@ -1,6 +1,6 @@
 #include "Weapon.h"
 
-Weapon::Weapon(std::string id, std::string name, std::string texturePath) : Equipable(id, name, texturePath, InteractionType::PICKUP)
+Weapon::Weapon(std::string id, std::string name, std::string texturePath) : Equipable(id, name, texturePath, ItemInteractionType::PICKUP)
 {
 }
 

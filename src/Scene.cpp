@@ -1,6 +1,10 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Engine.h"
+#include "NPC.h"
+#include "Audio.h"
+#include "Window.h"
+#include "SceneManager.h"
 
 Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 {
@@ -11,8 +15,13 @@ Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
 
-	LoadMap(mapPath, mapName);
-	LoadScene();
+	gameStarted = id != "main menu";
+
+	if (gameStarted)
+	{
+		LoadMap(mapPath, mapName);
+		LoadScene();
+	}
 
 	//entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
 
@@ -46,11 +55,21 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
+	paused = false;
+
+	Engine::GetInstance().menuManager->SetObserver(this);
+
+	if (!gameStarted) Engine::GetInstance().menuManager->ShowMainMenu();
+
 	entityManager->Start();
 	missionManager->Start();
 	dialogManager->Start();
 
-	/*testItem = std::make_shared<InteractableItem>(InteractionType::TOGGLE);
+
+	//testItem = std::make_shared<InteractableItem>(ItemInteractionType::TOGGLE);
+
+	/*testItem = std::make_shared<InteractableItem>(ItemInteractionType::TOGGLE);
+
 	testItem->position.setX(500);
 	testItem->position.setY(500);
 	entityManager->AddEntity(testItem);
@@ -68,7 +87,14 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+
+	if (!gameStarted) return true;
+	///////////// FOR TESTING (remove) /////////////
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) Engine::GetInstance().menuManager->ShowDeathScreen();
+	////////////////////////////////////////////////
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN || Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) TogglePause();
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("CH-001");
+
 	map->Update(dt);
 	entityManager->Update(dt);
 	missionManager->Update(dt);
@@ -92,9 +118,13 @@ bool Scene::CleanUp()
 
 void Scene::TogglePause()
 {
+	if (!gameStarted) return;
 	paused = !paused;
 	entityManager->paused = paused;
 	//Engine::GetInstance().physics->paused = paused;
+
+	if (paused) Engine::GetInstance().menuManager->ShowPauseMenu();
+	else Engine::GetInstance().menuManager->HideMenu();
 }
 
 void Scene::SaveGame()
@@ -127,7 +157,8 @@ void Scene::LoadScene()
 	std::string id = pNode.attribute("id").as_string();
 	std::string name = pNode.attribute("name").as_string();
 	std::string texture = pNode.attribute("texture").as_string();
-	player = std::dynamic_pointer_cast<Player>(entityManager->CreateEntity(id, name, baseTexturePath + texture, mapData.playerStartPosition, EntityType::PLAYER));
+	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, mapData.playerStartPosition, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+
 
 	for (NPCData npc : mapData.npcs) {
 		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
@@ -135,7 +166,8 @@ void Scene::LoadScene()
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
 			int type = cNode.attribute("type").as_int();
-			entityManager->CreateEntity(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type);
+			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
+			entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
 		}
 	}
 
@@ -146,7 +178,8 @@ void Scene::LoadScene()
 			std::string texture = iNode.attribute("texture").as_string();
 			int type = iNode.attribute("type").as_int();
 			int interactionType = iNode.attribute("interactionType").as_int();
-			entityManager->CreateEntity(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (InteractionType)interactionType);
+			bool canStack = iNode.attribute("canStack").as_bool();
+			entityManager->CreateItem(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack);
 		}
 	}
 }
@@ -158,14 +191,81 @@ void Scene::EndScene()
 
 void Scene::StartDialog(std::string characterId)
 {
+	if (!gameStarted) return;
 	if (isOnDialog) return;
 	if (!dialogManager->SetCurrentDialog(characterId)) return;
 	isOnDialog = true;
+	activeDialogId = characterId;
 	entityManager->paused = true;
 }
 
 void Scene::EndDialog()
 {
+	if (!gameStarted) return;
 	isOnDialog = false;
 	entityManager->paused = false;
+
+	if (!activeDialogId.empty()) {
+		for (const auto& entity : entityManager->entities) {
+			if (entity->id == activeDialogId) {
+				if (auto npc = std::dynamic_pointer_cast<NPC>(entity)) {
+					npc->OnDialogEnd();
+					break;
+				}
+			}
+		}
+		activeDialogId = "";
+	}
+}
+
+bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
+	
+	if (Engine::GetInstance().menuManager->uiLockFrame == Engine::GetInstance().frameCount) return true;
+
+	float musicVol;
+	float fxVol;
+	switch ((UIID)uiElement->id)
+	{
+	case START_GAME:
+		Engine::GetInstance().menuManager->HideMenu();
+		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001");
+		break;
+	case CONTINUE_GAME:
+		Engine::GetInstance().menuManager->HideMenu();
+		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001"); // take the last scene from the save data
+		break;
+	case RESUME_GAME:
+		TogglePause();
+		break;
+	case SETTINGS_BUTTON:
+		Engine::GetInstance().menuManager->ShowSettingsMenu();
+		break;
+	case CREDITS_BUTTON:
+		Engine::GetInstance().menuManager->ShowCreditsMenu();
+		break;
+	case MUSIC_VOLUME:
+		musicVol = ((UISlider*)uiElement)->GetValue() / 10;
+		Engine::GetInstance().audio->SetMusicVolume(musicVol);
+		break;
+	case FX_VOLUME:
+		fxVol = ((UISlider*)uiElement)->GetValue() / 10;
+		Engine::GetInstance().audio->SetFxVolume(fxVol);
+		break;
+	case FULLSCREEN:
+		Engine::GetInstance().window->SetFullscreen(((UICheckbox*)uiElement)->checked);
+		Engine::GetInstance().menuManager->Load(true);
+		break;
+	case BACK_MENU:
+		Engine::GetInstance().menuManager->ShowPreviousMenu();
+		break;
+	case BACK_MAIN_MENU:
+		Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		break;
+	case EXIT:
+		exit(0);
+		break;
+	default:
+		break;
+	}
+	return true;
 }

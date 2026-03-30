@@ -88,6 +88,7 @@
     <None Include="Assets\Textures\Boss.tsx">
       <Filter>Configuration FIles</Filter>
     </None>
+    <None Include="Assets\Maps\RebelRefuge.tmx" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio.cpp">
@@ -264,9 +265,6 @@
     <ClCompile Include="src\Inventory.cpp">
       <Filter>Source Files\Scene\Entities\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="src\Menu.cpp">
-      <Filter>Source Files\UI</Filter>
-    </ClCompile>
     <ClCompile Include="src\DialogManager.cpp">
       <Filter>Source Files\Scene\Dialog</Filter>
     </ClCompile>
@@ -290,6 +288,12 @@
     </ClCompile>
     <ClCompile Include="src\DialogAnswer.cpp">
       <Filter>Source Files\Scene\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuManager.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIImage.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -473,9 +477,6 @@
     <ClInclude Include="src\Inventory.h">
       <Filter>Source Files\Scene\Entities\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="src\Menu.h">
-      <Filter>Source Files\UI</Filter>
-    </ClInclude>
     <ClInclude Include="src\DialogManager.h">
       <Filter>Source Files\Scene\Dialog</Filter>
     </ClInclude>
@@ -500,6 +501,12 @@
     <ClInclude Include="src\DialogAnswer.h">
       <Filter>Source Files\Scene\Dialog</Filter>
     </ClInclude>
+    <ClInclude Include="src\MenuManager.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UIImage.h">
+      <Filter>Source Files\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml">
@@ -509,5 +516,7 @@
     <Xml Include="Assets\Dialogues\test.xml">
       <Filter>Configuration FIles</Filter>
     </Xml>
+    <Xml Include="Assets\Entities\characters.xml" />
+    <Xml Include="Assets\Entities\items.xml" />
   </ItemGroup>
 </Project>

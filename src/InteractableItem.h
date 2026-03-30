@@ -2,17 +2,19 @@
 
 #include "Item.h"
 
-enum class InteractionType {
-	DEFAULT = 0,
-	PICKUP = 1,
-	TOGGLE = 2,
-	DIALOGUE = 3
+enum class ItemInteractionType {
+	DEFAULT,
+	PICKUP,
+	TOGGLE,
+	DIALOGUE
+
 };
 
 class InteractableItem : public Item {
 public:
 	InteractableItem(){}
-	InteractableItem(std::string id, std::string name, std::string texturePath, InteractionType type, bool canStack);
+	InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type, bool canStack);
+
 	virtual ~InteractableItem();
 
 	virtual bool Awake() override;
@@ -45,7 +47,7 @@ public:
 
 protected:
 	//Dialogue type by default
-	InteractionType interactionType;
+	ItemInteractionType itemInteractionType;
 
 	SDL_Texture* pickupIcon;
 	const char* pickupIconPath;

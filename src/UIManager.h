@@ -6,6 +6,7 @@
 #include "UILabel.h"
 #include "UICheckbox.h"
 #include "UISlider.h"
+#include "UIImage.h"
 
 #include <list>
 #include <vector>
@@ -45,6 +46,15 @@ public:
 		return p;
 	}
 
+	static UIParameters Image(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex) {
+		UIParameters p = UIParameters();
+		p.disabledTex = disabledTex;
+		p.normalTex = normalTex;
+		p.focusedTex = focusedTex;
+		p.pressedTex = pressedTex;
+		return p;
+	}
+
 	static UIParameters Default() {
 		UIParameters p = UIParameters();
 		p.text = "";
@@ -55,6 +65,10 @@ public:
 		p.max = 1;
 		p.step = 0.1f;
 		p.value = 0.5f;
+		p.disabledTex = nullptr;
+		p.normalTex = nullptr;
+		p.focusedTex = nullptr;
+		p.pressedTex = nullptr;
 		return p;
 	}
 
@@ -62,6 +76,10 @@ public:
 	float showValue, min, max, step, value;
 	int spacing, horizotalSpacing, verticalSpacing;
 	bool checked;
+	SDL_Texture* disabledTex;
+	SDL_Texture* normalTex;
+	SDL_Texture* focusedTex;
+	SDL_Texture* pressedTex;
 };
 
 class UIManager : public Module
