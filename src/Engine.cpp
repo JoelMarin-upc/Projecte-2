@@ -39,6 +39,7 @@ Engine::Engine() {
     // L08: TODO 2: Add Physics module
     physics = std::make_shared<Physics>();
     sceneManager = std::make_shared<SceneManager>();
+    menuManager = std::make_shared<MenuManager>();
     uiManager = std::make_shared<UIManager>();
 
     // Ordered for awake / Start / Update
@@ -49,8 +50,9 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(audio));
     // L08: TODO 2: Add Physics module
     AddModule(std::static_pointer_cast<Module>(physics));
-    AddModule(std::static_pointer_cast<Module>(sceneManager));
     AddModule(std::static_pointer_cast<Module>(uiManager));
+    AddModule(std::static_pointer_cast<Module>(menuManager));
+    AddModule(std::static_pointer_cast<Module>(sceneManager));
 
     // Render last 
     AddModule(std::static_pointer_cast<Module>(render));

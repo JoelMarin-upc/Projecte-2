@@ -9,6 +9,10 @@
     <vsync value="false"/>
   </render>
 
+  <MenuManager>
+	  <audios hover="Assets/Audio/Fx/hover.wav" click="Assets/Audio/Fx/click.wav"/>
+  </MenuManager>
+
   <window>
     <resolution width="1600" height="1000" scale="1"/>
     <fullscreen value="false"/>

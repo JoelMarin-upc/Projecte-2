@@ -11,56 +11,9 @@
 #include "MissionManager.h"
 #include "DialogManager.h"
 #include "InteractableItem.h"
+#include "MenuManager.h"
 
 struct SDL_Texture;
-
-enum Menu {
-	NONE,
-	MAIN,
-	PAUSE,
-	SETTINGS,
-	CHECKPOINTS,
-	DEATHSCREEN,
-	CREDITS
-};
-
-enum UIID {
-	START_GAME,
-	PAUSED_LBL,
-	SETTINGS_LBL,
-	COUNTINUE_GAME,
-	RESUME,
-	SETTINGS_MENU,
-	CREDITS_BTN,
-	CREDITS_LBL,
-	MUSIC_VOLUME_LABEL,
-	MUSIC_VOLUME,
-	FX_VOLUME_LABEL,
-	FX_VOLUME,
-	FULLSCREEN_LABEL,
-	FULLSCREEN,
-	BACK_MENU,
-	BACK_MAIN_MENU,
-	EXIT,
-	UI_COINS,
-	UI_POWER,
-	UI_TIME,
-	CHECKPOINT_TELEPORTATION,
-	MAP1,
-	MAP1_TP1,
-	MAP1_TP2,
-	MAP1_TP3,
-	MAP1_TP4,
-	MAP1_TP5,
-	MAP2,
-	MAP2_TP1,
-	MAP2_TP2,
-	MAP2_TP3,
-	MAP2_TP4,
-	MAP2_TP5,
-	YOU_DIED_LBL,
-	PRESS_TO_CONTINUE_LBL
-};
 
 struct SceneData {
 	std::string mapPath;
@@ -68,7 +21,7 @@ struct SceneData {
 	std::string musicPath;
 };
 
-class Scene
+class Scene : public Module
 {
 public:
 
@@ -109,6 +62,8 @@ public:
 
 	Vector2D GetPlayerPosition();
 
+	bool OnUIMouseClickEvent(UIElement* uiElement);
+
 	bool hasEnded;
 
 	std::string id;
@@ -127,6 +82,7 @@ private:
 	SceneData data;
 	XMLHandler* persistance = new XMLHandler();
 	Timer gameTimer;
+	bool gameStarted = false;
 	bool paused = false;
 	bool isOnDialog = false;
 
