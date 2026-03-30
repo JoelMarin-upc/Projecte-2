@@ -157,7 +157,8 @@ void Scene::LoadScene()
 	std::string id = pNode.attribute("id").as_string();
 	std::string name = pNode.attribute("name").as_string();
 	std::string texture = pNode.attribute("texture").as_string();
-	player = std::dynamic_pointer_cast<Player>(entityManager->CreateEntity(id, name, baseTexturePath + texture, mapData.playerStartPosition, EntityType::PLAYER));
+	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, mapData.playerStartPosition, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+
 
 	for (NPCData npc : mapData.npcs) {
 		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
@@ -166,7 +167,7 @@ void Scene::LoadScene()
 			std::string texture = cNode.attribute("texture").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
-			entityManager->CreateEntity(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, ItemInteractionType::DEFAULT, (NPCInteractionType)npcInteractionType);
+			entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
 		}
 	}
 
@@ -177,7 +178,7 @@ void Scene::LoadScene()
 			std::string texture = iNode.attribute("texture").as_string();
 			int type = iNode.attribute("type").as_int();
 			int interactionType = iNode.attribute("interactionType").as_int();
-			entityManager->CreateEntity(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType);
+			entityManager->CreateItem(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType);
 		}
 	}
 }
