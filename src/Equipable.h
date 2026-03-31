@@ -3,7 +3,7 @@
 #include "InteractableItem.h"
 #include "Stats.h"
 
-class Equipable : InteractableItem
+class Equipable : public InteractableItem
 {
 public:
 	Equipable() : InteractableItem() {}

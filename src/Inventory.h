@@ -9,6 +9,7 @@
 const int MAX_SLOTS = 12;
 
 class Inventory {
+public:
 	Inventory();
 	~Inventory(); 
 
@@ -18,13 +19,22 @@ class Inventory {
 	bool Cleanup();
 
 	bool AddItem(InteractableItem* item);
-	bool RemoveItem(InteractableItem* item);
+	bool RemoveItem(std::string& itemName);
+	bool HasItem(std::string& itemName);
 
-	int FindItem(std::string itemName);
+	bool EquipWeapon(std::string& itemName);
+	bool EquipGear(std::string& itemName);
+	bool UnequipGear(GearSlot slot);
+
+	Gear* GetGearSlot(GearSlot slot);
+	int FindItem(std::string& itemName);
 	int FindFreeSlot();
+	bool IsFull();
 
 public:
 	std::vector<InteractableItem*> items;
-	Gear armor;
+	Gear* equippedHelmet = nullptr;
+	Gear* equippedBody = nullptr;
+	Gear* equippedBoots = nullptr;
 	Weapon weapon;
 };
