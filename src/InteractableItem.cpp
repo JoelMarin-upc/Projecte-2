@@ -10,9 +10,11 @@
 #include "EntityManager.h"
 #include "SceneManager.h"
 
-InteractableItem::InteractableItem(std::string id, std::string name, std::string texturePath, InteractionType type) : Item(id, name, texturePath, EntityType::INTERACTABLE_ITEM)
+InteractableItem::InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type) : Item(id, name, texturePath, EntityType::INTERACTABLE_ITEM)
 {
-	interactionType = type;
+	name = "interactableItem";
+	itemInteractionType = type;
+
 }
 
 InteractableItem::~InteractableItem() {}
@@ -53,6 +55,7 @@ bool InteractableItem::Update(float dt) {
 			Interact();
 		}
 	}
+	Draw(dt);
 	return true;
 }
 
@@ -105,17 +108,17 @@ void InteractableItem::OnCollisionEnd(Collider* physA, Collider* physB)
 
 void InteractableItem::Interact()
 {
-	switch (interactionType)
+	switch (itemInteractionType)
 	{
-	case InteractionType::PICKUP:   
+	case ItemInteractionType::PICKUP:   
 		Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
 		Pickup();  
 		break;
-	case InteractionType::TOGGLE:   
+	case ItemInteractionType::TOGGLE:   
 		Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
 		Toggle();   
 		break;
-	case InteractionType::DIALOGUE:
+	case ItemInteractionType::DIALOGUE:
 		Engine::GetInstance().sceneManager->currentScene->StartDialog(name);
 		break;
 	default:

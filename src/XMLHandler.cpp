@@ -2,9 +2,7 @@
 #include "XMLHandler.h"
 #include <fstream>
 
-XMLHandler::XMLHandler()
-{
-}
+const char* XMLHandler::saveFileName = "gamesave.xml";
 
 bool XMLHandler::SaveFileExists()
 {

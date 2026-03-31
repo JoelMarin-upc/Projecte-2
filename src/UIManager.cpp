@@ -91,6 +91,10 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 
 		uiElement = std::make_shared<UISlider>(id, bounds, params.showValue, params.min, params.max, params.step, params.value, c1, c2, c3, c4, c5, c6, c7, hoverFxId, clickFxId);
 		break;
+
+	case UIElementType::IMAGE:
+		uiElement = std::make_shared<UIImage>(id, bounds, params.disabledTex, params.normalTex, params.focusedTex, params.pressedTex, hoverFxId, clickFxId);
+		break;
 	}
 
 	//Set the observer
@@ -104,7 +108,7 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 
 bool UIManager::PostUpdate(float dt)
 {
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 		debug = !debug;
 
 	for (const auto& control : UIElementsList)
