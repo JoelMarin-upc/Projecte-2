@@ -10,12 +10,12 @@
 
 Pathfinding::Pathfinding() {
     
-    debug = false;
-     //Loads texture to draw the path
+    //Loads texture to draw the path
     pathTex = Engine::GetInstance().textures.get()->Load("Assets/Maps/metadata.png");
     tileX = Engine::GetInstance().textures.get()->Load("Assets/Textures/x.png");
     //map = Engine::GetInstance().map.get();
     //layerNav = map->GetNavigationLayer();
+    layerNav = nullptr;
     map = Engine::GetInstance().sceneManager->currentScene->GetMap();
 
     // Initialize the costSoFar with all elements set to 0

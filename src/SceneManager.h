@@ -47,5 +47,4 @@ public:
 	Scene* currentScene = nullptr;
 	bool paused = false;
 	std::string mapsPath = "Assets/Maps/";
-
 };

@@ -46,7 +46,12 @@ void SceneManager::LoadScenes()
 void SceneManager::SetCurrentScene(std::string sceneID)
 {
 	for (Scene* s : scenes) if (s->id == sceneID) currentScene = s;
-	if (currentScene) currentScene->Start();
+	if (!currentScene->sceneLoaded) {
+		currentScene->LoadScene();
+		currentScene->sceneLoaded = true;
+	}
+	currentScene->Start();
+	//if (currentScene) currentScene->Start();
 }
 
 Scene* SceneManager::GetCurrentScene() const { 

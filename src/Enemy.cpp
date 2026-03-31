@@ -188,25 +188,20 @@ void Enemy::Move(const Vector2D& target) {
 
 	float deadZone = 1.0f;
 
-	if (distanceX > deadZone) {
-		velocity.x = speed;
-		//facingDirection = SDL_FLIP_HORIZONTAL;
-	}
-	else if (distanceX < -deadZone) {
-		velocity.x = -speed;
-		//facingDirection = SDL_FLIP_NONE;
-	}
-	else if (distanceY > deadZone) {
-		velocity.y = speed;
-		//facingDirection = SDL_FLIP_NONE;
-	}
-	else if (distanceY < deadZone) {
-		velocity.y = -speed;
-		//facingDirection = SDL_FLIP_NONE;
+	Vector2D dir = nextWorldPos - currentPos;
+
+	float length = sqrt(dir.getX() * dir.getX() + dir.getY() * dir.getY());
+
+	if (length > deadZone) {
+		dir.setX(dir.getX() / length);
+		dir.setY(dir.getY() / length);
+
+		velocity.x = dir.getX() * speed;
+		velocity.y = dir.getY() * speed;
 	}
 	else {
 		pathfinding->pathTiles.pop_front();
-		velocity.x = 0;
+		velocity = { 0, 0 };
 	}
 }
 

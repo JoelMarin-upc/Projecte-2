@@ -25,7 +25,7 @@ public:
 
 	bool CleanUp();
 	Vector2D GetPosition();
-
+	//void SetMap(Map* m) {map = m;}
 	//void OnCollision(Collider* physA, Collider* physB);
 	//void OnCollisionEnd(Collider* physA, Collider* physB);
 private:
@@ -37,7 +37,7 @@ private:
 	float DistanceTo(const Vector2D& v) const;
 
 public: 
-	float speed = 1.0f;
+	float speed = 2.0f;
 	std::shared_ptr<Pathfinding> pathfinding;
 	std::vector<Vector2D> currentPath;
 	SDL_Texture* texture;
@@ -52,6 +52,6 @@ public:
 private: 
 	b2Vec2 velocity;
 	EnemyState state = EnemyState::IDLE;
-	float chaseDistance = 150.0f;
+	float chaseDistance = 300.0f;
 
 };

@@ -20,7 +20,7 @@ Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 	if (gameStarted)
 	{
 		LoadMap(mapPath, mapName);
-		LoadScene();
+		//LoadScene();
 	}
 
 	
@@ -194,10 +194,7 @@ void Scene::LoadScene()
 			std::string texture = eNode.attribute("texture").as_string();
 			int type = eNode.attribute("type").as_int();
 			entityManager->CreateEntity(enemy.id, name, baseTexturePath + texture, enemy.position, (EntityType)type);
-			/*auto enemyPtr = std::dynamic_pointer_cast<Enemy>(e);
-			if (enemyPtr) {
-				enemyPtr->SetMap(map);
-			}*/
+			
 		}
 	}
 }

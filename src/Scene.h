@@ -73,6 +73,8 @@ public:
 	EntityManager* entityManager;
 	MissionManager* missionManager;
 	DialogManager* dialogManager;
+	bool sceneLoaded = false;
+
 
 private:
 	
