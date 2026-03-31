@@ -25,10 +25,10 @@ public:
 	bool EquipWeapon(std::string& itemName);
 	bool EquipGear(std::string& itemName);
 	bool UnequipGear(GearSlot slot);
+	bool UnequipWeapon();
 
 	Gear* GetGearSlot(GearSlot slot);
 	int FindItem(std::string& itemName);
-	int FindFreeSlot();
 	bool IsFull();
 
 public:
@@ -36,5 +36,5 @@ public:
 	Gear* equippedHelmet = nullptr;
 	Gear* equippedBody = nullptr;
 	Gear* equippedBoots = nullptr;
-	Weapon weapon;
+	Weapon* equippedWeapon = nullptr;
 };

@@ -29,7 +29,7 @@ bool Inventory::Cleanup()
 
 bool Inventory::AddItem(InteractableItem* item)
 {
-	if (items.size() == MAX_SLOTS) {
+	if (IsFull()) {
 		LOG("The inventory is full, the item could not be added");
 		return false;
 	}
@@ -42,20 +42,11 @@ bool Inventory::AddItem(InteractableItem* item)
 		else {
 			items.push_back(item);
 		}
+		return true;
 	}
 
 	else {
 		items.push_back(item);
-
-		/*int firstFreeSlot = FindFreeSlot();
-		if (firstFreeSlot != -1) {
-			items[firstFreeSlot] = item;
-			LOG("Added %s to inventory space %d", item->name.c_str(), firstFreeSlot);
-		}
-		else {
-			LOG("Inventory full");
-			return false;
-		}*/
 	}
 	return true;
 }
@@ -65,7 +56,7 @@ bool Inventory::RemoveItem(std::string& itemName)
 	int i = FindItem(itemName);
 	if (i == -1)
 	{
-		LOG("RemoveItem: %s not found in inventory", itemName.c_str());
+		LOG("%s not found in inventory", itemName.c_str());
 		return false;
 	}
 
@@ -73,12 +64,12 @@ bool Inventory::RemoveItem(std::string& itemName)
 
 	if (item->canStack && item->count > 1) {
 		item->count--;
-		LOG("RemoveItem: Removed one %s from the stack, now %d", itemName.c_str(), item->count);
+		LOG("Removed one %s from the stack, now %d", itemName.c_str(), item->count);
 	}
 	else {
 		items[i]->Destroy();
 		items.erase(items.begin() + i);
-		LOG("RemoveItem: Removed %s from inventory", itemName.c_str());
+		LOG("Removed %s from inventory", itemName.c_str());
 	}
 
 	return true;
@@ -86,12 +77,54 @@ bool Inventory::RemoveItem(std::string& itemName)
 
 bool Inventory::HasItem(std::string& itemName)
 {
+	//Find the item in the inventory
+	if (FindItem(itemName) != -1) {
+		return true;
+	}
 	return false;
 }
 
 bool Inventory::EquipWeapon(std::string& itemName)
 {
-	return false;
+	int i = FindItem(itemName);
+	if (i == -1) {
+		LOG("%s not in inventory", itemName.c_str());
+		return false;
+	}
+
+	//Make sure that the item is of type Weapon
+	Weapon* w = dynamic_cast<Weapon*>(items[i]);
+	if (!w)	{
+		LOG("%s is not a Weapon", itemName.c_str());
+		return false;
+	}
+
+	//If there's weapon equipped in that slot
+	if (equippedWeapon)	{
+		//Remove new weapon from inventory
+		items.erase(items.begin() + i);
+
+		//Check if inventory is full, fail to swap weapon if full
+		if (IsFull())	{
+			items.insert(items.begin() + i, w);
+			LOG("No free slot for previously equipped weapon %s", equippedWeapon->name.c_str());
+			return false;
+		}
+		//Unequip old weapon and put back in the inventory
+		equippedWeapon->OnUnequip();
+		items.push_back(equippedWeapon);
+		LOG("Unequipped %s back to inventory", equippedWeapon->name.c_str());
+	}
+	//If the weapon slot was empty
+	else {
+		items.erase(items.begin() + i);
+	}
+
+	//Equip the new gear
+	equippedWeapon = w;
+	equippedWeapon->OnEquip();
+	LOG("Equipped weapon: '%s'", w->name.c_str());
+	return true;
 }
 
 bool Inventory::EquipGear(std::string& itemName)
@@ -99,14 +132,14 @@ bool Inventory::EquipGear(std::string& itemName)
 	//Find the item in the inventory
 	int i = FindItem(itemName);
 	if (i == -1) {
-		LOG("EquipGear: %s isnt' in inventory", itemName.c_str());
+		LOG("%s isnt' in inventory", itemName.c_str());
 		return false;
 	}
 
 	//Make sure that the item is of type Gear
 	Gear* g = dynamic_cast<Gear*>(items[i]);
 	if (!g) {
-		LOG("EquipGear: %s isn't a Gear item", itemName.c_str());
+		LOG("%s isn't a Gear item", itemName.c_str());
 		return false;
 	}
 
@@ -121,7 +154,7 @@ bool Inventory::EquipGear(std::string& itemName)
 		//Check if inventory is full, fail to swap gear if full
 		if (IsFull()) {
 			items.insert(items.begin() + i, g);
-			LOG("EquipGear: no free slot available");
+			LOG("no free slot available");
 			return false;
 		}
 
@@ -149,13 +182,13 @@ bool Inventory::UnequipGear(GearSlot slot)
 
 	if (!gear)
 	{
-		LOG("UnequipGear: the slot is already empty");
+		LOG("The slot is already empty");
 		return true;
 	}
 
 	if (IsFull())
 	{
-		LOG("UnequipGear: inventory full, cannot unequip %s", gear->name.c_str());
+		LOG("Inventory full, cannot unequip %s", gear->name.c_str());
 		return false;
 	}
 
@@ -164,6 +197,29 @@ bool Inventory::UnequipGear(GearSlot slot)
 	items.push_back(gear);
 	LOG("Unequipped gear %s to inventory", gear->name.c_str());
 	gear = nullptr;
+	return true;
+}
+
+bool Inventory::UnequipWeapon()
+{
+	//Get weapon from slot
+	if (!equippedWeapon)
+	{
+		LOG("No weapon equipped");
+		return true;
+	}
+
+	if (IsFull())
+	{
+		LOG("Inventory full, cannot unequip %s", equippedWeapon->name.c_str());
+		return false;
+	}
+
+	//Remove weapon effects and add back to inventory
+	equippedWeapon->OnUnequip();
+	items.push_back(equippedWeapon);
+	LOG("Unequipped weapon %s to inventory", equippedWeapon->id.c_str());
+	equippedWeapon = nullptr;
 	return true;
 }
 
@@ -188,16 +244,6 @@ int Inventory::FindItem(std::string& itemName)
 {
 	for (int i = 0; i < items.size(); ++i) {
 		if (items[i]->name == itemName) {
-			return i;
-		}
-	}
-	return -1;
-}
-
-int Inventory::FindFreeSlot()
-{
-	for (int i = 0; i < items.size(); ++i) {
-		if (!items[i]) {
 			return i;
 		}
 	}
