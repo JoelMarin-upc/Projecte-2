@@ -1,5 +1,5 @@
 <dialogs>
-	<tree id="DT-001" characterId="CH-001" order="1" done="false">
+	<tree id="DT-001" characterId="player" characterName="Garnik" order="1" done="false">
 		<node id="DN-001" first="true">
 			Hi this is my test dialog
 			<answer leadsToNodeId="DN-002">

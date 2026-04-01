@@ -30,6 +30,7 @@ bool DialogManager::Start() {
 
 	dialogBox = Engine::GetInstance().textures->Load("Assets/Dialogues/back.png");
 	dialogText = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)LABEL, { sw / 2 - 110, sh - 140, 220, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
+	speakerName = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SPEAKER_NAME, { sw / 2 - 130, sh - 160, 100, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
 	answer1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER1, { sw / 2 - 110, sh - 70, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
 	answer2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER2, { sw / 2 + 10, sh - 70, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
 	answer3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER3, { sw / 2 - 110, sh - 40, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
@@ -60,6 +61,7 @@ void DialogManager::LoadDialogs()
 		DialogTree* tree = new DialogTree();
 		tree->id = treeNode.attribute("id").as_string();
 		tree->characterId = treeNode.attribute("characterId").as_string();
+		tree->characterName = treeNode.attribute("characterName").as_string();
 		tree->order = treeNode.attribute("order").as_int();
 		tree->done = treeNode.attribute("done").as_bool();
 		tree->nodes = std::vector<DialogNode*>();
@@ -96,11 +98,13 @@ bool DialogManager::SetCurrentDialog(std::string characterId)
 	{
 		currentDialog = nullptr;
 		dialogText->text = "";
+		speakerName->text = "";
 		answer1->text = "";
 		answer2->text = "";
 		answer3->text = "";
 		answer4->text = "";
 		dialogText->active = false;
+		speakerName->active = false;
 		answer1->active = false;
 		answer2->active = false;
 		answer3->active = false;
@@ -138,6 +142,9 @@ void DialogManager::ShowDialog()
 
 	dialogText->text = node->text;
 	dialogText->active = true;
+
+	speakerName->text = currentDialog->characterName;
+	speakerName->active = true;
 
 	if (node->answers.size() > 0) {
 		answer1->active = true;
