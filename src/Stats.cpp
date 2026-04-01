@@ -3,8 +3,9 @@
 Stat Stats::GetStat(std::string statname)
 {
     for (const auto& s : stats) {
-        if (s.name == statname);
-        return s;
+        if (s.name == statname) {
+            return s;
+        }
     }
 }
 

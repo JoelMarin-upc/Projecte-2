@@ -135,7 +135,7 @@ public:
 
 
 
-	Inventory* inventory;
+	Inventory inventory;
 
 private:
 	b2Vec2 velocity;

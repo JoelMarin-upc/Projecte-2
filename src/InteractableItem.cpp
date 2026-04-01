@@ -130,11 +130,10 @@ void InteractableItem::Interact()
 
 void InteractableItem::Pickup()
 {
-	for (const auto& e : Engine::GetInstance().entityManager->entities)
-	{
-		if (auto* player = dynamic_cast<Player*>(e.get()))
-		{
-			if (player->inventory->AddItem(this)) {
+	for (const auto& e : Engine::GetInstance().sceneManager->currentScene->entityManager->entities) {
+		Player* player = dynamic_cast<Player*>(e.get());
+		if (player) {
+			if (player->inventory.AddItem(this)) {
 				isPicked = true;
 				isPlayerInRange = false;
 				active = false;
@@ -147,6 +146,9 @@ void InteractableItem::Pickup()
 					Engine::GetInstance().physics->DeletePhysBody(sensorCollider);
 					sensorCollider = nullptr;
 				}
+				player->inventory.PrintContents();
+				LOG("'%s' picked up", name.c_str());
+				return;
 			}
 				
 			else {
@@ -154,8 +156,7 @@ void InteractableItem::Pickup()
 			}
 			return;
 		}
-	}
-	LOG("'%s' picked up", name.c_str());
+	}	
 }
 
 void InteractableItem::Toggle()

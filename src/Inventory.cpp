@@ -45,17 +45,14 @@ bool Inventory::AddItem(InteractableItem* item)
 		return true;
 	}
 
-	else {
-		items.push_back(item);
-	}
+	items.push_back(item);
 	return true;
 }
 
 bool Inventory::RemoveItem(std::string& itemName)
 {
 	int i = FindItem(itemName);
-	if (i == -1)
-	{
+	if (i == -1) {
 		LOG("%s not found in inventory", itemName.c_str());
 		return false;
 	}
@@ -180,14 +177,12 @@ bool Inventory::UnequipGear(GearSlot slot)
 	//Get gear from slot
 	Gear* gear = GetGearSlot(slot);
 
-	if (!gear)
-	{
+	if (!gear) {
 		LOG("The slot is already empty");
 		return true;
 	}
 
-	if (IsFull())
-	{
+	if (IsFull()) {
 		LOG("Inventory full, cannot unequip %s", gear->name.c_str());
 		return false;
 	}
@@ -203,14 +198,12 @@ bool Inventory::UnequipGear(GearSlot slot)
 bool Inventory::UnequipWeapon()
 {
 	//Get weapon from slot
-	if (!equippedWeapon)
-	{
+	if (!equippedWeapon) {
 		LOG("No weapon equipped");
 		return true;
 	}
 
-	if (IsFull())
-	{
+	if (IsFull()) {
 		LOG("Inventory full, cannot unequip %s", equippedWeapon->name.c_str());
 		return false;
 	}
@@ -252,8 +245,28 @@ int Inventory::FindItem(std::string& itemName)
 
 bool Inventory::IsFull()
 {
-	if (items.size() >= MAX_SLOTS) {
+	if ((int)items.size() >= MAX_SLOTS) {
 		return true;
 	}
 	return false;
-}	
+}
+void Inventory::PrintContents()
+{
+	LOG("=== INVENTORY (%d/%d) ===", items.size(), MAX_SLOTS);
+	for (int i = 0; i < items.size(); ++i) {
+		LOG("%d. %s (x%d)", i, items[i]->name.c_str(), items[i]->count);
+	}	
+	if (equippedWeapon) {
+		LOG("Weapon: %s", equippedWeapon->name.c_str());
+	}	
+	if (equippedHelmet) {
+		LOG("Helmet: %s", equippedHelmet->name.c_str());
+	}	
+	if (equippedBody) {
+		LOG("Body: %s", equippedBody->name.c_str());
+	}
+	if (equippedBoots) {
+		LOG("Boots: %s", equippedBoots->name.c_str());
+	}
+}
+

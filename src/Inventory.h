@@ -30,6 +30,7 @@ public:
 	Gear* GetGearSlot(GearSlot slot);
 	int FindItem(std::string& itemName);
 	bool IsFull();
+	void PrintContents();
 
 public:
 	std::vector<InteractableItem*> items;
