@@ -41,6 +41,7 @@ Engine::Engine() {
     sceneManager = std::make_shared<SceneManager>();
     menuManager = std::make_shared<MenuManager>();
     uiManager = std::make_shared<UIManager>();
+    entityManager = std::make_shared <EntityManager>();
 
     // Ordered for awake / Start / Update
     // Reverse order of CleanUp
@@ -53,6 +54,7 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(uiManager));
     AddModule(std::static_pointer_cast<Module>(menuManager));
     AddModule(std::static_pointer_cast<Module>(sceneManager));
+    AddModule(std::static_pointer_cast<Module>(entityManager));
 
     // Render last 
     AddModule(std::static_pointer_cast<Module>(render));

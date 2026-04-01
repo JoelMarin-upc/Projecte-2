@@ -75,13 +75,16 @@ void InteractableItem::Draw(float dt) {
 
 bool InteractableItem::CleanUp() {
 	LOG("Cleanup Interactable Item");
+	Engine::GetInstance().textures->UnLoad(texture);
+	Engine::GetInstance().textures->UnLoad(pickupIcon);
 	if (sensorCollider != nullptr) {
-		Engine::GetInstance().textures->UnLoad(texture);
-		Engine::GetInstance().textures->UnLoad(pickupIcon);
 		Engine::GetInstance().physics->DeletePhysBody(sensorCollider);
 		sensorCollider = nullptr;
 	}
-
+	if (pbody != nullptr) {
+		Engine::GetInstance().physics->DeletePhysBody(pbody);
+		pbody = nullptr;
+	}
 	return true;
 }
 
@@ -127,6 +130,31 @@ void InteractableItem::Interact()
 
 void InteractableItem::Pickup()
 {
+	for (const auto& e : Engine::GetInstance().entityManager->entities)
+	{
+		if (auto* player = dynamic_cast<Player*>(e.get()))
+		{
+			if (player->inventory->AddItem(this)) {
+				isPicked = true;
+				isPlayerInRange = false;
+				active = false;
+
+				if (pbody) {
+					Engine::GetInstance().physics->DeletePhysBody(pbody);
+					pbody = nullptr;
+				}
+				if (sensorCollider) {
+					Engine::GetInstance().physics->DeletePhysBody(sensorCollider);
+					sensorCollider = nullptr;
+				}
+			}
+				
+			else {
+				LOG("Failed to pick up item");
+			}
+			return;
+		}
+	}
 	LOG("'%s' picked up", name.c_str());
 }
 
