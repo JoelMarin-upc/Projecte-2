@@ -89,6 +89,7 @@
       <Filter>Configuration FIles</Filter>
     </None>
     <None Include="Assets\Maps\RebelRefuge.tmx" />
+    <None Include="Assets\Maps\TutorialDungeon.tmx" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio.cpp">

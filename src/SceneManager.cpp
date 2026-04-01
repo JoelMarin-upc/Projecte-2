@@ -40,7 +40,7 @@ void SceneManager::LoadScenes()
 	// load from xml
 	scenes = std::list<Scene*>();
 	scenes.push_back(new Scene("main menu", "", ""));
-	scenes.push_back(new Scene("SC-001", mapsPath, "RebelRefuge.tmx"));
+	scenes.push_back(new Scene("SC-001", mapsPath, "TutorialDungeon.tmx"));
 }
 
 void SceneManager::SetCurrentScene(std::string sceneID)
