@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="20" nextobjectid="94">
  <tileset firstgid="1" name="DungeonMinlevbuild" tilewidth="16" tileheight="16" tilecount="2560" columns="64">
-  <image source="../Downloads/DungeonMinlevbuild.png" width="1024" height="640"/>
+  <image source="DungeonMinlevbuild.png" width="1024" height="640"/>
  </tileset>
  <tileset firstgid="2561" name="DungeonDecorative" tilewidth="16" tileheight="16" tilecount="256" columns="16">
-  <image source="../Downloads/DungeonDecorative.png" width="256" height="256"/>
+  <image source="DungeonDecorative.png" width="256" height="256"/>
  </tileset>
  <tileset firstgid="2817" name="mainlevbuild" tilewidth="16" tileheight="16" tilecount="2560" columns="64">
-  <image source="../Downloads/RF_Catacombs_v1.0/mainlevbuild.png" width="1024" height="640"/>
+  <image source="mainlevbuild.png" width="1024" height="640"/>
  </tileset>
  <layer id="1" name="Background" width="50" height="70">
   <data encoding="csv">
