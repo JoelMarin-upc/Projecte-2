@@ -234,8 +234,9 @@ void DialogManager::ResizeDialogBox()
 	int sw = BASE_W;
 	int sh = BASE_H;
 
+	//WRITE HERE THE SAME VALUES AS THE BOUNDS ESTABLISHED IN DialogManager::Start()!!!!!!!!!!!!!!!
 	dialogText->bounds = { sw / 2 - 110, sh - 140, 220, 40 };
-	speakerName->bounds = { sw / 2 - 110, sh - 165, 120, 20 };
+	speakerName->bounds = { sw / 2 - 130, sh - 160, 100, 40 };
 	answer1->bounds = { sw / 2 - 110, sh - 70,  100, 20 };
 	answer2->bounds = { sw / 2 + 10,  sh - 70,  100, 20 };
 	answer3->bounds = { sw / 2 - 110, sh - 40,  100, 20 };
