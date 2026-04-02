@@ -136,14 +136,21 @@ bool UISlider::Update(float dt)
 		}
 		else
 		{
-			if (mouseOverSlider) {
+			float mouseX, mouseY;
+			SDL_GetMouseState(&mouseX, &mouseY);
+
+			float logicalX, logicalY;
+			SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mouseX, mouseY, &logicalX, &logicalY);
+
+			//If the position of the mouse if inside the bounds of the button 
+			if (logicalX > bounds.x && logicalX < bounds.x + bounds.w && logicalY > bounds.y && logicalY < bounds.y + bounds.h) {
 				if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED && hoverFxId != -1) Engine::GetInstance().audio->PlayFx(hoverFxId);
 				state = UIElementState::FOCUSED;
 			}
 			else
 				state = UIElementState::NORMAL;
 
-			if (mouseOverSlider &&
+			if (logicalX > bounds.x && logicalX < bounds.x + bounds.w && logicalY > bounds.y && logicalY < bounds.y + bounds.h &&
 				Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 			{
 				if (clickFxId != -1) Engine::GetInstance().audio->PlayFx(clickFxId);

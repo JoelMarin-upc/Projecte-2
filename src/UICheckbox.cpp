@@ -44,7 +44,14 @@ bool UICheckbox::Update(float dt)
 		
 
 		//If the position of the mouse if inside the bounds of the button 
-		if (mouseOver) {
+		float mouseX, mouseY;
+		SDL_GetMouseState(&mouseX, &mouseY);
+
+		float logicalX, logicalY;
+		SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mouseX, mouseY, &logicalX, &logicalY);
+
+		//If the position of the mouse if inside the bounds of the button 
+		if (logicalX > bounds.x && logicalX < bounds.x + bounds.w && logicalY > bounds.y && logicalY < bounds.y + bounds.h) {
 
 			if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED && hoverFxId != -1) Engine::GetInstance().audio->PlayFx(hoverFxId);
 			state = UIElementState::FOCUSED;
