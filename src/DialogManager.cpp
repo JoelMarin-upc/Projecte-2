@@ -7,6 +7,7 @@
 #include "Window.h"
 #include "SceneManager.h"
 #include "Textures.h"
+#include "Log.h"
 
 DialogManager::DialogManager()
 {
@@ -25,8 +26,8 @@ bool DialogManager::Start() {
 
 	LoadDialogs();
 
-	int sw = Engine::GetInstance().window->width;
-	int sh = Engine::GetInstance().window->height;
+	int sw = BASE_W;
+	int sh = BASE_H;
 
 	dialogBox = Engine::GetInstance().textures->Load("Assets/Dialogues/back.png");
 	dialogText = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)LABEL, { sw / 2 - 110, sh - 140, 220, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
@@ -42,8 +43,8 @@ bool DialogManager::Start() {
 }
 
 bool DialogManager::Update(float dt) {
-	int sw = Engine::GetInstance().window->width;
-	int sh = Engine::GetInstance().window->height;
+	int sw = BASE_W;
+	int sh = BASE_H;
 	if (currentDialog) Engine::GetInstance().render->DrawTexture(dialogBox, sw / 2 - 130, sh - 160);
 	return true;
 }
@@ -226,4 +227,17 @@ bool DialogManager::OnUIMouseClickEvent(UIElement* uiElement)
 	ShowDialog();
 
 	return true;
+}
+
+void DialogManager::ResizeDialogBox()
+{
+	int sw = BASE_W;
+	int sh = BASE_H;
+
+	dialogText->bounds = { sw / 2 - 110, sh - 140, 220, 40 };
+	speakerName->bounds = { sw / 2 - 110, sh - 165, 120, 20 };
+	answer1->bounds = { sw / 2 - 110, sh - 70,  100, 20 };
+	answer2->bounds = { sw / 2 + 10,  sh - 70,  100, 20 };
+	answer3->bounds = { sw / 2 - 110, sh - 40,  100, 20 };
+	answer4->bounds = { sw / 2 + 10,  sh - 40,  100, 20 };
 }

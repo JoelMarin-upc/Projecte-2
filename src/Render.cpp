@@ -36,6 +36,13 @@ bool Render::Awake()
 	// SDL3: no flags; create default renderer and set vsync separately
 	renderer = SDL_CreateRenderer(window, nullptr);
 
+	SDL_SetRenderLogicalPresentation(
+		renderer,
+		Engine::GetInstance().window->width,
+		Engine::GetInstance().window->height,
+		SDL_LOGICAL_PRESENTATION_LETTERBOX
+	);
+
 	if (renderer == NULL)
 	{
 		LOG("Could not create the renderer! SDL_Error: %s\n", SDL_GetError());

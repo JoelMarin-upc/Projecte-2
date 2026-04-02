@@ -1,20 +1,14 @@
 <dialogs>
 	<tree id="DT-001" characterId="player" characterName="Garnik" order="1" done="false">
 		<node id="DN-001" first="true">
-			Hi this is my test dialog
+			I always end up wandering to this place…
 			<answer leadsToNodeId="DN-002">
-				Answer 1
-			</answer>
-			<answer leadsToNodeId="DN-003">
-				Answer 2
-			</answer>
-			<answer leadsToNodeId="">
-				End conversation
+				Continue
 			</answer>
 		</node>
 		<node id="DN-002" first="false">
-			This is my test reply 1
-			<answer leadsToNodeId="DN-004">
+			You used to drag me here every day
+			<answer leadsToNodeId="DN-003">
 				Single answer 1
 			</answer>
 		</node>

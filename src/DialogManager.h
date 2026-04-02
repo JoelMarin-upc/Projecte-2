@@ -7,6 +7,9 @@
 #include "UILabel.h"
 #include "UIButton.h"
 
+static constexpr int BASE_W = 1280;
+static constexpr int BASE_H = 720;
+
 class DialogManager : public Module
 {
 public:
@@ -34,6 +37,8 @@ public:
 	void ShowDialog();
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
+
+	void ResizeDialogBox();
 
 	std::list<DialogTree*> dialogs;
 	bool paused = false;
