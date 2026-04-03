@@ -1,85 +1,49 @@
 <dialogs>
 	<tree id="DT-001" characterId="player" characterName="Garnik" order="1" done="false">
 		<node id="DN-001" first="true">
-			I always end up wandering to this place…
+			I always end up wandering to this place…      
 			<answer leadsToNodeId="DN-002">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-002" first="false">
-			You used to drag me here every day...
+			You used to drag me here every day, said that the gods|listened to our prayers better at sunrise.
 			<answer leadsToNodeId="DN-003">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-003" first="false">
-			Said that the gods listened to our prayers better at sunrise.
+			I almost wanted to believe you at some point,|you’re always right after all.     
 			<answer leadsToNodeId="DN-004">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-004" first="false">
-			I almost wanted to believe you at some point.
+			But if they really listened to my prayers…|Why are you not coming back to me?
 			<answer leadsToNodeId="DN-005">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-005" first="false">
-			You’re always right after all.
+			Damn it, why would you want to go to the castle?|No one comes back from there anymore, not even you…
 			<answer leadsToNodeId="DN-006">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-006" first="false">
-			But if they really listened to my prayers…
+			I don’t know what I’ll find inside...|but I can’t stand here waiting anymore.
 			<answer leadsToNodeId="DN-007">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-007" first="false">
-			Why are you not coming back to me?
+			Nia, I’m coming to find you.
 			<answer leadsToNodeId="DN-008">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-008" first="false">
-			Damn it, why would you want to go to the castle?
-			<answer leadsToNodeId="DN-009">
-				Continue
-			</answer>
-		</node>
-		<node id="DN-009" first="false">
-			No one comes back from there anymore.
-			<answer leadsToNodeId="DN-010">
-				Continue
-			</answer>
-		</node>
-		<node id="DN-010" first="false">
-			Not even you…
-			<answer leadsToNodeId="DN-011">
-				Continue
-			</answer>
-		</node>
-		<node id="DN-011" first="false">
-			I don’t know what I’ll find inside
-			<answer leadsToNodeId="DN-012">
-				Continue
-			</answer>
-		</node>
-		<node id="DN-012" first="false">
-			...but I can’t stand here waiting anymore.
-			<answer leadsToNodeId="DN-013">
-				Continue
-			</answer>
-		</node>
-		<node id="DN-013" first="false">
-			Nia, I’m coming to find you.
-			<answer leadsToNodeId="DN-014">
-				Continue
-			</answer>
-		</node>
-		<node id="DN-014" first="false">
-			Or whatever remains of you.
+			...Or whatever remains of you.
 			<answer leadsToNodeId="">
 				Continue
 			</answer>

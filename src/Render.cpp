@@ -3,6 +3,7 @@
 #include "Render.h"
 #include "Map.h"
 #include "Log.h"
+#include <sstream>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -369,6 +370,22 @@ bool Render::DrawText(const char* text, int x, int y, int w, int h, SDL_Color co
 	SDL_DestroyTexture(texture);
 	SDL_DestroySurface(surface);
 
+	return true;
+}
+
+bool Render::DrawTextMultiline(const char* text, int x, int y, int w, int h, SDL_Color color, int lineHeight) const
+{
+	std::string full(text);
+	std::istringstream stream(full);
+	std::string line;
+	int offsetY = 0;
+
+	while (std::getline(stream, line, '\n'))
+	{
+		if (!line.empty())
+			DrawText(line.c_str(), x, y + offsetY, w, lineHeight, color);
+		offsetY += lineHeight;
+	}
 	return true;
 }
 

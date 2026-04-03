@@ -75,6 +75,10 @@ void DialogManager::LoadDialogs()
 			node->text = nodeXml.child_value();
 			node->text.erase(std::remove(node->text.begin(), node->text.end(), '\n'), node->text.end());
 			node->text.erase(std::remove(node->text.begin(), node->text.end(), '\t'), node->text.end());
+
+			// Convert | to newline
+			std::replace(node->text.begin(), node->text.end(), '|', '\n');
+
 			node->answers = std::vector<DialogAnswer*>();
 
 			if (node->first) tree->currentNode = node;
