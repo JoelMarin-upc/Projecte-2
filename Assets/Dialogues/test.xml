@@ -72,7 +72,7 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-001" characterId="interactableItem" order="1" done="false">
+	<tree id="DT-001" characterId="torch" order="1" done="false">
 		<node id="DN-001" first="true">
 			holi
 			<answer leadsToNodeId="">

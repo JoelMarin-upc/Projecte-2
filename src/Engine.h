@@ -19,6 +19,7 @@ class UIManager;
 class SceneManager;
 class MenuManager;
 class DialogManager;
+class EntityManager;
 
 class Engine
 {
@@ -103,6 +104,7 @@ public:
 	std::shared_ptr<MenuManager> menuManager;
 	std::shared_ptr<UIManager> uiManager;
 	std::shared_ptr<DialogManager> dialogManager;
+	std::shared_ptr<EntityManager> entityManager;
 
 	int frameCount = 0;
 

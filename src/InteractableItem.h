@@ -12,9 +12,8 @@ enum class ItemInteractionType {
 
 class InteractableItem : public Item {
 public:
-	InteractableItem() {}
-
-	InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type);
+	InteractableItem(){}
+	InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type, bool canStack);
 
 	virtual ~InteractableItem();
 
@@ -40,8 +39,11 @@ protected:
 	virtual void Toggle();
 
 public:
+
 	bool isPlayerInRange = false;
 	bool isPicked = false;
+	bool canStack = false;
+	int count = 1; //Current number of this item in the inventory slot
 
 protected:
 	//Dialogue type by default
