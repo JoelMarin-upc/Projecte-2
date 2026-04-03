@@ -2,6 +2,8 @@
 #include "Log.h"
 #include "Render.h"
 #include "Engine.h"
+#include "DialogManager.h"
+#include "SceneManager.h"
 
 Window::Window() : Module()
 {
@@ -104,18 +106,27 @@ int Window::GetScale() const
 
 void Window::SetFullscreen(bool fullscreen)
 {
-	this->fullscreen = fullscreen;
-	if (fullscreen)
+	bool fullscreen_window = configParameters.child("fullscreen_window").attribute("value").as_bool();
+	fullscreen_window = !fullscreen_window;
+
+	SDL_Renderer* renderer = Engine::GetInstance().render->renderer;
+
+	if (fullscreen_window)
 	{
-		SDL_SetWindowFullscreenMode(window, nullptr); // use desktop resolution
+		configParameters.child("fullscreen_window").attribute("value").set_value(true);
 		SDL_SetWindowFullscreen(window, true);
+		SDL_SyncWindow(window);
+		SDL_SetRenderLogicalPresentation(renderer, width, height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+		Engine::GetInstance().configFile.save_file("config.xml");
 	}
-	else {
+	else
+	{
+		configParameters.child("fullscreen_window").attribute("value").set_value(false);
 		SDL_SetWindowFullscreen(window, false);
+		SDL_SyncWindow(window);
+		SDL_SetRenderLogicalPresentation(renderer, width, height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+		Engine::GetInstance().configFile.save_file("config.xml");
 	}
-	SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-	SDL_ShowWindow(window);
-	SDL_GetWindowSize(window, &width, &height);
-	Engine::GetInstance().render->camera.w = width * scale;
-	Engine::GetInstance().render->camera.h = height * scale;
+
+	Engine::GetInstance().sceneManager->currentScene->dialogManager->ResizeDialogBox();
 }

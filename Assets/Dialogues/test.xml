@@ -1,33 +1,87 @@
 <dialogs>
-	<tree id="DT-001" characterId="CH-001" order="1" done="false">
+	<tree id="DT-001" characterId="player" characterName="Garnik" order="1" done="false">
 		<node id="DN-001" first="true">
-			Hi this is my test dialog
+			I always end up wandering to this place…
 			<answer leadsToNodeId="DN-002">
-				Answer 1
-			</answer>
-			<answer leadsToNodeId="DN-003">
-				Answer 2
-			</answer>
-			<answer leadsToNodeId="">
-				End conversation
+				Continue
 			</answer>
 		</node>
 		<node id="DN-002" first="false">
-			This is my test reply 1
-			<answer leadsToNodeId="DN-004">
-				Single answer 1
+			You used to drag me here every day...
+			<answer leadsToNodeId="DN-003">
+				Continue
 			</answer>
 		</node>
 		<node id="DN-003" first="false">
-			This is my test reply 2
+			Said that the gods listened to our prayers better at sunrise.
 			<answer leadsToNodeId="DN-004">
-				Single answer 2
+				Continue
 			</answer>
 		</node>
 		<node id="DN-004" first="false">
-			This is the last reply
+			I almost wanted to believe you at some point.
+			<answer leadsToNodeId="DN-005">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-005" first="false">
+			You’re always right after all.
+			<answer leadsToNodeId="DN-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-006" first="false">
+			But if they really listened to my prayers…
+			<answer leadsToNodeId="DN-007">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-007" first="false">
+			Why are you not coming back to me?
+			<answer leadsToNodeId="DN-008">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-008" first="false">
+			Damn it, why would you want to go to the castle?
+			<answer leadsToNodeId="DN-009">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-009" first="false">
+			No one comes back from there anymore.
+			<answer leadsToNodeId="DN-010">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-010" first="false">
+			Not even you…
+			<answer leadsToNodeId="DN-011">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-011" first="false">
+			I don’t know what I’ll find inside
+			<answer leadsToNodeId="DN-012">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-012" first="false">
+			...but I can’t stand here waiting anymore.
+			<answer leadsToNodeId="DN-013">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-013" first="false">
+			Nia, I’m coming to find you.
+			<answer leadsToNodeId="DN-014">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-014" first="false">
+			Or whatever remains of you.
 			<answer leadsToNodeId="">
-				End conversarion
+				Continue
 			</answer>
 		</node>
 	</tree>
@@ -60,7 +114,7 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-001" characterId="interactableItem" order="1" done="false">
+	<tree id="DT-001" characterId="torch" order="1" done="false">
 		<node id="DN-001" first="true">
 			holi
 			<answer leadsToNodeId="">

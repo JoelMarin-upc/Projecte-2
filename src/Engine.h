@@ -18,6 +18,8 @@ class Physics;
 class UIManager;
 class SceneManager;
 class MenuManager;
+class DialogManager;
+class EntityManager;
 
 class Engine
 {
@@ -101,8 +103,13 @@ public:
 	std::shared_ptr<SceneManager> sceneManager;
 	std::shared_ptr<MenuManager> menuManager;
 	std::shared_ptr<UIManager> uiManager;
+	std::shared_ptr<DialogManager> dialogManager;
+	std::shared_ptr<EntityManager> entityManager;
 
 	int frameCount = 0;
+
+	//L05 TODO 2: Declare a xml_document to load the config file
+	pugi::xml_document configFile;
 
 private: 
 
@@ -130,7 +137,6 @@ private:
 
 	std::string gameTitle = "The Graveyard";
 
-	//L05 TODO 2: Declare a xml_document to load the config file
-	pugi::xml_document configFile;
+	
 
 };

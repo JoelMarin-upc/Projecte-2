@@ -9,7 +9,7 @@ class Item : public DynamicEntity
 {
 public:
 
-	Item();
+	Item(){}
 	Item(std::string id, std::string name, std::string texturePath, EntityType type);
 	virtual ~Item();
 

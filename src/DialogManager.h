@@ -7,6 +7,9 @@
 #include "UILabel.h"
 #include "UIButton.h"
 
+static constexpr int BASE_W = 1280;
+static constexpr int BASE_H = 720;
+
 class DialogManager : public Module
 {
 public:
@@ -35,6 +38,8 @@ public:
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
 
+	void ResizeDialogBox();
+
 	std::list<DialogTree*> dialogs;
 	bool paused = false;
 
@@ -43,6 +48,7 @@ private:
 	DialogTree* currentDialog;
 	SDL_Texture* dialogBox;
 	std::shared_ptr<UILabel> dialogText;
+	std::shared_ptr<UILabel> speakerName;
 	std::shared_ptr<UIButton> answer1;
 	std::shared_ptr<UIButton> answer2;
 	std::shared_ptr<UIButton> answer3;
@@ -50,6 +56,7 @@ private:
 
 	enum DIALOG_UIID {
 		LABEL,
+		SPEAKER_NAME,
 		ANSWER1,
 		ANSWER2,
 		ANSWER3,
