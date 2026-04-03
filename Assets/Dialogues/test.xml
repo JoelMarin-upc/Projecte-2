@@ -7,21 +7,39 @@
 			</answer>
 		</node>
 		<node id="DN-002" first="false">
-			You used to drag me here every day
+			You used to drag me here every day...
 			<answer leadsToNodeId="DN-003">
-				Single answer 1
+				Continue
 			</answer>
 		</node>
 		<node id="DN-003" first="false">
-			This is my test reply 2
+			Said that the gods listened to our prayers better at sunrise.
 			<answer leadsToNodeId="DN-004">
-				Single answer 2
+				Continue
 			</answer>
 		</node>
 		<node id="DN-004" first="false">
-			This is the last reply
-			<answer leadsToNodeId="">
-				End conversarion
+			I almost wanted to believe you at some point.
+			<answer leadsToNodeId="DN-005">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-005" first="false">
+			You’re always right after all.
+			<answer leadsToNodeId="DN-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-006" first="false">
+			But if they really listened to my prayers…
+			<answer leadsToNodeId="DN-007">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-007" first="false">
+			Why are you not coming back to me?
+			<answer leadsToNodeId="DN-008">
+				Continue
 			</answer>
 		</node>
 	</tree>
