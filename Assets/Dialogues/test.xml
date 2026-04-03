@@ -42,6 +42,48 @@
 				Continue
 			</answer>
 		</node>
+		<node id="DN-008" first="false">
+			Damn it, why would you want to go to the castle?
+			<answer leadsToNodeId="DN-009">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-009" first="false">
+			No one comes back from there anymore.
+			<answer leadsToNodeId="DN-010">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-010" first="false">
+			Not even you…
+			<answer leadsToNodeId="DN-011">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-011" first="false">
+			I don’t know what I’ll find inside
+			<answer leadsToNodeId="DN-012">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-012" first="false">
+			...but I can’t stand here waiting anymore.
+			<answer leadsToNodeId="DN-013">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-013" first="false">
+			Nia, I’m coming to find you.
+			<answer leadsToNodeId="DN-014">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-014" first="false">
+			Or whatever remains of you.
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
 	</tree>
 	<tree id="DT-001" characterId="CH-001" order="2" done="false">
 		<node id="DN-001" first="true">
