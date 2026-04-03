@@ -94,6 +94,10 @@ bool Scene::Update(float dt)
 	////////////////////////////////////////////////
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN || Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) TogglePause();
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("player");
+	
+	///////////// FOR TESTING (remove) /////////////
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) for (const auto& entity : entityManager->entities) if (entity->id == "CH-002") player->AddPartyMember(std::dynamic_pointer_cast<NPC>(entity));
+	////////////////////////////////////////////////
 
 	map->Update(dt);
 	entityManager->Update(dt);
@@ -258,6 +262,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		Engine::GetInstance().menuManager->ShowPreviousMenu();
 		break;
 	case BACK_MAIN_MENU:
+		dialogManager->SetCurrentDialog();
 		Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
 		break;
 	case EXIT:

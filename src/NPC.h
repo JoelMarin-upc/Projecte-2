@@ -2,6 +2,9 @@
 
 #include "AICharacter.h"
 #include "Textures.h"
+
+class Party;
+
 //struct SDL_Texture;
 
 enum class NPCInteractionType {
@@ -15,7 +18,6 @@ class NPC : public AICharacter {
 public:
 	NPC(){}
 	NPC(std::string id, std::string name, std::string texturePath, NPCInteractionType type = NPCInteractionType::DEFAULT) : AICharacter(id, name, texturePath, EntityType::NPC) {
-		npcID = id;
 		npcInteractionType = type;
 	}
 	virtual ~NPC();
@@ -25,6 +27,7 @@ public:
 
 	bool Update(float dt);
 	void Draw(float dt);
+	void Move();
 	void Interact();
 	void OnDialogEnd();
 	void Recruit();
@@ -34,8 +37,8 @@ public:
 public:
 	bool isPlayerInRange = false;
 	bool isRecruitConditionFulfilled = false;
+	Party* party;
 private:
-	std::string npcID;
 	NPCInteractionType npcInteractionType;
 	Collider* pbody = nullptr;
 	Collider* sensorCollider = nullptr;

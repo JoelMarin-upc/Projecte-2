@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="46" tilewidth="20" tileheight="20" infinite="0" nextlayerid="22" nextobjectid="156">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="46" tilewidth="20" tileheight="20" infinite="0" nextlayerid="22" nextobjectid="157">
  <tileset firstgid="1" name="AutumnHillsTileset_8" tilewidth="20" tileheight="20" tilecount="625" columns="25">
   <image source="AutumnHillsTileset_8.png" width="500" height="500"/>
  </tileset>
- <tileset firstgid="626" name="metadata" tilewidth="20" tileheight="20" tilecount="7" columns="7">
-  <image source="metadata.png" width="140" height="20"/>
+ <tileset firstgid="626" name="metadata" tilewidth="16" tileheight="16" tilecount="7" columns="7">
+  <image source="metadata.png" width="112" height="16"/>
  </tileset>
- <tileset firstgid="633" source="AutumnHillsTileset_8.tsx"/>
  <layer id="6" name="Background" width="50" height="46">
   <properties>
    <property name="Draw" type="bool" value="true"/>
@@ -9246,6 +9245,12 @@
   <object id="154" x="602.667" y="182.666">
    <properties>
     <property name="id" value="CH-001"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="156" x="316" y="57">
+   <properties>
+    <property name="id" value="CH-002"/>
    </properties>
    <point/>
   </object>

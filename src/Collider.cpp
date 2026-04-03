@@ -23,6 +23,21 @@ float Collider::GetRotation() const
     return RADTODEG * b2Rot_GetAngle(xf.q);
 }
 
+void Collider::GetVelocity(int& x, int& y) const
+{
+    b2Vec2 pos = b2Body_GetLinearVelocity(body);
+    x = METERS_TO_PIXELS(pos.x);
+    y = METERS_TO_PIXELS(pos.y);
+}
+
+void Collider::SetPosition(int x, int y) const
+{
+    b2Vec2 pos = b2Vec2();
+    pos.x = PIXEL_TO_METERS(x);
+    pos.y = PIXEL_TO_METERS(y);
+    b2Body_SetTransform(body, pos, b2Body_GetRotation(body));
+}
+
 bool Collider::Contains(int x, int y) const
 {
     // World-space point in meters

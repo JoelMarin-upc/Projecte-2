@@ -44,6 +44,8 @@ bool Player::Start() {
 	texW = 32;
 	texH = 32;
 
+	party = nullptr;
+
 	return true;
 }
 
@@ -188,6 +190,12 @@ void Player::HandleAnimations()
 		anims.SetCurrent("falling");
 		currentAnimation = "falling";
 	}
+}
+
+void Player::AddPartyMember(std::shared_ptr<NPC> member)
+{
+	if (!party) party = new Party(this);
+	party->AddMember(member);
 }
 
 void Player::Draw(float dt) {

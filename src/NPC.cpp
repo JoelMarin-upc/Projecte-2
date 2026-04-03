@@ -2,6 +2,8 @@
 #include "Engine.h"
 #include "SceneManager.h"
 #include "Log.h"
+#include "Party.h"
+//#include <cmath>
 
 NPC::~NPC() {}
 
@@ -11,12 +13,12 @@ bool NPC::Awake() {
 
 bool NPC::Start()
 {
-	texturePath = "Assets/Textures/heart.png";
+	//texturePath = "Assets/Textures/heart.png";
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
-	position.setX(200);
-	position.setY(200);
+	//position.setX(200);
+	//position.setY(200);
 
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 1, 1);
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 0, 0);
 	pbody = colliders[0];
 	pbody->listener = this;
 	pbody->etype = EntityType::NPC;
@@ -28,6 +30,9 @@ bool NPC::Start()
 
 	texW = 32;
 	texH = 32;
+
+	party = nullptr;
+
     return true;
 }
 
@@ -41,6 +46,7 @@ bool NPC::Update(float dt)
 			Interact();
 		}
 	}
+	Move();
 	Draw(dt);
     return true;
 }
@@ -54,9 +60,49 @@ void NPC::Draw(float dt)
 	Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - 6 - texH / 2/*, &animFrame, facingRight*/);
 }
 
+void NPC::Move()
+{
+	if (!party || !party->player) return;
+	if (colliders.empty() || !colliders[0]) return;
+
+	const float speed = 2.5f;
+	const float stopDistance = 1.f;
+
+	int x, y;
+	colliders[0]->GetPosition(x, y);
+	b2Vec2 npcPos = b2Vec2();
+	npcPos.x = PIXEL_TO_METERS(x);
+	npcPos.y = PIXEL_TO_METERS(y);
+
+	float playerX = PIXEL_TO_METERS(party->player->position.getX());
+	float playerY = PIXEL_TO_METERS(party->player->position.getY());
+	b2Vec2 playerPos = b2Vec2();
+	playerPos.x = playerX;
+	playerPos.y = playerY;
+
+	b2Vec2 dir = playerPos - npcPos;
+
+	float distance = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+
+	if (distance < stopDistance || distance == 0.0f) {
+		Engine::GetInstance().physics->SetLinearVelocity(colliders[0], b2Vec2_zero);
+		return;
+	}
+
+	dir.x /= distance;
+	dir.y /= distance;
+
+	b2Vec2 velocity = speed * dir;
+
+	Engine::GetInstance().physics->SetLinearVelocity(colliders[0], velocity);
+	int xFinal, yFinal;
+	pbody->GetPosition(xFinal, yFinal);
+	sensorCollider->SetPosition(xFinal, yFinal);
+}
+
 void NPC::Interact()
 {
-	Engine::GetInstance().sceneManager->currentScene->StartDialog(npcID);
+	Engine::GetInstance().sceneManager->currentScene->StartDialog(id);
 }
 
 void NPC::OnDialogEnd()

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Party.h"
 #include "Character.h"
 #include "Animation.h"
 #include "Timer.h"
@@ -32,6 +33,7 @@ public:
 	Vector2D GetPosition();
 	Vector2D GetPositionCenter();
 
+	void AddPartyMember(std::shared_ptr<NPC> member);
 
 private:
 	void GodMode();
@@ -130,6 +132,8 @@ public:
 	bool inBoss = false;
 	int keyCount = 0;
 	bool doorOpen = false;
+
+	Party* party;
 
 private:
 	b2Vec2 velocity;
