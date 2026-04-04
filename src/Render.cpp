@@ -171,7 +171,7 @@ void Render::ResetViewPort()
 }
 
 // Blit to screen
-bool Render::DrawTexture(SDL_Texture* texture, int x, int y, const SDL_Rect* section, bool facingRight, double angle, int pivotX, int pivotY, float speed) const
+bool Render::DrawTexture(SDL_Texture* texture, int x, int y, float speed, const SDL_Rect* section, bool facingRight, double angle, int pivotX, int pivotY) const
 {
 	bool ret = true;
 	int scale = Engine::GetInstance().window->GetScale();

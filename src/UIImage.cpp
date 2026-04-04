@@ -53,16 +53,16 @@ bool UIImage::Update(float dt)
 	switch (state)
 	{
 	case UIElementState::DISABLED:
-		Engine::GetInstance().render->DrawTexture(disabledTex, bounds.x, bounds.y);
+		Engine::GetInstance().render->DrawTexture(disabledTex, bounds.x, bounds.y, 0.0f);
 		break;
 	case UIElementState::NORMAL:
-		Engine::GetInstance().render->DrawTexture(normalTex, bounds.x, bounds.y);
+		Engine::GetInstance().render->DrawTexture(normalTex, bounds.x, bounds.y, 0.0f);
 		break;
 	case UIElementState::FOCUSED:
-		Engine::GetInstance().render->DrawTexture(focusedTex, bounds.x, bounds.y);
+		Engine::GetInstance().render->DrawTexture(focusedTex, bounds.x, bounds.y, 0.0f);
 		break;
 	case UIElementState::PRESSED:
-		Engine::GetInstance().render->DrawTexture(pressedTex, bounds.x, bounds.y);
+		Engine::GetInstance().render->DrawTexture(pressedTex, bounds.x, bounds.y, 0.0f);
 		break;
 	}
 

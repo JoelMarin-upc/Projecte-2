@@ -46,7 +46,7 @@ bool DialogManager::Start() {
 bool DialogManager::Update(float dt) {
 	int sw = BASE_W;
 	int sh = BASE_H;
-	if (currentDialog) Engine::GetInstance().render->DrawTexture(dialogBox, 0, 0);
+	if (currentDialog) Engine::GetInstance().render->DrawTexture(dialogBox, 0, 0, 0.0f);
 	return true;
 }
 
