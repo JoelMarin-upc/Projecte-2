@@ -395,4 +395,12 @@
 			</answer>
 		</node>
 	</tree>
+	<tree id="DT-007" characterId="interactableStatue" order="1" done="false">
+		<node id="DN-001" first="true">
+			The gods are watching you. You feel a fleeting sensation of peace.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+	</tree>
 </dialogs>
