@@ -24,7 +24,8 @@ bool SceneManager::Awake()
 bool SceneManager::Start() 
 {
 	LoadScenes();
-	SetCurrentScene("main menu");
+	SetCurrentScene("intro");
+	//SetCurrentScene("main menu");
 	//SetCurrentScene("SC-001");
 	return true;
 }
@@ -39,6 +40,7 @@ void SceneManager::LoadScenes()
 {
 	// load from xml
 	scenes = std::list<Scene*>();
+	scenes.push_back(new Scene("intro", "", ""));
 	scenes.push_back(new Scene("main menu", "", ""));
 	scenes.push_back(new Scene("SC-001", mapsPath, "RebelRefuge.tmx"));
 }
