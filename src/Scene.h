@@ -36,7 +36,7 @@ public:
 	bool Awake();
 
 	// Called before the first frame
-	bool Start();
+	bool Start(std::string spawnId = "default");
 
 	// Called before all Updates
 	bool PreUpdate();
@@ -54,8 +54,10 @@ public:
 	void SaveGame();
 	void LoadGame();
 	void LoadMap(std::string mapPath, std::string mapName);
-	void LoadScene();
+	void LoadScene(std::string spawnId = "default");
 	void EndScene();
+
+	void CheckTransitions();
 
 	void StartDialog(std::string characterId);
 	void EndDialog();
@@ -68,6 +70,7 @@ public:
 
 	std::string id;
 	std::string name;
+	std::string pendingSpawnId = "default";
 
 	EntityManager* entityManager;
 	MissionManager* missionManager;

@@ -223,7 +223,7 @@ bool Map::Load(std::string path, std::string fileName)
 
                             break;
                         case 2:
-                            gameData.playerStartPosition = mapCoord;
+
                             break;
                         case 3:
 
@@ -331,6 +331,31 @@ bool Map::Load(std::string path, std::string fileName)
                     item.id = object->properties.GetProperty("id")->value_s;
                     item.position = Vector2D(object->x, object->y);
                     gameData.items.push_back(item);
+                }
+            }
+
+            if (objectGroup->name == "Transitions") {
+                for (const auto& object : objectGroup->objects) {
+                    AccessData t;
+                    t.position = Vector2D(object->x, object->y);
+                    t.width = object->width;
+                    t.height = object->height;
+                    auto* targetScene = object->properties.GetProperty("targetSceneId");
+                    auto* targetSpawn = object->properties.GetProperty("targetSpawnId");
+                    t.targetSceneId = targetScene ? targetScene->value_s : "";
+                    t.targetSpawnId = targetSpawn ? targetSpawn->value_s : "default";
+                    if (!t.targetSceneId.empty())
+                        gameData.accesses.push_back(t);
+                }
+            }
+
+            if (objectGroup->name == "Spawns") {
+                for (const auto& object : objectGroup->objects) {
+                    SpawnPoint sp;
+                    auto* prop = object->properties.GetProperty("spawnId");
+                    sp.spawnId = prop ? prop->value_s : "default";
+                    sp.position = Vector2D(object->x, object->y);
+                    gameData.spawnPoints.push_back(sp);
                 }
             }
         }

@@ -53,9 +53,10 @@ bool Scene::Awake()
 }
 
 // Called before the first frame
-bool Scene::Start()
+bool Scene::Start(std::string spawnId)
 {
 	paused = false;
+	pendingSpawnId = spawnId;
 
 	sw = Engine::GetInstance().window->width;
 	sh = Engine::GetInstance().window->height;
@@ -79,16 +80,10 @@ bool Scene::Start()
 	missionManager->Start();
 	dialogManager->Start();
 
+	if (gameStarted) {
+		StartDialog("player");
+	}
 
-	//testItem = std::make_shared<InteractableItem>(ItemInteractionType::TOGGLE);
-
-	/*testItem = std::make_shared<InteractableItem>(ItemInteractionType::TOGGLE);
-
-	testItem->position.setX(500);
-	testItem->position.setY(500);
-	entityManager->AddEntity(testItem);
-	testItem->Start();*/
-	
 	return true;
 }
 
@@ -120,9 +115,11 @@ bool Scene::Update(float dt)
 	entityManager->Update(dt);
 	missionManager->Update(dt);
 	dialogManager->Update(dt);
-	return true;
 
- 
+	if (gameStarted && !paused && !isOnDialog)
+		CheckTransitions();
+
+	return true;
 }
 
 // Called each loop iteration
@@ -170,7 +167,7 @@ void Scene::LoadMap(std::string mapPath, std::string mapName)
 	mapData = map->gameData;
 }
 
-void Scene::LoadScene()
+void Scene::LoadScene(std::string spawnId)
 {
 	std::string baseTexturePath = "Assets/Textures/";
 
@@ -183,7 +180,29 @@ void Scene::LoadScene()
 	std::string id = pNode.attribute("id").as_string();
 	std::string name = pNode.attribute("name").as_string();
 	std::string texture = pNode.attribute("texture").as_string();
-	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, mapData.playerStartPosition, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+
+	//Loads the spawnpoint
+	Vector2D spawnPos(0, 0);
+	bool found = false;
+
+	for (const SpawnPoint& sp : mapData.spawnPoints) {
+		if (sp.spawnId == pendingSpawnId) {
+			spawnPos = sp.position;
+			found = true;
+			break;
+		}
+	}
+
+	if (!found) {
+		for (const SpawnPoint& sp : mapData.spawnPoints) {
+			if (sp.spawnId == "default") {
+				spawnPos = sp.position;
+				break;
+			}
+		}
+	}
+
+	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
 	Engine::GetInstance().render->follow = player;
 
 	for (NPCData npc : mapData.npcs) {
@@ -214,6 +233,19 @@ void Scene::LoadScene()
 void Scene::EndScene()
 {
 	
+}
+
+void Scene::CheckTransitions()
+{
+	if (!player) return;
+	Vector2D playerPos = player->position;
+
+	for (AccessData& t : mapData.accesses) {
+		if (playerPos.getX() >= t.position.getX() && playerPos.getX() <= t.position.getX() + t.width && playerPos.getY() >= t.position.getY() && playerPos.getY() <= t.position.getY() + t.height) {
+			Engine::GetInstance().sceneManager->SetCurrentScene(t.targetSceneId, t.targetSpawnId);
+			return;
+		}
+	}
 }
 
 void Scene::StartDialog(std::string characterId)

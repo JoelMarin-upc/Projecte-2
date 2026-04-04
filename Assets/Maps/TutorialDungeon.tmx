@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="94">
- <tileset firstgid="1" name="metadata" tilewidth="16" tileheight="16" tilecount="7" columns="7">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="22" nextobjectid="95">
+ <tileset firstgid="1" name="metadata" tilewidth="16" tileheight="16" tilecount="0" columns="7">
   <image source="../../Desktop/Projecte-2/Assets/Maps/Metadata.png" width="112" height="16"/>
  </tileset>
  <tileset firstgid="8" name="DungeonDecorative" tilewidth="16" tileheight="16" tilecount="256" columns="16">
@@ -9,6 +9,7 @@
  <tileset firstgid="264" name="mainlevbuild" tilewidth="16" tileheight="16" tilecount="2560" columns="64">
   <image source="mainlevbuild.png" width="1024" height="640"/>
  </tileset>
+ <tileset firstgid="2824" source="Tileset - What Remains of You/Metadata.tsx"/>
  <layer id="1" name="Background" width="50" height="70">
   <properties>
    <property name="Draw" type="bool" value="true"/>
@@ -10532,9 +10533,9 @@
  </layer>
  <layer id="20" name="Logic" width="50" height="70">
   <data>
-   <tile gid="1"/>
-   <tile gid="2"/>
-   <tile gid="7"/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -14133,7 +14134,20 @@
   <object id="92" x="271.955" y="91.303" width="16.3409" height="20.644"/>
  </objectgroup>
  <objectgroup id="19" name="Accesses">
-  <object id="93" x="721.5" y="17.5" width="77" height="95.5"/>
+  <object id="93" x="721.5" y="17.5" width="77" height="95.5">
+   <properties>
+    <property name="targetSceneId" value="SC-001"/>
+    <property name="targetSpawnId" value="refuge_from_dungeon"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="21" name="Spawns">
+  <object id="94" x="759.75" y="121.75">
+   <properties>
+    <property name="spawnId" value="dungeon_from_refuge"/>
+   </properties>
+   <point/>
+  </object>
  </objectgroup>
  <objectgroup id="17" name="NPC"/>
  <objectgroup id="18" name="Items"/>

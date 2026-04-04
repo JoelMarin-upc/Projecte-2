@@ -21,7 +21,7 @@ bool SceneManager::Awake()
 	return true;
 }
 
-bool SceneManager::Start() 
+bool SceneManager::Start()
 {
 	LoadScenes();
 	SetCurrentScene("intro");
@@ -38,19 +38,20 @@ bool SceneManager::CleanUp()
 
 void SceneManager::LoadScenes()
 {
-	// load from xml
+	//load from xml
 	scenes = std::list<Scene*>();
 	scenes.push_back(new Scene("intro", "", ""));
 	scenes.push_back(new Scene("main menu", "", ""));
+	
+	scenes.push_back(new Scene("SC-002", mapsPath, "GroceriesShop.tmx"));
+	scenes.push_back(new Scene("SC-003", mapsPath, "TutorialDungeon.tmx"));
 	scenes.push_back(new Scene("SC-001", mapsPath, "RebelRefuge.tmx"));
-	/*scenes.push_back(new Scene("SC-002", mapsPath, "GroceriesShop.tmx"));
-	scenes.push_back(new Scene("SC-003", mapsPath, "TutorialDungeon.tmx"));*/
 }
 
-void SceneManager::SetCurrentScene(std::string sceneID)
+void SceneManager::SetCurrentScene(std::string sceneID, std::string spawnId)
 {
 	for (Scene* s : scenes) if (s->id == sceneID) currentScene = s;
-	if (currentScene) currentScene->Start();
+	if (currentScene) currentScene->Start(spawnId);
 }
 
 EntityManager* SceneManager::GetEntityManager() const

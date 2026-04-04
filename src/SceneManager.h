@@ -31,10 +31,10 @@ public:
 
 	void LoadScenes();
 
-	void SetCurrentScene(std::string sceneID);
+	void SetCurrentScene(std::string sceneID, std::string spawnID = "default");
 
 	EntityManager* GetEntityManager() const;
-
+	
 	MissionManager* GetMissionManager() const;
 
 	DialogManager* GetDialogManager() const;

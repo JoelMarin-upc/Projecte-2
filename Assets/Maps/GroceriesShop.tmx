@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="34">
- <tileset firstgid="1" name="metadata" tilewidth="16" tileheight="16" tilecount="7" columns="7">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="38">
+ <tileset firstgid="1" name="metadata" tilewidth="16" tileheight="16" tilecount="0" columns="7">
   <image source="../Metadata.png" width="112" height="16"/>
  </tileset>
  <tileset firstgid="8" name="TopDownHouse_FloorsAndWalls" tilewidth="16" tileheight="16" tilecount="162" columns="18">
@@ -1847,9 +1847,9 @@
  </layer>
  <layer id="13" name="Logic" width="30" height="20">
   <data>
-   <tile gid="1"/>
-   <tile gid="2"/>
-   <tile gid="7"/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -2454,7 +2454,8 @@
   <object id="2" x="43.9813" y="44.0277" width="4.2084" height="231.989"/>
   <object id="3" x="43.5" y="271.5" width="393" height="4.5"/>
   <object id="4" x="43.1136" y="43.8182" width="393" height="4.5"/>
-  <object id="5" x="45" y="44.5" width="390.5" height="69"/>
+  <object id="5" x="108.75" y="44.5" width="326.75" height="69"/>
+  <object id="34" x="48" y="44.25" width="34.75" height="67.75"/>
  </objectgroup>
  <objectgroup id="9" name="Obstacles">
   <object id="8" x="246.125" y="80.5" width="20.625" height="45.5"/>
@@ -2483,7 +2484,22 @@
   <object id="32" x="410.75" y="153.057" width="22" height="22.8864"/>
   <object id="33" x="416.5" y="162.557" width="15.75" height="22.8864"/>
  </objectgroup>
- <objectgroup id="10" name="Accesses"/>
+ <objectgroup id="10" name="Accesses">
+  <object id="36" x="83.125" y="66.375" width="26.25" height="45.75">
+   <properties>
+    <property name="targetSceneId" value="SC-001"/>
+    <property name="targetSpawnId" value="refuge_from_shop"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="14" name="Spawns">
+  <object id="37" x="95.5" y="118.75">
+   <properties>
+    <property name="spawnId" value="shop_from_refuge"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
  <objectgroup id="11" name="NPC"/>
  <objectgroup id="12" name="Items"/>
 </map>

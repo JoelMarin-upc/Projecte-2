@@ -159,7 +159,7 @@ struct MapData
     std::list<ObjectGroup*> objectlayers;
 };
 
-struct TransitionData {
+struct AccessData {
     Vector2D position;
     int width;
     int height;
@@ -167,10 +167,16 @@ struct TransitionData {
     std::string targetSpawnId;
 };
 
+struct SpawnPoint {
+    std::string spawnId;
+    Vector2D position;
+};
+
 struct GameData {
-    Vector2D playerStartPosition;
+    std::vector<SpawnPoint> spawnPoints;
     std::vector<NPCData> npcs;
     std::vector<ItemData> items;
+    std::vector<AccessData> accesses;
 };
 
 class Map
