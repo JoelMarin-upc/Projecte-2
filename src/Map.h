@@ -134,7 +134,8 @@ struct TileSet
 
 struct Object
 {
-    int id, x, y, width, height;
+    int id;
+    float x, y, width, height;
     Properties properties;
 };
 
@@ -161,8 +162,7 @@ struct MapData
 
 struct AccessData {
     Vector2D position;
-    int width;
-    int height;
+    float width, height;
     std::string targetSceneId;
     std::string targetSpawnId;
 };

@@ -42,8 +42,8 @@ bool Map::Update(float dt)
                 Vector2D camPosTile = GetCameraPositionInTiles();
                 Vector2D limits = GetCameraLimitsInTiles(camPosTile);
                 
-                for (int i = camPosTile.getX(); i <= limits.getX(); i++) {
-                    for (int j = camPosTile.getY(); j <= limits.getY(); j++) {
+                for (int i = camPosTile.getX(); i < limits.getX(); i++) {
+                    for (int j = camPosTile.getY(); j < limits.getY(); j++) {
 						// L07 TODO 9: Complete the draw function
                         //Get the gid from tile
                         int gid = mapLayer->Get(i, j);
@@ -196,10 +196,10 @@ bool Map::Load(std::string path, std::string fileName)
             for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object")) {
                 Object* object = new Object();
                 object->id = objectNode.attribute("id").as_int();
-                object->x = objectNode.attribute("x").as_int();
-                object->y = objectNode.attribute("y").as_int();
-                object->width = objectNode.attribute("width").as_int();
-                object->height = objectNode.attribute("height").as_int();
+                object->x = objectNode.attribute("x").as_float();
+                object->y = objectNode.attribute("y").as_float();
+                object->width = objectNode.attribute("width").as_float();
+                object->height = objectNode.attribute("height").as_float();
 
                 LoadProperties(objectNode, object->properties);
 
@@ -334,7 +334,7 @@ bool Map::Load(std::string path, std::string fileName)
                 }
             }
 
-            if (objectGroup->name == "Transitions") {
+            if (objectGroup->name == "Accesses") {
                 for (const auto& object : objectGroup->objects) {
                     AccessData t;
                     t.position = Vector2D(object->x, object->y);
@@ -344,8 +344,9 @@ bool Map::Load(std::string path, std::string fileName)
                     auto* targetSpawn = object->properties.GetProperty("targetSpawnId");
                     t.targetSceneId = targetScene ? targetScene->value_s : "";
                     t.targetSpawnId = targetSpawn ? targetSpawn->value_s : "default";
-                    if (!t.targetSceneId.empty())
+                    if (!t.targetSceneId.empty()) {
                         gameData.accesses.push_back(t);
+                    }
                 }
             }
 
@@ -478,7 +479,7 @@ Vector2D Map::GetCameraLimitsInTiles(Vector2D camPosTile) {
     Vector2D camSize = Vector2D(Engine::GetInstance().render->camera.w, Engine::GetInstance().render->camera.h);
     Vector2D camSizeTile = WorldToMap(camSize.getX(), camSize.getY());
 
-    Vector2D limits = Vector2D(camPosTile.getX() + camSizeTile.getX(), camPosTile.getY() + camSizeTile.getY());
+    Vector2D limits = Vector2D(camPosTile.getX() + camSizeTile.getX() + 2, camPosTile.getY() + camSizeTile.getY() + 2);
     if (limits.getX() > mapData.width) limits.setX(mapData.width);
     if (limits.getY() > mapData.height) limits.setY(mapData.height);
 

@@ -2493,7 +2493,7 @@
   </object>
  </objectgroup>
  <objectgroup id="14" name="Spawns">
-  <object id="37" x="95.5" y="118.75">
+  <object id="37" x="97" y="135.25">
    <properties>
     <property name="spawnId" value="shop_from_refuge"/>
    </properties>

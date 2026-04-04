@@ -20,7 +20,6 @@ Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 	if (gameStarted)
 	{
 		LoadMap(mapPath, mapName);
-		LoadScene();
 	}
 
 	//entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
@@ -76,6 +75,10 @@ bool Scene::Start(std::string spawnId)
 
 	if (id == "main menu") Engine::GetInstance().menuManager->ShowMainMenu();
 
+	if (gameStarted) {
+		LoadScene();
+	}
+
 	entityManager->Start();
 	missionManager->Start();
 	dialogManager->Start();
@@ -116,8 +119,19 @@ bool Scene::Update(float dt)
 	missionManager->Update(dt);
 	dialogManager->Update(dt);
 
-	if (gameStarted && !paused && !isOnDialog)
+	if (gameStarted && !paused && !isOnDialog) {
 		CheckTransitions();
+	}
+		
+	for (AccessData& t : mapData.accesses) {
+		SDL_Rect rect = {
+			(int)t.position.getX(),
+			(int)t.position.getY(),
+			(int)t.width,
+			(int)t.height
+		};
+		Engine::GetInstance().render->DrawRectangle(rect, 0, 255, 0, 128, true, true);
+	}
 
 	return true;
 }

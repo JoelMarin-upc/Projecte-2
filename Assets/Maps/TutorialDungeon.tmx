@@ -14142,7 +14142,7 @@
   </object>
  </objectgroup>
  <objectgroup id="21" name="Spawns">
-  <object id="94" x="759.75" y="121.75">
+  <object id="94" x="759.75" y="134.75">
    <properties>
     <property name="spawnId" value="dungeon_from_refuge"/>
    </properties>
