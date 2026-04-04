@@ -42,8 +42,8 @@ bool Map::Update(float dt)
                 Vector2D camPosTile = GetCameraPositionInTiles();
                 Vector2D limits = GetCameraLimitsInTiles(camPosTile);
                 
-                for (int i = camPosTile.getX(); i < limits.getX(); i++) {
-                    for (int j = camPosTile.getY(); j < limits.getY(); j++) {
+                for (int i = camPosTile.getX(); i <= limits.getX(); i++) {
+                    for (int j = camPosTile.getY(); j <= limits.getY(); j++) {
 						// L07 TODO 9: Complete the draw function
                         //Get the gid from tile
                         int gid = mapLayer->Get(i, j);
@@ -219,25 +219,25 @@ bool Map::Load(std::string path, std::string fileName)
                         Vector2D mapCoord = MapToWorld(i, j);        
                         switch (gid)
                         {
-                        case 626:
+                        case 1:
 
                             break;
-                        case 627:
+                        case 2:
                             gameData.playerStartPosition = mapCoord;
                             break;
-                        case 628:
+                        case 3:
 
                             break;
-                        case 629:
+                        case 4:
 
                             break;
-                        case 630:
+                        case 5:
 
                             break;
-                        case 631:
+                        case 6:
 
                             break;
-                        case 632:
+                        case 7:
 
                             break;
                         default:

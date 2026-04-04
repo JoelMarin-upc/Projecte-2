@@ -56,8 +56,10 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(menuManager));
     AddModule(std::static_pointer_cast<Module>(sceneManager));
     AddModule(std::static_pointer_cast<Module>(dialogManager));
-    AddModule(std::static_pointer_cast<Module>(uiManager));
     AddModule(std::static_pointer_cast<Module>(entityManager));
+
+    // UI Manager on top of the other modules
+    AddModule(std::static_pointer_cast<Module>(uiManager));
 
     // Render last 
     AddModule(std::static_pointer_cast<Module>(render));

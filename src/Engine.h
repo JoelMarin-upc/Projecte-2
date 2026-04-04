@@ -105,7 +105,7 @@ public:
 	std::shared_ptr<UIManager> uiManager;
 	std::shared_ptr<DialogManager> dialogManager;
 	std::shared_ptr<EntityManager> entityManager;
-
+	
 	int frameCount = 0;
 
 	//L05 TODO 2: Declare a xml_document to load the config file

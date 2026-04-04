@@ -210,6 +210,7 @@ void Player::Draw(float dt) {
 	}
 	else if (hasItem1 && canThrow1) tex = itemChargeTexture1;
 	Engine::GetInstance().render->DrawTexture(tex, x - 8, y -8);
+
 }
 
 bool Player::CleanUp()

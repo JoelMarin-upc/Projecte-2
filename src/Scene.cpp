@@ -112,7 +112,10 @@ bool Scene::PostUpdate(float dt)
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
-
+	if (Engine::GetInstance().render->follow) {
+		Engine::GetInstance().render->follow->Destroy();
+		Engine::GetInstance().render->follow = nullptr;
+	}
 	return true;
 }
 
@@ -158,6 +161,7 @@ void Scene::LoadScene()
 	std::string name = pNode.attribute("name").as_string();
 	std::string texture = pNode.attribute("texture").as_string();
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, mapData.playerStartPosition, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+	Engine::GetInstance().render->follow = player;
 
 
 	for (NPCData npc : mapData.npcs) {
