@@ -18,7 +18,7 @@ bool NPC::Start()
 	//position.setX(200);
 	//position.setY(200);
 
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 0, 0);
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 2, 2);
 	pbody = colliders[0];
 	pbody->listener = this;
 	pbody->etype = EntityType::NPC;

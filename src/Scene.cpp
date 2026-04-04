@@ -96,7 +96,7 @@ bool Scene::Update(float dt)
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("player");
 	
 	///////////// FOR TESTING (remove) /////////////
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) for (const auto& entity : entityManager->entities) if (entity->id == "CH-002") player->AddPartyMember(std::dynamic_pointer_cast<NPC>(entity));
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) for (const auto& entity : entityManager->entities) if (entity->id == "CH-002" || entity->id == "CH-003") player->AddPartyMember(std::dynamic_pointer_cast<NPC>(entity));
 	////////////////////////////////////////////////
 
 	map->Update(dt);
@@ -162,7 +162,6 @@ void Scene::LoadScene()
 	std::string name = pNode.attribute("name").as_string();
 	std::string texture = pNode.attribute("texture").as_string();
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, mapData.playerStartPosition, EntityType::PLAYER, NPCInteractionType::DEFAULT));
-
 
 	for (NPCData npc : mapData.npcs) {
 		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {

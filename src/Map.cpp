@@ -118,6 +118,7 @@ bool Map::Load(std::string path, std::string fileName)
     bool ret = false;
 
     gameData = GameData();
+    combatData = CombatData();
 
     // Assigns the name of the map file and the path
     mapFileName = fileName;
@@ -331,6 +332,22 @@ bool Map::Load(std::string path, std::string fileName)
                     item.id = object->properties.GetProperty("id")->value_s;
                     item.position = Vector2D(object->x, object->y);
                     gameData.items.push_back(item);
+                }
+            }
+
+            if (objectGroup->name == "Camera") {
+                for (const auto& object : objectGroup->objects) {
+                    combatData.cameraPosition = Vector2D(object->x, object->y);
+                }
+            }
+
+            if (objectGroup->name == "Positions") {
+                for (const auto& object : objectGroup->objects) {
+                    CombatPosition pos;
+                    pos.isEnemy = object->properties.GetProperty("isEnemy")->value_b;
+                    pos.order = object->properties.GetProperty("order")->value_i;
+                    pos.position = Vector2D(object->x, object->y);
+                    combatData.positions.push_back(pos);
                 }
             }
         }

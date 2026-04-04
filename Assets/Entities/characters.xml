@@ -9,7 +9,12 @@
 			<!--some items-->
 		</inventory>
 	</character>
-	<character id="CH-002" name="test follower" texture="heart.png" type="3" npcInteractionType="1">
+	<character id="CH-002" name="test follower 1" texture="heart.png" type="3" npcInteractionType="1">
+		<inventory>
+			<!--some items-->
+		</inventory>
+	</character>
+	<character id="CH-003" name="test follower 2" texture="heart.png" type="3" npcInteractionType="1">
 		<inventory>
 			<!--some items-->
 		</inventory>

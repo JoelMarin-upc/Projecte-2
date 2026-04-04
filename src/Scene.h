@@ -12,6 +12,7 @@
 #include "DialogManager.h"
 #include "InteractableItem.h"
 #include "MenuManager.h"
+#include "Combat.h"
 
 struct SDL_Texture;
 
@@ -60,6 +61,8 @@ public:
 	void StartDialog(std::string characterId);
 	void EndDialog();
 
+	void StartCombat(std::shared_ptr<Enemy> enemy);
+
 	Vector2D GetPlayerPosition();
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
@@ -85,6 +88,8 @@ private:
 	bool gameStarted = false;
 	bool paused = false;
 	bool isOnDialog = false;
+
+	Combat* combat = nullptr;
 
 	std::string  activeDialogId = "";
 

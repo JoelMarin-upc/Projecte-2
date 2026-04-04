@@ -165,6 +165,17 @@ struct GameData {
     std::vector<ItemData> items;
 };
 
+struct CombatData {
+    Vector2D cameraPosition;
+    std::vector<CombatPosition> positions;
+};
+
+struct CombatPosition {
+    bool isEnemy;
+    int order;
+    Vector2D position;
+};
+
 class Map
 {
 public:
@@ -223,6 +234,7 @@ public:
     Vector2D* playerStartPos = nullptr;
     MapData mapData;
     GameData gameData;
+    CombatData combatData;
 
 private:
     bool mapLoaded;

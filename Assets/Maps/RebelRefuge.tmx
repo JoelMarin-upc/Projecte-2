@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="46" tilewidth="20" tileheight="20" infinite="0" nextlayerid="22" nextobjectid="157">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="46" tilewidth="20" tileheight="20" infinite="0" nextlayerid="22" nextobjectid="158">
  <tileset firstgid="1" name="AutumnHillsTileset_8" tilewidth="20" tileheight="20" tilecount="625" columns="25">
   <image source="AutumnHillsTileset_8.png" width="500" height="500"/>
  </tileset>
@@ -2319,7 +2319,7 @@
   <object id="132" x="680" y="120" width="140" height="140"/>
   <object id="133" x="220" y="640" width="140" height="140"/>
   <object id="149" x="0" y="-20" width="1000" height="20"/>
-  <object id="150" x="1000" y="0" width="40" height="920"/>
+  <object id="150" x="1000" y="0" width="20" height="920"/>
   <object id="151" x="0" y="920" width="1000" height="20"/>
   <object id="152" x="-20" y="0" width="20" height="920"/>
  </objectgroup>
@@ -9251,6 +9251,12 @@
   <object id="156" x="316" y="57">
    <properties>
     <property name="id" value="CH-002"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="157" x="148" y="487">
+   <properties>
+    <property name="id" value="CH-003"/>
    </properties>
    <point/>
   </object>
