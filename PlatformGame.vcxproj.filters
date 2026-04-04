@@ -513,10 +513,8 @@
       <Filter>Configuration FIles</Filter>
     </Xml>
     <Xml Include="gamesave.xml" />
-    <Xml Include="Assets\Dialogues\test.xml">
-      <Filter>Configuration FIles</Filter>
-    </Xml>
     <Xml Include="Assets\Entities\characters.xml" />
     <Xml Include="Assets\Entities\items.xml" />
+    <Xml Include="Assets\Dialogues\test.xml" />
   </ItemGroup>
 </Project>

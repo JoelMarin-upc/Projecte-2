@@ -93,7 +93,7 @@ bool Scene::Update(float dt)
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) Engine::GetInstance().menuManager->ShowDeathScreen();
 	////////////////////////////////////////////////
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN || Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) TogglePause();
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("player");
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("gravekeeper");
 
 	map->Update(dt);
 	entityManager->Update(dt);
