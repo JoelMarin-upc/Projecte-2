@@ -63,9 +63,17 @@ bool Scene::Start()
 	b_logo = { sw/2 - logo->w/2, sh/2 - logo->h/2, 0, 0 };
 	hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
 	clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
-	studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));
 
 	Engine::GetInstance().menuManager->SetObserver(this);
+
+	if (id == "intro")
+	{
+		Engine::GetInstance().menuManager->HideMenu();
+		studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));
+		studioLogo->active = true;
+	}
+
+	if (id == "main menu") Engine::GetInstance().menuManager->ShowMainMenu();
 
 	entityManager->Start();
 	missionManager->Start();
@@ -94,16 +102,12 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	if (id == "intro") {
-		studioLogo->active = true;
-		Engine::GetInstance().menuManager->HideMenu();
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
 			studioLogo->active = false;
 			studioLogo->Destroy();
 			Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
 		}
 	}
-
-	if (id == "main menu") Engine::GetInstance().menuManager->ShowMainMenu();
 
 	if (!gameStarted) return true;
 	///////////// FOR TESTING (remove) /////////////
