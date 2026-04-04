@@ -15,7 +15,7 @@ Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
 
-	gameStarted = id != "main menu";
+	gameStarted = id != "main menu" && id != "intro";
 
 	if (gameStarted)
 	{
@@ -57,9 +57,23 @@ bool Scene::Start()
 {
 	paused = false;
 
+	sw = Engine::GetInstance().window->width;
+	sh = Engine::GetInstance().window->height;
+	logo = Engine::GetInstance().textures->Load("Assets/Textures/TeamDayo_Logo.png");
+	b_logo = { sw/2 - logo->w/2, sh/2 - logo->h/2, 0, 0 };
+	hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
+	clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
+
 	Engine::GetInstance().menuManager->SetObserver(this);
 
-	if (!gameStarted) Engine::GetInstance().menuManager->ShowMainMenu();
+	if (id == "intro")
+	{
+		Engine::GetInstance().menuManager->HideMenu();
+		studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));
+		studioLogo->active = true;
+	}
+
+	if (id == "main menu") Engine::GetInstance().menuManager->ShowMainMenu();
 
 	entityManager->Start();
 	missionManager->Start();
@@ -87,6 +101,13 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	if (id == "intro") {
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
+			studioLogo->active = false;
+			studioLogo->Destroy();
+			Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		}
+	}
 
 	if (!gameStarted) return true;
 	///////////// FOR TESTING (remove) /////////////
@@ -100,6 +121,8 @@ bool Scene::Update(float dt)
 	missionManager->Update(dt);
 	dialogManager->Update(dt);
 	return true;
+
+ 
 }
 
 // Called each loop iteration

@@ -44,7 +44,6 @@ bool MenuManager::CleanUp() { return true; }
 void MenuManager::Load(bool onlyPositions)
 {
 	SDL_Texture* title = Engine::GetInstance().textures->Load("Assets/Textures/game_title.png");
-	SDL_Texture* logo = Engine::GetInstance().textures->Load("Assets/Textures/logo.png");
 
 	SDL_Color mainColorDef = { 0, 0, 255, 255 };
 	SDL_Color mainColorDis = { 200, 200, 200, 255 };
@@ -70,7 +69,6 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect pos5 = { sw / 2, sh / 2 + 57.5f, 0, 0 };
 
 	SDL_Rect b_gameTitle = { pos1.x - title->w / 2, pos1.y - title->h - 20, 0, 0 };
-	SDL_Rect b_logo = { sw - logo->w, sh - logo->h, 0, 0 };
 	SDL_Rect b_startGame = { pos1.x - 125, pos1.y, 250, 40 };
 	SDL_Rect b_paused_lbl = { pos1.x - 100, pos1.y, 200, 40 };
 	SDL_Rect b_gameOver_lbl = { pos1.x - 150, pos1.y, 300, 60 };
@@ -93,7 +91,6 @@ void MenuManager::Load(bool onlyPositions)
 
 	if (onlyPositions) {
 		gameTitle->SetBounds(b_gameTitle);
-		studioLogo->SetBounds(b_logo);
 		startGame->SetBounds(b_startGame);
 		pausedLabel->SetBounds(b_paused_lbl);
 		gameOverLabel->SetBounds(b_gameOver_lbl);
@@ -120,7 +117,6 @@ void MenuManager::Load(bool onlyPositions)
 
 		// MENUS
 		gameTitle = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)GAME_TITLE, b_gameTitle, this, {  }, hoverFxId, clickFxId, UIParameters::Image(title, title, title, title)));;
-		studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));;;
 		startGame = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)START_GAME, b_startGame, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Start Game", 5)));
 		pausedLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)PAUSED_LABEL, b_paused_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("PAUSED")));
 		gameOverLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)GAME_OVER_LABEL , b_gameOver_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("GAME OVER")));
@@ -146,7 +142,6 @@ void MenuManager::Load(bool onlyPositions)
 void MenuManager::SetObserver(Module* observer) 
 {
 	gameTitle->observer = observer;
-	studioLogo->observer = observer;
 	startGame->observer = observer;
 	pausedLabel->observer = observer;
 	settingsLabel->observer = observer;
@@ -176,7 +171,6 @@ void MenuManager::ShowMainMenu()
 	currentMenu = MAIN;
 
 	gameTitle->active = true;
-	studioLogo->active = true;
 	startGame->active = true;
 	continueGame->active = true;
 	if (XMLHandler::SaveFileExists()) continueGame->Enable();
@@ -278,7 +272,6 @@ void MenuManager::HideMenu()
 
 	currentMenu = NONE;
 	gameTitle->active = false;
-	studioLogo->active = false;
 	startGame->active = false;
 	pausedLabel->active = false;
 	gameOverLabel->active = false;

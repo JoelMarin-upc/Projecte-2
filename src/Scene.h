@@ -89,5 +89,12 @@ private:
 	std::string  activeDialogId = "";
 
 	GameData mapData;
-
+	
+	int sw;
+	int sh;
+	SDL_Texture* logo;
+	SDL_Rect b_logo;
+	std::shared_ptr<UIImage> studioLogo;
+	int hoverFxId;
+	int clickFxId;
 };
