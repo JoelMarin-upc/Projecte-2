@@ -159,6 +159,14 @@ struct MapData
     std::list<ObjectGroup*> objectlayers;
 };
 
+struct TransitionData {
+    Vector2D position;
+    int width;
+    int height;
+    std::string targetSceneId;
+    std::string targetSpawnId;
+};
+
 struct GameData {
     Vector2D playerStartPosition;
     std::vector<NPCData> npcs;
