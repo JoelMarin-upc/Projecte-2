@@ -127,8 +127,8 @@ void Render::CameraFollow()
 	/*camera.x = -follow->position.getX() + camera.w / 2.f;
 	camera.y = -follow->position.getY() + camera.h / 1.2f;*/
 
-	const float deadZoneWidth = camera.w * 0.4f;
-	const float deadZoneHeight = camera.h * 0.7f;
+	const float deadZoneWidth = 0.0f;
+	const float deadZoneHeight = 0.0f;
 
 	//float limitLeft = Engine::GetInstance().render->camera.w / 4;
 
