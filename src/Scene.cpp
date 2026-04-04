@@ -6,7 +6,7 @@
 #include "Window.h"
 #include "SceneManager.h"
 
-Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
+Scene::Scene(std::string _id, std::string _mapsPath, std::string _mapName, std::string _combatMapName)
 {
 	id = _id;
 	name = "scene";
@@ -15,13 +15,11 @@ Scene::Scene(std::string _id, std::string mapPath, std::string mapName)
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
 
-	gameStarted = id != "main menu";
+	
 
-	if (gameStarted)
-	{
-		LoadMap(mapPath, mapName);
-		LoadScene();
-	}
+	mapsPath = _mapsPath;
+	mapName = _mapName;
+	combatMapName = _combatMapName;
 
 	//entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
 
@@ -55,6 +53,14 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
+	gameStarted = id != "main menu";
+
+	if (gameStarted)
+	{
+		LoadMap(mapsPath, mapName);
+		LoadScene();
+	}
+
 	paused = false;
 
 	Engine::GetInstance().menuManager->SetObserver(this);
@@ -89,6 +95,12 @@ bool Scene::Update(float dt)
 {
 
 	if (!gameStarted) return true;
+
+	if (combat) {
+		combat->Update(dt);
+		return true;
+	}
+
 	///////////// FOR TESTING (remove) /////////////
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) Engine::GetInstance().menuManager->ShowDeathScreen();
 	////////////////////////////////////////////////
@@ -218,6 +230,17 @@ void Scene::EndDialog()
 		}
 		activeDialogId = "";
 	}
+}
+
+void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
+{
+	combat = new Combat(player->party, enemy->party, mapsPath, combatMapName);
+}
+
+void Scene::EndCombat(EnemyParty* enemyParty)
+{
+	for (const auto& enemy : enemyParty->members) entityManager->DestroyEntity(enemy);
+	combat = nullptr;
 }
 
 bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {

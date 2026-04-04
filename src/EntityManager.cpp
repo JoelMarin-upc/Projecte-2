@@ -130,6 +130,9 @@ std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::stri
 	case EntityType::NPC:
 		entity = std::make_shared<NPC>(id, name, texturePath, npcInteractionType);
 		break;
+	case EntityType::ENEMY:
+		entity = std::make_shared<Enemy>(id, name, texturePath);
+		break;
 	default:
 		break;
 	}

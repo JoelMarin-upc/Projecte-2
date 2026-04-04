@@ -34,6 +34,7 @@ public:
 	void OpenShop();
 	void OnCollision(Collider* physA, Collider* physB) override;
 	void OnCollisionEnd(Collider* physA, Collider* physB) override;
+
 public:
 	bool isPlayerInRange = false;
 	bool isRecruitConditionFulfilled = false;

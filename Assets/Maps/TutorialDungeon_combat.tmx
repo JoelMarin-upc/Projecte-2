@@ -920,56 +920,56 @@
   <object id="94" x="176" y="208">
    <properties>
     <property name="isEnemy" type="bool" value="false"/>
-    <property name="position" type="int" value="2"/>
+    <property name="order" type="int" value="2"/>
    </properties>
    <point/>
   </object>
   <object id="97" x="208" y="224">
    <properties>
     <property name="isEnemy" type="bool" value="false"/>
-    <property name="position" type="int" value="0"/>
+    <property name="order" type="int" value="0"/>
    </properties>
    <point/>
   </object>
   <object id="98" x="176" y="240">
    <properties>
     <property name="isEnemy" type="bool" value="false"/>
-    <property name="position" type="int" value="3"/>
+    <property name="order" type="int" value="3"/>
    </properties>
    <point/>
   </object>
   <object id="99" x="208" y="256">
    <properties>
     <property name="isEnemy" type="bool" value="false"/>
-    <property name="position" type="int" value="1"/>
+    <property name="order" type="int" value="1"/>
    </properties>
    <point/>
   </object>
   <object id="100" x="272" y="224">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
-    <property name="position" type="int" value="0"/>
+    <property name="order" type="int" value="0"/>
    </properties>
    <point/>
   </object>
   <object id="101" x="304" y="208">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
-    <property name="position" type="int" value="2"/>
+    <property name="order" type="int" value="2"/>
    </properties>
    <point/>
   </object>
   <object id="102" x="304" y="240">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
-    <property name="position" type="int" value="3"/>
+    <property name="order" type="int" value="3"/>
    </properties>
    <point/>
   </object>
   <object id="103" x="272" y="256">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
-    <property name="position" type="int" value="1"/>
+    <property name="order" type="int" value="1"/>
    </properties>
    <point/>
   </object>

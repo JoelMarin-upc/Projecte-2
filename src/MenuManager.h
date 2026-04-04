@@ -36,7 +36,20 @@ enum UIID {
 	FULLSCREEN,
 	BACK_MENU,
 	BACK_MAIN_MENU,
-	EXIT
+	EXIT,
+	C_PLAYER,
+	C_NPC1,
+	C_NPC2,
+	C_NPC3,
+	C_ENEMY1,
+	C_ENEMY2,
+	C_ENEMY3,
+	C_ENEMY4,
+	ACTION1,
+	ACTION2,
+	ACTION3,
+	ACTION4,
+	END_TURN
 };
 
 class MenuManager : public Module

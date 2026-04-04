@@ -11,6 +11,7 @@ enum class EntityType
 	WALL = 2,
 	NPC = 3,
 	INTERACTABLE_ITEM = 4,
+	ENEMY = 5,
 	UNKNOWN
 };
 

@@ -165,15 +165,15 @@ struct GameData {
     std::vector<ItemData> items;
 };
 
-struct CombatData {
-    Vector2D cameraPosition;
-    std::vector<CombatPosition> positions;
-};
-
 struct CombatPosition {
     bool isEnemy;
     int order;
     Vector2D position;
+};
+
+struct CombatData {
+    Vector2D cameraPosition;
+    std::vector<CombatPosition> positions;
 };
 
 class Map

@@ -19,4 +19,9 @@
 			<!--some items-->
 		</inventory>
 	</character>
+	<character id="CH-004" name="test enemy" texture="enemy.png" type="5">
+		<inventory>
+			<!--some items-->
+		</inventory>
+	</character>
 </characters>

@@ -10,7 +10,7 @@
 constexpr auto PI = 3.14159265;
 struct SDL_Texture;
 
-class Player : public Character
+class Player : public Character//, public std::enable_shared_from_this<Player>
 {
 public:
 

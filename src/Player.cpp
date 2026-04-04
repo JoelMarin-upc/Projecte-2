@@ -9,6 +9,8 @@
 #include "Log.h"
 #include "Physics.h"
 #include "EntityManager.h"
+#include "SceneManager.h"
+#include <memory>
 
 Player::Player(std::string id, std::string name, std::string texturePath) : Character(id, name, texturePath, EntityType::PLAYER)
 {
@@ -194,7 +196,7 @@ void Player::HandleAnimations()
 
 void Player::AddPartyMember(std::shared_ptr<NPC> member)
 {
-	if (!party) party = new Party(this);
+	if (!party) party = new Party(std::static_pointer_cast<Player>(shared_from_this()));
 	party->AddMember(member);
 }
 
@@ -231,6 +233,10 @@ void Player::OnCollision(Collider* physA, Collider* physB) {
 	switch (physB->etype) {
 	case EntityType::INTERACTABLE_ITEM:
 		LOG("Player is in range of interadctable item");
+		break;
+	case EntityType::ENEMY:
+		Enemy* enemy = static_cast<Enemy*>(physB->listener);
+		Engine::GetInstance().sceneManager->currentScene->StartCombat(std::static_pointer_cast<Enemy>(enemy->shared_from_this()));
 		break;
 	}
 }

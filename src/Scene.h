@@ -13,6 +13,7 @@
 #include "InteractableItem.h"
 #include "MenuManager.h"
 #include "Combat.h"
+#include "EnemyParty.h"
 
 struct SDL_Texture;
 
@@ -26,7 +27,7 @@ class Scene : public Module
 {
 public:
 
-	Scene(std::string _id, std::string mapPath, std::string mapName);
+	Scene(std::string _id, std::string mapPath, std::string mapName, std::string combatMapName = "");
 	
 	Scene();
 
@@ -62,6 +63,7 @@ public:
 	void EndDialog();
 
 	void StartCombat(std::shared_ptr<Enemy> enemy);
+	void EndCombat(EnemyParty* enemyParty);
 
 	Vector2D GetPlayerPosition();
 
@@ -79,6 +81,10 @@ public:
 private:
 	
 	Map* map;
+	Map* combatMap;
+	std::string mapsPath;
+	std::string mapName;
+	std::string combatMapName;
 
 	std::shared_ptr<InteractableItem> testItem;
 	std::shared_ptr<Player> player;
