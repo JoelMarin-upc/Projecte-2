@@ -111,6 +111,19 @@ bool SceneManager::PreUpdate()
 bool SceneManager::Update(float dt)
 {
 	if (currentScene == nullptr || paused) return true;
+
+	if (!currentScene->GetIsOnDialog()) {
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
+			SetCurrentScene("SC-001", "default");
+		}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_2) == KEY_DOWN) {
+			SetCurrentScene("SC-002", "shop_from_refuge");
+		}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) {
+			SetCurrentScene("SC-003", "dungeon_from_refuge");
+		}
+	}
+
 	return currentScene->Update(dt);
 }
 

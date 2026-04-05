@@ -66,6 +66,10 @@ public:
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
 
+	bool GetIsOnDialog() {
+		return isOnDialog;
+	}
+
 	bool hasEnded;
 
 	std::string id;
