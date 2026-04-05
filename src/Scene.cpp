@@ -83,9 +83,13 @@ bool Scene::Start(std::string spawnId)
 	missionManager->Start();
 	dialogManager->Start();
 
-	if (gameStarted) {
-		StartDialog("player");
+	if (id == "SC-001") {
+		if (Engine::GetInstance().sceneManager->triggerFirstMonologue == true) {
+			StartDialog("player");
+			Engine::GetInstance().sceneManager->triggerFirstMonologue = false;
+		}
 	}
+
 
 	return true;
 }

@@ -56,4 +56,6 @@ public:
 	std::string pendingSceneID = "";
 	std::string pendingSpawnId = "";
 	bool hasQueuedTransition = false;
+
+	bool triggerFirstMonologue = true;
 };
