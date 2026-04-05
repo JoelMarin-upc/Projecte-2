@@ -296,7 +296,7 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-004" characterId="CH-002" characterName="Medic" order="1" done="false">
+	<tree id="DT-004" characterId="CH-002" characterName="Medic" order="4" done="false">
 		<node id="DN-001" first="true">
 			I see that you’re finally heading out,|it must take a lot of courage.
 			<answer leadsToNodeId="DN-002">
@@ -364,7 +364,7 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-005" characterId="CH-003" characterName="Thief" order="1" done="false">
+	<tree id="DT-005" characterId="CH-003" characterName="Thief" order="5" done="false">
 		<node id="DN-001" first="true">
 			... What?
 			<answer leadsToNodeId="DN-002">
@@ -387,7 +387,7 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-006" characterId="CH-004" characterName="Executioner" order="1" done="false">
+	<tree id="DT-006" characterId="CH-004" characterName="Executioner" order="6" done="false">
 		<node id="DN-001" first="true">
 			...
 			<answer leadsToNodeId="DN-002">
@@ -410,15 +410,7 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-006" characterId="interactableItem" order="1" done="false">
-		<node id="DN-001" first="true">
-			holi
-			<answer leadsToNodeId="">
-				End conversation
-			</answer>
-		</node>
-	</tree>
-	<tree id="DT-007" characterId="interactableStatue" order="1" done="false">
+	<tree id="DT-007" characterId="statue" characterName="Statue" order="7" done="false">
 		<node id="DN-001" first="true">
 			The gods are watching you. You feel a fleeting sensation of peace.
 			<answer leadsToNodeId="">

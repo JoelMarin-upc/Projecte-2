@@ -1,6 +1,3 @@
 <items>
-	<item id="IT-001" name="torch" texture="door_open.png" type="4" itemClass="item" interactionType="1" canStack="true" />
-	<item id="IT-002" name="rustyHoe" texture="door_open.png" type="4" itemClass="weapon" interactionType="1" canStack="false" />
-	<item id="IT-003" name="leatherHelmet" texture="door_open.png" type="4" itemClass="gear" interactionType="1" canStack="false" />
-	<item id="IT-004" name="torch" texture="door_open.png" type="4" itemClass="item" interactionType="1" canStack="true" />
+	<item id="IT-001" name="statue" texture="transparent.png" type="4" itemClass="item" interactionType="3" canStack="false" />
 </items>
