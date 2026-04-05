@@ -19,6 +19,14 @@ bool NPC::Start()
 	pbody->listener = this;
 	pbody->etype = EntityType::NPC;
 
+	b2Body_SetFixedRotation(pbody->body, true);
+
+	b2MassData massData;
+	massData.mass = 1000.0f;
+	massData.center = { 0.0f, 0.0f };
+	massData.rotationalInertia = 0.0f;
+	b2Body_SetMassData(pbody->body, massData);
+
 	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 20, 20, 1, 1);
 	sensorCollider = colliders[1];
 	sensorCollider->listener = this;
@@ -34,6 +42,12 @@ bool NPC::Update(float dt)
 	if (!active) {
 		return true;
 	}
+
+	//To make sure that the Sensor follows the pbody
+	int x, y;
+	colliders[0]->GetPosition(x, y);
+	b2Body_SetTransform(sensorCollider->body, { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, b2Body_GetRotation(sensorCollider->body));
+
 	if (isPlayerInRange) {
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
 			Interact();
