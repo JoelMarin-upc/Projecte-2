@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="400" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="579">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="400" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="580">
  <properties>
   <property name="Draw" type="bool" value="true"/>
  </properties>
@@ -240137,7 +240137,17 @@
   </data>
  </layer>
  <objectgroup id="20" name="Obstacles"/>
- <objectgroup id="18" name="NPC"/>
+ <objectgroup id="18" name="NPC">
+  <properties>
+   <property name="id" value="CH-001"/>
+  </properties>
+  <object id="579" x="1504" y="1455.75">
+   <properties>
+    <property name="id" value="CH-001"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
  <objectgroup id="19" name="Items"/>
  <objectgroup id="15" name="Boundaries">
   <object id="2" x="2112" y="0" width="464" height="976"/>

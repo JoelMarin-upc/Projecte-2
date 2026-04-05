@@ -13,15 +13,13 @@ bool NPC::Start()
 {
 	texturePath = "Assets/Textures/heart.png";
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
-	position.setX(200);
-	position.setY(200);
 
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 1, 1);
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -10, 0, 1, 1);
 	pbody = colliders[0];
 	pbody->listener = this;
 	pbody->etype = EntityType::NPC;
 
-	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 50, 50, 1, 1);
+	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 20, 20, 1, 1);
 	sensorCollider = colliders[1];
 	sensorCollider->listener = this;
 	sensorCollider->etype = EntityType::NPC;
