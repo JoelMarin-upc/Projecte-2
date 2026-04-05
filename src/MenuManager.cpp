@@ -70,11 +70,11 @@ void MenuManager::Load(bool onlyPositions)
 
 	SDL_Rect b_gameTitle = { pos1.x - title->w / 2, pos1.y - title->h + 220, 0, 0 };
 	SDL_Rect b_startGame = { pos1.x - 125, pos1.y + 200, 250, 40 };
-	SDL_Rect b_paused_lbl = { pos1.x - 100, pos1.y, 200, 40 };
+	SDL_Rect b_paused_lbl = { pos1.x - 100, pos1.y + 180, 200, 40 };
 	SDL_Rect b_gameOver_lbl = { pos1.x - 150, pos1.y, 300, 60 };
 	SDL_Rect b_settings_lbl = { pos1.x - 100, pos1.y, 200, 40 };
 	SDL_Rect b_continueGame = { pos2.x - 75, pos2.y + 200, 150, 25 };
-	SDL_Rect b_resume = { pos2.x - 75, pos2.y, 150, 25 };
+	SDL_Rect b_resume = { pos2.x - 75, pos2.y + 200, 150, 25 };
 	SDL_Rect b_settings = { pos4.x - 75, pos4.y, 150, 25 };
 	SDL_Rect b_credits_btn = { pos3.x - 75, pos3.y + 200, 150, 25 };
 	SDL_Rect b_credits1 = { pos3.x - 500, pos3.y - 130, 1000, 25 };
@@ -86,7 +86,7 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_fullscreen_lbl = { pos4.x - 300, pos4.y, 200, 25 };
 	SDL_Rect b_fullscreen = { pos4.x + 100, pos4.y, 25, 25 };
 	SDL_Rect b_backMenu = { pos5.x - 75, pos5.y, 150, 25 };
-	SDL_Rect b_backMainMenu = { pos3.x - 75, pos3.y, 150, 25 };
+	SDL_Rect b_backMainMenu = { pos3.x - 75, pos3.y + 200, 150, 25 };
 	SDL_Rect b_exit = { pos5.x - 75, pos5.y, 150, 25 };
 
 	if (onlyPositions) {
@@ -227,7 +227,6 @@ void MenuManager::ShowCreditsMenu()
 	creditsLabel1->active = true;
 	creditsLabel2->active = true;
 	backMainMenu->active = true;
-	studioLogo->active = true;
 }
 
 void MenuManager::ShowInventory(Inventory* inventory)
