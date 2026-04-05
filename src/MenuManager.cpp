@@ -206,7 +206,7 @@ void MenuManager::ShowSettingsMenu()
 	settingsLabel->active = true;
 	musicVolumeLabel->active = true;
 	musicVolumeSlider->active = true;
-	musicVolumeSlider->SetValue(Engine::GetInstance().audio->GetMusicVolume() * 10);
+	musicVolumeSlider->SetValue(Engine::GetInstance().audio->GetTargetMusicVolume() * 10);
 	fxVolumeLabel->active = true;
 	fxVolumeSlider->active = true;
 	fxVolumeSlider->SetValue(Engine::GetInstance().audio->GetFxVolume() * 10);

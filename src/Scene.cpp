@@ -81,23 +81,23 @@ bool Scene::Start(std::string spawnId)
 	if (id == "main menu")
 	{
 		Engine::GetInstance().menuManager->ShowMainMenu();
-		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav");
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav", 5000.0f);
 	}
 
 	if (gameStarted) {
 		LoadScene();
 		if (id == "SC-001")
 		{
-			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav");
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav", 5000.0f);
 		}
 		else if (id == "SC-002")
 		{
-			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav");
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav", 5000.0f);
 		}
 		else if (id == "SC-003")
 		{
 			Engine::GetInstance().audio->PlayFx(elevatorFxId);
-			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav");
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
 		}
 	}
 	
@@ -200,9 +200,18 @@ void Scene::TogglePause()
 	paused = !paused;
 	entityManager->paused = paused;
 	//Engine::GetInstance().physics->paused = paused;
-
-	if (paused) Engine::GetInstance().menuManager->ShowPauseMenu();
-	else Engine::GetInstance().menuManager->HideMenu();
+	
+	if (paused) {
+		Engine::GetInstance().audio->pauseMultiplier = 0.3f;
+		Engine::GetInstance().audio->UpdateMusicVolume();
+		Engine::GetInstance().menuManager->ShowPauseMenu();
+	} 
+	else
+	{
+		Engine::GetInstance().audio->pauseMultiplier = 1.0f;
+		Engine::GetInstance().audio->UpdateMusicVolume();
+		Engine::GetInstance().menuManager->HideMenu();
+	}
 }
 
 void Scene::SaveGame()
