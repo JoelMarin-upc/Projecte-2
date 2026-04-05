@@ -65,7 +65,7 @@
 	</tree>
 	<tree id="DT-003" characterId="CH-001" characterName="Gravekeeper" order="3" done="false">
 		<node id="DN-001" first="true">
-			You’ve been pacing around the cemetery |for quite a while.
+			You have been pacing around|the cemetery for quite a while.
 			<answer leadsToNodeId="DN-002">
 				Continue
 			</answer>
@@ -86,7 +86,7 @@
 			</answer>
 		</node>
 		<node id="DN-004" first="false">
-			The castle... Many people go there looking|for answers.
+			The castle... Many people|go there looking for answers.
 			<answer leadsToNodeId="DN-005">
 				Continue
 			</answer>
@@ -398,13 +398,13 @@
 			</answer>
 		</node>
 		<node id="DN-002" first="false">
-			...
+			......
 			<answer leadsToNodeId="">
 				End conversation
 			</answer>
 		</node>
 		<node id="DN-003" first="false">
-			...
+			......
 			<answer leadsToNodeId="">
 				End conversation
 			</answer>
