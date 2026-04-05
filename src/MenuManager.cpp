@@ -43,7 +43,7 @@ bool MenuManager::CleanUp() { return true; }
 
 void MenuManager::Load(bool onlyPositions)
 {
-	SDL_Texture* title = Engine::GetInstance().textures->Load("Assets/Textures/game_title.png");
+	SDL_Texture* title = Engine::GetInstance().textures->Load("Assets/Textures/Game_Title.png");
 
 	SDL_Color mainColorDef = { 0, 0, 255, 255 };
 	SDL_Color mainColorDis = { 200, 200, 200, 255 };
@@ -62,21 +62,21 @@ void MenuManager::Load(bool onlyPositions)
 	int sw = Engine::GetInstance().window->width;
 	int sh = Engine::GetInstance().window->height;
 
-	SDL_Rect pos1 = { sw / 2, sh / 2 - 97.5f, 0, 0 };
-	SDL_Rect pos2 = { sw / 2, sh / 2 - 47.5f, 0, 0 };
-	SDL_Rect pos3 = { sw / 2, sh / 2 - 12.5f, 0, 0 };
-	SDL_Rect pos4 = { sw / 2, sh / 2 + 22.5f, 0, 0 };
-	SDL_Rect pos5 = { sw / 2, sh / 2 + 57.5f, 0, 0 };
+	SDL_Rect pos1 = { sw / 2, sh / 2 - 197.5f, 0, 0 };
+	SDL_Rect pos2 = { sw / 2, sh / 2 - 147.5f, 0, 0 };
+	SDL_Rect pos3 = { sw / 2, sh / 2 - 112.5f, 0, 0 };
+	SDL_Rect pos4 = { sw / 2, sh / 2 + 122.5f, 0, 0 };
+	SDL_Rect pos5 = { sw / 2, sh / 2 + 157.5f, 0, 0 };
 
-	SDL_Rect b_gameTitle = { pos1.x - title->w / 2, pos1.y - title->h - 20, 0, 0 };
-	SDL_Rect b_startGame = { pos1.x - 125, pos1.y, 250, 40 };
+	SDL_Rect b_gameTitle = { pos1.x - title->w / 2, pos1.y - title->h + 220, 0, 0 };
+	SDL_Rect b_startGame = { pos1.x - 125, pos1.y + 200, 250, 40 };
 	SDL_Rect b_paused_lbl = { pos1.x - 100, pos1.y, 200, 40 };
 	SDL_Rect b_gameOver_lbl = { pos1.x - 150, pos1.y, 300, 60 };
 	SDL_Rect b_settings_lbl = { pos1.x - 100, pos1.y, 200, 40 };
-	SDL_Rect b_continueGame = { pos2.x - 75, pos2.y, 150, 25 };
+	SDL_Rect b_continueGame = { pos2.x - 75, pos2.y + 200, 150, 25 };
 	SDL_Rect b_resume = { pos2.x - 75, pos2.y, 150, 25 };
 	SDL_Rect b_settings = { pos4.x - 75, pos4.y, 150, 25 };
-	SDL_Rect b_credits_btn = { pos3.x - 75, pos3.y, 150, 25 };
+	SDL_Rect b_credits_btn = { pos3.x - 75, pos3.y + 200, 150, 25 };
 	SDL_Rect b_credits1 = { pos3.x - 500, pos3.y - 130, 1000, 25 };
 	SDL_Rect b_credits2 = { pos3.x - 500, pos3.y - 90, 1000, 25 };
 	SDL_Rect b_musicVolume_lbl = { pos2.x - 300, pos2.y, 200, 25 };
