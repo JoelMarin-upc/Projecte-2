@@ -151,9 +151,6 @@ void Render::CameraFollow()
 	else if (playerY > bottomBound)
 		camera.y = -(playerY - (camera.h + deadZoneHeight) / 2.f);
 
-	camera.x = roundf(camera.x);
-	camera.y = roundf(camera.y);
-
 	// Optional: clamp camera to world limits
 	//camera.x = std::clamp(camera.x, -worldWidth + (float)camera.w, 0.0f);
 	//camera.y = std::clamp(camera.y, -worldHeight + (float)camera.h, 0.0f);
@@ -174,31 +171,31 @@ void Render::ResetViewPort()
 }
 
 // Blit to screen
-bool Render::DrawTexture(SDL_Texture* texture, int x, int y, float speed, const SDL_Rect* section, bool facingRight, double angle, int pivotX, int pivotY, float tileScale) const
+bool Render::DrawTexture(SDL_Texture* texture, int x, int y, float speed, const SDL_Rect* section, bool facingRight, double angle, int pivotX, int pivotY) const
 {
 	bool ret = true;
 	int scale = Engine::GetInstance().window->GetScale();
 
+	// SDL3 uses float rects for rendering
 	SDL_FRect rect;
-	rect.x = roundf(camera.x * speed) + (float)(x * scale);
-	rect.y = roundf(camera.y * speed) + (float)(y * scale);
-
+	rect.x = (float)((int)(camera.x * speed) + x * scale);
+	rect.y = (float)((int)(camera.y * speed) + y * scale);
 
 	if (section != NULL)
 	{
-		// tileScale is 1.0f by default, so all non-map callers are unaffected
-		rect.w = ceilf((float)(section->w * scale * tileScale));
-		rect.h = ceilf((float)(section->h * scale * tileScale));
+		rect.w = (float)(section->w * scale);
+		rect.h = (float)(section->h * scale);
 	}
 	else
 	{
 		float tw = 0.0f, th = 0.0f;
 		if (!SDL_GetTextureSize(texture, &tw, &th))
 		{
+			//LOG("SDL_GetTextureSize failed: %s", SDL_GetError());
 			return false;
 		}
-		rect.w = tw * scale;  // tileScale not applied here — no section means
-		rect.h = th * scale;  // it's a full texture (UI, background, etc.)
+		rect.w = tw * scale;
+		rect.h = th * scale;
 	}
 
 	const SDL_FRect* src = NULL;
@@ -221,6 +218,7 @@ bool Render::DrawTexture(SDL_Texture* texture, int x, int y, float speed, const 
 		p = &pivot;
 	}
 
+	// SDL3: returns bool; map to int-style check
 	int rc = SDL_RenderTextureRotated(renderer, texture, src, &rect, angle, p, facingRight ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL) ? 0 : -1;
 	if (rc != 0)
 	{

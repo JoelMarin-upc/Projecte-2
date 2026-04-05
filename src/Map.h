@@ -111,8 +111,6 @@ struct TileSet
     std::string name;
     int tileWidth;
     int tileHeight;
-    int renderWidth;
-    int renderHeight;
     int spacing;
     int margin;
     int tileCount;
@@ -239,9 +237,8 @@ public:
     Vector2D* playerStartPos = nullptr;
     MapData mapData;
     GameData gameData;
-    bool mapLoaded;
 
 private:
-    float scale = 2.0f;
+    bool mapLoaded;
     // L06: DONE 1: Declare a variable data of the struct MapData
 };
