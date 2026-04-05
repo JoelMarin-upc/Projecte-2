@@ -24,7 +24,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-    bool Update(float dt);
+    bool Update();
 	// Play a music file
 	bool PlayMusic(const char* path, float fadeTime = DEFAULT_MUSIC_FADE_TIME);
 
@@ -41,7 +41,6 @@ public:
     float GetFxVolume() const { return fxVolume; }
     bool MusicPlaying();
     bool EnsureStreams();
-    void StopFx() { if (sfx_stream_) SDL_ClearAudioStream(sfx_stream_);}
 
 private:
     
