@@ -55,10 +55,20 @@ bool Map::Update(float dt)
                             if (tileSet != nullptr) {
                                 //Get the Rect from the tileSetTexture;
                                 SDL_Rect tileRect = tileSet->GetRect(gid);
+
+                                SDL_Rect dstRect = {
+                                    0, 0,                        // x/y are handled by DrawTexture below
+                                    tileSet->renderWidth,        // scaled draw width
+                                    tileSet->renderHeight        // scaled draw height
+                                };
+
                                 //Get the screen coordinates from the tile coordinates
                                 Vector2D mapCoord = MapToWorld(i, j);
+                                int tileX = (int)round(mapCoord.getX());
+                                int tileY = (int)round(mapCoord.getY());
+
                                 //Draw the texture
-                                Engine::GetInstance().render->DrawTexture(tileSet->texture, (int)mapCoord.getX(), (int)mapCoord.getY(), 1.0f, &tileRect);
+                                Engine::GetInstance().render->DrawTexture(tileSet->texture, (int)mapCoord.getX(), (int)mapCoord.getY(), 1.0f, &tileRect, true, 0, INT_MAX, INT_MAX, scale);
                             }
                         }
                     }
@@ -160,7 +170,7 @@ bool Map::Load(std::string path, std::string fileName)
 			//Load the tileset image
 			std::string imgName = tilesetNode.child("image").attribute("source").as_string();
             tileSet->texture = Engine::GetInstance().textures->Load((mapPath+imgName).c_str());
-
+            SDL_SetTextureScaleMode(tileSet->texture, SDL_SCALEMODE_NEAREST);
 			mapData.tilesets.push_back(tileSet);
 		}
 
@@ -209,6 +219,24 @@ bool Map::Load(std::string path, std::string fileName)
             mapData.objectlayers.push_back(objectGroup);
         }
 
+        //scale everything after loading, before processing
+        mapData.tileWidth = (int)(mapData.tileWidth * scale);
+        mapData.tileHeight = (int)(mapData.tileHeight * scale);
+
+        for (auto& tileSet : mapData.tilesets) {
+            tileSet->renderWidth = (int)(tileSet->tileWidth * scale); // scaled draw size
+            tileSet->renderHeight = (int)(tileSet->tileHeight * scale); // scaled draw size
+            // tileWidth and tileHeight remain UNTOUCHED for correct source rect sampling
+        }
+
+        for (auto& objectGroup : mapData.objectlayers) {
+            for (auto& object : objectGroup->objects) {
+                object->x *= scale;
+                object->y *= scale;
+                object->width *= scale;
+                object->height *= scale;
+            }
+        }
         // Later you can create a function here to load and create the colliders from the map
         //Iterate the layer and create colliders
         for (const auto& mapLayer : mapData.layers) {
