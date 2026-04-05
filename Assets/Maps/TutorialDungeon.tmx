@@ -14134,7 +14134,7 @@
   <object id="92" x="271.955" y="91.303" width="16.3409" height="20.644"/>
  </objectgroup>
  <objectgroup id="19" name="Accesses">
-  <object id="93" x="721.5" y="17.5" width="77" height="95.5">
+  <object id="93" x="721.5" y="17.5" width="77" height="117.75">
    <properties>
     <property name="targetSceneId" value="SC-001"/>
     <property name="targetSpawnId" value="refuge_from_dungeon"/>
@@ -14142,7 +14142,7 @@
   </object>
  </objectgroup>
  <objectgroup id="21" name="Spawns">
-  <object id="94" x="759.75" y="134.75">
+  <object id="94" x="759.75" y="151.75">
    <properties>
     <property name="spawnId" value="dungeon_from_refuge"/>
    </properties>

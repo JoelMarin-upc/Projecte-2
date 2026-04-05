@@ -433,6 +433,19 @@ void Physics::SetGravityScale(Collider* p, float scale)
     b2Body_SetGravityScale(p->body, scale);
 }
 
+void Physics::ResetPhysicsWorld()
+{
+    if (!B2_IS_NULL(world))
+    {
+        b2DestroyWorld(world);
+        world = b2_nullWorldId;
+    }
+
+    b2WorldDef worldDef = b2DefaultWorldDef();
+    worldDef.gravity = { 0.0f, 0.0f };
+    world = b2CreateWorld(&worldDef);
+}
+
 b2BodyType Physics::ToB2Type(bodyType t)
 {
     switch (t)

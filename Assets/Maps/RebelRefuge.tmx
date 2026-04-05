@@ -240602,7 +240602,7 @@
    </properties>
    <point/>
   </object>
-  <object id="573" x="5407.45" y="502.182">
+  <object id="573" x="5408.72" y="528.182">
    <properties>
     <property name="spawnId" value="refuge_from_dungeon"/>
    </properties>
@@ -240616,7 +240616,7 @@
     <property name="targetSpawnId" value="shop_from_refuge"/>
    </properties>
   </object>
-  <object id="568" x="5392" y="464.273" width="32" height="31.7273">
+  <object id="568" x="5392" y="464.273" width="32" height="52.6364">
    <properties>
     <property name="targetSceneId" value="SC-003"/>
     <property name="targetSpawnId" value="dungeon_from_refuge"/>

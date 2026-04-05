@@ -24,9 +24,11 @@ bool SceneManager::Awake()
 bool SceneManager::Start()
 {
 	LoadScenes();
-	SetCurrentScene("intro");
-	//SetCurrentScene("main menu");
-	//SetCurrentScene("SC-001");
+	pendingSceneID = "intro";
+	pendingSpawnId = "";
+	hasQueuedTransition = true;
+	DoTransition();
+
 	return true;
 }
 
@@ -38,20 +40,40 @@ bool SceneManager::CleanUp()
 
 void SceneManager::LoadScenes()
 {
-	//load from xml
-	scenes = std::list<Scene*>();
-	scenes.push_back(new Scene("intro", "", ""));
-	scenes.push_back(new Scene("main menu", "", ""));
-	
-	scenes.push_back(new Scene("SC-002", mapsPath, "GroceriesShop.tmx"));
-	scenes.push_back(new Scene("SC-003", mapsPath, "TutorialDungeon.tmx"));
-	scenes.push_back(new Scene("SC-001", mapsPath, "RebelRefuge.tmx"));
+	sceneInfos.push_back({ "intro",     "",        "" });
+	sceneInfos.push_back({ "main menu", "",        "" });
+	sceneInfos.push_back({ "SC-001",    mapsPath,  "RebelRefuge.tmx" });
+	sceneInfos.push_back({ "SC-002",    mapsPath,  "GroceriesShop.tmx" });
+	sceneInfos.push_back({ "SC-003",    mapsPath,  "TutorialDungeon.tmx" });
 }
 
 void SceneManager::SetCurrentScene(std::string sceneID, std::string spawnId)
 {
-	for (Scene* s : scenes) if (s->id == sceneID) currentScene = s;
-	if (currentScene) currentScene->Start(spawnId);
+	pendingSceneID = sceneID;
+	pendingSpawnId = spawnId;
+	hasQueuedTransition = true;
+}
+
+void SceneManager::DoTransition()
+{
+	if (currentScene) {
+		currentScene->CleanUp();
+		delete currentScene;
+		currentScene = nullptr;
+	}
+
+	Engine::GetInstance().physics->ResetPhysicsWorld();
+	Engine::GetInstance().menuManager->HideMenu();
+
+	for (const SceneInfo& info : sceneInfos) {
+		if (info.id == pendingSceneID) {
+			currentScene = new Scene(info.id, info.mapPath, info.mapName);
+			currentScene->Awake();
+			currentScene->Start(pendingSpawnId);
+			hasQueuedTransition = false;
+			return;
+		}
+	}
 }
 
 EntityManager* SceneManager::GetEntityManager() const
@@ -84,5 +106,10 @@ bool SceneManager::Update(float dt)
 bool SceneManager::PostUpdate(float dt)
 {
 	if (currentScene == nullptr || paused) return true;
+
+	if (hasQueuedTransition) {
+		DoTransition();
+	}
+
 	return currentScene->PostUpdate(dt);
 }

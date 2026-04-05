@@ -123,6 +123,7 @@ bool Scene::Update(float dt)
 		CheckTransitions();
 	}
 		
+	//////////////////// JUST TO SEE ACCESSES, DELETE LATER ////////////////////
 	for (AccessData& t : mapData.accesses) {
 		SDL_Rect rect = {
 			(int)t.position.getX(),
@@ -132,6 +133,7 @@ bool Scene::Update(float dt)
 		};
 		Engine::GetInstance().render->DrawRectangle(rect, 0, 255, 0, 128, true, true);
 	}
+	/////////////////////
 
 	return true;
 }
@@ -146,10 +148,25 @@ bool Scene::PostUpdate(float dt)
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
-	if (Engine::GetInstance().render->follow) {
-		Engine::GetInstance().render->follow->Destroy();
-		Engine::GetInstance().render->follow = nullptr;
+	
+	Engine::GetInstance().render->follow = nullptr;
+
+	entityManager->CleanUp();
+	dialogManager->CleanUp();
+
+	if (map) {
+		map->CleanUp();
+		delete map;
+		map = nullptr;
 	}
+
+	delete entityManager;
+	entityManager = nullptr;
+	delete missionManager;
+	missionManager = nullptr;
+	delete dialogManager;
+	dialogManager = nullptr;
+
 	return true;
 }
 

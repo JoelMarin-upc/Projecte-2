@@ -2485,7 +2485,7 @@
   <object id="33" x="416.5" y="162.557" width="15.75" height="22.8864"/>
  </objectgroup>
  <objectgroup id="10" name="Accesses">
-  <object id="36" x="83.125" y="66.375" width="26.25" height="45.75">
+  <object id="36" x="83.125" y="66.375" width="26.25" height="58.75">
    <properties>
     <property name="targetSceneId" value="SC-001"/>
     <property name="targetSpawnId" value="refuge_from_shop"/>
@@ -2493,7 +2493,7 @@
   </object>
  </objectgroup>
  <objectgroup id="14" name="Spawns">
-  <object id="37" x="97" y="135.25">
+  <object id="37" x="97" y="140.75">
    <properties>
     <property name="spawnId" value="shop_from_refuge"/>
    </properties>
