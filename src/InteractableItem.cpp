@@ -50,7 +50,7 @@ bool InteractableItem::Update(float dt) {
 		return true;
 	}
 	if (isPlayerInRange) {
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
 			Interact();
 		}
 	}

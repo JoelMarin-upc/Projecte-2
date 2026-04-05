@@ -72,6 +72,7 @@ void SceneManager::DoTransition()
 
 	//Destroy all colliders from the current scene
 	Engine::GetInstance().physics->ResetPhysicsWorld();
+	Engine::GetInstance().physics->ClearPendingDeletes();
 	//Hide open menus
 	Engine::GetInstance().menuManager->HideMenu();
 

@@ -140,11 +140,6 @@ std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::stri
 
 	entity->Start();
 
-	LOG("Entity created: id=%s type=%d pos=%.1f,%.1f entities count=%d",
-		entity->id.c_str(), (int)type,
-		entity->position.getX(), entity->position.getY(),
-		(int)entities.size());
-
 	return entity;
 }
 

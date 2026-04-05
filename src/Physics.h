@@ -79,6 +79,8 @@ public:
 
     void ResetPhysicsWorld();
 
+    void ClearPendingDeletes() { bodiesToDelete.clear(); }
+
 private:
     // helpers
     static b2BodyType ToB2Type(bodyType t);
