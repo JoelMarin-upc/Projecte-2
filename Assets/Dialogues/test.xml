@@ -412,7 +412,7 @@
 	</tree>
 	<tree id="DT-007" characterId="statue" characterName="Statue" order="7" done="false">
 		<node id="DN-001" first="true">
-			The gods are watching you. You feel a fleeting sensation of peace.
+			The gods are watching you. |You feel a fleeting sensation of peace.
 			<answer leadsToNodeId="">
 				End conversation
 			</answer>

@@ -28,7 +28,7 @@ bool InteractableItem::Start() {
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
 	pickupIcon = Engine::GetInstance().textures->Load(pickupIconPath);
 	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -20, -20, 1, 1);
-	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 30, 30, 1, 1);
+	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 50, 50, 1, 1);
 	texW = 30;
 	texH = 30;
 
