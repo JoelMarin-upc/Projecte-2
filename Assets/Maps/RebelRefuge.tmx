@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="400" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="580">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="400" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="582">
  <properties>
   <property name="Draw" type="bool" value="true"/>
  </properties>
@@ -240144,6 +240144,18 @@
   <object id="579" x="1504" y="1455.75">
    <properties>
     <property name="id" value="CH-001"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="580" x="1479.91" y="1199.82">
+   <properties>
+    <property name="id" value="CH-002"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="581" x="3168" y="338.667">
+   <properties>
+    <property name="id" value="CH-004"/>
    </properties>
    <point/>
   </object>

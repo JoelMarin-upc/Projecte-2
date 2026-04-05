@@ -296,31 +296,8 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-004" characterId="thief" order="1" done="false">
-		<node id="DN-001" first="false">
-			... What?
-			<answer leadsToNodeId="DN-002">
-				Where are your parents?
-			</answer>
-			<answer leadsToNodeId="DN-003">
-				Is there anything I can do for you?
-			</answer>
-		</node>
-		<node id="DN-002" first="false">
-			That's none of your business.
-			<answer leadsToNodeId="">
-				End conversation
-			</answer>
-		</node>
-		<node id="DN-003" first="false">
-			I don't need your pity.
-			<answer leadsToNodeId="">
-				End conversation
-			</answer>
-		</node>
-	</tree>
-	<tree id="DT-005" characterId="medic" order="1" done="false">
-		<node id="DN-001" first="false">
+	<tree id="DT-004" characterId="CH-002" characterName="Medic" order="1" done="false">
+		<node id="DN-001" first="true">
 			I see that you’re finally heading out,|it must take a lot of courage.
 			<answer leadsToNodeId="DN-002">
 				I need to find her.
@@ -382,6 +359,52 @@
 		</node>
 		<node id="DN-010" first="false">
 			That's okay, you can come to me|whenever you need anything.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-005" characterId="CH-003" characterName="Thief" order="1" done="false">
+		<node id="DN-001" first="true">
+			... What?
+			<answer leadsToNodeId="DN-002">
+				Where are your parents?
+			</answer>
+			<answer leadsToNodeId="DN-003">
+				Is there anything I can do for you?
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			That's none of your business.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			I don't need your pity.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-006" characterId="CH-004" characterName="Executioner" order="1" done="false">
+		<node id="DN-001" first="true">
+			...
+			<answer leadsToNodeId="DN-002">
+				Why are you here by yourself?
+			</answer>
+			<answer leadsToNodeId="DN-003">
+				I haven't seen you around
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			...
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			...
 			<answer leadsToNodeId="">
 				End conversation
 			</answer>
