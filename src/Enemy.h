@@ -14,6 +14,8 @@ public:
 	bool Update(float dt);
 	void Draw(float dt);
 
+	bool CleanUp();
+
 	std::vector<std::string> GetActions();
 
 	EnemyParty* party = nullptr;

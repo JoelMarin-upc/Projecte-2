@@ -116,4 +116,6 @@ public:
 
 	int hoverFxId;
 	int clickFxId;
+
+	bool useCamera;
 };

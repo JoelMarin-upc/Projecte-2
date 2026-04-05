@@ -71,22 +71,22 @@ bool UICheckbox::Update(float dt)
 	switch (state)
 	{
 	case UIElementState::DISABLED:
-		Engine::GetInstance().render->DrawRectangle(bounds, colorOutDis.r, colorOutDis.g, colorOutDis.b, colorOutDis.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(innerBounds, colorInDis.r, colorInDis.g, colorInDis.b, colorInDis.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(bounds, colorOutDis.r, colorOutDis.g, colorOutDis.b, colorOutDis.a, true, useCamera);
+		Engine::GetInstance().render->DrawRectangle(innerBounds, colorInDis.r, colorInDis.g, colorInDis.b, colorInDis.a, true, useCamera);
 		break;
 	case UIElementState::NORMAL:
-		Engine::GetInstance().render->DrawRectangle(bounds, colorOutDef.r, colorOutDef.g, colorOutDef.b, colorOutDef.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(innerBounds, colorInDef.r, colorInDef.g, colorInDef.b, colorInDef.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(bounds, colorOutDef.r, colorOutDef.g, colorOutDef.b, colorOutDef.a, true, useCamera);
+		Engine::GetInstance().render->DrawRectangle(innerBounds, colorInDef.r, colorInDef.g, colorInDef.b, colorInDef.a, true, useCamera);
 		break;
 	case UIElementState::FOCUSED:
 		SDL_Color in = checked ? colorInChk : colorInDef;
-		Engine::GetInstance().render->DrawRectangle(bounds, colorOutHov.r, colorOutHov.g, colorOutHov.b, colorOutHov.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(innerBounds, in.r, in.g, in.b, in.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(bounds, colorOutHov.r, colorOutHov.g, colorOutHov.b, colorOutHov.a, true, useCamera);
+		Engine::GetInstance().render->DrawRectangle(innerBounds, in.r, in.g, in.b, in.a, true, useCamera);
 		break;
 	case UIElementState::PRESSED:
 		SDL_Color out = mouseOver ? colorOutHov : colorOutDef;
-		Engine::GetInstance().render->DrawRectangle(bounds, out.r, out.g, out.b, out.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(innerBounds, colorInChk.r, colorInChk.g, colorInChk.b, colorInChk.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(bounds, out.r, out.g, out.b, out.a, true, useCamera);
+		Engine::GetInstance().render->DrawRectangle(innerBounds, colorInChk.r, colorInChk.g, colorInChk.b, colorInChk.a, true, useCamera);
 		break;
 	}
 

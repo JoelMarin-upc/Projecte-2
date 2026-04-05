@@ -27,6 +27,7 @@ public:
 
 	bool Update(float dt);
 	void Draw(float dt);
+	bool CleanUp();
 	void Move();
 	void Interact();
 	void OnDialogEnd();

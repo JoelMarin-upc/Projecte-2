@@ -46,7 +46,7 @@ bool Player::Start() {
 	texW = 32;
 	texH = 32;
 
-	party = nullptr;
+	party = new Party(std::static_pointer_cast<Player>(shared_from_this()));
 
 	return true;
 }
@@ -226,6 +226,7 @@ bool Player::CleanUp()
 {
 	LOG("Cleanup player");
 	Engine::GetInstance().textures->UnLoad(texture);
+	for (const auto& collider : colliders) Engine::GetInstance().physics->DestroyBody(collider);
 	return true;
 }
 

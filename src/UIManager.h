@@ -104,12 +104,14 @@ public:
 	void DrawControlDebug(std::shared_ptr<UIElement> control);
 
 	// Additional methods
-	std::shared_ptr<UIElement> CreateUIElement(UIElementType type, int id, SDL_Rect bounds, Module* observer, std::vector<SDL_Color> colors, int hoverFxId, int clickFxId, UIParameters params = UIParameters::Default());
+	std::shared_ptr<UIElement> CreateUIElement(UIElementType type, int id, SDL_Rect bounds, Module* observer, std::vector<SDL_Color> colors, int hoverFxId, int clickFxId, UIParameters params = UIParameters::Default(), bool useCamera = false);
+	void DestroyUIElement(std::shared_ptr<UIElement> element);
 
 public:
 
 	std::list<std::shared_ptr<UIElement>> UIElementsList;
 	SDL_Texture* texture;
+	int uiLockFrame = -1;
 
 private:
 	bool debug = false;

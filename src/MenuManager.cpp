@@ -169,7 +169,7 @@ void MenuManager::SetObserver(Module* observer)
 
 void MenuManager::ShowMainMenu()
 {
-	uiLockFrame = Engine::GetInstance().frameCount;
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 
 	previousMenu = currentMenu;
 	HideMenu();
@@ -188,7 +188,7 @@ void MenuManager::ShowMainMenu()
 
 void MenuManager::ShowPauseMenu()
 {
-	uiLockFrame = Engine::GetInstance().frameCount;
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 
 	previousMenu = currentMenu;
 	HideMenu();
@@ -203,7 +203,7 @@ void MenuManager::ShowPauseMenu()
 
 void MenuManager::ShowSettingsMenu()
 {
-	uiLockFrame = Engine::GetInstance().frameCount;
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 
 	previousMenu = currentMenu;
 	HideMenu();
@@ -224,7 +224,7 @@ void MenuManager::ShowSettingsMenu()
 
 void MenuManager::ShowCreditsMenu()
 {
-	uiLockFrame = Engine::GetInstance().frameCount;
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 
 	previousMenu = currentMenu;
 	HideMenu();
@@ -238,7 +238,7 @@ void MenuManager::ShowCreditsMenu()
 
 void MenuManager::ShowInventory(Inventory* inventory)
 {
-	uiLockFrame = Engine::GetInstance().frameCount;
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 
 	previousMenu = currentMenu;
 	HideMenu();
@@ -249,7 +249,7 @@ void MenuManager::ShowInventory(Inventory* inventory)
 
 void MenuManager::ShowShop(Inventory* customer, Inventory* shop)
 {
-	uiLockFrame = Engine::GetInstance().frameCount;
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 
 	previousMenu = currentMenu;
 	HideMenu();
@@ -261,7 +261,7 @@ void MenuManager::ShowShop(Inventory* customer, Inventory* shop)
 
 void MenuManager::ShowDeathScreen()
 {
-	uiLockFrame = Engine::GetInstance().frameCount;
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 
 	previousMenu = currentMenu;
 	HideMenu();
@@ -274,7 +274,7 @@ void MenuManager::ShowDeathScreen()
 
 void MenuManager::HideMenu()
 {
-	uiLockFrame = Engine::GetInstance().frameCount;
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 
 	currentMenu = NONE;
 	gameTitle->active = false;

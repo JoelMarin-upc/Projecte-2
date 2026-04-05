@@ -162,20 +162,20 @@ bool UISlider::Update(float dt)
 	switch (state)
 	{
 	case UIElementState::DISABLED:
-		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDis.r, colorBarDis.g, colorBarDis.b, colorBarDis.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderDis.r, colorSliderDis.g, colorSliderDis.b, colorSliderDis.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDis.r, colorBarDis.g, colorBarDis.b, colorBarDis.a, true, useCamera);
+		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderDis.r, colorSliderDis.g, colorSliderDis.b, colorSliderDis.a, true, useCamera);
 		break;
 	case UIElementState::NORMAL:
 		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDef.r, colorBarDef.g, colorBarDef.b, colorBarDef.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderDef.r, colorSliderDef.g, colorSliderDef.b, colorSliderDef.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderDef.r, colorSliderDef.g, colorSliderDef.b, colorSliderDef.a, true, useCamera);
 		break;
 	case UIElementState::FOCUSED:
 		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDef.r, colorBarDef.g, colorBarDef.b, colorBarDef.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderHov.r, colorSliderHov.g, colorSliderHov.b, colorSliderHov.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderHov.r, colorSliderHov.g, colorSliderHov.b, colorSliderHov.a, true, useCamera);
 		break;
 	case UIElementState::PRESSED:
 		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDef.r, colorBarDef.g, colorBarDef.b, colorBarDef.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderPre.r, colorSliderPre.g, colorSliderPre.b, colorSliderPre.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderPre.r, colorSliderPre.g, colorSliderPre.b, colorSliderPre.a, true, useCamera);
 		break;
 	}
 

@@ -1,9 +1,28 @@
 #pragma once
 
 #include "DynamicEntity.h"
+#include "Consumable.h"
+
+enum Stance {
+	REST,
+	DEFEND,
+	CONCENTRATE,
+	ASSIST,
+	NO_STANCE
+};
 
 class Character : public DynamicEntity {
 public:
 	Character() {}
 	Character(std::string id, std::string name, std::string texturePath, EntityType type) : DynamicEntity(id, name, texturePath, type) {}
+
+	int Attack();
+	Consumable* UseConsumable(std::string type);
+	void TakeConsumable(Consumable* consumable);
+	void TakeStance(Stance stance);
+	bool TakeDamage(int damage);
+
+	Stats stats;
+	bool isDead = false;
+	bool hasFled = false;
 };

@@ -58,12 +58,14 @@ public:
 	void LoadMap(std::string mapPath, std::string mapName);
 	void LoadScene();
 	void EndScene();
+	void EndGame();
+	void CheckTimers();
 
 	void StartDialog(std::string characterId);
 	void EndDialog();
 
 	void StartCombat(std::shared_ptr<Enemy> enemy);
-	void EndCombat(EnemyParty* enemyParty);
+	void EndCombat(EnemyParty* enemyParty, CombatResult combatResult);
 
 	Vector2D GetPlayerPosition();
 
@@ -94,6 +96,10 @@ private:
 	bool gameStarted = false;
 	bool paused = false;
 	bool isOnDialog = false;
+
+	float combatCooldownSeconds = 5.f;
+	bool hasCombatCooldown = false;
+	Timer combatTimer;
 
 	Combat* combat = nullptr;
 

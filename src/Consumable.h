@@ -2,6 +2,6 @@
 
 #include "Equipable.h"
 
-class Gear : Equipable {
+class Consumable : Equipable {
 
 };

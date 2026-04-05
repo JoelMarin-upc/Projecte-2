@@ -62,16 +62,16 @@ bool UIButton::Update(float dt)
 	switch (state)
 	{
 	case UIElementState::DISABLED:
-		Engine::GetInstance().render->DrawRectangle(bounds, colorDis.r, colorDis.g, colorDis.b, colorDis.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(bounds, colorDis.r, colorDis.g, colorDis.b, colorDis.a, true, useCamera);
 		break;
 	case UIElementState::NORMAL:
-		Engine::GetInstance().render->DrawRectangle(bounds, colorDef.r, colorDef.g, colorDef.b, colorDef.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(bounds, colorDef.r, colorDef.g, colorDef.b, colorDef.a, true, useCamera);
 		break;
 	case UIElementState::FOCUSED:
-		Engine::GetInstance().render->DrawRectangle(bounds, colorHov.r, colorHov.g, colorHov.b, colorHov.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(bounds, colorHov.r, colorHov.g, colorHov.b, colorHov.a, true, useCamera);
 		break;
 	case UIElementState::PRESSED:
-		Engine::GetInstance().render->DrawRectangle(bounds, colorPre.r, colorPre.g, colorPre.b, colorPre.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(bounds, colorPre.r, colorPre.g, colorPre.b, colorPre.a, true, useCamera);
 		break;
 	}
 

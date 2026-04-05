@@ -49,7 +49,15 @@ enum UIID {
 	ACTION2,
 	ACTION3,
 	ACTION4,
-	END_TURN
+	END_TURN,
+	LOG1,
+	LOG2,
+	LOG3,
+	LOG4,
+	STANCE1,
+	STANCE2,
+	STANCE3,
+	STANCE4
 };
 
 class MenuManager : public Module
@@ -117,6 +125,4 @@ public:
 	std::shared_ptr<UIButton> backMenu;
 	std::shared_ptr<UIButton> backMainMenu;
 	std::shared_ptr<UIButton> exit;
-
-	int uiLockFrame = -1;
 };

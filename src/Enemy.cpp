@@ -41,3 +41,8 @@ void Enemy::Draw(float dt)
     position.setY((float)y);
     Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - 6 - texH / 2/*, &animFrame, facingRight*/);
 }
+
+bool Enemy::CleanUp() {
+    for (const auto& collider : colliders) Engine::GetInstance().physics->DestroyBody(collider);
+    return true;
+}

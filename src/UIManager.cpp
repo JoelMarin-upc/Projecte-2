@@ -16,7 +16,7 @@ bool UIManager::Start()
 	return true;
 }
 
-std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id, SDL_Rect bounds, Module* observer, std::vector<SDL_Color> colors, int hoverFxId, int clickFxId, UIParameters params)
+std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id, SDL_Rect bounds, Module* observer, std::vector<SDL_Color> colors, int hoverFxId, int clickFxId, UIParameters params, bool useCamera)
 {
 	std::shared_ptr<UIElement> uiElement = std::make_shared<UIElement>();
 
@@ -99,11 +99,19 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 
 	//Set the observer
 	uiElement->observer = observer;
+	uiElement->useCamera = useCamera;
 
 	// Created GuiControls are add it to the list of controls
 	UIElementsList.push_back(uiElement);
 
 	return uiElement;
+}
+
+void UIManager::DestroyUIElement(std::shared_ptr<UIElement> element)
+{
+	if (!element) return;
+	UIElementsList.remove(element);
+	element->CleanUp();
 }
 
 bool UIManager::PostUpdate(float dt)

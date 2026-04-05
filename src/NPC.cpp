@@ -60,6 +60,11 @@ void NPC::Draw(float dt)
 	Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - 6 - texH / 2/*, &animFrame, facingRight*/);
 }
 
+bool NPC::CleanUp() {
+	for (const auto& collider : colliders) Engine::GetInstance().physics->DestroyBody(collider);
+	return true;
+}
+
 void NPC::Move()
 {
 	if (!party || !party->player) return;

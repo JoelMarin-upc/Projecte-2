@@ -15,8 +15,6 @@ Scene::Scene(std::string _id, std::string _mapsPath, std::string _mapName, std::
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
 
-	
-
 	mapsPath = _mapsPath;
 	mapName = _mapName;
 	combatMapName = _combatMapName;
@@ -96,21 +94,20 @@ bool Scene::Update(float dt)
 
 	if (!gameStarted) return true;
 
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN || Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) TogglePause();
+	
 	if (combat) {
 		combat->Update(dt);
+		if (combat->combatResult != CombatResult::NO_RESULT) EndCombat(combat->enemyParty, combat->combatResult);
 		return true;
 	}
 
 	///////////// FOR TESTING (remove) /////////////
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) Engine::GetInstance().menuManager->ShowDeathScreen();
-	////////////////////////////////////////////////
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN || Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) TogglePause();
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("player");
-	
-	///////////// FOR TESTING (remove) /////////////
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) for (const auto& entity : entityManager->entities) if (entity->id == "CH-002" || entity->id == "CH-003") player->AddPartyMember(std::dynamic_pointer_cast<NPC>(entity));
 	////////////////////////////////////////////////
 
+	CheckTimers();
 	map->Update(dt);
 	entityManager->Update(dt);
 	missionManager->Update(dt);
@@ -203,6 +200,15 @@ void Scene::EndScene()
 	
 }
 
+void Scene::EndGame()
+{
+	Engine::GetInstance().menuManager->ShowDeathScreen();
+}
+
+void Scene::CheckTimers() {
+	if (combatTimer.ReadSec() > combatCooldownSeconds) hasCombatCooldown = false;
+}
+
 void Scene::StartDialog(std::string characterId)
 {
 	if (!gameStarted) return;
@@ -234,18 +240,40 @@ void Scene::EndDialog()
 
 void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
 {
+	if (hasCombatCooldown) return;
+	Engine::GetInstance().render->follow = nullptr;
 	combat = new Combat(player->party, enemy->party, mapsPath, combatMapName);
+	combat->Awake();
+	combat->Start();
 }
 
-void Scene::EndCombat(EnemyParty* enemyParty)
+void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 {
-	for (const auto& enemy : enemyParty->members) entityManager->DestroyEntity(enemy);
+	switch (combatResult)
+	{
+	case WIN:
+		for (const auto& enemy : enemyParty->members) entityManager->DestroyEntity(enemy);
+		for (const auto& npc : player->party->members) if (npc->isDead) entityManager->DestroyEntity(npc);
+		break;
+	case LOSE:
+		EndGame();
+		break;
+	case FLED:
+		for (const auto& npc : player->party->members) if (npc->isDead) entityManager->DestroyEntity(npc);
+		combatTimer.Start();
+		hasCombatCooldown = true;
+		break;
+	default:
+		break;
+	}
+	delete combat;
 	combat = nullptr;
+	Engine::GetInstance().render->follow = player;
 }
 
 bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	
-	if (Engine::GetInstance().menuManager->uiLockFrame == Engine::GetInstance().frameCount) return true;
+	if (Engine::GetInstance().uiManager->uiLockFrame == Engine::GetInstance().frameCount) return true;
 
 	float musicVol;
 	float fxVol;
@@ -285,6 +313,11 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	case BACK_MAIN_MENU:
 		dialogManager->SetCurrentDialog();
+		//for (const auto& entity : entityManager->entities) entityManager->DestroyEntity(entity);
+		if (combat) {
+			delete combat;
+			combat = nullptr;
+		}
 		Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
 		break;
 	case EXIT:

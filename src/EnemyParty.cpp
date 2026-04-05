@@ -4,8 +4,8 @@
 EnemyParty::EnemyParty(std::shared_ptr<Enemy> _leader)
 {
 	leader = _leader;
-	AddMember(_leader);
 	members = std::vector<std::shared_ptr<Enemy>>();
+	AddMember(_leader);
 }
 
 void EnemyParty::AddMember(std::shared_ptr<Enemy> member)
