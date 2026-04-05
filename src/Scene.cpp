@@ -266,6 +266,7 @@ void Scene::EndScene()
 	
 }
 
+//Checks if the player is at a transition rectagle
 void Scene::CheckTransitions()
 {
 	if (!player) return;

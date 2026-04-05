@@ -23,7 +23,10 @@ bool SceneManager::Awake()
 
 bool SceneManager::Start()
 {
+	//Store the data of all scenes in the game, but don't load them yet
 	LoadScenes();
+
+	//Queues the intro scene and executes the transition to it
 	pendingSceneID = "intro";
 	pendingSpawnId = "";
 	hasQueuedTransition = true;
@@ -40,15 +43,17 @@ bool SceneManager::CleanUp()
 
 void SceneManager::LoadScenes()
 {
-	sceneInfos.push_back({ "intro",     "",        "" });
-	sceneInfos.push_back({ "main menu", "",        "" });
-	sceneInfos.push_back({ "SC-001",    mapsPath,  "RebelRefuge.tmx" });
-	sceneInfos.push_back({ "SC-002",    mapsPath,  "GroceriesShop.tmx" });
-	sceneInfos.push_back({ "SC-003",    mapsPath,  "TutorialDungeon.tmx" });
+	//Registers and stores the id and map file of all scenes¡
+	sceneInfos.push_back({ "intro", "", "" });
+	sceneInfos.push_back({ "main menu", "", "" });
+	sceneInfos.push_back({ "SC-001", mapsPath, "RebelRefuge.tmx" });
+	sceneInfos.push_back({ "SC-002", mapsPath, "GroceriesShop.tmx" });
+	sceneInfos.push_back({ "SC-003", mapsPath, "TutorialDungeon.tmx" });
 }
 
 void SceneManager::SetCurrentScene(std::string sceneID, std::string spawnId)
 {
+	//Queues a transition but doesn't do it immediately, to make sure the transition is done at the end of the frame to not cause read access violations
 	pendingSceneID = sceneID;
 	pendingSpawnId = spawnId;
 	hasQueuedTransition = true;
@@ -56,15 +61,21 @@ void SceneManager::SetCurrentScene(std::string sceneID, std::string spawnId)
 
 void SceneManager::DoTransition()
 {
+	//Performs the actual transition, ONLY call at Start() or PostUpdate() to not call it between frames
+
+	//First clean up the current scene
 	if (currentScene) {
 		currentScene->CleanUp();
 		delete currentScene;
 		currentScene = nullptr;
 	}
 
+	//Destroy all colliders from the current scene
 	Engine::GetInstance().physics->ResetPhysicsWorld();
+	//Hide open menus
 	Engine::GetInstance().menuManager->HideMenu();
 
+	//Find the scene you want to transition and create it, spawns the player at the request spawn point and releases the queued transition
 	for (const SceneInfo& info : sceneInfos) {
 		if (info.id == pendingSceneID) {
 			currentScene = new Scene(info.id, info.mapPath, info.mapName);
@@ -107,6 +118,7 @@ bool SceneManager::PostUpdate(float dt)
 {
 	if (currentScene == nullptr || paused) return true;
 
+	//Execute transition at the end of frame and delete current scene
 	if (hasQueuedTransition) {
 		DoTransition();
 	}
