@@ -66,6 +66,7 @@ bool Map::Update(float dt)
                                 Vector2D mapCoord = MapToWorld(i, j);
                                 int tileX = (int)round(mapCoord.getX());
                                 int tileY = (int)round(mapCoord.getY());
+
                                 //Draw the texture
                                 Engine::GetInstance().render->DrawTexture(tileSet->texture, (int)mapCoord.getX(), (int)mapCoord.getY(), 1.0f, &tileRect, true, 0, INT_MAX, INT_MAX, scale);
                             }
@@ -169,7 +170,7 @@ bool Map::Load(std::string path, std::string fileName)
 			//Load the tileset image
 			std::string imgName = tilesetNode.child("image").attribute("source").as_string();
             tileSet->texture = Engine::GetInstance().textures->Load((mapPath+imgName).c_str());
-
+            SDL_SetTextureScaleMode(tileSet->texture, SDL_SCALEMODE_NEAREST);
 			mapData.tilesets.push_back(tileSet);
 		}
 

@@ -151,6 +151,9 @@ void Render::CameraFollow()
 	else if (playerY > bottomBound)
 		camera.y = -(playerY - (camera.h + deadZoneHeight) / 2.f);
 
+	camera.x = roundf(camera.x);
+	camera.y = roundf(camera.y);
+
 	// Optional: clamp camera to world limits
 	//camera.x = std::clamp(camera.x, -worldWidth + (float)camera.w, 0.0f);
 	//camera.y = std::clamp(camera.y, -worldHeight + (float)camera.h, 0.0f);
@@ -177,14 +180,15 @@ bool Render::DrawTexture(SDL_Texture* texture, int x, int y, float speed, const 
 	int scale = Engine::GetInstance().window->GetScale();
 
 	SDL_FRect rect;
-	rect.x = (float)((int)round(camera.x * speed) + x * scale);
-	rect.y = (float)((int)round(camera.y * speed) + y * scale);
+	rect.x = roundf(camera.x * speed) + (float)(x * scale);
+	rect.y = roundf(camera.y * speed) + (float)(y * scale);
+
 
 	if (section != NULL)
 	{
 		// tileScale is 1.0f by default, so all non-map callers are unaffected
-		rect.w = (float)(section->w * scale * tileScale);
-		rect.h = (float)(section->h * scale * tileScale);
+		rect.w = ceilf((float)(section->w * scale * tileScale));
+		rect.h = ceilf((float)(section->h * scale * tileScale));
 	}
 	else
 	{
