@@ -63,6 +63,10 @@ bool Scene::Start(std::string spawnId)
 	b_logo = { sw/2 - logo->w/2, sh/2 - logo->h/2, 0, 0 };
 	hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
 	clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
+	//logoFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("logo").as_string());
+	logoFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/logo.wav");
+	elevatorFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/elevator.wav");
+
 
 	Engine::GetInstance().menuManager->SetObserver(this);
 
@@ -71,13 +75,32 @@ bool Scene::Start(std::string spawnId)
 		Engine::GetInstance().menuManager->HideMenu();
 		studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));
 		studioLogo->active = true;
+		Engine::GetInstance().audio->PlayFx(logoFxId);
 	}
 
-	if (id == "main menu") Engine::GetInstance().menuManager->ShowMainMenu();
+	if (id == "main menu")
+	{
+		Engine::GetInstance().menuManager->ShowMainMenu();
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav");
+	}
 
 	if (gameStarted) {
 		LoadScene();
+		if (id == "SC-001")
+		{
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav");
+		}
+		else if (id == "SC-002")
+		{
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav");
+		}
+		else if (id == "SC-003")
+		{
+			Engine::GetInstance().audio->PlayFx(elevatorFxId);
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav");
+		}
 	}
+	
 
 	entityManager->Start();
 	missionManager->Start();
@@ -107,6 +130,7 @@ bool Scene::Update(float dt)
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
 			studioLogo->active = false;
 			studioLogo->Destroy();
+			Engine::GetInstance().audio->StopFx();
 			Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
 		}
 	}
