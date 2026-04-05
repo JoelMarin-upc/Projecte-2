@@ -66,7 +66,7 @@ void Pathfinding::DrawPath() {
     	Vector2D pathTileWorld = map->MapToWorld((int)pathTile.getX(), (int)pathTile.getY());
 		// we use the second tile in the tileset to draw the visited. That's why we use rect x=33
         SDL_Rect rect = { 33,1,map->GetTileWidth(),map->GetTileHeight()};
-        Engine::GetInstance().render->DrawTexture(pathTex, (int)pathTileWorld.getX(), (int)pathTileWorld.getY(),&rect);
+        Engine::GetInstance().render->DrawTexture(pathTex, (int)pathTileWorld.getX(), (int)pathTileWorld.getY(), 1.0f, &rect);
     }
 
     // Draw frontier BFS
@@ -83,7 +83,7 @@ void Pathfinding::DrawPath() {
         Vector2D pos = map->MapToWorld(frontierTile.getX(), frontierTile.getY());
 		//Draw the frontier tile. We use the first tile in the tileset to draw the frontier. That's why we use rect x=1
         SDL_Rect rect = { 1,1,map->GetTileWidth(),map->GetTileHeight() };
-        Engine::GetInstance().render->DrawTexture(pathTex, (int)pos.getX(), (int)pos.getY(), &rect);
+        Engine::GetInstance().render->DrawTexture(pathTex, (int)pos.getX(), (int)pos.getY(), 1.0f, &rect);
 
         //Remove the front element from the queue
         frontierCopy.pop();
@@ -103,7 +103,7 @@ void Pathfinding::DrawPath() {
         Vector2D pos = map->MapToWorld(frontierTile.getX(), frontierTile.getY());
         //Draw the frontier tile
         SDL_Rect rect = { 0,0,map->GetTileWidth(),map->GetTileHeight() };
-        Engine::GetInstance().render.get()->DrawTexture(pathTex, pos.getX(), pos.getY(), &rect);
+        Engine::GetInstance().render.get()->DrawTexture(pathTex, pos.getX(), pos.getY(), 1.0f, &rect);
         //Remove the front element from the queue
         frontierDijkstraCopy.pop();
     }
@@ -122,7 +122,7 @@ void Pathfinding::DrawPath() {
         Vector2D pos = map->MapToWorld(frontierTile.getX(), frontierTile.getY());
         //Draw the frontier tile
         SDL_Rect rect = { 0,0,map->GetTileWidth(),map->GetTileHeight() };
-        Engine::GetInstance().render.get()->DrawTexture(pathTex, pos.getX(), pos.getY(), &rect);
+        Engine::GetInstance().render.get()->DrawTexture(pathTex, pos.getX(), pos.getY(), 1.0f, &rect);
         //Remove the front element from the queue
         frontierAStarCopy.pop();
     }

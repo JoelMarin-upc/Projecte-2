@@ -49,9 +49,9 @@ bool Scene::Awake()
 }
 
 // Called before the first frame
-bool Scene::Start()
+bool Scene::Start(std::string spawnId)
 {
-	gameStarted = id != "main menu";
+	gameStarted = id != "main menu" && id != "intro";
 
 	if (gameStarted)
 	{
@@ -60,25 +60,65 @@ bool Scene::Start()
 	}
 
 	paused = false;
+	pendingSpawnId = spawnId;
+
+	sw = Engine::GetInstance().window->width;
+	sh = Engine::GetInstance().window->height;
+	logo = Engine::GetInstance().textures->Load("Assets/Textures/TeamDayo_Logo.png");
+	b_logo = { sw/2 - logo->w/2, sh/2 - logo->h/2, 0, 0 };
+	hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
+	clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
+	//logoFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("logo").as_string());
+	logoFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/logo.wav");
+	elevatorFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/elevator.wav");
+
 
 	Engine::GetInstance().menuManager->SetObserver(this);
 
-	if (!gameStarted) Engine::GetInstance().menuManager->ShowMainMenu();
+	if (id == "intro")
+	{
+		Engine::GetInstance().menuManager->HideMenu();
+		studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));
+		studioLogo->active = true;
+		Engine::GetInstance().audio->PlayFx(logoFxId);
+	}
+
+	if (id == "main menu")
+	{
+		Engine::GetInstance().menuManager->ShowMainMenu();
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav");
+	}
+
+	if (gameStarted) {
+		LoadScene();
+		if (id == "SC-001")
+		{
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav");
+		}
+		else if (id == "SC-002")
+		{
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav");
+		}
+		else if (id == "SC-003")
+		{
+			Engine::GetInstance().audio->PlayFx(elevatorFxId);
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav");
+		}
+	}
+	
 
 	entityManager->Start();
 	missionManager->Start();
 	dialogManager->Start();
 
+	if (id == "SC-001") {
+		if (Engine::GetInstance().sceneManager->triggerFirstMonologue == true) {
+			StartDialog("player");
+			Engine::GetInstance().sceneManager->triggerFirstMonologue = false;
+		}
+	}
 
-	//testItem = std::make_shared<InteractableItem>(ItemInteractionType::TOGGLE);
 
-	/*testItem = std::make_shared<InteractableItem>(ItemInteractionType::TOGGLE);
-
-	testItem->position.setX(500);
-	testItem->position.setY(500);
-	entityManager->AddEntity(testItem);
-	testItem->Start();*/
-	
 	return true;
 }
 
@@ -91,6 +131,14 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	if (id == "intro") {
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+			studioLogo->active = false;
+			studioLogo->Destroy();
+			Engine::GetInstance().audio->StopFx();
+			Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		}
+	}
 
 	if (!gameStarted) return true;
 
@@ -112,6 +160,23 @@ bool Scene::Update(float dt)
 	entityManager->Update(dt);
 	missionManager->Update(dt);
 	dialogManager->Update(dt);
+
+	if (gameStarted && !paused && !isOnDialog) {
+		CheckTransitions();
+	}
+		
+	//////////////////// JUST TO SEE ACCESSES, DELETE LATER ////////////////////
+	for (AccessData& t : mapData.accesses) {
+		SDL_Rect rect = {
+			(int)t.position.getX(),
+			(int)t.position.getY(),
+			(int)t.width,
+			(int)t.height
+		};
+		Engine::GetInstance().render->DrawRectangle(rect, 0, 255, 0, 128, true, true);
+	}
+	/////////////////////
+
 	return true;
 }
 
@@ -125,6 +190,24 @@ bool Scene::PostUpdate(float dt)
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
+	
+	Engine::GetInstance().render->follow = nullptr;
+
+	entityManager->CleanUp();
+	dialogManager->CleanUp();
+
+	if (map) {
+		map->CleanUp();
+		delete map;
+		map = nullptr;
+	}
+
+	delete entityManager;
+	entityManager = nullptr;
+	delete missionManager;
+	missionManager = nullptr;
+	delete dialogManager;
+	dialogManager = nullptr;
 
 	return true;
 }
@@ -157,7 +240,7 @@ void Scene::LoadMap(std::string mapPath, std::string mapName)
 	mapData = map->gameData;
 }
 
-void Scene::LoadScene()
+void Scene::LoadScene(std::string spawnId)
 {
 	std::string baseTexturePath = "Assets/Textures/";
 
@@ -170,7 +253,30 @@ void Scene::LoadScene()
 	std::string id = pNode.attribute("id").as_string();
 	std::string name = pNode.attribute("name").as_string();
 	std::string texture = pNode.attribute("texture").as_string();
-	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, mapData.playerStartPosition, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+
+	//Loads the spawnpoint
+	Vector2D spawnPos(0, 0);
+	bool found = false;
+
+	for (const SpawnPoint& sp : mapData.spawnPoints) {
+		if (sp.spawnId == pendingSpawnId) {
+			spawnPos = sp.position;
+			found = true;
+			break;
+		}
+	}
+
+	if (!found) {
+		for (const SpawnPoint& sp : mapData.spawnPoints) {
+			if (sp.spawnId == "default") {
+				spawnPos = sp.position;
+				break;
+			}
+		}
+	}
+
+	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+	Engine::GetInstance().render->follow = player;
 
 	for (NPCData npc : mapData.npcs) {
 		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
@@ -190,7 +296,9 @@ void Scene::LoadScene()
 			std::string texture = iNode.attribute("texture").as_string();
 			int type = iNode.attribute("type").as_int();
 			int interactionType = iNode.attribute("interactionType").as_int();
-			entityManager->CreateItem(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType);
+			bool canStack = iNode.attribute("canStack").as_bool();
+			std::string itemClass = iNode.attribute("itemClass").as_string("item");
+			entityManager->CreateItem(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack);
 		}
 	}
 }
@@ -207,6 +315,21 @@ void Scene::EndGame()
 
 void Scene::CheckTimers() {
 	if (combatTimer.ReadSec() > combatCooldownSeconds) hasCombatCooldown = false;
+}
+
+//Checks if the player is at a transition rectagle
+void Scene::CheckTransitions()
+{
+	if (!player) return;
+	Vector2D playerPos = player->position;
+
+	for (AccessData& t : mapData.accesses) {
+		if (playerPos.getX() >= t.position.getX() && playerPos.getX() <= t.position.getX() + t.width && playerPos.getY() >= t.position.getY() && playerPos.getY() <= t.position.getY() + t.height) {
+			Engine::GetInstance().sceneManager->SetCurrentScene(t.targetSceneId, t.targetSpawnId);
+			return;
+		}
+	}
+
 }
 
 void Scene::StartDialog(std::string characterId)

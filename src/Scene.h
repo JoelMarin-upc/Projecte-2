@@ -38,7 +38,7 @@ public:
 	bool Awake();
 
 	// Called before the first frame
-	bool Start();
+	bool Start(std::string spawnId = "default");
 
 	// Called before all Updates
 	bool PreUpdate();
@@ -56,10 +56,12 @@ public:
 	void SaveGame();
 	void LoadGame();
 	void LoadMap(std::string mapPath, std::string mapName);
-	void LoadScene();
+	void LoadScene(std::string spawnId = "default");
 	void EndScene();
 	void EndGame();
 	void CheckTimers();
+
+	void CheckTransitions();
 
 	void StartDialog(std::string characterId);
 	void EndDialog();
@@ -71,10 +73,15 @@ public:
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
 
+	bool GetIsOnDialog() {
+		return isOnDialog;
+	}
+
 	bool hasEnded;
 
 	std::string id;
 	std::string name;
+	std::string pendingSpawnId = "default";
 
 	EntityManager* entityManager;
 	MissionManager* missionManager;
@@ -106,5 +113,15 @@ private:
 	std::string  activeDialogId = "";
 
 	GameData mapData;
+	
+	int sw;
+	int sh;
+	SDL_Texture* logo;
+	SDL_Rect b_logo;
+	std::shared_ptr<UIImage> studioLogo;
+	int hoverFxId;
+	int clickFxId;
+	int logoFxId;
+	int elevatorFxId;
 
 };

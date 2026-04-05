@@ -55,10 +55,20 @@ bool Map::Update(float dt)
                             if (tileSet != nullptr) {
                                 //Get the Rect from the tileSetTexture;
                                 SDL_Rect tileRect = tileSet->GetRect(gid);
+
+                                SDL_Rect dstRect = {
+                                    0, 0,                        // x/y are handled by DrawTexture below
+                                    tileSet->renderWidth,        // scaled draw width
+                                    tileSet->renderHeight        // scaled draw height
+                                };
+
                                 //Get the screen coordinates from the tile coordinates
                                 Vector2D mapCoord = MapToWorld(i, j);
+                                int tileX = (int)round(mapCoord.getX());
+                                int tileY = (int)round(mapCoord.getY());
+
                                 //Draw the texture
-                                Engine::GetInstance().render->DrawTexture(tileSet->texture, (int)mapCoord.getX(), (int)mapCoord.getY(), &tileRect);
+                                Engine::GetInstance().render->DrawTexture(tileSet->texture, (int)mapCoord.getX(), (int)mapCoord.getY(), 1.0f, &tileRect, true, 0, INT_MAX, INT_MAX, scale);
                             }
                         }
                     }
@@ -161,7 +171,7 @@ bool Map::Load(std::string path, std::string fileName)
 			//Load the tileset image
 			std::string imgName = tilesetNode.child("image").attribute("source").as_string();
             tileSet->texture = Engine::GetInstance().textures->Load((mapPath+imgName).c_str());
-
+            SDL_SetTextureScaleMode(tileSet->texture, SDL_SCALEMODE_NEAREST);
 			mapData.tilesets.push_back(tileSet);
 		}
 
@@ -197,10 +207,10 @@ bool Map::Load(std::string path, std::string fileName)
             for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object")) {
                 Object* object = new Object();
                 object->id = objectNode.attribute("id").as_int();
-                object->x = objectNode.attribute("x").as_int();
-                object->y = objectNode.attribute("y").as_int();
-                object->width = objectNode.attribute("width").as_int();
-                object->height = objectNode.attribute("height").as_int();
+                object->x = objectNode.attribute("x").as_float();
+                object->y = objectNode.attribute("y").as_float();
+                object->width = objectNode.attribute("width").as_float();
+                object->height = objectNode.attribute("height").as_float();
 
                 LoadProperties(objectNode, object->properties);
 
@@ -210,6 +220,24 @@ bool Map::Load(std::string path, std::string fileName)
             mapData.objectlayers.push_back(objectGroup);
         }
 
+        //scale everything after loading, before processing
+        mapData.tileWidth = (int)(mapData.tileWidth * scale);
+        mapData.tileHeight = (int)(mapData.tileHeight * scale);
+
+        for (auto& tileSet : mapData.tilesets) {
+            tileSet->renderWidth = (int)(tileSet->tileWidth * scale); // scaled draw size
+            tileSet->renderHeight = (int)(tileSet->tileHeight * scale); // scaled draw size
+            // tileWidth and tileHeight remain UNTOUCHED for correct source rect sampling
+        }
+
+        for (auto& objectGroup : mapData.objectlayers) {
+            for (auto& object : objectGroup->objects) {
+                object->x *= scale;
+                object->y *= scale;
+                object->width *= scale;
+                object->height *= scale;
+            }
+        }
         // Later you can create a function here to load and create the colliders from the map
         //Iterate the layer and create colliders
         for (const auto& mapLayer : mapData.layers) {
@@ -220,25 +248,25 @@ bool Map::Load(std::string path, std::string fileName)
                         Vector2D mapCoord = MapToWorld(i, j);        
                         switch (gid)
                         {
-                        case 626:
+                        case 1:
 
                             break;
-                        case 627:
-                            gameData.playerStartPosition = mapCoord;
-                            break;
-                        case 628:
+                        case 2:
 
                             break;
-                        case 629:
+                        case 3:
 
                             break;
-                        case 630:
+                        case 4:
 
                             break;
-                        case 631:
+                        case 5:
 
                             break;
-                        case 632:
+                        case 6:
+
+                            break;
+                        case 7:
 
                             break;
                         default:
@@ -348,6 +376,30 @@ bool Map::Load(std::string path, std::string fileName)
                     pos.order = object->properties.GetProperty("order")->value_i;
                     pos.position = Vector2D(object->x, object->y);
                     combatData.positions.push_back(pos);
+
+            if (objectGroup->name == "Accesses") {
+                for (const auto& object : objectGroup->objects) {
+                    AccessData t;
+                    t.position = Vector2D(object->x, object->y);
+                    t.width = object->width;
+                    t.height = object->height;
+                    auto* targetScene = object->properties.GetProperty("targetSceneId");
+                    auto* targetSpawn = object->properties.GetProperty("targetSpawnId");
+                    t.targetSceneId = targetScene ? targetScene->value_s : "";
+                    t.targetSpawnId = targetSpawn ? targetSpawn->value_s : "default";
+                    if (!t.targetSceneId.empty()) {
+                        gameData.accesses.push_back(t);
+                    }
+                }
+            }
+
+            if (objectGroup->name == "Spawns") {
+                for (const auto& object : objectGroup->objects) {
+                    SpawnPoint sp;
+                    auto* prop = object->properties.GetProperty("spawnId");
+                    sp.spawnId = prop ? prop->value_s : "default";
+                    sp.position = Vector2D(object->x, object->y);
+                    gameData.spawnPoints.push_back(sp);
                 }
             }
         }
@@ -470,7 +522,7 @@ Vector2D Map::GetCameraLimitsInTiles(Vector2D camPosTile) {
     Vector2D camSize = Vector2D(Engine::GetInstance().render->camera.w, Engine::GetInstance().render->camera.h);
     Vector2D camSizeTile = WorldToMap(camSize.getX(), camSize.getY());
 
-    Vector2D limits = Vector2D(camPosTile.getX() + camSizeTile.getX(), camPosTile.getY() + camSizeTile.getY());
+    Vector2D limits = Vector2D(camPosTile.getX() + camSizeTile.getX() + 2, camPosTile.getY() + camSizeTile.getY() + 2);
     if (limits.getX() > mapData.width) limits.setX(mapData.width);
     if (limits.getY() > mapData.height) limits.setY(mapData.height);
 

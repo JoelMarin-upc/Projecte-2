@@ -43,8 +43,7 @@ bool MenuManager::CleanUp() { return true; }
 
 void MenuManager::Load(bool onlyPositions)
 {
-	SDL_Texture* title = Engine::GetInstance().textures->Load("Assets/Textures/game_title.png");
-	SDL_Texture* logo = Engine::GetInstance().textures->Load("Assets/Textures/logo.png");
+	SDL_Texture* title = Engine::GetInstance().textures->Load("Assets/Textures/Game_Title.png");
 
 	SDL_Color mainColorDef = { 0, 0, 255, 255 };
 	SDL_Color mainColorDis = { 200, 200, 200, 255 };
@@ -63,22 +62,21 @@ void MenuManager::Load(bool onlyPositions)
 	int sw = Engine::GetInstance().window->width;
 	int sh = Engine::GetInstance().window->height;
 
-	SDL_Rect pos1 = { sw / 2, sh / 2 - 97.5f, 0, 0 };
-	SDL_Rect pos2 = { sw / 2, sh / 2 - 47.5f, 0, 0 };
-	SDL_Rect pos3 = { sw / 2, sh / 2 - 12.5f, 0, 0 };
-	SDL_Rect pos4 = { sw / 2, sh / 2 + 22.5f, 0, 0 };
-	SDL_Rect pos5 = { sw / 2, sh / 2 + 57.5f, 0, 0 };
+	SDL_Rect pos1 = { sw / 2, sh / 2 - 197.5f, 0, 0 };
+	SDL_Rect pos2 = { sw / 2, sh / 2 - 147.5f, 0, 0 };
+	SDL_Rect pos3 = { sw / 2, sh / 2 - 112.5f, 0, 0 };
+	SDL_Rect pos4 = { sw / 2, sh / 2 + 122.5f, 0, 0 };
+	SDL_Rect pos5 = { sw / 2, sh / 2 + 157.5f, 0, 0 };
 
-	SDL_Rect b_gameTitle = { pos1.x - title->w / 2, pos1.y - title->h - 20, 0, 0 };
-	SDL_Rect b_logo = { sw - logo->w, sh - logo->h, 0, 0 };
-	SDL_Rect b_startGame = { pos1.x - 125, pos1.y, 250, 40 };
-	SDL_Rect b_paused_lbl = { pos1.x - 100, pos1.y, 200, 40 };
+	SDL_Rect b_gameTitle = { pos1.x - title->w / 2, pos1.y - title->h + 220, 0, 0 };
+	SDL_Rect b_startGame = { pos1.x - 125, pos1.y + 200, 250, 40 };
+	SDL_Rect b_paused_lbl = { pos1.x - 100, pos1.y + 180, 200, 40 };
 	SDL_Rect b_gameOver_lbl = { pos1.x - 150, pos1.y, 300, 60 };
 	SDL_Rect b_settings_lbl = { pos1.x - 100, pos1.y, 200, 40 };
-	SDL_Rect b_continueGame = { pos2.x - 75, pos2.y, 150, 25 };
-	SDL_Rect b_resume = { pos2.x - 75, pos2.y, 150, 25 };
+	SDL_Rect b_continueGame = { pos2.x - 75, pos2.y + 200, 150, 25 };
+	SDL_Rect b_resume = { pos2.x - 75, pos2.y + 200, 150, 25 };
 	SDL_Rect b_settings = { pos4.x - 75, pos4.y, 150, 25 };
-	SDL_Rect b_credits_btn = { pos3.x - 75, pos3.y, 150, 25 };
+	SDL_Rect b_credits_btn = { pos3.x - 75, pos3.y + 200, 150, 25 };
 	SDL_Rect b_credits1 = { pos3.x - 500, pos3.y - 130, 1000, 25 };
 	SDL_Rect b_credits2 = { pos3.x - 500, pos3.y - 90, 1000, 25 };
 	SDL_Rect b_musicVolume_lbl = { pos2.x - 300, pos2.y, 200, 25 };
@@ -88,12 +86,11 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_fullscreen_lbl = { pos4.x - 300, pos4.y, 200, 25 };
 	SDL_Rect b_fullscreen = { pos4.x + 100, pos4.y, 25, 25 };
 	SDL_Rect b_backMenu = { pos5.x - 75, pos5.y, 150, 25 };
-	SDL_Rect b_backMainMenu = { pos3.x - 75, pos3.y, 150, 25 };
+	SDL_Rect b_backMainMenu = { pos3.x - 75, pos3.y + 200, 150, 25 };
 	SDL_Rect b_exit = { pos5.x - 75, pos5.y, 150, 25 };
 
 	if (onlyPositions) {
 		gameTitle->SetBounds(b_gameTitle);
-		studioLogo->SetBounds(b_logo);
 		startGame->SetBounds(b_startGame);
 		pausedLabel->SetBounds(b_paused_lbl);
 		gameOverLabel->SetBounds(b_gameOver_lbl);
@@ -120,7 +117,6 @@ void MenuManager::Load(bool onlyPositions)
 
 		// MENUS
 		gameTitle = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)GAME_TITLE, b_gameTitle, this, {  }, hoverFxId, clickFxId, UIParameters::Image(title, title, title, title)));;
-		studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));;;
 		startGame = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)START_GAME, b_startGame, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Start Game", 5)));
 		pausedLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)PAUSED_LABEL, b_paused_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("PAUSED")));
 		gameOverLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)GAME_OVER_LABEL , b_gameOver_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("GAME OVER")));
@@ -146,7 +142,6 @@ void MenuManager::Load(bool onlyPositions)
 void MenuManager::SetObserver(Module* observer) 
 {
 	gameTitle->observer = observer;
-	studioLogo->observer = observer;
 	startGame->observer = observer;
 	pausedLabel->observer = observer;
 	settingsLabel->observer = observer;
@@ -176,7 +171,6 @@ void MenuManager::ShowMainMenu()
 	currentMenu = MAIN;
 
 	gameTitle->active = true;
-	studioLogo->active = true;
 	startGame->active = true;
 	continueGame->active = true;
 	if (XMLHandler::SaveFileExists()) continueGame->Enable();
@@ -233,7 +227,6 @@ void MenuManager::ShowCreditsMenu()
 	creditsLabel1->active = true;
 	creditsLabel2->active = true;
 	backMainMenu->active = true;
-	studioLogo->active = true;
 }
 
 void MenuManager::ShowInventory(Inventory* inventory)
@@ -278,7 +271,6 @@ void MenuManager::HideMenu()
 
 	currentMenu = NONE;
 	gameTitle->active = false;
-	studioLogo->active = false;
 	startGame->active = false;
 	pausedLabel->active = false;
 	gameOverLabel->active = false;

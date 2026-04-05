@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "Animation.h"
 #include "Timer.h"
+#include "Inventory.h"
 #include <box2d/box2d.h>
 #include <SDL3/SDL.h>
 
@@ -134,6 +135,8 @@ public:
 	bool doorOpen = false;
 
 	Party* party;
+
+	Inventory inventory;
 
 private:
 	b2Vec2 velocity;

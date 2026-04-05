@@ -111,6 +111,8 @@ struct TileSet
     std::string name;
     int tileWidth;
     int tileHeight;
+    int renderWidth;
+    int renderHeight;
     int spacing;
     int margin;
     int tileCount;
@@ -134,7 +136,8 @@ struct TileSet
 
 struct Object
 {
-    int id, x, y, width, height;
+    int id;
+    float x, y, width, height;
     Properties properties;
 };
 
@@ -159,10 +162,23 @@ struct MapData
     std::list<ObjectGroup*> objectlayers;
 };
 
+struct AccessData {
+    Vector2D position;
+    float width, height;
+    std::string targetSceneId;
+    std::string targetSpawnId;
+};
+
+struct SpawnPoint {
+    std::string spawnId;
+    Vector2D position;
+};
+
 struct GameData {
-    Vector2D playerStartPosition;
+    std::vector<SpawnPoint> spawnPoints;
     std::vector<NPCData> npcs;
     std::vector<ItemData> items;
+    std::vector<AccessData> accesses;
 };
 
 struct CombatPosition {
@@ -235,8 +251,9 @@ public:
     MapData mapData;
     GameData gameData;
     CombatData combatData;
+    bool mapLoaded;
 
 private:
-    bool mapLoaded;
+    float scale = 2.0f;
     // L06: DONE 1: Declare a variable data of the struct MapData
 };

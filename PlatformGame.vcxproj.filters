@@ -89,6 +89,7 @@
       <Filter>Configuration FIles</Filter>
     </None>
     <None Include="Assets\Maps\RebelRefuge.tmx" />
+    <None Include="Assets\Maps\TutorialDungeon.tmx" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio.cpp">
@@ -513,10 +514,8 @@
       <Filter>Configuration FIles</Filter>
     </Xml>
     <Xml Include="gamesave.xml" />
-    <Xml Include="Assets\Dialogues\test.xml">
-      <Filter>Configuration FIles</Filter>
-    </Xml>
     <Xml Include="Assets\Entities\characters.xml" />
     <Xml Include="Assets\Entities\items.xml" />
+    <Xml Include="Assets\Dialogues\test.xml" />
   </ItemGroup>
 </Project>

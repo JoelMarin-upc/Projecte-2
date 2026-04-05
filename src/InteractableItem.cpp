@@ -10,11 +10,10 @@
 #include "EntityManager.h"
 #include "SceneManager.h"
 
-InteractableItem::InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type) : Item(id, name, texturePath, EntityType::INTERACTABLE_ITEM)
+InteractableItem::InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type, bool canStack) : Item(id, name, texturePath, EntityType::INTERACTABLE_ITEM)
 {
-	name = "interactableItem";
 	itemInteractionType = type;
-
+	this->canStack = canStack;
 }
 
 InteractableItem::~InteractableItem() {}
@@ -28,7 +27,7 @@ bool InteractableItem::Start() {
 	pickupIconPath = "Assets/Textures/item.png";
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
 	pickupIcon = Engine::GetInstance().textures->Load(pickupIconPath);
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 1, 1);
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -20, -20, 1, 1);
 	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 50, 50, 1, 1);
 	texW = 30;
 	texH = 30;
@@ -51,7 +50,7 @@ bool InteractableItem::Update(float dt) {
 		return true;
 	}
 	if (isPlayerInRange) {
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
 			Interact();
 		}
 	}
@@ -76,13 +75,16 @@ void InteractableItem::Draw(float dt) {
 
 bool InteractableItem::CleanUp() {
 	LOG("Cleanup Interactable Item");
+	Engine::GetInstance().textures->UnLoad(texture);
+	Engine::GetInstance().textures->UnLoad(pickupIcon);
 	if (sensorCollider != nullptr) {
-		Engine::GetInstance().textures->UnLoad(texture);
-		Engine::GetInstance().textures->UnLoad(pickupIcon);
 		Engine::GetInstance().physics->DeletePhysBody(sensorCollider);
 		sensorCollider = nullptr;
 	}
-
+	if (pbody != nullptr) {
+		Engine::GetInstance().physics->DeletePhysBody(pbody);
+		pbody = nullptr;
+	}
 	return true;
 }
 
@@ -128,7 +130,33 @@ void InteractableItem::Interact()
 
 void InteractableItem::Pickup()
 {
-	LOG("'%s' picked up", name.c_str());
+	for (const auto& e : Engine::GetInstance().sceneManager->currentScene->entityManager->entities) {
+		Player* player = dynamic_cast<Player*>(e.get());
+		if (player) {
+			if (player->inventory.AddItem(this)) {
+				isPicked = true;
+				isPlayerInRange = false;
+				active = false;
+
+				if (pbody) {
+					Engine::GetInstance().physics->DeletePhysBody(pbody);
+					pbody = nullptr;
+				}
+				if (sensorCollider) {
+					Engine::GetInstance().physics->DeletePhysBody(sensorCollider);
+					sensorCollider = nullptr;
+				}
+				player->inventory.PrintContents();
+				LOG("'%s' picked up", name.c_str());
+				return;
+			}
+				
+			else {
+				LOG("Failed to pick up item");
+			}
+			return;
+		}
+	}	
 }
 
 void InteractableItem::Toggle()

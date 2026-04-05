@@ -29,13 +29,15 @@ bool DialogManager::Start() {
 	int sw = BASE_W;
 	int sh = BASE_H;
 
+	//IF ANY OF THE BOUNDS ARE MODIFIED, COPY AND PASTE THE SAME VALUES AT ResizeDialogBox()
 	dialogBox = Engine::GetInstance().textures->Load("Assets/Dialogues/Text_box.png");
-	dialogText = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)LABEL, { 20, sh - 140, 220, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
-	speakerName = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SPEAKER_NAME, { 20, sh - 160, 100, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
-	answer1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER1, { sw / 2 - 110, sh - 70, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	answer2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER2, { sw / 2 + 10, sh - 70, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	answer3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER3, { sw / 2 - 110, sh - 40, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	answer4 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER4, { sw / 2 + 10, sh - 40, 100, 20 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	speakerName = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SPEAKER_NAME, { 100, sh - 150, 100, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
+	dialogText = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)LABEL, { 100, sh - 120, 420, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
+	
+	answer1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER1, { sw / 2 + 280, sh - 210, 280, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	answer2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER2, { sw / 2 + 280, sh - 260, 280, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	answer3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER3, { sw / 2 + 280, sh - 280, 280, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	answer4 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER4, { sw / 2 + 280, sh - 300, 280, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
 
 	SetCurrentDialog();
 
@@ -45,7 +47,7 @@ bool DialogManager::Start() {
 bool DialogManager::Update(float dt) {
 	int sw = BASE_W;
 	int sh = BASE_H;
-	if (currentDialog) Engine::GetInstance().render->DrawTexture(dialogBox, 0, 0);
+	if (currentDialog) Engine::GetInstance().render->DrawTexture(dialogBox, 0, 0, 0.0f);
 	return true;
 }
 
@@ -74,6 +76,10 @@ void DialogManager::LoadDialogs()
 			node->text = nodeXml.child_value();
 			node->text.erase(std::remove(node->text.begin(), node->text.end(), '\n'), node->text.end());
 			node->text.erase(std::remove(node->text.begin(), node->text.end(), '\t'), node->text.end());
+
+			// Convert | to newline
+			std::replace(node->text.begin(), node->text.end(), '|', '\n');
+
 			node->answers = std::vector<DialogAnswer*>();
 
 			if (node->first) tree->currentNode = node;
@@ -98,14 +104,18 @@ bool DialogManager::SetCurrentDialog(std::string characterId)
 	if (characterId == "")
 	{
 		currentDialog = nullptr;
-		dialogText->text = "";
+
 		speakerName->text = "";
+		dialogText->text = "";
+
 		answer1->text = "";
 		answer2->text = "";
 		answer3->text = "";
 		answer4->text = "";
-		dialogText->active = false;
+
 		speakerName->active = false;
+		dialogText->active = false;
+
 		answer1->active = false;
 		answer2->active = false;
 		answer3->active = false;
@@ -141,11 +151,11 @@ void DialogManager::ShowDialog()
 
 	if (!node) return;
 
-	dialogText->text = node->text;
-	dialogText->active = true;
-
 	speakerName->text = currentDialog->characterName;
 	speakerName->active = true;
+
+	dialogText->text = node->text;
+	dialogText->active = true;
 
 	if (node->answers.size() > 0) {
 		answer1->active = true;
@@ -235,10 +245,11 @@ void DialogManager::ResizeDialogBox()
 	int sh = BASE_H;
 
 	//WRITE HERE THE SAME VALUES AS THE BOUNDS ESTABLISHED IN DialogManager::Start()!!!!!!!!!!!!!!!
-	dialogText->bounds = { sw / 2 - 110, sh - 140, 220, 40 };
-	speakerName->bounds = { sw / 2 - 130, sh - 160, 100, 40 };
-	answer1->bounds = { sw / 2 - 110, sh - 70,  100, 20 };
-	answer2->bounds = { sw / 2 + 10,  sh - 70,  100, 20 };
-	answer3->bounds = { sw / 2 - 110, sh - 40,  100, 20 };
-	answer4->bounds = { sw / 2 + 10,  sh - 40,  100, 20 };
+	speakerName->bounds = { 100, sh - 150, 100, 40 };
+	dialogText->bounds = { 100, sh - 120, 420, 40 };
+
+	answer1->bounds = { sw / 2 + 280, sh - 200, 280, 40 };
+	answer2->bounds = { sw / 2 + 280, sh - 250, 280, 40 };
+	answer3->bounds = { sw / 2 + 280, sh - 270, 280, 40 };
+	answer4->bounds = { sw / 2 + 280, sh - 290, 280, 40 };
 }

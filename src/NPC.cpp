@@ -15,15 +15,22 @@ bool NPC::Start()
 {
 	//texturePath = "Assets/Textures/heart.png";
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
-	//position.setX(200);
-	//position.setY(200);
 
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, 0, 0, 2, 2);
+
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -10, 0, 1, 1);
 	pbody = colliders[0];
 	pbody->listener = this;
 	pbody->etype = EntityType::NPC;
 
-	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 50, 50, 1, 1);
+	b2Body_SetFixedRotation(pbody->body, true);
+
+	b2MassData massData;
+	massData.mass = 1000.0f;
+	massData.center = { 0.0f, 0.0f };
+	massData.rotationalInertia = 0.0f;
+	b2Body_SetMassData(pbody->body, massData);
+
+	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 20, 20, 1, 1);
 	sensorCollider = colliders[1];
 	sensorCollider->listener = this;
 	sensorCollider->etype = EntityType::NPC;
@@ -41,6 +48,12 @@ bool NPC::Update(float dt)
 	if (!active) {
 		return true;
 	}
+
+	//To make sure that the Sensor follows the pbody
+	int x, y;
+	colliders[0]->GetPosition(x, y);
+	b2Body_SetTransform(sensorCollider->body, { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, b2Body_GetRotation(sensorCollider->body));
+
 	if (isPlayerInRange) {
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
 			Interact();
