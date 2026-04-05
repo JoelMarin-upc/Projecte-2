@@ -127,7 +127,7 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	if (id == "intro") {
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+		if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
 			studioLogo->active = false;
 			studioLogo->Destroy();
 			Engine::GetInstance().audio->StopFx();
