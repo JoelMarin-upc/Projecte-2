@@ -259,3 +259,13 @@ bool Audio::MusicPlaying() {
     if (SDL_GetAudioStreamAvailable(music_stream_) == 0) return false;
     return true;
 }
+
+bool Audio::Update(float dt)
+{
+    if (music_stream_ && SDL_GetAudioStreamAvailable(music_stream_) == 0)
+    {
+        // Requeue the same music for infinite looping
+        SDL_PutAudioStreamData(music_stream_, music_data_.buf, music_data_.len);
+    }
+    return true;
+}

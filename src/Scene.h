@@ -100,4 +100,7 @@ private:
 	std::shared_ptr<UIImage> studioLogo;
 	int hoverFxId;
 	int clickFxId;
+	int logoFxId;
+	int elevatorFxId;
+
 };
