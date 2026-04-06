@@ -72,6 +72,7 @@ In this release, the following features have been implemented:
 - Stats don't get saved by the save system
 - If a party member dies in battle, it comes back alive when exiting the dungeon
 - The lever is only visual for the moment, it has no other function
+- Sometimes when clicking on the intro screen, you can accidentally press buttons from the main menu
 
 ---
 
@@ -101,7 +102,7 @@ In this release, the following features have been implemented:
 
 1. Download the latest `.zip` file from the [Releases](../../releases) section.  
 2. Extract all files to a folder.  
-3. Run `[GameName].exe`.  
+3. Run `[WhatRemainsOfYou].exe`.  
 
 ---
 
