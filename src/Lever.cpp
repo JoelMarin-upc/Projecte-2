@@ -45,7 +45,7 @@ bool Lever::Update(float dt)
 	if (!active) {
 		return true;
 	}
-	if (isPlayerInRange) {
+	if (isPlayerInRange && !isOpened) {
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
 			Interact();
 		}
