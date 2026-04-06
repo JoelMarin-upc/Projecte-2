@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <dialogs>
 	<tree id="DT-001" characterId="player" characterName="Garnik" order="1" done="false">
 		<node id="DN-001" first="true">
@@ -419,7 +418,7 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-099" characterId="CH-006" characterName="follower" order="1" done="true">
+	<tree id="DT-099" characterId="CH-006" characterName="follower" order="1" done="false">
 		<node id="DN-001" first="true">
 			Hello, i'll help you!
 			<answer leadsToNodeId="">
