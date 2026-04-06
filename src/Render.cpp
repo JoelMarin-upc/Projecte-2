@@ -360,8 +360,8 @@ bool Render::DrawText(const char* text, int x, int y, int w, int h, SDL_Color co
 	/*x = (float)((int)(camera.x) + x);
 	y = (float)((int)(camera.y) + y);*/
 
-	float fw = (w > 0) ? (float)w : (float)surface->w;
-	float fh = (h > 0) ? (float)h : (float)surface->h;
+	float fw = (float)surface->w;
+	float fh = (float)surface->h;
 
 	SDL_FRect dstrect = { (float)x, (float)y, fw, fh };
 
