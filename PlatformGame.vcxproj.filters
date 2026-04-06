@@ -296,6 +296,9 @@
     <ClCompile Include="src\UIImage.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\Lever.cpp">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio.h">
@@ -507,6 +510,9 @@
     </ClInclude>
     <ClInclude Include="src\UIImage.h">
       <Filter>Source Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Lever.h">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

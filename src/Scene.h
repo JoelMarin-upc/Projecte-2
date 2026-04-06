@@ -75,6 +75,7 @@ public:
 	void CopyCleanGameData();
 
 	Vector2D GetPlayerPosition();
+	Map* GetMap() const { return map; }
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
 

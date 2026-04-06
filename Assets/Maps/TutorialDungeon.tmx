@@ -14163,5 +14163,12 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="18" name="Items"/>
+ <objectgroup id="18" name="Items">
+  <object id="97" x="163.667" y="87.6667">
+   <properties>
+    <property name="id" value="LEVER-001"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
 </map>

@@ -64,7 +64,7 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-003" characterId="CH-001" characterName="Gravekeeper" order="3" done="true">
+	<tree id="DT-003" characterId="CH-001" characterName="Gravekeeper" order="3" done="false">
 		<node id="DN-001" first="true">
 			You have been pacing around|the cemetery for quite a while.
 			<answer leadsToNodeId="DN-002">
@@ -424,6 +424,14 @@
 			Hello, i'll help you!
 			<answer leadsToNodeId="">
 				Okay
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-098" characterId="Lever" characterName="" order="1" done="false">
+		<node id="DN-001" first="true">
+			The lever has been pulled
+			<answer leadsToNodeId="">
+				Continue
 			</answer>
 		</node>
 	</tree>

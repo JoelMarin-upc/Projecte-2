@@ -426,4 +426,12 @@
 			</answer>
 		</node>
 	</tree>
+	<tree id="DT-098" characterId="Lever" characterName="" order="1" done="false">
+		<node id="DN-001" first="true">
+			The lever has been pulled
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
 </dialogs>
