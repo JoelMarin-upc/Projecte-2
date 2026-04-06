@@ -232,10 +232,14 @@ void Scene::TogglePause()
 void Scene::SaveGame()
 {
 	pugi::xml_document charDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
-	pugi::xml_node playerNode = charDoc.child("characters").child("player");
+	pugi::xml_node characters = charDoc.child("characters");
+	pugi::xml_node playerNode = characters.child("player");
+
+	characters.attribute("savedGame").set_value(true);
+
+	//Save player party
 	playerNode.remove_child("party");
 	pugi::xml_node partyNode = playerNode.append_child("party");
-
 	if (player && player->party) {
 		for (const auto& member : player->party->members) {
 			pugi::xml_node mNode = partyNode.append_child("member");
@@ -243,9 +247,25 @@ void Scene::SaveGame()
 		}
 	}
 
+	//Save player positions
+	playerNode.attribute("savedX").set_value(player->position.getX());
+	playerNode.attribute("savedY").set_value(player->position.getY());
+
+	//Save NPC positions and dead state
+	for (const auto& entity : entityManager->entities) {
+		auto npc = std::dynamic_pointer_cast<NPC>(entity);
+		if (!npc) continue;
+		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
+			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
+			cNode.attribute("savedX").set_value(npc->position.getX());
+			cNode.attribute("savedY").set_value(npc->position.getY());
+			cNode.attribute("isDead").set_value(npc->isDead);
+			break;
+		}
+	}
+
 	charDoc.save_file("Assets/Entities/characters.xml");
 	SaveDialogState();
-	Engine::GetInstance().sceneManager->isGameSaved = true;
 	LOG("GAME SAVED");
 }
 
@@ -342,6 +362,14 @@ void Scene::LoadScene(std::string spawnId)
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
 	Engine::GetInstance().render->follow = player;
 
+	//Uncomment when I find a fix
+	/*float savedX = pNode.attribute("savedX").as_float();
+	float savedY = pNode.attribute("savedY").as_float();
+	if (savedX >= 0 && savedY >= 0) {
+		b2Body_SetTransform(player->pbody->body, { PIXEL_TO_METERS(savedX), PIXEL_TO_METERS(savedY) }, b2Rot_identity);
+		player->position = Vector2D(savedX, savedY);
+	}*/
+
 	std::unordered_set<std::string> ids;
 
 	for (const auto& npc : partyMembers) {
@@ -374,11 +402,17 @@ void Scene::LoadScene(std::string spawnId)
 	for (NPCData npc : mapData.npcs) {
 		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
 			if (cNode.attribute("id").as_string() != npc.id) continue;
+			if (cNode.attribute("dead").as_bool(false)) break;
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
-			entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
+			float savedX = cNode.attribute("savedX").as_float();
+			float savedY = cNode.attribute("savedY").as_float();
+			Vector2D spawnPos = (savedX >= 0 && savedY >= 0) ? Vector2D(savedX, savedY) : npc.position;
+			entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType);
+			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
+			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 		}
 	}
 
@@ -514,7 +548,6 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	{
 	case START_GAME:
 		CopyCleanGameData();
-		Engine::GetInstance().sceneManager->isGameSaved = false;
 		Engine::GetInstance().menuManager->HideMenu();
 		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001");
 		break;

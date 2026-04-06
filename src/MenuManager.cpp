@@ -181,7 +181,9 @@ void MenuManager::ShowMainMenu()
 	gameTitle->active = true;
 	startGame->active = true;
 	continueGame->active = true;
-	if (!Engine::GetInstance().sceneManager->isGameSaved) {
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+	bool hasSave = doc.child("characters").attribute("savedGame").as_bool(false);
+	if (!hasSave) {
 		continueGame->Disable();
 	}
 	else {

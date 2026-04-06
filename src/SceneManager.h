@@ -59,5 +59,4 @@ public:
 	bool hasQueuedTransition = false;
 
 	bool triggerFirstMonologue = true;
-	bool isGameSaved = false;
 };
