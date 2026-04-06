@@ -49,11 +49,13 @@ UISlider::~UISlider()
 void UISlider::SetValueFromMouse()
 {
 	Vector2D mousePos = Engine::GetInstance().input->GetMousePosition();
+	float logicalX, logicalY;
+	SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mousePos.getX(), mousePos.getY(), &logicalX, &logicalY);
 
 	int sliderMinX = bounds.x;
 	int sliderMaxX = bounds.x + bounds.w - boundsSlider.w;
 
-	int newSliderX = (int)(mousePos.getX() - boundsSlider.w * 0.5f);
+	int newSliderX = (int)(logicalX - boundsSlider.w * 0.5f);
 
 	if (newSliderX < sliderMinX)
 		newSliderX = sliderMinX;
