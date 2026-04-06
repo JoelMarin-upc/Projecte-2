@@ -71,7 +71,7 @@ bool Render::Awake()
 
 	TTF_Init();
 
-	font = TTF_OpenFont("Assets/Fonts/PixelifySans-Regular.ttf", 25);
+	font = TTF_OpenFont("Assets/Fonts/Leander.ttf", 25);
 
 	return ret;
 }
