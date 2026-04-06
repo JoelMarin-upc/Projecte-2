@@ -253,12 +253,12 @@ void Scene::LoadScene(std::string spawnId)
 	pugi::xml_document statsDoc = XMLHandler::LoadFile("Assets/Entities/base_stats.xml");
 	pugi::xml_node stats = statsDoc.child("stats");
 
-	Stats* baseStats = new Stats();
+	Stats baseStats = Stats();
 	for (pugi::xml_node sNode = stats.child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
 		std::string name = sNode.attribute("name").as_string();
 		int value = sNode.attribute("value").as_float();
 		int max = sNode.attribute("max").as_float();
-		baseStats->AddStat(name, value, max);
+		baseStats.AddStat(name, value, max);
 	}
 
 	pugi::xml_node pNode = characters.child("player");
@@ -298,7 +298,8 @@ void Scene::LoadScene(std::string spawnId)
 
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
 	Engine::GetInstance().render->follow = player;
-	player->stats = baseStats;
+	Stats s = baseStats;
+	player->stats = new Stats(s);
 
 	std::unordered_set<std::string> ids;
 
@@ -325,7 +326,8 @@ void Scene::LoadScene(std::string spawnId)
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
-			m->stats = baseStats;
+			Stats s = baseStats;
+			m->stats = new Stats(s);
 			player->AddPartyMember(m);
 		}
 	}
@@ -338,7 +340,8 @@ void Scene::LoadScene(std::string spawnId)
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
-			m->stats = baseStats;
+			Stats s = baseStats;
+			m->stats = new Stats(s);
 		}
 	}
 

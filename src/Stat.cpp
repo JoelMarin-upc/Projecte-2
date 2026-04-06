@@ -9,6 +9,5 @@ float Stat::setValue(float v)
 
 float Stat::getValue() const
 {
-	if (modifierTurnsLeft > 0) return value * modifier;
-	return value;
+	return value * modifier;
 }

@@ -22,6 +22,7 @@ public:
 	void TakeStance(Stance stance);
 	bool TakeDamage(float damage);
 	void CheckModifiers();
+	void DrawHealthBar(SDL_Texture* texture);
 
 	Stats* stats;
 	bool isDead = false;

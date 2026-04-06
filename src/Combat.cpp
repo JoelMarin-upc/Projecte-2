@@ -66,10 +66,10 @@ bool Combat::Start() {
 	SDL_Rect b_action3 = { sw / 2 - 120, sh - 100, 100, 40 };
 	SDL_Rect b_action4 = { sw / 2 + 20, sh - 100, 100, 40 };
 	SDL_Rect b_endTurn = { sw - 120, sh - 100, 100, 40 };
-	SDL_Rect b_log1 = { sw - 320, 20, 300, 20 };
-	SDL_Rect b_log2 = { sw - 320, 60, 300, 20 };
-	SDL_Rect b_log3 = { sw - 320, 100, 300, 20 };
-	SDL_Rect b_log4 = { sw - 320, 140, 300, 20 };
+	SDL_Rect b_log1 = { sw - 520, 20, 300, 20 };
+	SDL_Rect b_log2 = { sw - 520, 60, 300, 20 };
+	SDL_Rect b_log3 = { sw - 520, 100, 300, 20 };
+	SDL_Rect b_log4 = { sw - 520, 140, 300, 20 };
 	SDL_Rect b_hint = { 20, 20, 300, 20 };
 	
 	action1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::ACTION1, b_action1, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Attack")));
@@ -109,6 +109,7 @@ bool Combat::Start() {
 		player = playerParty->player;
 		player->hasFled = false;
 		player->isDead = false;
+		player->position = pos;
 	}
 
 	if (playerParty->members.size() > 0)
@@ -121,6 +122,7 @@ bool Combat::Start() {
 		npc1 = playerParty->members[0];
 		npc1->hasFled = false;
 		npc1->isDead = false;
+		npc1->position = pos;
 	}
 
 	if (playerParty->members.size() > 1)
@@ -133,6 +135,7 @@ bool Combat::Start() {
 		npc2 = playerParty->members[1];
 		npc2->hasFled = false;
 		npc2->isDead = false;
+		npc2->position = pos;
 	}
 
 	if (playerParty->members.size() > 2)
@@ -145,6 +148,7 @@ bool Combat::Start() {
 		npc3 = playerParty->members[2];
 		npc3->hasFled = false;
 		npc3->isDead = false;
+		npc3->position = pos;
 	}
 
 	// ENEMY TEAM
@@ -159,6 +163,7 @@ bool Combat::Start() {
 		enemy1 = enemyParty->members[0];
 		enemy1->hasFled = false;
 		enemy1->isDead = false;
+		enemy1->position = pos;
 	}
 
 	if (enemyParty->members.size() > 1)
@@ -171,6 +176,7 @@ bool Combat::Start() {
 		enemy2 = enemyParty->members[1];
 		enemy2->hasFled = false;
 		enemy2->isDead = false;
+		enemy2->position = pos;
 	}
 
 	if (enemyParty->members.size() > 2)
@@ -183,6 +189,7 @@ bool Combat::Start() {
 		enemy3 = enemyParty->members[2];
 		enemy3->hasFled = false;
 		enemy3->isDead = false;
+		enemy3->position = pos;
 	}
 
 	if (enemyParty->members.size() > 3)
@@ -195,38 +202,39 @@ bool Combat::Start() {
 		enemy4 = enemyParty->members[3];
 		enemy4->hasFled = false;
 		enemy4->isDead = false;
+		enemy4->position = pos;
 	}
 
 	float highestSpeed = 0;
-	highestSpeed = player->stats->GetStat("speed")->getValue();
+	highestSpeed = player->stats->GetStat("speed").getValue();
 	if (npc1) {
-		float newSpeed = npc1->stats->GetStat("speed")->getValue();
+		float newSpeed = npc1->stats->GetStat("speed").getValue();
 		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
 	}
 	if (npc2) {
-		float newSpeed = npc2->stats->GetStat("speed")->getValue();
+		float newSpeed = npc2->stats->GetStat("speed").getValue();
 		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
 	}
 	if (npc3) {
-		float newSpeed = npc3->stats->GetStat("speed")->getValue();
+		float newSpeed = npc3->stats->GetStat("speed").getValue();
 		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
 	}
 
 	float highestEnemySpeed = 0;
 	if (enemy1) {
-		float newSpeed = enemy1->stats->GetStat("speed")->getValue();
+		float newSpeed = enemy1->stats->GetStat("speed").getValue();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 	if (enemy2) {
-		float newSpeed = enemy2->stats->GetStat("speed")->getValue();
+		float newSpeed = enemy2->stats->GetStat("speed").getValue();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 	if (enemy3) {
-		float newSpeed = enemy3->stats->GetStat("speed")->getValue();
+		float newSpeed = enemy3->stats->GetStat("speed").getValue();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 	if (enemy4) {
-		float newSpeed = enemy4->stats->GetStat("speed")->getValue();
+		float newSpeed = enemy4->stats->GetStat("speed").getValue();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 
@@ -293,7 +301,7 @@ bool Combat::Update(float dt) {
 		if (isPlayerTurn) hint->text = "Select a character";
 		break;
 	case ENEMY_TURN:
-		if (enemyTurnTimerActive && enemyTurnTimer.ReadMSec() < enemyTurnMS) return true;
+		if (enemyTurnTimerActive && enemyTurnTimer.ReadMSec() < enemyTurnMS) break;
 		if (!enemyTurnTimerActive)
 		{
 			for (std::shared_ptr<Enemy> enemy : enemyParty->members) {
@@ -307,6 +315,7 @@ bool Combat::Update(float dt) {
 	default:
 		break;
 	}
+	DrawHealthBars();
 	return true;
 }
 
@@ -574,4 +583,16 @@ void Combat::CreateRandomAction(std::shared_ptr<Enemy> enemy)
 	//}
 
 	AddTurnAction();
+}
+
+void Combat::DrawHealthBars()
+{
+	if (player) player->DrawHealthBar(player->texture);
+	if (npc1) npc1->DrawHealthBar(npc1->texture);
+	if (npc2) npc2->DrawHealthBar(npc2->texture);
+	if (npc3) npc3->DrawHealthBar(npc3->texture);
+	if (enemy1) enemy1->DrawHealthBar(enemy1->texture);
+	if (enemy2) enemy2->DrawHealthBar(enemy2->texture);
+	if (enemy3) enemy3->DrawHealthBar(enemy3->texture);
+	if (enemy4) enemy4->DrawHealthBar(enemy4->texture);
 }

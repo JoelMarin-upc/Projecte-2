@@ -43,8 +43,8 @@ bool Player::Start() {
 	pbody = colliders[0];
 	pbody->listener = this;
 
-	texW = 32;
-	texH = 32;
+	texW = 30;
+	texH = 30;
 
 	party = new Party(std::static_pointer_cast<Player>(shared_from_this()));
 
@@ -227,17 +227,18 @@ void Player::Draw(float dt) {
 	position.setX((float)x);
 	position.setY((float)y);
 	SDL_Texture* tex = damaged ? textureDamaged : texture;
-	Engine::GetInstance().render->DrawTexture(tex, x - texW / 2, y - 6 - texH / 2/*, &animFrame, facingRight*/);
+	Engine::GetInstance().render->DrawTexture(tex, x - texW / 2, y - texH / 2/*, &animFrame, facingRight*/);
 
-	if (!isActive) return;
+	/*if (!isActive) return;
 	tex = itemChargeTexture0;
 	if (hasItem2) {
 		if (canThrow1 && canThrow2) tex = itemChargeTexture2;
 		else if (canThrow1 || canThrow2) tex = itemChargeTexture1;
 	}
 	else if (hasItem1 && canThrow1) tex = itemChargeTexture1;
-	Engine::GetInstance().render->DrawTexture(tex, x - 8, y -8);
+	Engine::GetInstance().render->DrawTexture(tex, x - 8, y -8);*/
 
+	DrawHealthBar(tex);
 }
 
 bool Player::CleanUp()

@@ -2,7 +2,7 @@
 <characters>
 	<player id="player" name="main character" texture="goldCoin.png">
 		<party>
-			
+			<member id="CH-006" />
 		</party>
 		<inventory />
 	</player>

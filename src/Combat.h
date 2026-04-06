@@ -48,6 +48,7 @@ struct TurnAction {
 		switch (this->action) {
 		case ATTACK:
 			action = "Attack";
+			action += " (" + std::to_string((int)selected->stats->GetStat("attack").getValue()) + ")";
 			break;
 		case TAKE_STANCE:
 			action = "Take Stance";
@@ -125,6 +126,8 @@ public:
 	void EndTurn();
 
 	void CreateRandomAction(std::shared_ptr<Enemy> enemy);
+
+	void DrawHealthBars();
 
 	Party* playerParty;
 	EnemyParty* enemyParty;
