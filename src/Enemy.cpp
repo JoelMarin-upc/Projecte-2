@@ -183,7 +183,7 @@ void Enemy::Move(const Vector2D& target) {
 		targetIndex = 2;
 	}
 
-	Vector2D nextTile = tiles[targetIndex];
+	Vector2D nextTile = tiles[targetIndex-1];
 
 	Vector2D nextWorldPos = map->MapToWorld((int)nextTile.getX(), (int)nextTile.getY());
 	int tileWidth = map->GetTileWidth();
