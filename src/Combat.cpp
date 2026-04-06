@@ -66,10 +66,10 @@ bool Combat::Start() {
 	SDL_Rect b_action3 = { sw / 2 - 145, sh - 100, 150, 40 };
 	SDL_Rect b_action4 = { sw / 2 + 45, sh - 100, 150, 40 };
 	SDL_Rect b_endTurn = { sw - 165, sh - 100, 150, 40 };
-	SDL_Rect b_log1 = { sw - 320, 20, 300, 20 };
-	SDL_Rect b_log2 = { sw - 320, 60, 300, 20 };
-	SDL_Rect b_log3 = { sw - 320, 100, 300, 20 };
-	SDL_Rect b_log4 = { sw - 320, 140, 300, 20 };
+	SDL_Rect b_log1 = { sw / 2, 20, 300, 20 };
+	SDL_Rect b_log2 = { sw / 2, 60, 300, 20 };
+	SDL_Rect b_log3 = { sw / 2, 100, 300, 20 };
+	SDL_Rect b_log4 = { sw / 2, 140, 300, 20 };
 	SDL_Rect b_hint = { 20, 20, 300, 20 };
 	
 	action1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::ACTION1, b_action1, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Attack")));
@@ -110,9 +110,7 @@ bool Combat::Start() {
 		SDL_Texture* tex = playerParty->player->texture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 0) pos = cPos.position;
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, pos.getX(), pos.getY(), &logicalX, &logicalY);
-		SDL_Rect boundaries = { logicalX + cx, logicalX + cy, tex->w, tex->h };
+		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_player = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_PLAYER, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		player = playerParty->player;
 		player->hasFled = false;
@@ -124,9 +122,7 @@ bool Combat::Start() {
 		SDL_Texture* tex = playerParty->members[0]->texture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 1) pos = cPos.position;
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, pos.getX(), pos.getY(), &logicalX, &logicalY);
-		SDL_Rect boundaries = { logicalX + cx, logicalX + cy, tex->w, tex->h };
+		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_npc1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC1, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		npc1 = playerParty->members[0];
 		npc1->hasFled = false;
@@ -138,9 +134,7 @@ bool Combat::Start() {
 		SDL_Texture* tex = playerParty->members[1]->texture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 2) pos = cPos.position;
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, pos.getX(), pos.getY(), &logicalX, &logicalY);
-		SDL_Rect boundaries = { logicalX + cx, logicalX + cy, tex->w, tex->h };
+		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_npc2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC2, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		npc2 = playerParty->members[1];
 		npc2->hasFled = false;
@@ -152,9 +146,7 @@ bool Combat::Start() {
 		SDL_Texture* tex = playerParty->members[2]->texture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 3) pos = cPos.position;
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, pos.getX(), pos.getY(), &logicalX, &logicalY);
-		SDL_Rect boundaries = { logicalX + cx, logicalX + cy, tex->w, tex->h };
+		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_npc3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC3, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		npc3 = playerParty->members[2];
 		npc3->hasFled = false;
@@ -168,9 +160,7 @@ bool Combat::Start() {
 		SDL_Texture* tex = enemyParty->members[0]->texture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (cPos.isEnemy && cPos.order == 0) pos = cPos.position;
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, pos.getX(), pos.getY(), &logicalX, &logicalY);
-		SDL_Rect boundaries = { logicalX + cx, logicalX + cy, tex->w, tex->h };
+		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_enemy1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_ENEMY1, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		enemy1 = enemyParty->members[0];
 		enemy1->hasFled = false;
@@ -182,9 +172,7 @@ bool Combat::Start() {
 		SDL_Texture* tex = enemyParty->members[1]->texture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (cPos.isEnemy && cPos.order == 1) pos = cPos.position;
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, pos.getX(), pos.getY(), &logicalX, &logicalY);
-		SDL_Rect boundaries = { logicalX + cx, logicalX + cy, tex->w, tex->h };
+		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_enemy2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_ENEMY2, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		enemy2 = enemyParty->members[1];
 		enemy2->hasFled = false;
@@ -196,9 +184,7 @@ bool Combat::Start() {
 		SDL_Texture* tex = enemyParty->members[2]->texture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (cPos.isEnemy && cPos.order == 2) pos = cPos.position;
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, pos.getX(), pos.getY(), &logicalX, &logicalY);
-		SDL_Rect boundaries = { logicalX + cx, logicalX + cy, tex->w, tex->h };
+		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_enemy3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_ENEMY3, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		enemy3 = enemyParty->members[2];
 		enemy3->hasFled = false;
@@ -209,9 +195,8 @@ bool Combat::Start() {
 	{
 		SDL_Texture* tex = enemyParty->members[3]->texture;
 		Vector2D pos;
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, pos.getX(), pos.getY(), &logicalX, &logicalY);
-		SDL_Rect boundaries = { logicalX + cx, logicalX + cy, tex->w, tex->h };
+		for (CombatPosition cPos : combatData.positions) if (cPos.isEnemy && cPos.order == 3) pos = cPos.position;
+		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_enemy4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_ENEMY4, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		enemy4 = enemyParty->members[3];
 		enemy4->hasFled = false;
