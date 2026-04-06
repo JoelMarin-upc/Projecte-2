@@ -75,7 +75,14 @@ bool UIButton::Update(float dt)
 		break;
 	}
 
-	Engine::GetInstance().render->DrawText(text.c_str(), bounds.x + horizotalSpacing, bounds.y + verticalSpacing, bounds.w - horizotalSpacing * 2, bounds.h - verticalSpacing * 2, colorTxt);
+	TTF_Font* font = Engine::GetInstance().render->font;
+	if (font && !text.empty()) {
+		int textW = 0, textH = 0;
+		TTF_GetStringSize(font, text.c_str(), 0, &textW, &textH);
+		int centeredX = bounds.x + (bounds.w - textW) / 2;
+		int centeredY = bounds.y + (bounds.h - textH) / 2;
+		Engine::GetInstance().render->DrawText(text.c_str(), centeredX, centeredY, 0, 0, colorTxt);
+	}
 
 	return false;
 }
