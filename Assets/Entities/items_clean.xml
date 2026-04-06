@@ -1,0 +1,3 @@
+<items>
+	<item id="IT-001" name="statue" texture="transparent.png" type="4" itemClass="item" interactionType="3" canStack="false" />
+</items>

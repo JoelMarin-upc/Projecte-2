@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "SceneManager.h"
 #include <unordered_set>
+#include <fstream>
 
 Scene::Scene(std::string _id, std::string _mapsPath, std::string _mapName, std::string _combatMapName)
 {
@@ -433,6 +434,16 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	Engine::GetInstance().render->follow = player;
 }
 
+void Scene::CopyCleanGameData()
+{
+	std::ifstream src1("Assets/Entities/characters_clean.xml", std::ios::binary);
+	std::ofstream dst1("Assets/Entities/characters.xml", std::ios::binary | std::ios::trunc);
+	dst1 << src1.rdbuf();
+	std::ifstream src2("Assets/Entities/items_clean.xml", std::ios::binary);
+	std::ofstream dst2("Assets/Entities/items.xml", std::ios::binary | std::ios::trunc);
+	dst2 << src2.rdbuf();
+}
+
 bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	
 	if (Engine::GetInstance().uiManager->uiLockFrame == Engine::GetInstance().frameCount) return true;
@@ -442,6 +453,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	switch ((UIID)uiElement->id)
 	{
 	case START_GAME:
+		CopyCleanGameData();
 		Engine::GetInstance().menuManager->HideMenu();
 		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001");
 		break;

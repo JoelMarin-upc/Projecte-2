@@ -69,6 +69,8 @@ public:
 	void StartCombat(std::shared_ptr<Enemy> enemy);
 	void EndCombat(EnemyParty* enemyParty, CombatResult combatResult);
 
+	void CopyCleanGameData();
+
 	Vector2D GetPlayerPosition();
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
