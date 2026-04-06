@@ -299,6 +299,7 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Assets\Dialogues\test.xml" />
+    <Xml Include="Assets\Entities\base_stats.xml" />
     <Xml Include="Assets\Entities\characters.xml" />
     <Xml Include="Assets\Entities\characters_clean.xml" />
     <Xml Include="Assets\Entities\items.xml" />

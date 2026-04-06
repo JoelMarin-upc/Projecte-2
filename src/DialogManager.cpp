@@ -34,10 +34,10 @@ bool DialogManager::Start() {
 	speakerName = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SPEAKER_NAME, { 100, sh - 150, 100, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
 	dialogText = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)LABEL, { 100, sh - 120, 420, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
 	
-	answer1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER1, { sw / 2 + 280, sh - 210, 280, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	answer2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER2, { sw / 2 + 280, sh - 260, 280, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	answer3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER3, { sw / 2 + 280, sh - 280, 280, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	answer4 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER4, { sw / 2 + 280, sh - 300, 280, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	answer1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER1, { sw / 2 + 60, sh - 210, 500, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	answer2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER2, { sw / 2 + 60, sh - 260, 500, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	answer3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER3, { sw / 2 + 60, sh - 280, 500, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	answer4 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER4, { sw / 2 + 60, sh - 300, 500, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
 
 	SetCurrentDialog();
 
@@ -58,7 +58,7 @@ bool DialogManager::CleanUp() {
 void DialogManager::LoadDialogs()
 {
 	dialogs = std::list<DialogTree*>();
-	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Dialogues/test.xml"); // get all dialogues from Assets/Dialogues/...
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml"); // get all dialogues from Assets/Dialogues/...
 	pugi::xml_node root = doc.child("dialogs");
 	for (pugi::xml_node treeNode = root.child("tree"); treeNode != NULL; treeNode = treeNode.next_sibling("tree")) {
 		DialogTree* tree = new DialogTree();
@@ -67,6 +67,7 @@ void DialogManager::LoadDialogs()
 		tree->characterName = treeNode.attribute("characterName").as_string();
 		tree->order = treeNode.attribute("order").as_int();
 		tree->done = treeNode.attribute("done").as_bool();
+		tree->isRepeatable = treeNode.attribute("isRepeatable").as_bool(false);
 		tree->nodes = std::vector<DialogNode*>();
 
 		for (pugi::xml_node nodeXml = treeNode.child("node"); nodeXml != NULL; nodeXml = nodeXml.next_sibling("node")) {
@@ -219,7 +220,17 @@ bool DialogManager::OnUIMouseClickEvent(UIElement* uiElement)
 	std::string nextId = currentDialog->currentNode->answers[answerNum]->leadsToNodeId;
 
 	if (nextId == "") {
-		currentDialog->done = true;
+		if (!currentDialog->isRepeatable) {
+			currentDialog->done = true;
+		}
+		else {
+			for (DialogNode* n : currentDialog->nodes) {
+				if (n->first) {
+					currentDialog->currentNode = n;
+					break;
+				}
+			}
+		}
 		SetCurrentDialog();
 		Engine::GetInstance().sceneManager->currentScene->EndDialog();
 		return true;
@@ -248,8 +259,8 @@ void DialogManager::ResizeDialogBox()
 	speakerName->bounds = { 100, sh - 150, 100, 40 };
 	dialogText->bounds = { 100, sh - 120, 420, 40 };
 
-	answer1->bounds = { sw / 2 + 280, sh - 200, 280, 40 };
-	answer2->bounds = { sw / 2 + 280, sh - 250, 280, 40 };
-	answer3->bounds = { sw / 2 + 280, sh - 270, 280, 40 };
-	answer4->bounds = { sw / 2 + 280, sh - 290, 280, 40 };
+	answer1->bounds = { sw / 2 + 60, sh - 200, 500, 40 };
+	answer2->bounds = { sw / 2 + 60, sh - 250, 500, 40 };
+	answer3->bounds = { sw / 2 + 60, sh - 270, 500, 40 };
+	answer4->bounds = { sw / 2 + 60, sh - 290, 500, 40 };
 }

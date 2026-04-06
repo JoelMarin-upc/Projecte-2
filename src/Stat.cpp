@@ -6,3 +6,8 @@ float Stat::setValue(float v)
 	if (value > maxValue) value = maxValue;
 	return value;
 }
+
+float Stat::getValue() const
+{
+	return value * modifier;
+}

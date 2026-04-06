@@ -6,7 +6,7 @@
 #include "Item.h"
 #include "Audio.h"
 #include "Window.h"
-
+#include "SceneManager.h"
 
 MenuManager::MenuManager() : Module()
 {
@@ -59,35 +59,43 @@ void MenuManager::Load(bool onlyPositions)
 
 	/*int sw = Engine::GetInstance().render->camera.w;
 	int sh = Engine::GetInstance().render->camera.h;*/
+
 	int sw = Engine::GetInstance().window->width;
 	int sh = Engine::GetInstance().window->height;
 
-	SDL_Rect pos1 = { sw / 2, sh / 2 - 197.5f, 0, 0 };
-	SDL_Rect pos2 = { sw / 2, sh / 2 - 147.5f, 0, 0 };
-	SDL_Rect pos3 = { sw / 2, sh / 2 - 112.5f, 0, 0 };
-	SDL_Rect pos4 = { sw / 2, sh / 2 + 122.5f, 0, 0 };
-	SDL_Rect pos5 = { sw / 2, sh / 2 + 157.5f, 0, 0 };
+	int centerX = sw / 2;
+	int centerY = sh / 2;
 
-	SDL_Rect b_gameTitle = { pos1.x - title->w / 2, pos1.y - title->h + 220, 0, 0 };
-	SDL_Rect b_startGame = { pos1.x - 125, pos1.y + 200, 250, 40 };
-	SDL_Rect b_paused_lbl = { pos1.x - 100, pos1.y + 180, 200, 40 };
-	SDL_Rect b_gameOver_lbl = { pos1.x - 150, pos1.y, 300, 60 };
-	SDL_Rect b_settings_lbl = { pos1.x - 100, pos1.y, 200, 40 };
-	SDL_Rect b_continueGame = { pos2.x - 75, pos2.y + 200, 150, 25 };
-	SDL_Rect b_resume = { pos2.x - 75, pos2.y + 200, 150, 25 };
-	SDL_Rect b_settings = { pos4.x - 75, pos4.y, 150, 25 };
-	SDL_Rect b_credits_btn = { pos3.x - 75, pos3.y + 200, 150, 25 };
-	SDL_Rect b_credits1 = { pos3.x - 500, pos3.y - 130, 1000, 25 };
-	SDL_Rect b_credits2 = { pos3.x - 500, pos3.y - 90, 1000, 25 };
-	SDL_Rect b_musicVolume_lbl = { pos2.x - 300, pos2.y, 200, 25 };
-	SDL_Rect b_musicVolume = { pos2.x + 100, pos2.y, 200, 25 };
-	SDL_Rect b_fxVolume_lbl = { pos3.x - 300, pos3.y, 200, 25 };
-	SDL_Rect b_fxVolume = { pos3.x + 100, pos3.y, 200, 25 };
-	SDL_Rect b_fullscreen_lbl = { pos4.x - 300, pos4.y, 200, 25 };
-	SDL_Rect b_fullscreen = { pos4.x + 100, pos4.y, 25, 25 };
-	SDL_Rect b_backMenu = { pos5.x - 75, pos5.y, 150, 25 };
-	SDL_Rect b_backMainMenu = { pos3.x - 75, pos3.y + 200, 150, 25 };
-	SDL_Rect b_exit = { pos5.x - 75, pos5.y, 150, 25 };
+	//Main menu elements
+	SDL_Rect b_gameTitle = { centerX - title->w / 2, centerY - title->h/2 - 150, 0, 0 };
+	SDL_Rect b_startGame = { centerX - 140, centerY + 10, 280, 50 };
+	SDL_Rect b_continueGame = { centerX - 125, centerY + 80, 250, 35 };
+	SDL_Rect b_settings = { centerX - 125, centerY + 130, 250, 35 };
+	SDL_Rect b_credits_btn = { centerX - 125, centerY + 180, 250, 35 };
+	SDL_Rect b_exit = { centerX - 125, centerY + 230, 250, 35 };
+	
+	//Settings menu elements
+	SDL_Rect b_settings_lbl = { centerX - 100, centerY - 200, 200, 40 };
+	SDL_Rect b_musicVolume_lbl = { centerX - 300, centerY - 100, 200, 25 };
+	SDL_Rect b_musicVolume = { centerX + 100, centerY - 100, 200, 25 };
+	SDL_Rect b_fxVolume_lbl = { centerX - 300, centerY - 50, 200, 25 };
+	SDL_Rect b_fxVolume = { centerX + 100, centerY - 50, 200, 25 };
+	SDL_Rect b_fullscreen_lbl = { centerX - 300, centerY - 0, 200, 25 };
+	SDL_Rect b_fullscreen = { centerX + 100, centerY - 0, 25, 25 };
+	SDL_Rect b_backMenu = { centerX - 125, centerY + 50, 250, 35 };
+
+	//Credits menu elements
+	SDL_Rect b_credits1 = { centerX - 500, centerY - 200, 1000, 25 };
+	SDL_Rect b_credits2 = { centerX - 500, centerY - 160, 1000, 25 };
+	SDL_Rect b_backMainMenu = { centerX - 125, centerY + 180, 250, 35 };
+
+	//Pause menu elements
+	SDL_Rect b_paused_lbl = { centerX - 60, centerY - 10, 200, 40 };
+	SDL_Rect b_resume = { centerX - 125, centerY + 80, 250, 35 };
+
+	//Other elements
+	SDL_Rect b_gameOver_lbl = { centerX - 150, centerY, 300, 60 };
+	
 
 	if (onlyPositions) {
 		gameTitle->SetBounds(b_gameTitle);
@@ -173,8 +181,16 @@ void MenuManager::ShowMainMenu()
 	gameTitle->active = true;
 	startGame->active = true;
 	continueGame->active = true;
-	if (XMLHandler::SaveFileExists()) continueGame->Enable();
-	else continueGame->Disable();
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+	bool hasSave = doc.child("characters").attribute("savedGame").as_bool(false);
+	if (!hasSave) {
+		continueGame->Disable();
+	}
+	else {
+		continueGame->Enable();
+	}
+	//if (XMLHandler::SaveFileExists()) continueGame->Enable();
+	//else continueGame->Disable();
 	creditsButton->active = true;
 	settingsButton->active = true;
 	exit->active = true;
@@ -206,7 +222,7 @@ void MenuManager::ShowSettingsMenu()
 	settingsLabel->active = true;
 	musicVolumeLabel->active = true;
 	musicVolumeSlider->active = true;
-	musicVolumeSlider->SetValue(Engine::GetInstance().audio->GetMusicVolume() * 10);
+	musicVolumeSlider->SetValue(Engine::GetInstance().audio->GetTargetMusicVolume() * 10);
 	fxVolumeLabel->active = true;
 	fxVolumeSlider->active = true;
 	fxVolumeSlider->SetValue(Engine::GetInstance().audio->GetFxVolume() * 10);

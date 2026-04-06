@@ -11,6 +11,7 @@ public:
 	std::vector<DialogNode*> nodes;
 	bool done;
 	int order;
+	bool isRepeatable;
 	DialogNode* currentNode;
 
 private:

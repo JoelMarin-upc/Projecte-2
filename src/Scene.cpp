@@ -88,23 +88,23 @@ bool Scene::Start(std::string spawnId)
 	if (id == "main menu")
 	{
 		Engine::GetInstance().menuManager->ShowMainMenu();
-		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav");
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav", 5000.0f);
 	}
 
 	if (gameStarted) {
 		LoadScene();
 		if (id == "SC-001")
 		{
-			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav");
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav", 5000.0f);
 		}
 		else if (id == "SC-002")
 		{
-			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav");
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav", 5000.0f);
 		}
 		else if (id == "SC-003")
 		{
 			Engine::GetInstance().audio->PlayFx(elevatorFxId);
-			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav");
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
 		}
 	}
 	
@@ -112,6 +112,10 @@ bool Scene::Start(std::string spawnId)
 	entityManager->Start();
 	missionManager->Start();
 	dialogManager->Start();
+
+	if (gameStarted) {
+		LoadDialogState();
+	}
 
 	if (id == "SC-001") {
 		if (Engine::GetInstance().sceneManager->triggerFirstMonologue == true) {
@@ -220,19 +224,150 @@ void Scene::TogglePause()
 	paused = !paused;
 	entityManager->paused = paused;
 	//Engine::GetInstance().physics->paused = paused;
-
-	if (paused) Engine::GetInstance().menuManager->ShowPauseMenu();
-	else Engine::GetInstance().menuManager->HideMenu();
+	
+	if (paused) {
+		Engine::GetInstance().audio->pauseMultiplier = 0.3f;
+		Engine::GetInstance().audio->UpdateMusicVolume();
+		Engine::GetInstance().menuManager->ShowPauseMenu();
+	} 
+	else
+	{
+		Engine::GetInstance().audio->pauseMultiplier = 1.0f;
+		Engine::GetInstance().audio->UpdateMusicVolume();
+		Engine::GetInstance().menuManager->HideMenu();
+	}
 }
 
 void Scene::SaveGame()
 {
-	
+	pugi::xml_document charDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+	pugi::xml_node characters = charDoc.child("characters");
+	pugi::xml_node playerNode = characters.child("player");
+
+	characters.attribute("savedGame").set_value(true);
+
+	//Save player party
+	playerNode.remove_child("party");
+	pugi::xml_node partyNode = playerNode.append_child("party");
+	if (player && player->party) {
+		for (const auto& member : player->party->members) {
+			pugi::xml_node mNode = partyNode.append_child("member");
+			mNode.append_attribute("id").set_value(member->id.c_str());
+		}
+	}
+
+	//Save player positions
+	playerNode.attribute("savedX").set_value(player->position.getX());
+	playerNode.attribute("savedY").set_value(player->position.getY());
+
+	//Save NPC positions and dead state
+	for (const auto& entity : entityManager->entities) {
+		auto npc = std::dynamic_pointer_cast<NPC>(entity);
+		if (!npc) continue;
+		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
+			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
+			cNode.attribute("savedX").set_value(npc->position.getX());
+			cNode.attribute("savedY").set_value(npc->position.getY());
+			cNode.attribute("isDead").set_value(npc->isDead);
+			break;
+		}
+	}
+
+	charDoc.save_file("Assets/Entities/characters.xml");
+	SaveDialogState();
+	LOG("GAME SAVED");
 }
 
 void Scene::LoadGame()
 {
 	
+}
+
+void Scene::SaveSessionState()
+{
+	std::ifstream src("Assets/Entities/characters.xml", std::ios::binary);
+	std::ofstream dst("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
+	dst << src.rdbuf();
+
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
+	pugi::xml_node characters = doc.child("characters");
+	pugi::xml_node playerNode = characters.child("player");
+
+	if (player) {
+		playerNode.attribute("savedX").set_value(player->position.getX());
+		playerNode.attribute("savedY").set_value(player->position.getY());
+	}
+
+	for (const auto& entity : entityManager->entities) {
+		auto npc = std::dynamic_pointer_cast<NPC>(entity);
+		if (!npc) continue;
+		for (pugi::xml_node cNode = characters.child("character"); cNode; cNode = cNode.next_sibling("character")) {
+			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
+			cNode.attribute("savedX").set_value(npc->position.getX());
+			cNode.attribute("savedY").set_value(npc->position.getY());
+			cNode.attribute("dead").set_value(npc->isDead);
+			break;
+		}
+	}
+
+	playerNode.remove_child("party");
+	pugi::xml_node partyNode = playerNode.append_child("party");
+	if (player && player->party) {
+		for (const auto& member : player->party->members) {
+			pugi::xml_node mNode = partyNode.append_child("member");
+			mNode.append_attribute("id").set_value(member->id.c_str());
+		}
+	}
+
+	doc.save_file("Assets/Entities/characters_session.xml");
+
+	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
+	pugi::xml_node root = dialogDoc.child("dialogs");
+	for (pugi::xml_node treeNode = root.child("tree"); treeNode; treeNode = treeNode.next_sibling("tree")) {
+		std::string treeId = treeNode.attribute("id").as_string();
+		for (DialogTree* tree : dialogManager->dialogs) {
+			if (tree->id == treeId) {
+				treeNode.attribute("done").set_value(tree->done);
+				break;
+			}
+		}
+	}
+	dialogDoc.save_file("Assets/Dialogues/dialogues_session.xml");
+}
+
+void Scene::SaveDialogState()
+{
+	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
+	pugi::xml_node root = dialogDoc.child("dialogs");
+
+	for (pugi::xml_node treeNode = root.child("tree"); treeNode != NULL; treeNode = treeNode.next_sibling("tree")) {
+		std::string treeId = treeNode.attribute("id").as_string();
+		for (DialogTree* tree : dialogManager->dialogs) {
+			if (tree->id == treeId) {
+				treeNode.attribute("done").set_value(tree->done);
+				break;
+			}
+		}
+	}
+	dialogDoc.save_file("Assets/Dialogues/dialogues.xml");
+}
+
+void Scene::LoadDialogState()
+{
+	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues_session.xml");
+	//pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
+	pugi::xml_node root = dialogDoc.child("dialogs");
+
+	for (pugi::xml_node treeNode = root.child("tree"); treeNode != NULL; treeNode = treeNode.next_sibling("tree")) {
+		std::string treeId = treeNode.attribute("id").as_string();
+		bool done = treeNode.attribute("done").as_bool();
+		for (DialogTree* tree : dialogManager->dialogs) {
+			if (tree->id == treeId) {
+				tree->done = done;
+				break;
+			}
+		}
+	}
 }
 
 void Scene::LoadMap(std::string mapPath, std::string mapName)
@@ -246,10 +381,21 @@ void Scene::LoadScene(std::string spawnId)
 {
 	std::string baseTexturePath = "Assets/Textures/";
 
-	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
+	//pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
 	pugi::xml_node characters = charactersDoc.child("characters");
 	pugi::xml_document itemsDoc = XMLHandler::LoadFile("Assets/Entities/items.xml");
 	pugi::xml_node items = itemsDoc.child("items");
+	pugi::xml_document statsDoc = XMLHandler::LoadFile("Assets/Entities/base_stats.xml");
+	pugi::xml_node stats = statsDoc.child("stats");
+
+	Stats baseStats = Stats();
+	for (pugi::xml_node sNode = stats.child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
+		std::string name = sNode.attribute("name").as_string();
+		int value = sNode.attribute("value").as_float();
+		int max = sNode.attribute("max").as_float();
+		baseStats.AddStat(name, value, max);
+	}
 
 	pugi::xml_node pNode = characters.child("player");
 	std::string id = pNode.attribute("id").as_string();
@@ -288,6 +434,16 @@ void Scene::LoadScene(std::string spawnId)
 
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
 	Engine::GetInstance().render->follow = player;
+	Stats s = baseStats;
+	player->stats = new Stats(s);
+
+	//Uncomment when I find a fix
+	/*float savedX = pNode.attribute("savedX").as_float();
+	float savedY = pNode.attribute("savedY").as_float();
+	if (savedX >= 0 && savedY >= 0) {
+		b2Body_SetTransform(player->pbody->body, { PIXEL_TO_METERS(savedX), PIXEL_TO_METERS(savedY) }, b2Rot_identity);
+		player->position = Vector2D(savedX, savedY);
+	}*/
 
 	std::unordered_set<std::string> ids;
 
@@ -313,19 +469,33 @@ void Scene::LoadScene(std::string spawnId)
 			std::string texture = cNode.attribute("texture").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
-			std::shared_ptr<Entity> m = entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
-			player->AddPartyMember(std::static_pointer_cast<NPC>(m));
+			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
+			Stats s = baseStats;
+			m->stats = new Stats(s);
+			player->AddPartyMember(m);
 		}
 	}
 
 	for (NPCData npc : mapData.npcs) {
 		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
 			if (cNode.attribute("id").as_string() != npc.id) continue;
+			if (cNode.attribute("dead").as_bool(false)) break;
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
-			entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
+
+			float savedX = cNode.attribute("savedX").as_float();
+			float savedY = cNode.attribute("savedY").as_float();
+			Vector2D spawnPos = (savedX >= 0 && savedY >= 0) ? Vector2D(savedX, savedY) : npc.position;
+			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType);
+			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
+			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
+
+			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType));
+			Stats s = baseStats;
+			m->stats = new Stats(s);
+
 		}
 	}
 
@@ -366,6 +536,7 @@ void Scene::CheckTransitions()
 
 	for (AccessData& t : mapData.accesses) {
 		if (playerPos.getX() >= t.position.getX() && playerPos.getX() <= t.position.getX() + t.width && playerPos.getY() >= t.position.getY() && playerPos.getY() <= t.position.getY() + t.height) {
+			SaveSessionState();
 			Engine::GetInstance().sceneManager->SetCurrentScene(t.targetSceneId, t.targetSpawnId);
 			return;
 		}
@@ -390,6 +561,9 @@ void Scene::EndDialog()
 	entityManager->paused = false;
 
 	if (!activeDialogId.empty()) {
+		if (activeDialogId == "statue") {
+			SaveGame();
+		}
 		for (const auto& entity : entityManager->entities) {
 			if (entity->id == activeDialogId) {
 				if (auto npc = std::dynamic_pointer_cast<NPC>(entity)) {
@@ -437,12 +611,33 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 
 void Scene::CopyCleanGameData()
 {
-	std::ifstream src1("Assets/Entities/characters_clean.xml", std::ios::binary);
-	std::ofstream dst1("Assets/Entities/characters.xml", std::ios::binary | std::ios::trunc);
-	dst1 << src1.rdbuf();
-	std::ifstream src2("Assets/Entities/items_clean.xml", std::ios::binary);
-	std::ofstream dst2("Assets/Entities/items.xml", std::ios::binary | std::ios::trunc);
-	dst2 << src2.rdbuf();
+	{
+		std::ifstream src("Assets/Entities/characters_clean.xml", std::ios::binary);
+		std::ofstream dst1("Assets/Entities/characters.xml", std::ios::binary | std::ios::trunc);
+		dst1 << src.rdbuf();
+	}
+	{
+		std::ifstream src("Assets/Entities/characters_clean.xml", std::ios::binary);
+		std::ofstream dst2("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
+		dst2 << src.rdbuf();
+	}
+
+	{
+		std::ifstream src("Assets/Entities/items_clean.xml", std::ios::binary);
+		std::ofstream dst("Assets/Entities/items.xml", std::ios::binary | std::ios::trunc);
+		dst << src.rdbuf();
+	}
+
+	{
+		std::ifstream src("Assets/Dialogues/dialogues_clean.xml", std::ios::binary);
+		std::ofstream dst1("Assets/Dialogues/dialogues.xml", std::ios::binary | std::ios::trunc);
+		dst1 << src.rdbuf();
+	}
+	{
+		std::ifstream src("Assets/Dialogues/dialogues_clean.xml", std::ios::binary);
+		std::ofstream dst2("Assets/Dialogues/dialogues_session.xml", std::ios::binary | std::ios::trunc);
+		dst2 << src.rdbuf();
+	}
 }
 
 bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
@@ -458,10 +653,22 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		Engine::GetInstance().menuManager->HideMenu();
 		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001");
 		break;
-	case CONTINUE_GAME:
+	case CONTINUE_GAME: {
+		{
+			std::ifstream src("Assets/Entities/characters.xml", std::ios::binary);
+			std::ofstream dst("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
+			dst << src.rdbuf();
+		}
+		{
+			std::ifstream src("Assets/Dialogues/dialogues.xml", std::ios::binary);
+			std::ofstream dst("Assets/Dialogues/dialogues_session.xml", std::ios::binary | std::ios::trunc);
+			dst << src.rdbuf();
+		}
+
 		Engine::GetInstance().menuManager->HideMenu();
 		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001"); // take the last scene from the save data
 		break;
+	}
 	case RESUME_GAME:
 		TogglePause();
 		break;

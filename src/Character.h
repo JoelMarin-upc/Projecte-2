@@ -16,13 +16,15 @@ public:
 	Character() {}
 	Character(std::string id, std::string name, std::string texturePath, EntityType type) : DynamicEntity(id, name, texturePath, type) {}
 
-	int Attack();
+	float Attack();
 	Consumable* UseConsumable(std::string type);
 	void TakeConsumable(Consumable* consumable);
 	void TakeStance(Stance stance);
-	bool TakeDamage(int damage);
+	bool TakeDamage(float damage);
+	void CheckModifiers();
+	void DrawHealthBar(SDL_Texture* texture);
 
-	Stats stats;
+	Stats* stats;
 	bool isDead = false;
 	bool hasFled = false;
 };
