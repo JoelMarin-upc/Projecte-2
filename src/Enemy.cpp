@@ -109,12 +109,12 @@ void Enemy::UpdateState(float dt)
 {
 	Vector2D playerPos = Engine::GetInstance().sceneManager->currentScene->GetPlayerPosition();
 	float dist = DistanceTo(playerPos);
-	LOG("Distance: %f | ChaseDist: %f", dist, chaseDistance);
+	//LOG("Distance: %f | ChaseDist: %f", dist, chaseDistance);
 
 	switch (state)
 	{
 	case EnemyState::IDLE:
-		LOG("IDLE");
+		//LOG("IDLE");
 		velocity = { 0, 0 };
 
 		if (dist < chaseDistance)
@@ -123,7 +123,7 @@ void Enemy::UpdateState(float dt)
 
 	case EnemyState::CHASING:
 	{
-		LOG("chasing");
+		//LOG("chasing");
 
 		Vector2D playerTile = map->WorldToMap(playerPos.getX(), playerPos.getY());
 		Vector2D enemyTile = map->WorldToMap(position.getX(), position.getY());
@@ -164,7 +164,7 @@ float Enemy::DistanceTo(const Vector2D& v) const
 }
 
 void Enemy::Move(const Vector2D& target) {
-	LOG("moving");
+	//LOG("moving");
 	Vector2D currentPos = GetPosition();
 	std::vector<Vector2D> tiles(pathfinding->pathTiles.begin(), pathfinding->pathTiles.end());
 	int targetIndex = 1;

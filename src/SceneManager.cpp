@@ -30,7 +30,7 @@ bool SceneManager::Start()
 }
 
 // Called before quitting
-bool SceneManager::CleanUp()
+bool SceneManager::CleanUp() 
 {
 	return true;
 }

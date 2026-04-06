@@ -224,6 +224,9 @@ void Player::OnCollision(Collider* physA, Collider* physB) {
 	case EntityType::INTERACTABLE_ITEM:
 		LOG("Player is in range of interadctable item");
 		break;
+	case EntityType::ENEMY:
+		LOG("Player is colliding with enemy");
+		break;
 	}
 }
 
