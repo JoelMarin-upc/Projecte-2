@@ -487,7 +487,15 @@ void Combat::ToggleStances(bool show)
 
 void Combat::KillCombatant(std::shared_ptr<Character> character)
 {
-	character->isDead = true;
+	//character->isDead = true;
+	if (player && character->id == player->id) player->isDead = true;
+	if (npc1 && character->id == npc1->id) npc1->isDead = true;
+	if (npc2 && character->id == npc2->id) npc2->isDead = true;
+	if (npc3 && character->id == npc3->id) npc3->isDead = true;
+	if (enemy1 && character->id == enemy1->id) enemy1->isDead = true;
+	if (enemy2 && character->id == enemy2->id) enemy2->isDead = true;
+	if (enemy3 && character->id == enemy3->id) enemy3->isDead = true;
+	if (enemy4 && character->id == enemy4->id) enemy4->isDead = true;
 	if (player->isDead) combatResult = LOSE;
 	bool alive1 = enemy1 && !enemy1->isDead;
 	bool alive2 = enemy2 && !enemy2->isDead;
