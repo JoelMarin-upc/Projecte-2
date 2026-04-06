@@ -465,6 +465,7 @@ void Scene::LoadScene(std::string spawnId)
 	for (NPCData member : partyMembers) {
 		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
 			if (cNode.attribute("id").as_string() != member.id) continue;
+			if (cNode.attribute("isDead").as_bool(false)) break;
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
 			int type = cNode.attribute("type").as_int();
@@ -590,7 +591,13 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	{
 	case WIN:
 		for (const auto& enemy : enemyParty->members) entityManager->DestroyEntity(enemy);
-		for (const auto& npc : player->party->members) if (npc->isDead) entityManager->DestroyEntity(npc);
+		for (const auto& npc : player->party->members) {
+			if (npc->isDead) {
+				player->party->RemoveMember(npc->id);
+				entityManager->DestroyEntity(npc);
+			}
+		}
+			
 		break;
 	case LOSE:
 		EndGame();
