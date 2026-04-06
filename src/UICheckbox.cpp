@@ -32,11 +32,13 @@ UICheckbox::~UICheckbox()
 bool UICheckbox::Update(float dt)
 {
 	Vector2D mousePos = Engine::GetInstance().input->GetMousePosition();
+	float logicalX, logicalY;
+	SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mousePos.getX(), mousePos.getY(), &logicalX, &logicalY);
 	bool mouseOver = 
-		mousePos.getX() > bounds.x && 
-		mousePos.getX() < bounds.x + bounds.w && 
-		mousePos.getY() > bounds.y && 
-		mousePos.getY() < bounds.y + bounds.h;
+		logicalX > bounds.x &&
+		logicalX < bounds.x + bounds.w &&
+		logicalY > bounds.y &&
+		logicalY < bounds.y + bounds.h;
 
 	if (state != UIElementState::DISABLED)
 	{
