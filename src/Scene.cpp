@@ -306,7 +306,7 @@ void Scene::SaveSessionState()
 			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
 			cNode.attribute("savedX").set_value(npc->position.getX());
 			cNode.attribute("savedY").set_value(npc->position.getY());
-			cNode.attribute("dead").set_value(npc->isDead);
+			cNode.attribute("isDead").set_value(npc->isDead);
 			break;
 		}
 	}
@@ -471,6 +471,7 @@ void Scene::LoadScene(std::string spawnId)
 	for (NPCData member : partyMembers) {
 		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
 			if (cNode.attribute("id").as_string() != member.id) continue;
+			if (cNode.attribute("isDead").as_bool(false)) break;
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
 			int type = cNode.attribute("type").as_int();
@@ -490,7 +491,7 @@ void Scene::LoadScene(std::string spawnId)
 	for (NPCData npc : mapData.npcs) {
 		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
 			if (cNode.attribute("id").as_string() != npc.id) continue;
-			if (cNode.attribute("dead").as_bool(false)) break;
+			if (cNode.attribute("isDead").as_bool(false)) break;
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
 			int type = cNode.attribute("type").as_int();
@@ -606,13 +607,24 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	{
 	case WIN:
 		for (const auto& enemy : enemyParty->members) entityManager->DestroyEntity(enemy);
-		for (const auto& npc : player->party->members) if (npc->isDead) entityManager->DestroyEntity(npc);
+		for (const auto& npc : player->party->members) {
+			if (npc->isDead) {
+				player->party->RemoveMember(npc->id);
+				entityManager->DestroyEntity(npc);
+			}
+		}
+			
 		break;
 	case LOSE:
 		EndGame();
 		break;
 	case FLED:
-		for (const auto& npc : player->party->members) if (npc->isDead) entityManager->DestroyEntity(npc);
+		for (const auto& npc : player->party->members) {
+			if (npc->isDead) {
+				player->party->RemoveMember(npc->id);
+				entityManager->DestroyEntity(npc);
+			}
+		}
 		combatTimer.Start();
 		hasCombatCooldown = true;
 		break;
