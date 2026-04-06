@@ -97,12 +97,6 @@ bool Combat::Start() {
 	action4->active = false;
 	ToggleStances(false);
 
-	isPlayerTurn = true; // calculate from speed stats
-	combatPhase = isPlayerTurn ? DECISION : ENEMY_TURN;
-	endTurn->active = isPlayerTurn;
-	enemyTurnTimerActive = false;
-	if (isPlayerTurn) hint->text = "Select a character";
-
 	// PLAYER TEAM
 
 	if (playerParty->player)
@@ -203,6 +197,48 @@ bool Combat::Start() {
 		enemy4->isDead = false;
 	}
 
+	float highestSpeed = 0;
+	highestSpeed = player->stats->GetStat("speed")->getValue();
+	if (npc1) {
+		float newSpeed = npc1->stats->GetStat("speed")->getValue();
+		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
+	}
+	if (npc2) {
+		float newSpeed = npc2->stats->GetStat("speed")->getValue();
+		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
+	}
+	if (npc3) {
+		float newSpeed = npc3->stats->GetStat("speed")->getValue();
+		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
+	}
+
+	float highestEnemySpeed = 0;
+	if (enemy1) {
+		float newSpeed = enemy1->stats->GetStat("speed")->getValue();
+		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
+	}
+	if (enemy2) {
+		float newSpeed = enemy2->stats->GetStat("speed")->getValue();
+		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
+	}
+	if (enemy3) {
+		float newSpeed = enemy3->stats->GetStat("speed")->getValue();
+		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
+	}
+	if (enemy4) {
+		float newSpeed = enemy4->stats->GetStat("speed")->getValue();
+		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
+	}
+
+	highestSpeed += random_int(1, 10);
+	highestEnemySpeed += random_int(1, 10);
+
+	isPlayerTurn = highestSpeed >= highestEnemySpeed;
+	combatPhase = isPlayerTurn ? DECISION : ENEMY_TURN;
+	endTurn->active = isPlayerTurn;
+	enemyTurnTimerActive = false;
+	if (isPlayerTurn) hint->text = "Select a character";
+
 	return true;
 }
 
@@ -226,7 +262,7 @@ bool Combat::Update(float dt) {
 				if (action->target->TakeDamage(action->selected->Attack())) KillCombatant(action->target);
 				break;
 			case TAKE_STANCE:
-				action->target->TakeStance(action->stance);
+				action->selected->TakeStance(action->stance);
 				break;
 			case TAKE_CONSUMABLE:
 				action->target->TakeConsumable(action->selected->UseConsumable(action->consumableType));
@@ -242,6 +278,18 @@ bool Combat::Update(float dt) {
 		combatPhase = isPlayerTurn ? DECISION : ENEMY_TURN;
 		endTurn->active = isPlayerTurn;
 		turnActions.clear();
+		if (isPlayerTurn) {
+			if (player) player->CheckModifiers();
+			if (npc1) npc1->CheckModifiers();
+			if (npc2) npc2->CheckModifiers();
+			if (npc3) npc3->CheckModifiers();
+		}
+		else {
+			if (enemy1) enemy1->CheckModifiers();
+			if (enemy2) enemy2->CheckModifiers();
+			if (enemy3) enemy3->CheckModifiers();
+			if (enemy4) enemy4->CheckModifiers();
+		}
 		if (isPlayerTurn) hint->text = "Select a character";
 		break;
 	case ENEMY_TURN:

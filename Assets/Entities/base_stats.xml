@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<stats>
+	<stat name="health" value="100" max="100" />
+	<stat name="speed" value="5"/>
+	<stat name="attack" value="30"/>
+	<stat name="defense" value="10"/>
+</stats>

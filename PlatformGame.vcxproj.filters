@@ -517,5 +517,6 @@
     <Xml Include="Assets\Entities\characters.xml" />
     <Xml Include="Assets\Entities\items.xml" />
     <Xml Include="Assets\Dialogues\test.xml" />
+    <Xml Include="Assets\Entities\base_stats.xml" />
   </ItemGroup>
 </Project>
