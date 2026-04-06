@@ -390,13 +390,13 @@ void Scene::LoadScene(std::string spawnId)
 	pugi::xml_document statsDoc = XMLHandler::LoadFile("Assets/Entities/base_stats.xml");
 	pugi::xml_node stats = statsDoc.child("stats");
 
-	Stats baseStats = Stats();
+	/*Stats baseStats = Stats();
 	for (pugi::xml_node sNode = stats.child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
 		std::string name = sNode.attribute("name").as_string();
 		int value = sNode.attribute("value").as_float();
 		int max = sNode.attribute("max").as_float();
 		baseStats.AddStat(name, value, max);
-	}
+	}*/
 
 	pugi::xml_node pNode = characters.child("player");
 	std::string id = pNode.attribute("id").as_string();
@@ -435,8 +435,13 @@ void Scene::LoadScene(std::string spawnId)
 
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
 	Engine::GetInstance().render->follow = player;
-	Stats s = baseStats;
-	player->stats = new Stats(s);
+	player->stats = new Stats();
+	for (pugi::xml_node sNode = pNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
+		std::string name = sNode.attribute("name").as_string();
+		int value = sNode.attribute("value").as_float();
+		int max = sNode.attribute("max").as_float();
+		player->stats->AddStat(name, value, max);
+	}
 
 	//Uncomment when I find a fix
 	/*float savedX = pNode.attribute("savedX").as_float();
@@ -471,8 +476,13 @@ void Scene::LoadScene(std::string spawnId)
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
-			Stats s = baseStats;
-			m->stats = new Stats(s);
+			m->stats = new Stats();
+			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
+				std::string name = sNode.attribute("name").as_string();
+				int value = sNode.attribute("value").as_float();
+				int max = sNode.attribute("max").as_float();
+				m->stats->AddStat(name, value, max);
+			}
 			player->AddPartyMember(m);
 		}
 	}
@@ -494,9 +504,13 @@ void Scene::LoadScene(std::string spawnId)
 			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 
 			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType));
-			Stats s = baseStats;
-			m->stats = new Stats(s);
-
+			m->stats = new Stats();
+			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
+				std::string name = sNode.attribute("name").as_string();
+				int value = sNode.attribute("value").as_float();
+				int max = sNode.attribute("max").as_float();
+				m->stats->AddStat(name, value, max);
+			}
 		}
 	}
 
