@@ -603,7 +603,12 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 		EndGame();
 		break;
 	case FLED:
-		for (const auto& npc : player->party->members) if (npc->isDead) entityManager->DestroyEntity(npc);
+		for (const auto& npc : player->party->members) {
+			if (npc->isDead) {
+				player->party->RemoveMember(npc->id);
+				entityManager->DestroyEntity(npc);
+			}
+		}
 		combatTimer.Start();
 		hasCombatCooldown = true;
 		break;
