@@ -97,7 +97,7 @@ void Textures::GetSize(const SDL_Texture* texture, int& width, int& height) cons
 	float th = 0.0f;
 	if (!SDL_GetTextureSize((SDL_Texture*)texture, &tw, &th))
 	{
-		LOG("SDL_GetTextureSize failed: %s", SDL_GetError());
+		//LOG("SDL_GetTextureSize failed: %s", SDL_GetError());
 		width = 0;
 		height = 0;
 	}

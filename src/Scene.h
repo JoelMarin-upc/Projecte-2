@@ -10,56 +10,12 @@
 #include "EntityManager.h"
 #include "MissionManager.h"
 #include "DialogManager.h"
+#include "InteractableItem.h"
+#include "MenuManager.h"
+#include "Combat.h"
+#include "EnemyParty.h"
 
 struct SDL_Texture;
-
-enum Menu {
-	NONE,
-	MAIN,
-	PAUSE,
-	SETTINGS,
-	CHECKPOINTS,
-	DEATHSCREEN,
-	CREDITS
-};
-
-enum UIID {
-	START_GAME,
-	PAUSED_LBL,
-	SETTINGS_LBL,
-	COUNTINUE_GAME,
-	RESUME,
-	SETTINGS_MENU,
-	CREDITS_BTN,
-	CREDITS_LBL,
-	MUSIC_VOLUME_LABEL,
-	MUSIC_VOLUME,
-	FX_VOLUME_LABEL,
-	FX_VOLUME,
-	FULLSCREEN_LABEL,
-	FULLSCREEN,
-	BACK_MENU,
-	BACK_MAIN_MENU,
-	EXIT,
-	UI_COINS,
-	UI_POWER,
-	UI_TIME,
-	CHECKPOINT_TELEPORTATION,
-	MAP1,
-	MAP1_TP1,
-	MAP1_TP2,
-	MAP1_TP3,
-	MAP1_TP4,
-	MAP1_TP5,
-	MAP2,
-	MAP2_TP1,
-	MAP2_TP2,
-	MAP2_TP3,
-	MAP2_TP4,
-	MAP2_TP5,
-	YOU_DIED_LBL,
-	PRESS_TO_CONTINUE_LBL
-};
 
 struct SceneData {
 	std::string mapPath;
@@ -67,11 +23,11 @@ struct SceneData {
 	std::string musicPath;
 };
 
-class Scene
+class Scene : public Module
 {
 public:
 
-	Scene(std::string mapName);
+	Scene(std::string _id, std::string mapPath, std::string mapName, std::string combatMapName = "");
 	
 	Scene();
 
@@ -82,7 +38,7 @@ public:
 	bool Awake();
 
 	// Called before the first frame
-	bool Start();
+	bool Start(std::string spawnId = "default");
 
 	// Called before all Updates
 	bool PreUpdate();
@@ -99,27 +55,84 @@ public:
 	void TogglePause();
 	void SaveGame();
 	void LoadGame();
-	void LoadScene();
-	void LoadMap();
+	void SaveSessionState();
+	void SaveDialogState();
+	void LoadDialogState();
+	void LoadMap(std::string mapPath, std::string mapName);
+	void LoadScene(std::string spawnId = "default");
 	void EndScene();
+	void EndGame();
+	void CheckTimers();
+
+	void CheckTransitions();
+
+	void StartDialog(std::string characterId);
+	void EndDialog();
+
+	void StartCombat(std::shared_ptr<Enemy> enemy);
+	void EndCombat(EnemyParty* enemyParty, CombatResult combatResult);
+
+	void CopyCleanGameData();
 
 	Vector2D GetPlayerPosition();
+	Map* GetMap() const { return map; }
+
+	bool OnUIMouseClickEvent(UIElement* uiElement);
+
+	bool GetIsOnDialog() {
+		return isOnDialog;
+	}
+
+	bool GetGameStarted() {
+		return gameStarted;
+	}
 
 	bool hasEnded;
 
 	std::string id;
 	std::string name;
+	std::string pendingSpawnId = "default";
 
-private:
 	EntityManager* entityManager;
 	MissionManager* missionManager;
 	DialogManager* dialogManager;
-	Map* map;
 
 	std::shared_ptr<Player> player;
+private:
+	
+	Map* map;
+	Map* combatMap;
+	std::string mapsPath;
+	std::string mapName;
+	std::string combatMapName;
+
+	std::shared_ptr<InteractableItem> testItem;
 	SceneData data;
 	XMLHandler* persistance = new XMLHandler();
 	Timer gameTimer;
+	bool gameStarted = false;
 	bool paused = false;
+	bool isOnDialog = false;
+	float previousMusicVolume = 1.0f;
+
+	float combatCooldownSeconds = 5.f;
+	bool hasCombatCooldown = false;
+	Timer combatTimer;
+
+	Combat* combat = nullptr;
+
+	std::string  activeDialogId = "";
+
+	GameData mapData;
+	
+	int sw;
+	int sh;
+	SDL_Texture* logo;
+	SDL_Rect b_logo;
+	std::shared_ptr<UIImage> studioLogo;
+	int hoverFxId;
+	int clickFxId;
+	int logoFxId;
+	int elevatorFxId;
 
 };

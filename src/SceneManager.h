@@ -4,6 +4,13 @@
 #include "Scene.h"
 #include <list>
 
+struct SceneInfo {
+	std::string id;
+	std::string mapPath;
+	std::string mapName;
+	std::string combatMapName;
+};
+
 class SceneManager : public Module
 {
 public:
@@ -31,12 +38,27 @@ public:
 
 	void LoadScenes();
 
-	void SetCurrentScene(std::string sceneID);
+	void SetCurrentScene(std::string sceneID, std::string spawnID = "default");
+
+	void DoTransition();
+
+	Scene* GetCurrentScene() const;
+
+	EntityManager* GetEntityManager() const;
+	
+	MissionManager* GetMissionManager() const;
+
+	DialogManager* GetDialogManager() const;
 
 public:
 
-	std::list<Scene*> scenes;
+	std::list<SceneInfo> sceneInfos;
 	Scene* currentScene = nullptr;
 	bool paused = false;
+	std::string mapsPath = "Assets/Maps/";
+	std::string pendingSceneID = "";
+	std::string pendingSpawnId = "";
+	bool hasQueuedTransition = false;
 
+	bool triggerFirstMonologue = true;
 };

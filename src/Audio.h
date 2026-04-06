@@ -24,7 +24,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-    bool Update();
+    bool Update(float dt);
 	// Play a music file
 	bool PlayMusic(const char* path, float fadeTime = DEFAULT_MUSIC_FADE_TIME);
 
@@ -36,16 +36,27 @@ public:
 
     void SetMusicVolume(float volume);
     void SetFxVolume(float volume);
+    void UpdateMusicVolume();
 
     float GetMusicVolume() const { return musicVolume; }
     float GetFxVolume() const { return fxVolume; }
+    float GetTargetMusicVolume() const { return targetVolume; }
     bool MusicPlaying();
     bool EnsureStreams();
+    void StopFx() { if (sfx_stream_) SDL_ClearAudioStream(sfx_stream_);}
 
+    float pauseMultiplier = 1.0f; // 1.0 = normal, 0.3 = paused
 private:
     
     float musicVolume = 1.f;
     float fxVolume = 1.f;
+    //used for the pause menu, temporary volume (musicVolume used as the actual volume used at any times, target volume is the "real" volume)
+    float targetVolume = 1.f;
+
+    //fading
+    float fadeSpeed = 0.0f;
+    float fadeFactor;
+    bool isFading = false;
 
     struct SoundData {
         SDL_AudioSpec spec{};  // source format

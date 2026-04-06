@@ -15,6 +15,7 @@
 #include "Log.h"
 #include "UIManager.h"
 #include "SceneManager.h"
+#include "DialogManager.h"
 
 // Constructor
 Engine::Engine() {
@@ -39,7 +40,10 @@ Engine::Engine() {
     // L08: TODO 2: Add Physics module
     physics = std::make_shared<Physics>();
     sceneManager = std::make_shared<SceneManager>();
+    menuManager = std::make_shared<MenuManager>();
     uiManager = std::make_shared<UIManager>();
+    dialogManager = std::make_shared<DialogManager>();
+    entityManager = std::make_shared <EntityManager>();
 
     // Ordered for awake / Start / Update
     // Reverse order of CleanUp
@@ -48,8 +52,13 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(textures));
     AddModule(std::static_pointer_cast<Module>(audio));
     // L08: TODO 2: Add Physics module
-    AddModule(std::static_pointer_cast<Module>(physics));
+    AddModule(std::static_pointer_cast<Module>(physics));   
+    AddModule(std::static_pointer_cast<Module>(menuManager));
     AddModule(std::static_pointer_cast<Module>(sceneManager));
+    AddModule(std::static_pointer_cast<Module>(dialogManager));
+    AddModule(std::static_pointer_cast<Module>(entityManager));
+
+    // UI Manager on top of the other modules
     AddModule(std::static_pointer_cast<Module>(uiManager));
 
     // Render last 

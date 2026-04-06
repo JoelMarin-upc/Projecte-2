@@ -49,11 +49,13 @@ UISlider::~UISlider()
 void UISlider::SetValueFromMouse()
 {
 	Vector2D mousePos = Engine::GetInstance().input->GetMousePosition();
+	float logicalX, logicalY;
+	SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mousePos.getX(), mousePos.getY(), &logicalX, &logicalY);
 
 	int sliderMinX = bounds.x;
 	int sliderMaxX = bounds.x + bounds.w - boundsSlider.w;
 
-	int newSliderX = (int)(mousePos.getX() - boundsSlider.w * 0.5f);
+	int newSliderX = (int)(logicalX - boundsSlider.w * 0.5f);
 
 	if (newSliderX < sliderMinX)
 		newSliderX = sliderMinX;
@@ -136,17 +138,24 @@ bool UISlider::Update(float dt)
 		}
 		else
 		{
-			if (mouseOverSlider) {
-				if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED) Engine::GetInstance().audio->PlayFx(hoverFxId);
+			float mouseX, mouseY;
+			SDL_GetMouseState(&mouseX, &mouseY);
+
+			float logicalX, logicalY;
+			SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mouseX, mouseY, &logicalX, &logicalY);
+
+			//If the position of the mouse if inside the bounds of the button 
+			if (logicalX > bounds.x && logicalX < bounds.x + bounds.w && logicalY > bounds.y && logicalY < bounds.y + bounds.h) {
+				if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED && hoverFxId != -1) Engine::GetInstance().audio->PlayFx(hoverFxId);
 				state = UIElementState::FOCUSED;
 			}
 			else
 				state = UIElementState::NORMAL;
 
-			if (mouseOverSlider &&
+			if (logicalX > bounds.x && logicalX < bounds.x + bounds.w && logicalY > bounds.y && logicalY < bounds.y + bounds.h &&
 				Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 			{
-				Engine::GetInstance().audio->PlayFx(clickFxId);
+				if (clickFxId != -1) Engine::GetInstance().audio->PlayFx(clickFxId);
 				state = UIElementState::PRESSED;
 			}
 		}
@@ -155,20 +164,20 @@ bool UISlider::Update(float dt)
 	switch (state)
 	{
 	case UIElementState::DISABLED:
-		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDis.r, colorBarDis.g, colorBarDis.b, colorBarDis.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderDis.r, colorSliderDis.g, colorSliderDis.b, colorSliderDis.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDis.r, colorBarDis.g, colorBarDis.b, colorBarDis.a, true, useCamera);
+		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderDis.r, colorSliderDis.g, colorSliderDis.b, colorSliderDis.a, true, useCamera);
 		break;
 	case UIElementState::NORMAL:
 		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDef.r, colorBarDef.g, colorBarDef.b, colorBarDef.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderDef.r, colorSliderDef.g, colorSliderDef.b, colorSliderDef.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderDef.r, colorSliderDef.g, colorSliderDef.b, colorSliderDef.a, true, useCamera);
 		break;
 	case UIElementState::FOCUSED:
 		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDef.r, colorBarDef.g, colorBarDef.b, colorBarDef.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderHov.r, colorSliderHov.g, colorSliderHov.b, colorSliderHov.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderHov.r, colorSliderHov.g, colorSliderHov.b, colorSliderHov.a, true, useCamera);
 		break;
 	case UIElementState::PRESSED:
 		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDef.r, colorBarDef.g, colorBarDef.b, colorBarDef.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderPre.r, colorSliderPre.g, colorSliderPre.b, colorSliderPre.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderPre.r, colorSliderPre.g, colorSliderPre.b, colorSliderPre.a, true, useCamera);
 		break;
 	}
 

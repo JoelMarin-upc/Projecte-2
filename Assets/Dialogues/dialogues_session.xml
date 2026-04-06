@@ -1,0 +1,438 @@
+<?xml version="1.0"?>
+<dialogs>
+	<tree id="DT-001" characterId="player" characterName="Garnik" order="1" done="true">
+		<node id="DN-001" first="true">
+			I always end up wandering to this place…      
+			<answer leadsToNodeId="DN-002">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			You used to drag me here every day, said that the gods|listened to our prayers better at sunrise.
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			I almost wanted to believe you at some point,|you’re always right after all.     
+			<answer leadsToNodeId="DN-004">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			But if they really listened to my prayers…|Why are you not coming back to me?
+			<answer leadsToNodeId="DN-005">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-005" first="false">
+			Damn it, why would you want to go to the castle?|No one comes back from there anymore, not even you…
+			<answer leadsToNodeId="DN-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-006" first="false">
+			I don’t know what I’ll find inside...|but I can’t stand here waiting anymore.
+			<answer leadsToNodeId="DN-007">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-007" first="false">
+			Nia, I’m coming to find you.
+			<answer leadsToNodeId="DN-008">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-008" first="false">
+			...Or whatever remains of you.
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-002" characterId="player" characterName="Garnik" order="2" done="false">
+		<node id="DN-001" first="true">
+			Maybe I should ask the Gravekeeper where to go,|she’s been here for longer than anyone.
+			<answer leadsToNodeId="DN-002">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			If there’s a way into the castle, she’ll know.
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-003" characterId="CH-001" characterName="Gravekeeper" order="3" done="false">
+		<node id="DN-001" first="true">
+			You have been pacing around|the cemetery for quite a while.
+			<answer leadsToNodeId="DN-002">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			People who wander around like this are either lost…|or afraid of where they need to go next.
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			I wonder which one you are.
+			<answer leadsToNodeId="DN-004">
+				I'm looking for a way into the castle.
+			</answer>
+			<answer leadsToNodeId="DN-022">
+				Someone I care about is lost.
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			The castle... Many people|go there looking for answers.
+			<answer leadsToNodeId="DN-005">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-005" first="false">
+			But they end up here instead,|keeping me company.
+			<answer leadsToNodeId="DN-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-006" first="false">
+			The main gates are closed and watched,|but there is an older entrance.
+			<answer leadsToNodeId="DN-007">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-007" first="false">
+			Just behind the castle, lies a forgotten elevator|that goes right into the castle dungeons.
+			<answer leadsToNodeId="DN-008">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-008" first="false">
+			If you truly desire to go below,|you should not go empty-handed.
+			<answer leadsToNodeId="DN-009">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-009" first="false">
+			There is a rusty farming tool laying nearby.
+			<answer leadsToNodeId="DN-010">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-010" first="false">
+			It may help you defend yourself…|or at least buy you some time.
+			<answer leadsToNodeId="DN-011">
+				Thank you.
+			</answer>
+			<answer leadsToNodeId="DN-015">
+				Do you really stand here all day?
+			</answer>
+		</node>
+		<node id="DN-011" first="false">
+			I cannot promise that you will find what|you are looking for.
+			<answer leadsToNodeId="DN-012">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-012" first="false">
+			But maybe if you descend low enough, the secrets of|the castle will be unveiled to you.
+			<answer leadsToNodeId="DN-013">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-013" first="false">
+			Before going down, however, you may|wish to stop by the statue again.
+			<answer leadsToNodeId="DN-014">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-014" first="false">
+			It shall be the last peaceful moment|you will have for quite a while.
+			<answer leadsToNodeId="">
+				End Conversation
+			</answer>
+		</node>
+		<node id="DN-015" first="false">
+			Someone must do so.
+			<answer leadsToNodeId="DN-016">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-016" first="false">
+			The dead are patient,|but they do not bury themselves.
+			<answer leadsToNodeId="DN-017">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-017" first="false">
+			On top of that, they have been|increasingly restless lately.
+			<answer leadsToNodeId="DN-018">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-018" first="false">
+			Whatever is happening behind those|castle walls, it is complete blasphemy.
+			<answer leadsToNodeId="DN-020">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-020" first="false">
+			Which is why, before going down, you may|wish to stop by the statue again.
+			<answer leadsToNodeId="DN-021">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-021" first="false">
+			It shall be the last peaceful moment|you will have for quite a while.
+			<answer leadsToNodeId="">
+				End Conversation
+			</answer>
+		</node>
+		<node id="DN-022" first="false">
+			My deepest condolences, young one.
+			<answer leadsToNodeId="DN-023">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-023" first="false">
+			Is it perhaps the lovely damsel that|frequented the castle?
+			<answer leadsToNodeId="DN-024">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-024" first="false">
+			She seemed like a resourceful one,|it is difficult to believe that she|went there for no reason at all.
+			<answer leadsToNodeId="DN-025">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-025" first="false">
+			However, just behind the castle, there’s|a forgotten elevator that goes|right into the castle dungeons.
+			<answer leadsToNodeId="DN-026">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-026" first="false">
+			If you truly desire to go below,|you should not go empty-handed.
+			<answer leadsToNodeId="DN-027">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-027" first="false">
+			There is a rusty farming tool laying nearby.
+			<answer leadsToNodeId="DN-028">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-028" first="false">
+			It may help you defend yourself…|or at least buy you some time.
+			<answer leadsToNodeId="DN-029">
+				Thank you
+			</answer>
+			<answer leadsToNodeId="DN-033">
+				What's happening to the dead?
+			</answer>
+		</node>
+		<node id="DN-029" first="false">
+			I cannot promise that you will find|what you are looking for.
+			<answer leadsToNodeId="DN-030">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-030" first="false">
+			But maybe if you descend low enough,|the secrets of the castle will be unveiled to you.
+			<answer leadsToNodeId="DN-031">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-031" first="false">
+			Before going down, however, you may|wish to stop by the statue again.
+			<answer leadsToNodeId="DN-032">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-032" first="false">
+			It shall be the last peaceful moment|you will have for quite a while.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+		<node id="DN-033" first="false">
+			They do not rest in peace anymore.
+			<answer leadsToNodeId="DN-034">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-034" first="false">
+			Soulless carcasses are meant to return to|the Earth that birthed them.
+			<answer leadsToNodeId="DN-035">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-035" first="false">
+			That is the natural order.
+			<answer leadsToNodeId="DN-036">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-036" first="false">
+			However, something behind those castle|walls is disturbing that.
+			<answer leadsToNodeId="DN-037">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-037" first="false">
+			Which is why, before going down, you may wish|to stop by the statue again.
+			<answer leadsToNodeId="DN-038">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-038" first="false">
+			It shall be the last peaceful moment|you will have for quite a while.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-004" characterId="CH-002" characterName="Medic" order="4" done="false">
+		<node id="DN-001" first="true">
+			I see that you’re finally heading out,|it must take a lot of courage.
+			<answer leadsToNodeId="DN-002">
+				I need to find her.
+			</answer>
+			<answer leadsToNodeId="DN-004">
+				Do you have anything that could help me?
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			I understand, Nia’s disappearance is|felt throughout the entire Refuge.
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			Be careful Garnik, I have no idea|what you may find out there.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			I… maybe I do have something.
+			<answer leadsToNodeId="DN-005">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-005" first="false">
+			I’ve been holding onto this for quite|some time, it’s a little something to|fight back the infected air.
+			<answer leadsToNodeId="DN-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-006" first="false">
+			Take it, I’ve got no clue what’s inside|the castle… but hundreds of corpses|are walking out from those doors.
+			<answer leadsToNodeId="DN-007">
+				Wait, won’t you need this?
+			</answer>
+			<answer leadsToNodeId="DN-010">
+				I changed my mind, please keep it
+			</answer>
+		</node>
+		<node id="DN-007" first="false">
+			Haha… it’s okay, you’ll need it|more than I do.
+			<answer leadsToNodeId="DN-008">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-008" first="false">
+			I don’t have much left,|nor much to fight for.
+			<answer leadsToNodeId="DN-009">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-009" first="false">
+			So I’ll try my best to help|with what little I have left.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+		<node id="DN-010" first="false">
+			That's okay, you can come to me|whenever you need anything.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-005" characterId="CH-003" characterName="Thief" order="5" done="false">
+		<node id="DN-001" first="true">
+			... What?
+			<answer leadsToNodeId="DN-002">
+				Where are your parents?
+			</answer>
+			<answer leadsToNodeId="DN-003">
+				Is there anything I can do for you?
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			That's none of your business.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			I don't need your pity.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-006" characterId="CH-004" characterName="Executioner" order="6" done="false">
+		<node id="DN-001" first="true">
+			...
+			<answer leadsToNodeId="DN-002">
+				Why are you here by yourself?
+			</answer>
+			<answer leadsToNodeId="DN-003">
+				I haven't seen you around
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			......
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			......
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-007" characterId="statue" characterName="Statue" order="1" done="false" isRepeatable="true">
+		<node id="DN-001" first="true">
+			The gods are watching you. |You feel a fleeting sensation of peace.
+			<answer leadsToNodeId="">
+				Pray and save
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-099" characterId="CH-006" characterName="follower" order="1" done="false">
+		<node id="DN-001" first="true">
+			Hello, i'll help you!
+			<answer leadsToNodeId="">
+				Okay
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-098" characterId="Lever" characterName="" order="1" done="false">
+		<node id="DN-001" first="true">
+			The lever has been pulled
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
+</dialogs>

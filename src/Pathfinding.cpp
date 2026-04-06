@@ -4,18 +4,22 @@
 #include "Map.h"
 #include "Render.h"
 #include "Scene.h"
+#include "SceneManager.h"
+#include "Log.h"
+
 
 Pathfinding::Pathfinding() {
     
-    debug = false;
-     //Loads texture to draw the path
-    pathTex = Engine::GetInstance().textures.get()->Load("Assets/Maps/MapMetadata.png");
+    //Loads texture to draw the path
+    pathTex = Engine::GetInstance().textures.get()->Load("Assets/Maps/metadata.png");
     tileX = Engine::GetInstance().textures.get()->Load("Assets/Textures/x.png");
     //map = Engine::GetInstance().map.get();
-    layerNav = map->GetNavigationLayer();
+    //layerNav = map->GetNavigationLayer();
+    layerNav = nullptr;
+    map = Engine::GetInstance().sceneManager->currentScene->GetMap();
 
     // Initialize the costSoFar with all elements set to 0
-    costSoFar = std::vector<std::vector<int>>(map->GetMapSizeInTiles().getX(), std::vector<int>(map->GetMapSizeInTiles().getY(), 0));
+    //costSoFar = std::vector<std::vector<int>>(map->GetMapSizeInTiles().getX(), std::vector<int>(map->GetMapSizeInTiles().getY(), 0));
 }
 
 Pathfinding::~Pathfinding() {
@@ -66,7 +70,7 @@ void Pathfinding::DrawPath() {
     	Vector2D pathTileWorld = map->MapToWorld((int)pathTile.getX(), (int)pathTile.getY());
 		// we use the second tile in the tileset to draw the visited. That's why we use rect x=33
         SDL_Rect rect = { 33,1,map->GetTileWidth(),map->GetTileHeight()};
-        Engine::GetInstance().render->DrawTexture(pathTex, (int)pathTileWorld.getX(), (int)pathTileWorld.getY(),&rect);
+        Engine::GetInstance().render->DrawTexture(pathTex, (int)pathTileWorld.getX(), (int)pathTileWorld.getY(), 1.0f, &rect);
     }
 
     // Draw frontier BFS
@@ -83,7 +87,7 @@ void Pathfinding::DrawPath() {
         Vector2D pos = map->MapToWorld(frontierTile.getX(), frontierTile.getY());
 		//Draw the frontier tile. We use the first tile in the tileset to draw the frontier. That's why we use rect x=1
         SDL_Rect rect = { 1,1,map->GetTileWidth(),map->GetTileHeight() };
-        Engine::GetInstance().render->DrawTexture(pathTex, (int)pos.getX(), (int)pos.getY(), &rect);
+        Engine::GetInstance().render->DrawTexture(pathTex, (int)pos.getX(), (int)pos.getY(), 1.0f, &rect);
 
         //Remove the front element from the queue
         frontierCopy.pop();
@@ -103,7 +107,7 @@ void Pathfinding::DrawPath() {
         Vector2D pos = map->MapToWorld(frontierTile.getX(), frontierTile.getY());
         //Draw the frontier tile
         SDL_Rect rect = { 0,0,map->GetTileWidth(),map->GetTileHeight() };
-        Engine::GetInstance().render.get()->DrawTexture(pathTex, pos.getX(), pos.getY(), &rect);
+        Engine::GetInstance().render.get()->DrawTexture(pathTex, pos.getX(), pos.getY(), 1.0f, &rect);
         //Remove the front element from the queue
         frontierDijkstraCopy.pop();
     }
@@ -122,7 +126,7 @@ void Pathfinding::DrawPath() {
         Vector2D pos = map->MapToWorld(frontierTile.getX(), frontierTile.getY());
         //Draw the frontier tile
         SDL_Rect rect = { 0,0,map->GetTileWidth(),map->GetTileHeight() };
-        Engine::GetInstance().render.get()->DrawTexture(pathTex, pos.getX(), pos.getY(), &rect);
+        Engine::GetInstance().render.get()->DrawTexture(pathTex, pos.getX(), pos.getY(), 1.0f, &rect);
         //Remove the front element from the queue
         frontierAStarCopy.pop();
     }
@@ -138,11 +142,13 @@ void Pathfinding::DrawPath() {
 
 bool Pathfinding::IsWalkable(int x, int y) {
 
+    // we will have to change after adding navigation layer!!!!!
     bool isWalkable = false;
 
     // L11: TODO 3: return true only if x and y are within map limits
     // and the tile is walkable (not blocked)
-    if(layerNav != nullptr) {
+
+    /*if (layerNav != nullptr) {
 
 		//Check map limits
         if (x >= 0 && x < map->GetMapSizeInTiles().getX() &&
@@ -155,9 +161,21 @@ bool Pathfinding::IsWalkable(int x, int y) {
                 isWalkable = true;
             }
         }
-	}
+	}*/
+    if (map == nullptr) return false;
 
-    return isWalkable;
+    if (x < 0 || x >= map->GetMapSizeInTiles().getX() ||
+        y < 0 || y >= map->GetMapSizeInTiles().getY())
+        return false;
+
+    if (layerNav == nullptr)
+        return true; // fallback: everything walkable
+
+    int gid = layerNav->Get(x, y);
+
+    return gid != blockedGid;
+
+    //return isWalkable;
 }
 
 void Pathfinding::PropagateBFS() {
@@ -275,8 +293,8 @@ void Pathfinding::PropagateDijkstra() {
 }
 
 Vector2D* Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {    
-    Vector2D playerPos = { 0, 0 };// Engine::GetInstance().scene.get()->GetPlayerPosition();
-    Vector2D playerPosTile = { 0, 0 }; //Engine::GetInstance().map.get()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
+    Vector2D playerPos = Engine::GetInstance().sceneManager->currentScene->GetPlayerPosition();
+    Vector2D playerPosTile = Engine::GetInstance().sceneManager->GetCurrentScene()->GetMap()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
 
     bool foundDestination = false;
     if (frontierAStar.size() > 0) {
@@ -353,16 +371,16 @@ Vector2D* Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
 
 int Pathfinding::MovementCost(int x, int y)
 {
-    int ret = -1;
+    int ret = 1;
 
-    if ((x >= 0) && (x < map->GetMapSizeInTiles().getX()) && (y >= 0) && (y < map->GetMapSizeInTiles().getY()))
-    {
-        int gid = layerNav->Get(x, y);
-        if (gid == highCostGid) {
-            ret = 5;
-        }
-        else ret = 1;
-    }
+    //if ((x >= 0) && (x < map->GetMapSizeInTiles().getX()) && (y >= 0) && (y < map->GetMapSizeInTiles().getY()))
+    //{
+    //    int gid = layerNav->Get(x, y);
+    //    if (gid == highCostGid) {
+    //        ret = 5;
+    //    }
+    //    else ret = 1;
+    //}
 
     return ret;
 }

@@ -1,19 +1,21 @@
 #pragma once
 
+#include "Party.h"
 #include "Character.h"
 #include "Animation.h"
 #include "Timer.h"
+#include "Inventory.h"
 #include <box2d/box2d.h>
 #include <SDL3/SDL.h>
 
 constexpr auto PI = 3.14159265;
 struct SDL_Texture;
 
-class Player : public Character
+class Player : public Character//, public std::enable_shared_from_this<Player>
 {
 public:
 
-	Player();
+	Player(std::string id, std::string name, std::string texturePath);
 	
 	virtual ~Player();
 
@@ -32,6 +34,7 @@ public:
 	Vector2D GetPosition();
 	Vector2D GetPositionCenter();
 
+	void AddPartyMember(std::shared_ptr<NPC> member, bool write = false);
 
 private:
 	void GodMode();
@@ -56,7 +59,13 @@ public:
 	SDL_Texture* itemChargeTexture0 = NULL;
 	SDL_Texture* itemChargeTexture1 = NULL;
 	SDL_Texture* itemChargeTexture2 = NULL;
-	bool facingRight = true;
+	enum FacingDirection {
+		UP,
+		LEFT,
+		DOWN,
+		RIGHT
+	};
+	FacingDirection currentFacingDirection;
 
 	//Audio fx
 	int jumpFxId;
@@ -100,7 +109,7 @@ public:
 	float spearOffset = 25.0f;
 	bool spearCol1 = false;
 	bool spearCol2 = false;
-	bool godMode = true;
+	bool godMode = false;
 	float godModeSpeed = 0.1f;
 	std::string currentAnimation = "";
 	float deathMS = 600.0f;
@@ -124,6 +133,10 @@ public:
 	bool inBoss = false;
 	int keyCount = 0;
 	bool doorOpen = false;
+
+	Party* party;
+
+	Inventory inventory;
 
 private:
 	b2Vec2 velocity;

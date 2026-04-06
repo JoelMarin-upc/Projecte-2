@@ -18,7 +18,8 @@ enum class UIElementType
 	DROPDOWNBOX,
 	INPUTBOX,
 	VALUEBOX,
-	SPINNER
+	SPINNER,
+	IMAGE
 };
 
 enum class UIElementState
@@ -115,4 +116,6 @@ public:
 
 	int hoverFxId;
 	int clickFxId;
+
+	bool useCamera;
 };

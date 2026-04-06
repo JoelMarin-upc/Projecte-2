@@ -1,21 +1,36 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Engine.h"
+#include "NPC.h"
+#include "Audio.h"
+#include "Window.h"
+#include "SceneManager.h"
+#include <unordered_set>
+#include <fstream>
 
-Scene::Scene(std::string mapName)
+Scene::Scene(std::string _id, std::string _mapsPath, std::string _mapName, std::string _combatMapName)
 {
-	id = "SC-001";
+	id = _id;
 	name = "scene";
-	map = new Map();
+	
 	entityManager = new EntityManager();
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
-	entityManager->CreateEntity(EntityType::PLAYER);
-	entityManager->CreateEntity(EntityType::NPC);
+
+	mapsPath = _mapsPath;
+	mapName = _mapName;
+	combatMapName = _combatMapName;
+
+	//entityManager->CreateEntity("IT-001", EntityType::INTERACTABLE_ITEM);
+
+	//entityManager->CreateEntity("player", EntityType::PLAYER);
+	//entityManager->CreateEntity("CH-001", EntityType::NPC);
+
 	//map->Load("base map path", mapName);
 	/*entityManager->Load(entities);
 	missionManager->Load(missions);
 	dialogManager->Load(dialogs);*/
+
 }
 
 // Destructor
@@ -28,14 +43,89 @@ bool Scene::Awake()
 	LOG("Loading Scene");
 	bool ret = true;
 
-	
+
+	entityManager->Awake();
+	missionManager->Awake();
+	dialogManager->Awake();
 
 	return ret;
 }
 
 // Called before the first frame
-bool Scene::Start()
+bool Scene::Start(std::string spawnId)
 {
+	gameStarted = id != "main menu" && id != "intro";
+
+	if (gameStarted)
+	{
+		LoadMap(mapsPath, mapName);
+		//LoadScene();
+	}
+
+	paused = false;
+	pendingSpawnId = spawnId;
+
+	sw = Engine::GetInstance().window->width;
+	sh = Engine::GetInstance().window->height;
+	logo = Engine::GetInstance().textures->Load("Assets/Textures/TeamDayo_Logo.png");
+	b_logo = { sw/2 - logo->w/2, sh/2 - logo->h/2, 0, 0 };
+	hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
+	clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
+	//logoFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("logo").as_string());
+	logoFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/logo.wav");
+	elevatorFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/elevator.wav");
+
+
+	Engine::GetInstance().menuManager->SetObserver(this);
+
+	if (id == "intro")
+	{
+		Engine::GetInstance().menuManager->HideMenu();
+		studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));
+		studioLogo->active = true;
+		Engine::GetInstance().audio->PlayFx(logoFxId);
+	}
+
+	if (id == "main menu")
+	{
+		Engine::GetInstance().menuManager->ShowMainMenu();
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav", 5000.0f);
+	}
+
+	if (gameStarted) {
+		LoadScene();
+		if (id == "SC-001")
+		{
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav", 5000.0f);
+		}
+		else if (id == "SC-002")
+		{
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav", 5000.0f);
+		}
+		else if (id == "SC-003")
+		{
+			Engine::GetInstance().audio->PlayFx(elevatorFxId);
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
+		}
+	}
+	
+
+	entityManager->Start();
+	missionManager->Start();
+	dialogManager->Start();
+
+	if (gameStarted) {
+		LoadDialogState();
+	}
+
+	if (id == "SC-001") {
+		if (Engine::GetInstance().sceneManager->triggerFirstMonologue == true) {
+			StartDialog("player");
+			Engine::GetInstance().sceneManager->triggerFirstMonologue = false;
+		}
+	}
+
+
 	return true;
 }
 
@@ -48,10 +138,52 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	if (id == "intro") {
+		if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+			studioLogo->active = false;
+			studioLogo->Destroy();
+			Engine::GetInstance().audio->StopFx();
+			Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		}
+	}
+
+	if (!gameStarted) return true;
+
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN || Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) TogglePause();
+	
+	if (combat) {
+		combat->Update(dt);
+		if (combat->combatResult != CombatResult::NO_RESULT) EndCombat(combat->enemyParty, combat->combatResult);
+		return true;
+	}
+
+	///////////// FOR TESTING (remove) /////////////
+	//if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("player");
+	//if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) for (const auto& entity : entityManager->entities) if (entity->id == "CH-002" || entity->id == "CH-003") player->AddPartyMember(std::dynamic_pointer_cast<NPC>(entity));
+	////////////////////////////////////////////////
+
+	CheckTimers();
 	map->Update(dt);
 	entityManager->Update(dt);
 	missionManager->Update(dt);
 	dialogManager->Update(dt);
+
+	if (gameStarted && !paused && !isOnDialog) {
+		CheckTransitions();
+	}
+		
+	//////////////////// JUST TO SEE ACCESSES, DELETE LATER ////////////////////
+	for (AccessData& t : mapData.accesses) {
+		SDL_Rect rect = {
+			(int)t.position.getX(),
+			(int)t.position.getY(),
+			(int)t.width,
+			(int)t.height
+		};
+		Engine::GetInstance().render->DrawRectangle(rect, 0, 255, 0, 128, true, true);
+	}
+	/////////////////////
+
 	return true;
 }
 
@@ -65,20 +197,86 @@ bool Scene::PostUpdate(float dt)
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
+	
+	Engine::GetInstance().render->follow = nullptr;
+
+	entityManager->CleanUp();
+	dialogManager->CleanUp();
+
+	if (map) {
+		map->CleanUp();
+		delete map;
+		map = nullptr;
+	}
+
+	delete entityManager;
+	entityManager = nullptr;
+	delete missionManager;
+	missionManager = nullptr;
+	delete dialogManager;
+	dialogManager = nullptr;
 
 	return true;
 }
 
 void Scene::TogglePause()
 {
+	if (!gameStarted) return;
 	paused = !paused;
 	entityManager->paused = paused;
 	//Engine::GetInstance().physics->paused = paused;
+	
+	if (paused) {
+		Engine::GetInstance().audio->pauseMultiplier = 0.3f;
+		Engine::GetInstance().audio->UpdateMusicVolume();
+		Engine::GetInstance().menuManager->ShowPauseMenu();
+	} 
+	else
+	{
+		Engine::GetInstance().audio->pauseMultiplier = 1.0f;
+		Engine::GetInstance().audio->UpdateMusicVolume();
+		Engine::GetInstance().menuManager->HideMenu();
+	}
 }
 
 void Scene::SaveGame()
 {
-	
+	pugi::xml_document charDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+	pugi::xml_node characters = charDoc.child("characters");
+	pugi::xml_node playerNode = characters.child("player");
+
+	characters.attribute("savedGame").set_value(true);
+
+	//Save player party
+	playerNode.remove_child("party");
+	pugi::xml_node partyNode = playerNode.append_child("party");
+	if (player && player->party) {
+		for (const auto& member : player->party->members) {
+			pugi::xml_node mNode = partyNode.append_child("member");
+			mNode.append_attribute("id").set_value(member->id.c_str());
+		}
+	}
+
+	//Save player positions
+	playerNode.attribute("savedX").set_value(player->position.getX());
+	playerNode.attribute("savedY").set_value(player->position.getY());
+
+	//Save NPC positions and dead state
+	for (const auto& entity : entityManager->entities) {
+		auto npc = std::dynamic_pointer_cast<NPC>(entity);
+		if (!npc) continue;
+		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
+			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
+			cNode.attribute("savedX").set_value(npc->position.getX());
+			cNode.attribute("savedY").set_value(npc->position.getY());
+			cNode.attribute("isDead").set_value(npc->isDead);
+			break;
+		}
+	}
+
+	charDoc.save_file("Assets/Entities/characters.xml");
+	SaveDialogState();
+	LOG("GAME SAVED");
 }
 
 void Scene::LoadGame()
@@ -86,17 +284,464 @@ void Scene::LoadGame()
 	
 }
 
-void Scene::LoadScene()
+void Scene::SaveSessionState()
 {
-	// Load entities
+	std::ifstream src("Assets/Entities/characters.xml", std::ios::binary);
+	std::ofstream dst("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
+	dst << src.rdbuf();
+
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
+	pugi::xml_node characters = doc.child("characters");
+	pugi::xml_node playerNode = characters.child("player");
+
+	if (player) {
+		playerNode.attribute("savedX").set_value(player->position.getX());
+		playerNode.attribute("savedY").set_value(player->position.getY());
+	}
+
+	for (const auto& entity : entityManager->entities) {
+		auto npc = std::dynamic_pointer_cast<NPC>(entity);
+		if (!npc) continue;
+		for (pugi::xml_node cNode = characters.child("character"); cNode; cNode = cNode.next_sibling("character")) {
+			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
+			cNode.attribute("savedX").set_value(npc->position.getX());
+			cNode.attribute("savedY").set_value(npc->position.getY());
+			cNode.attribute("isDead").set_value(npc->isDead);
+			break;
+		}
+	}
+
+	playerNode.remove_child("party");
+	pugi::xml_node partyNode = playerNode.append_child("party");
+	if (player && player->party) {
+		for (const auto& member : player->party->members) {
+			pugi::xml_node mNode = partyNode.append_child("member");
+			mNode.append_attribute("id").set_value(member->id.c_str());
+		}
+	}
+
+	doc.save_file("Assets/Entities/characters_session.xml");
+
+	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
+	pugi::xml_node root = dialogDoc.child("dialogs");
+	for (pugi::xml_node treeNode = root.child("tree"); treeNode; treeNode = treeNode.next_sibling("tree")) {
+		std::string treeId = treeNode.attribute("id").as_string();
+		for (DialogTree* tree : dialogManager->dialogs) {
+			if (tree->id == treeId) {
+				treeNode.attribute("done").set_value(tree->done);
+				break;
+			}
+		}
+	}
+	dialogDoc.save_file("Assets/Dialogues/dialogues_session.xml");
 }
 
-void Scene::LoadMap()
+void Scene::SaveDialogState()
 {
+	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
+	pugi::xml_node root = dialogDoc.child("dialogs");
 
+	for (pugi::xml_node treeNode = root.child("tree"); treeNode != NULL; treeNode = treeNode.next_sibling("tree")) {
+		std::string treeId = treeNode.attribute("id").as_string();
+		for (DialogTree* tree : dialogManager->dialogs) {
+			if (tree->id == treeId) {
+				treeNode.attribute("done").set_value(tree->done);
+				break;
+			}
+		}
+	}
+	dialogDoc.save_file("Assets/Dialogues/dialogues.xml");
+}
+
+void Scene::LoadDialogState()
+{
+	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues_session.xml");
+	//pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
+	pugi::xml_node root = dialogDoc.child("dialogs");
+
+	for (pugi::xml_node treeNode = root.child("tree"); treeNode != NULL; treeNode = treeNode.next_sibling("tree")) {
+		std::string treeId = treeNode.attribute("id").as_string();
+		bool done = treeNode.attribute("done").as_bool();
+		for (DialogTree* tree : dialogManager->dialogs) {
+			if (tree->id == treeId) {
+				tree->done = done;
+				break;
+			}
+		}
+	}
+}
+
+void Scene::LoadMap(std::string mapPath, std::string mapName)
+{
+	map = new Map();
+	map->Load(mapPath, mapName);
+	mapData = map->gameData;
+}
+
+void Scene::LoadScene(std::string spawnId)
+{
+	std::string baseTexturePath = "Assets/Textures/";
+
+	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
+	//pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+	pugi::xml_node characters = charactersDoc.child("characters");
+	pugi::xml_document itemsDoc = XMLHandler::LoadFile("Assets/Entities/items.xml");
+	pugi::xml_node items = itemsDoc.child("items");
+	pugi::xml_document statsDoc = XMLHandler::LoadFile("Assets/Entities/base_stats.xml");
+	pugi::xml_node stats = statsDoc.child("stats");
+
+	/*Stats baseStats = Stats();
+	for (pugi::xml_node sNode = stats.child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
+		std::string name = sNode.attribute("name").as_string();
+		int value = sNode.attribute("value").as_float();
+		int max = sNode.attribute("max").as_float();
+		baseStats.AddStat(name, value, max);
+	}*/
+
+	pugi::xml_node pNode = characters.child("player");
+	std::string id = pNode.attribute("id").as_string();
+	std::string name = pNode.attribute("name").as_string();
+	std::string texture = pNode.attribute("texture").as_string();
+
+	//Loads the spawnpoint
+	Vector2D spawnPos(0, 0);
+	bool found = false;
+
+	for (const SpawnPoint& sp : mapData.spawnPoints) {
+		if (sp.spawnId == pendingSpawnId) {
+			spawnPos = sp.position;
+			found = true;
+			break;
+		}
+	}
+
+	if (!found) {
+		for (const SpawnPoint& sp : mapData.spawnPoints) {
+			if (sp.spawnId == "default") {
+				spawnPos = sp.position;
+				break;
+			}
+		}
+	}
+
+	std::vector<NPCData> partyMembers = std::vector<NPCData>();
+	for (pugi::xml_node mNode = pNode.child("party").child("member"); mNode != NULL; mNode = mNode.next_sibling("member"))
+	{
+		NPCData member = NPCData();
+		member.id = mNode.attribute("id").as_string();
+		member.position = spawnPos;
+		partyMembers.push_back(member);
+	}
+
+	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+	Engine::GetInstance().render->follow = player;
+	player->stats = new Stats();
+	for (pugi::xml_node sNode = pNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
+		std::string name = sNode.attribute("name").as_string();
+		int value = sNode.attribute("value").as_float();
+		int max = sNode.attribute("max").as_float();
+		player->stats->AddStat(name, value, max);
+	}
+
+	//Uncomment when I find a fix
+	/*float savedX = pNode.attribute("savedX").as_float();
+	float savedY = pNode.attribute("savedY").as_float();
+	if (savedX >= 0 && savedY >= 0) {
+		b2Body_SetTransform(player->pbody->body, { PIXEL_TO_METERS(savedX), PIXEL_TO_METERS(savedY) }, b2Rot_identity);
+		player->position = Vector2D(savedX, savedY);
+	}*/
+
+	std::unordered_set<std::string> ids;
+
+	for (const auto& npc : partyMembers) {
+		ids.insert(npc.id);
+	}
+
+	mapData.npcs.erase(
+		std::remove_if(
+			mapData.npcs.begin(),
+			mapData.npcs.end(),
+			[&](const NPCData& npc) {
+				return ids.find(npc.id) != ids.end();
+			}
+		),
+		mapData.npcs.end()
+	);
+
+	for (NPCData member : partyMembers) {
+		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
+			if (cNode.attribute("id").as_string() != member.id) continue;
+			if (cNode.attribute("isDead").as_bool(false)) break;
+			std::string name = cNode.attribute("name").as_string();
+			std::string texture = cNode.attribute("texture").as_string();
+			int type = cNode.attribute("type").as_int();
+			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
+			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
+			m->stats = new Stats();
+			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
+				std::string name = sNode.attribute("name").as_string();
+				int value = sNode.attribute("value").as_float();
+				int max = sNode.attribute("max").as_float();
+				m->stats->AddStat(name, value, max);
+			}
+			player->AddPartyMember(m);
+		}
+	}
+
+	for (NPCData npc : mapData.npcs) {
+		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
+			if (cNode.attribute("id").as_string() != npc.id) continue;
+			if (cNode.attribute("isDead").as_bool(false)) break;
+			std::string name = cNode.attribute("name").as_string();
+			std::string texture = cNode.attribute("texture").as_string();
+			int type = cNode.attribute("type").as_int();
+			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
+
+			float savedX = cNode.attribute("savedX").as_float();
+			float savedY = cNode.attribute("savedY").as_float();
+			Vector2D spawnPos = (savedX >= 0 && savedY >= 0) ? Vector2D(savedX, savedY) : npc.position;
+			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType);
+			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
+			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
+
+			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType));
+			m->stats = new Stats();
+			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
+				std::string name = sNode.attribute("name").as_string();
+				int value = sNode.attribute("value").as_float();
+				int max = sNode.attribute("max").as_float();
+				m->stats->AddStat(name, value, max);
+			}
+		}
+	}
+
+	for (ItemData item : mapData.items) {
+		for (pugi::xml_node iNode = items.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
+			if (iNode.attribute("id").as_string() != item.id) continue;
+			std::string name = iNode.attribute("name").as_string();
+			std::string texture = iNode.attribute("texture").as_string();
+			int type = iNode.attribute("type").as_int();
+			int interactionType = iNode.attribute("interactionType").as_int();
+			bool canStack = iNode.attribute("canStack").as_bool();
+			std::string itemClass = iNode.attribute("itemClass").as_string("item");
+			std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
+			entityManager->CreateItem(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath);
+		}
+	}
 }
 
 void Scene::EndScene()
 {
 	
+}
+
+void Scene::EndGame()
+{
+	Engine::GetInstance().menuManager->ShowDeathScreen();
+}
+
+void Scene::CheckTimers() {
+	if (combatTimer.ReadSec() > combatCooldownSeconds) hasCombatCooldown = false;
+}
+
+//Checks if the player is at a transition rectagle
+void Scene::CheckTransitions()
+{
+	if (!player) return;
+	Vector2D playerPos = player->position;
+
+	for (AccessData& t : mapData.accesses) {
+		if (playerPos.getX() >= t.position.getX() && playerPos.getX() <= t.position.getX() + t.width && playerPos.getY() >= t.position.getY() && playerPos.getY() <= t.position.getY() + t.height) {
+			SaveSessionState();
+			Engine::GetInstance().sceneManager->SetCurrentScene(t.targetSceneId, t.targetSpawnId);
+			return;
+		}
+	}
+
+}
+
+void Scene::StartDialog(std::string characterId)
+{
+	if (!gameStarted) return;
+	if (isOnDialog) return;
+	if (!dialogManager->SetCurrentDialog(characterId)) return;
+	isOnDialog = true;
+	activeDialogId = characterId;
+	entityManager->paused = true;
+}
+
+void Scene::EndDialog()
+{
+	if (!gameStarted) return;
+	isOnDialog = false;
+	entityManager->paused = false;
+
+	if (!activeDialogId.empty()) {
+		if (activeDialogId == "statue") {
+			SaveGame();
+		}
+		for (const auto& entity : entityManager->entities) {
+			if (entity->id == activeDialogId) {
+				if (auto npc = std::dynamic_pointer_cast<NPC>(entity)) {
+					npc->OnDialogEnd();
+					break;
+				}
+			}
+		}
+		activeDialogId = "";
+	}
+}
+
+void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
+{
+	if (hasCombatCooldown) return;
+	Engine::GetInstance().render->follow = nullptr;
+	combat = new Combat(player->party, enemy->party, mapsPath, combatMapName);
+	combat->Awake();
+	combat->Start();
+}
+
+void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
+{
+	switch (combatResult)
+	{
+	case WIN:
+		for (const auto& enemy : enemyParty->members) entityManager->DestroyEntity(enemy);
+		for (const auto& npc : player->party->members) {
+			if (npc->isDead) {
+				player->party->RemoveMember(npc->id);
+				entityManager->DestroyEntity(npc);
+			}
+		}
+			
+		break;
+	case LOSE:
+		EndGame();
+		break;
+	case FLED:
+		for (const auto& npc : player->party->members) {
+			if (npc->isDead) {
+				player->party->RemoveMember(npc->id);
+				entityManager->DestroyEntity(npc);
+			}
+		}
+		combatTimer.Start();
+		hasCombatCooldown = true;
+		break;
+	default:
+		break;
+	}
+	delete combat;
+	combat = nullptr;
+	Engine::GetInstance().render->follow = player;
+}
+
+void Scene::CopyCleanGameData()
+{
+	{
+		std::ifstream src("Assets/Entities/characters_clean.xml", std::ios::binary);
+		std::ofstream dst1("Assets/Entities/characters.xml", std::ios::binary | std::ios::trunc);
+		dst1 << src.rdbuf();
+	}
+	{
+		std::ifstream src("Assets/Entities/characters_clean.xml", std::ios::binary);
+		std::ofstream dst2("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
+		dst2 << src.rdbuf();
+	}
+
+	{
+		std::ifstream src("Assets/Entities/items_clean.xml", std::ios::binary);
+		std::ofstream dst("Assets/Entities/items.xml", std::ios::binary | std::ios::trunc);
+		dst << src.rdbuf();
+	}
+
+	{
+		std::ifstream src("Assets/Dialogues/dialogues_clean.xml", std::ios::binary);
+		std::ofstream dst1("Assets/Dialogues/dialogues.xml", std::ios::binary | std::ios::trunc);
+		dst1 << src.rdbuf();
+	}
+	{
+		std::ifstream src("Assets/Dialogues/dialogues_clean.xml", std::ios::binary);
+		std::ofstream dst2("Assets/Dialogues/dialogues_session.xml", std::ios::binary | std::ios::trunc);
+		dst2 << src.rdbuf();
+	}
+}
+
+Vector2D Scene::GetPlayerPosition() {
+
+	if (player)
+		return player->GetPosition();
+
+	return Vector2D(0, 0);
+}
+
+bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
+	
+	if (Engine::GetInstance().uiManager->uiLockFrame == Engine::GetInstance().frameCount) return true;
+
+	float musicVol;
+	float fxVol;
+	switch ((UIID)uiElement->id)
+	{
+	case START_GAME:
+		CopyCleanGameData();
+		Engine::GetInstance().menuManager->HideMenu();
+		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001");
+		break;
+	case CONTINUE_GAME: {
+		{
+			std::ifstream src("Assets/Entities/characters.xml", std::ios::binary);
+			std::ofstream dst("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
+			dst << src.rdbuf();
+		}
+		{
+			std::ifstream src("Assets/Dialogues/dialogues.xml", std::ios::binary);
+			std::ofstream dst("Assets/Dialogues/dialogues_session.xml", std::ios::binary | std::ios::trunc);
+			dst << src.rdbuf();
+		}
+
+		Engine::GetInstance().menuManager->HideMenu();
+		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001"); // take the last scene from the save data
+		break;
+	}
+	case RESUME_GAME:
+		TogglePause();
+		break;
+	case SETTINGS_BUTTON:
+		Engine::GetInstance().menuManager->ShowSettingsMenu();
+		break;
+	case CREDITS_BUTTON:
+		Engine::GetInstance().menuManager->ShowCreditsMenu();
+		break;
+	case MUSIC_VOLUME:
+		musicVol = ((UISlider*)uiElement)->GetValue() / 10;
+		Engine::GetInstance().audio->SetMusicVolume(musicVol);
+		break;
+	case FX_VOLUME:
+		fxVol = ((UISlider*)uiElement)->GetValue() / 10;
+		Engine::GetInstance().audio->SetFxVolume(fxVol);
+		break;
+	case FULLSCREEN:
+		Engine::GetInstance().window->SetFullscreen(((UICheckbox*)uiElement)->checked);
+		Engine::GetInstance().menuManager->Load(true);
+		break;
+	case BACK_MENU:
+		Engine::GetInstance().menuManager->ShowPreviousMenu();
+		break;
+	case BACK_MAIN_MENU:
+		dialogManager->SetCurrentDialog();
+		//for (const auto& entity : entityManager->entities) entityManager->DestroyEntity(entity);
+		if (combat) {
+			delete combat;
+			combat = nullptr;
+		}
+		Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		break;
+	case EXIT:
+		exit(0);
+		break;
+	default:
+		break;
+	}
+	return true;
 }

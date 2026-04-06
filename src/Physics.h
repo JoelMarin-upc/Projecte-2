@@ -72,10 +72,16 @@ public:
 
     void   DestroyBody(Collider* p) const;
 
+    void SetCollisionFilter(Collider * p, uint16_t categoryBits, uint16_t maskBits);
+
     b2Transform GetTransform(Collider* p);
     void MoveBody(Collider* p, b2Vec2 pos, b2Rot rot);
     
     void SetGravityScale(Collider* p, float scale);
+
+    void ResetPhysicsWorld();
+
+    void ClearPendingDeletes() { bodiesToDelete.clear(); }
 
 private:
     // helpers

@@ -34,6 +34,7 @@ public:
     // L13: A* Pathfinding methods
     Vector2D* PropagateAStar(ASTAR_HEURISTICS heuristic);
 
+
 private:
     int Find(std::list<Vector2D> vector, Vector2D elem);
 
@@ -60,5 +61,6 @@ public:
     int blockedGid = 626; //Gid of the tiles that block the path - Important adjust this value to your map
     int highCostGid = 50; //Gid of the tiles that have high cost - Important adjust this value to your map
     bool debug;
+    std::vector<Vector2D> path;
 };
 

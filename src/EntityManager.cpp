@@ -7,6 +7,7 @@
 #include "Log.h"
 #include "Item.h"
 #include "NPC.h"
+#include "InteractableItem.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -39,11 +40,11 @@ bool EntityManager::Start() {
 	bool ret = true; 
 
 	//Iterates over the entities and calls Start
-	for(const auto entity : entities)
+	/*for(const auto entity : entities)
 	{
 		if (entity->active == false) continue;
 		ret = entity->Start();
-	}
+	}*/
 
 	return ret;
 }
@@ -64,7 +65,7 @@ bool EntityManager::CleanUp()
 	return ret;
 }
 
-std::shared_ptr<Entity> EntityManager::CreateEntity(EntityType type)
+std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, ItemInteractionType interactionType, NPCInteractionType npcInteractionType)
 {
 	std::shared_ptr<Entity> entity = std::make_shared<Entity>();
 
@@ -72,19 +73,73 @@ std::shared_ptr<Entity> EntityManager::CreateEntity(EntityType type)
 	switch (type)
 	{
 	case EntityType::PLAYER:
-		entity = std::make_shared<Player>();
+		entity = std::make_shared<Player>(id, name, texturePath);
 		break;
 	case EntityType::NPC:
-		entity = std::make_shared<NPC>();
+		entity = std::make_shared<NPC>(id, name, texturePath, npcInteractionType);
 		break;
-	case EntityType::ITEM:
-		entity = std::make_shared<Item>();
+	/*case EntityType::INTERACTABLE_ITEM:
+		entity = std::make_shared<InteractableItem>(id, name, texturePath, interactionType);
+		break;*/
+	default:
+		break;
+	}
+
+	entities.push_back(entity);
+
+	entity->position = position;
+
+	entity->Start();
+
+	return entity;
+}
+
+std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, ItemInteractionType interactionType, bool canStack, std::string toggledTexturePath)
+{
+	std::shared_ptr<Entity> entity = std::make_shared<Entity>();
+
+	//L04: TODO 3a: Instantiate entity according to the type and add the new entity to the list of Entities
+	switch (type)
+	{
+	case EntityType::INTERACTABLE_ITEM:
+		entity = std::make_shared<InteractableItem>(id, name, texturePath, interactionType, canStack, toggledTexturePath);
 		break;
 	default:
 		break;
 	}
 
 	entities.push_back(entity);
+
+	entity->position = position;
+
+	entity->Start();
+
+	return entity;
+}
+
+std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, NPCInteractionType npcInteractionType)
+{
+	std::shared_ptr<Entity> entity = std::make_shared<Entity>();
+
+	//L04: TODO 3a: Instantiate entity according to the type and add the new entity to the list of Entities
+	switch (type)
+	{
+	case EntityType::PLAYER:
+		entity = std::make_shared<Player>(id, name, texturePath);
+		break;
+	case EntityType::NPC:
+		entity = std::make_shared<NPC>(id, name, texturePath, npcInteractionType);
+		break;
+	case EntityType::ENEMY:
+		entity = std::make_shared<Enemy>(id, name, texturePath);
+		break;
+	default:
+		break;
+	}
+
+	entities.push_back(entity);
+
+	entity->position = position;
 
 	entity->Start();
 

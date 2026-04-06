@@ -94,6 +94,8 @@ Collider* Physics::CreateRectangle(int x, int y, int width, int height, bodyType
     b2BodyDef def = b2DefaultBodyDef();
     def.type = ToB2Type(type);
     def.position = { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) };
+    def.linearDamping = 5.f;
+    def.angularDamping = 5.f;
 
     b2BodyId b = b2CreateBody(world, &def);
 
@@ -120,6 +122,8 @@ Collider* Physics::CreateCircle(int x, int y, int radious, bodyType type, uint16
     b2BodyDef def = b2DefaultBodyDef();
     def.type = ToB2Type(type);
     def.position = { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) };
+    def.linearDamping = 5.f;
+    def.angularDamping = 5.f;
 
     b2BodyId b = b2CreateBody(world, &def);
 
@@ -201,6 +205,8 @@ Collider* Physics::CreateChain(int x, int y, int* points, int size, bodyType typ
     b2BodyDef def = b2DefaultBodyDef();
     def.type = ToB2Type(type);
     def.position = { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) };
+    def.linearDamping = 5.f;
+    def.angularDamping = 5.f;
 
     b2BodyId b = b2CreateBody(world, &def);
 
@@ -236,7 +242,7 @@ bool Physics::PostUpdate(float dt)
     bool ret = true;
 
     // Activate or deactivate debug mode
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
         debug = !debug;
 
     // Debug draw via Box2D 3.x callbacks
@@ -412,6 +418,24 @@ void Physics::DestroyBody(Collider* p) const
     p = nullptr;
 }
 
+void Physics::SetCollisionFilter(Collider* p, uint16_t categoryBits, uint16_t maskBits)
+{
+    int shapeCount = b2Body_GetShapeCount(p->body);
+    b2ShapeId shapes[16];
+
+    if (shapeCount > 16) shapeCount = 16;
+
+    b2Body_GetShapes(p->body, shapes, shapeCount);
+
+    for (int i = 0; i < shapeCount; ++i) {
+        b2Filter filter = b2Shape_GetFilter(shapes[i]);
+        filter.categoryBits = categoryBits;
+        filter.maskBits = maskBits;
+
+        b2Shape_SetFilter(shapes[i], filter);
+    }
+}
+
 b2Transform Physics::GetTransform(Collider * p)
 {
     return b2Body_GetTransform(p->body);
@@ -425,6 +449,19 @@ void Physics::MoveBody(Collider* p, b2Vec2 pos, b2Rot rot)
 void Physics::SetGravityScale(Collider* p, float scale)
 {
     b2Body_SetGravityScale(p->body, scale);
+}
+
+void Physics::ResetPhysicsWorld()
+{
+    if (!B2_IS_NULL(world))
+    {
+        b2DestroyWorld(world);
+        world = b2_nullWorldId;
+    }
+
+    b2WorldDef worldDef = b2DefaultWorldDef();
+    worldDef.gravity = { 0.0f, 0.0f };
+    world = b2CreateWorld(&worldDef);
 }
 
 b2BodyType Physics::ToB2Type(bodyType t)

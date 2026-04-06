@@ -12,7 +12,11 @@ struct Properties
     struct Property
     {
         std::string name;
-        bool value; //We assume that we are going to work only with bool for the moment
+        std::string type;
+        bool value_b;
+        std::string value_s;
+        int value_i;
+        float value_f;
     };
 
     std::list<Property*> propertyList;
@@ -39,10 +43,40 @@ struct Properties
         return nullptr;
     }
 
-    void ChangePorperty(const char* name) {
+    void ChangePorperty(const char* name, bool value) {
         for (const auto& property : propertyList) {
             if (property->name == name) {
-                property->value = true;
+                property->value_b = value;
+            }
+        }
+
+        return;
+    }
+
+    void ChangePorperty(const char* name, std::string value) {
+        for (const auto& property : propertyList) {
+            if (property->name == name) {
+                property->value_s = value;
+            }
+        }
+
+        return;
+    }
+
+    void ChangePorperty(const char* name, int value) {
+        for (const auto& property : propertyList) {
+            if (property->name == name) {
+                property->value_i = value;
+            }
+        }
+
+        return;
+    }
+
+    void ChangePorperty(const char* name, float value) {
+        for (const auto& property : propertyList) {
+            if (property->name == name) {
+                property->value_f = value;
             }
         }
 
@@ -77,6 +111,8 @@ struct TileSet
     std::string name;
     int tileWidth;
     int tileHeight;
+    int renderWidth;
+    int renderHeight;
     int spacing;
     int margin;
     int tileCount;
@@ -100,7 +136,9 @@ struct TileSet
 
 struct Object
 {
-    int id, x, y, width, height;
+    int id;
+    float x, y, width, height;
+    Properties properties;
 };
 
 struct ObjectGroup
@@ -122,6 +160,36 @@ struct MapData
     // L07: TODO 2: Add the info to the MapLayer Struct
     std::list<MapLayer*> layers;
     std::list<ObjectGroup*> objectlayers;
+};
+
+struct AccessData {
+    Vector2D position;
+    float width, height;
+    std::string targetSceneId;
+    std::string targetSpawnId;
+};
+
+struct SpawnPoint {
+    std::string spawnId;
+    Vector2D position;
+};
+
+struct GameData {
+    std::vector<SpawnPoint> spawnPoints;
+    std::vector<NPCData> npcs;
+    std::vector<ItemData> items;
+    std::vector<AccessData> accesses;
+};
+
+struct CombatPosition {
+    bool isEnemy;
+    int order;
+    Vector2D position;
+};
+
+struct CombatData {
+    Vector2D cameraPosition;
+    std::vector<CombatPosition> positions;
 };
 
 class Map
@@ -181,8 +249,11 @@ public:
     std::string mapPath;
     Vector2D* playerStartPos = nullptr;
     MapData mapData;
+    GameData gameData;
+    CombatData combatData;
+    bool mapLoaded;
 
 private:
-    bool mapLoaded;
+    float scale = 2.0f;
     // L06: DONE 1: Declare a variable data of the struct MapData
 };

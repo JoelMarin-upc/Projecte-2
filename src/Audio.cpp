@@ -183,6 +183,21 @@ bool Audio::PlayMusic(const char* path, float fadeTime) {
         return false;
     }
 
+    //fading
+    if (fadeTime > 0.0f) {
+        LOG("is fading");
+        fadeFactor = 0.0f;
+        fadeSpeed = 1.0f / fadeTime;
+        isFading = true;
+    }
+    else {
+        fadeFactor = 1.0f;
+    }
+
+    UpdateMusicVolume();
+    
+    //SDL_SetAudioStreamGain(music_stream_, musicVolume);
+
     LOG("Audio: playing music %s", path);
     return true;
 }
@@ -236,7 +251,16 @@ void Audio::SetMusicVolume(float volume)
     if (volume < 0.0f) volume = 0.0f;
     if (volume > 1.0f) volume = 1.0f;
 
-    musicVolume = volume;
+    targetVolume = volume;
+    //musicVolume = volume;
+
+    UpdateMusicVolume();
+}
+
+void Audio::UpdateMusicVolume()
+{
+    float finalVolume = targetVolume * pauseMultiplier * fadeFactor;
+    musicVolume = finalVolume;
 
     if (music_stream_) {
         SDL_SetAudioStreamGain(music_stream_, musicVolume);
@@ -257,5 +281,30 @@ void Audio::SetFxVolume(float volume)
 
 bool Audio::MusicPlaying() {
     if (SDL_GetAudioStreamAvailable(music_stream_) == 0) return false;
+    return true;
+}
+
+bool Audio::Update(float dt)
+{
+    //Loop music
+    if (music_stream_ && SDL_GetAudioStreamAvailable(music_stream_) == 0)
+    {
+        //Requeue the same music for infinite looping
+        SDL_PutAudioStreamData(music_stream_, music_data_.buf, music_data_.len);
+    }
+
+    //fading stuff
+    if (isFading)
+    {
+        fadeFactor += fadeSpeed * dt;
+
+        if (fadeFactor >= 1.0f)
+        {
+            fadeFactor = 1.0f;
+            isFading = false;
+        }
+
+        UpdateMusicVolume();
+    }
     return true;
 }

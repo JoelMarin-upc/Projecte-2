@@ -145,6 +145,8 @@
     <None Include=".gitignore" />
     <None Include="Assets\Maps\MapTemplate.tmx" />
     <None Include="Assets\Maps\MapTemplate1.tmx" />
+    <None Include="Assets\Maps\RebelRefuge.tmx" />
+    <None Include="Assets\Maps\TutorialDungeon.tmx" />
     <None Include="Assets\Textures\AnimationSheet_Character.tsx" />
     <None Include="Assets\Textures\bat.tsx" />
     <None Include="Assets\Textures\bat32.tsx" />
@@ -165,6 +167,7 @@
     <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\Combat.cpp" />
     <ClCompile Include="src\Consumable.cpp" />
+    <ClCompile Include="src\DialogAnswer.cpp" />
     <ClCompile Include="src\DialogManager.cpp" />
     <ClCompile Include="src\DialogNode.cpp" />
     <ClCompile Include="src\DialogTree.cpp" />
@@ -183,7 +186,7 @@
     <ClCompile Include="src\KillMission.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Map.cpp" />
-    <ClCompile Include="src\Menu.cpp" />
+    <ClCompile Include="src\MenuManager.cpp" />
     <ClCompile Include="src\Mission.cpp" />
     <ClCompile Include="src\MissionManager.cpp" />
     <ClCompile Include="src\NonInteractableBuilding.cpp" />
@@ -203,6 +206,7 @@
     <ClCompile Include="src\StaticEntity.cpp" />
     <ClCompile Include="src\Stats.cpp" />
     <ClCompile Include="src\TalkMission.cpp" />
+    <ClCompile Include="src\UIImage.cpp" />
     <ClCompile Include="src\UnbreakableObstacle.cpp" />
     <ClCompile Include="src\Weapon.cpp" />
     <ClCompile Include="src\XMLHandler.cpp" />
@@ -233,6 +237,7 @@
     <ClInclude Include="src\Collider.h" />
     <ClInclude Include="src\Combat.h" />
     <ClInclude Include="src\Consumable.h" />
+    <ClInclude Include="src\DialogAnswer.h" />
     <ClInclude Include="src\DialogManager.h" />
     <ClInclude Include="src\DialogNode.h" />
     <ClInclude Include="src\DialogTree.h" />
@@ -252,7 +257,7 @@
     <ClInclude Include="src\KillMission.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Map.h" />
-    <ClInclude Include="src\Menu.h" />
+    <ClInclude Include="src\MenuManager.h" />
     <ClInclude Include="src\Mission.h" />
     <ClInclude Include="src\MissionManager.h" />
     <ClInclude Include="src\Module.h" />
@@ -273,6 +278,7 @@
     <ClInclude Include="src\StaticEntity.h" />
     <ClInclude Include="src\Stats.h" />
     <ClInclude Include="src\TalkMission.h" />
+    <ClInclude Include="src\UIImage.h" />
     <ClInclude Include="src\UnbreakableObstacle.h" />
     <ClInclude Include="src\Weapon.h" />
     <ClInclude Include="src\XMLHandler.h" />
@@ -292,6 +298,12 @@
     <ClInclude Include="src\Zombie.h" />
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="Assets\Dialogues\test.xml" />
+    <Xml Include="Assets\Entities\base_stats.xml" />
+    <Xml Include="Assets\Entities\characters.xml" />
+    <Xml Include="Assets\Entities\characters_clean.xml" />
+    <Xml Include="Assets\Entities\items.xml" />
+    <Xml Include="Assets\Entities\items_clean.xml" />
     <Xml Include="config.xml" />
     <Xml Include="gamesave.xml" />
   </ItemGroup>

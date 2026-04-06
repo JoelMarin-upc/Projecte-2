@@ -16,7 +16,7 @@ bool UIManager::Start()
 	return true;
 }
 
-std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id, SDL_Rect bounds, Module* observer, std::vector<SDL_Color> colors, int hoverFxId, int clickFxId, UIParameters params)
+std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id, SDL_Rect bounds, Module* observer, std::vector<SDL_Color> colors, int hoverFxId, int clickFxId, UIParameters params, bool useCamera)
 {
 	std::shared_ptr<UIElement> uiElement = std::make_shared<UIElement>();
 
@@ -91,10 +91,15 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 
 		uiElement = std::make_shared<UISlider>(id, bounds, params.showValue, params.min, params.max, params.step, params.value, c1, c2, c3, c4, c5, c6, c7, hoverFxId, clickFxId);
 		break;
+
+	case UIElementType::IMAGE:
+		uiElement = std::make_shared<UIImage>(id, bounds, params.disabledTex, params.normalTex, params.focusedTex, params.pressedTex, hoverFxId, clickFxId);
+		break;
 	}
 
 	//Set the observer
 	uiElement->observer = observer;
+	uiElement->useCamera = useCamera;
 
 	// Created GuiControls are add it to the list of controls
 	UIElementsList.push_back(uiElement);
@@ -102,9 +107,16 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 	return uiElement;
 }
 
+void UIManager::DestroyUIElement(std::shared_ptr<UIElement> element)
+{
+	if (!element) return;
+	UIElementsList.remove(element);
+	element->CleanUp();
+}
+
 bool UIManager::PostUpdate(float dt)
 {
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 		debug = !debug;
 
 	for (const auto& control : UIElementsList)
