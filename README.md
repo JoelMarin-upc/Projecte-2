@@ -114,3 +114,14 @@ In this release, the following features have been implemented:
 
 ---
 
+## External Assets
+- Pixel Crawler Tileset by Anokolisa: https://anokolisa.itch.io/free-pixel-art-asset-pack-topdown-tileset-rpg-16x16-sprites
+- Rogue Fantasy "catacombs" Tileset by szadiard: https://szadiart.itch.io/rogue-fantasy-catacombs
+- Home Interior Asset Pack - Phonky Phone: https://mologo.itch.io/home-interior-asset-pack-free
+- Leander Typography by Tension Type: https://www.dafont.com/leander.font
+- Dark Cinematic by NikitaKondrashev: https://pixabay.com/music/suspense-dark-cinematic-509801/
+- Waltz in C (Classical, Piano, Soundtrack) by Ashot_Danielyan: https://pixabay.com/music/modern-classical-waltz-in-c-classical-piano-soundtrack-368728/
+- Follows ( Dark Ambient ) by AmbientAUDIOVISION: https://pixabay.com/music/ambient-follows-dark-ambient-194926/
+- Opening Old Elevator Door by ryanharding95 (Freesound): https://pixabay.com/sound-effects/film-special-effects-opening-old-elevator-door-84624/
+
+All original assets in this project are licensed under CC BY 4.0.
