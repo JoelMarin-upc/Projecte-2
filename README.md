@@ -68,7 +68,10 @@ In this release, the following features have been implemented:
 ---
 ## Known Issues
 
-- The dialog box is drawn on top of the pause menu when player is interacting with someone/something
+- The dialog box and its options are drawn on top of the pause menu when player is interacting with someone/something
+- Stats don't get saved by the save system
+- If a party member dies in battle, it comes back alive when exiting the dungeon
+- The lever is only visual for the moment, it has no other function
 
 ---
 
@@ -87,7 +90,6 @@ In this release, the following features have been implemented:
 ### Debug Controls
 | Action | Key |
 |:--------|:----|
-| Show Colliders | F9 |
 | God Mode + show collisions | F10 |
 | Rebel refuge scene | 1 |
 | Shop scene | 2 |
