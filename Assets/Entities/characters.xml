@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
 <characters>
 	<player id="player" name="main character" texture="goldCoin.png">
-		<party>
-			<member id="CH-006" />
-		</party>
 		<inventory />
+		<party />
 	</player>
 	<character id="CH-001" name="Gravekeeper" texture="heart.png" type="3" npcInteractionType="3">
 		<inventory />

@@ -65,6 +65,9 @@ void SceneManager::DoTransition()
 
 	//First clean up the current scene
 	if (currentScene) {
+		/*if (currentScene->GetGameStarted()) {
+			currentScene->SaveDialogState();
+		}*/
 		currentScene->CleanUp();
 		delete currentScene;
 		currentScene = nullptr;

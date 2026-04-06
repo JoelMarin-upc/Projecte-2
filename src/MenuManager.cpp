@@ -6,7 +6,7 @@
 #include "Item.h"
 #include "Audio.h"
 #include "Window.h"
-
+#include "SceneManager.h"
 
 MenuManager::MenuManager() : Module()
 {
@@ -173,8 +173,14 @@ void MenuManager::ShowMainMenu()
 	gameTitle->active = true;
 	startGame->active = true;
 	continueGame->active = true;
-	if (XMLHandler::SaveFileExists()) continueGame->Enable();
-	else continueGame->Disable();
+	if (!Engine::GetInstance().sceneManager->isGameSaved) {
+		continueGame->Disable();
+	}
+	else {
+		continueGame->Enable();
+	}
+	//if (XMLHandler::SaveFileExists()) continueGame->Enable();
+	//else continueGame->Disable();
 	creditsButton->active = true;
 	settingsButton->active = true;
 	exit->active = true;

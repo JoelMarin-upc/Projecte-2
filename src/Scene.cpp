@@ -113,6 +113,10 @@ bool Scene::Start(std::string spawnId)
 	missionManager->Start();
 	dialogManager->Start();
 
+	if (gameStarted) {
+		LoadDialogState();
+	}
+
 	if (id == "SC-001") {
 		if (Engine::GetInstance().sceneManager->triggerFirstMonologue == true) {
 			StartDialog("player");
@@ -227,12 +231,61 @@ void Scene::TogglePause()
 
 void Scene::SaveGame()
 {
-	
+	pugi::xml_document charDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+	pugi::xml_node playerNode = charDoc.child("characters").child("player");
+	playerNode.remove_child("party");
+	pugi::xml_node partyNode = playerNode.append_child("party");
+
+	if (player && player->party) {
+		for (const auto& member : player->party->members) {
+			pugi::xml_node mNode = partyNode.append_child("member");
+			mNode.append_attribute("id").set_value(member->id.c_str());
+		}
+	}
+
+	charDoc.save_file("Assets/Entities/characters.xml");
+	SaveDialogState();
+	Engine::GetInstance().sceneManager->isGameSaved = true;
+	LOG("GAME SAVED");
 }
 
 void Scene::LoadGame()
 {
 	
+}
+
+void Scene::SaveDialogState()
+{
+	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
+	pugi::xml_node root = dialogDoc.child("dialogs");
+
+	for (pugi::xml_node treeNode = root.child("tree"); treeNode != NULL; treeNode = treeNode.next_sibling("tree")) {
+		std::string treeId = treeNode.attribute("id").as_string();
+		for (DialogTree* tree : dialogManager->dialogs) {
+			if (tree->id == treeId) {
+				treeNode.attribute("done").set_value(tree->done);
+				break;
+			}
+		}
+	}
+	dialogDoc.save_file("Assets/Dialogues/dialogues.xml");
+}
+
+void Scene::LoadDialogState()
+{
+	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
+	pugi::xml_node root = dialogDoc.child("dialogs");
+
+	for (pugi::xml_node treeNode = root.child("tree"); treeNode != NULL; treeNode = treeNode.next_sibling("tree")) {
+		std::string treeId = treeNode.attribute("id").as_string();
+		bool done = treeNode.attribute("done").as_bool();
+		for (DialogTree* tree : dialogManager->dialogs) {
+			if (tree->id == treeId) {
+				tree->done = done;
+				break;
+			}
+		}
+	}
 }
 
 void Scene::LoadMap(std::string mapPath, std::string mapName)
@@ -389,6 +442,9 @@ void Scene::EndDialog()
 	entityManager->paused = false;
 
 	if (!activeDialogId.empty()) {
+		if (activeDialogId == "statue") {
+			SaveGame();
+		}
 		for (const auto& entity : entityManager->entities) {
 			if (entity->id == activeDialogId) {
 				if (auto npc = std::dynamic_pointer_cast<NPC>(entity)) {
@@ -442,6 +498,10 @@ void Scene::CopyCleanGameData()
 	std::ifstream src2("Assets/Entities/items_clean.xml", std::ios::binary);
 	std::ofstream dst2("Assets/Entities/items.xml", std::ios::binary | std::ios::trunc);
 	dst2 << src2.rdbuf();
+	std::ifstream src3("Assets/Dialogues/dialogues_clean.xml", std::ios::binary);
+	std::ofstream dst3("Assets/Dialogues/dialogues.xml", std::ios::binary | std::ios::trunc);
+	dst3 << src3.rdbuf();
+
 }
 
 bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
@@ -454,6 +514,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	{
 	case START_GAME:
 		CopyCleanGameData();
+		Engine::GetInstance().sceneManager->isGameSaved = false;
 		Engine::GetInstance().menuManager->HideMenu();
 		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001");
 		break;

@@ -55,6 +55,8 @@ public:
 	void TogglePause();
 	void SaveGame();
 	void LoadGame();
+	void SaveDialogState();
+	void LoadDialogState();
 	void LoadMap(std::string mapPath, std::string mapName);
 	void LoadScene(std::string spawnId = "default");
 	void EndScene();
@@ -77,6 +79,10 @@ public:
 
 	bool GetIsOnDialog() {
 		return isOnDialog;
+	}
+
+	bool GetGameStarted() {
+		return gameStarted;
 	}
 
 	bool hasEnded;

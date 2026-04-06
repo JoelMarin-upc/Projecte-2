@@ -67,6 +67,7 @@ void DialogManager::LoadDialogs()
 		tree->characterName = treeNode.attribute("characterName").as_string();
 		tree->order = treeNode.attribute("order").as_int();
 		tree->done = treeNode.attribute("done").as_bool();
+		tree->isRepeatable = treeNode.attribute("isRepeatable").as_bool(false);
 		tree->nodes = std::vector<DialogNode*>();
 
 		for (pugi::xml_node nodeXml = treeNode.child("node"); nodeXml != NULL; nodeXml = nodeXml.next_sibling("node")) {
@@ -219,7 +220,17 @@ bool DialogManager::OnUIMouseClickEvent(UIElement* uiElement)
 	std::string nextId = currentDialog->currentNode->answers[answerNum]->leadsToNodeId;
 
 	if (nextId == "") {
-		currentDialog->done = true;
+		if (!currentDialog->isRepeatable) {
+			currentDialog->done = true;
+		}
+		else {
+			for (DialogNode* n : currentDialog->nodes) {
+				if (n->first) {
+					currentDialog->currentNode = n;
+					break;
+				}
+			}
+		}
 		SetCurrentDialog();
 		Engine::GetInstance().sceneManager->currentScene->EndDialog();
 		return true;
