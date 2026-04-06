@@ -305,7 +305,7 @@ void Scene::SaveSessionState()
 			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
 			cNode.attribute("savedX").set_value(npc->position.getX());
 			cNode.attribute("savedY").set_value(npc->position.getY());
-			cNode.attribute("dead").set_value(npc->isDead);
+			cNode.attribute("isDead").set_value(npc->isDead);
 			break;
 		}
 	}
@@ -479,7 +479,7 @@ void Scene::LoadScene(std::string spawnId)
 	for (NPCData npc : mapData.npcs) {
 		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
 			if (cNode.attribute("id").as_string() != npc.id) continue;
-			if (cNode.attribute("dead").as_bool(false)) break;
+			if (cNode.attribute("isDead").as_bool(false)) break;
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
 			int type = cNode.attribute("type").as_int();
