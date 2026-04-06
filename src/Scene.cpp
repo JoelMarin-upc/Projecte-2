@@ -43,6 +43,7 @@ bool Scene::Awake()
 	LOG("Loading Scene");
 	bool ret = true;
 
+
 	entityManager->Awake();
 	missionManager->Awake();
 	dialogManager->Awake();
@@ -638,6 +639,14 @@ void Scene::CopyCleanGameData()
 		std::ofstream dst2("Assets/Dialogues/dialogues_session.xml", std::ios::binary | std::ios::trunc);
 		dst2 << src.rdbuf();
 	}
+}
+
+Vector2D Scene::GetPlayerPosition() {
+
+	if (player)
+		return player->GetPosition();
+
+	return Vector2D(0, 0);
 }
 
 bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {

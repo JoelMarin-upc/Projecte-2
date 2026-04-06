@@ -91,6 +91,10 @@ void SceneManager::DoTransition()
 	}
 }
 
+Scene* SceneManager::GetCurrentScene() const { 
+	return currentScene; 
+}
+
 EntityManager* SceneManager::GetEntityManager() const
 {
 	return currentScene->entityManager;

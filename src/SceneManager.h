@@ -42,6 +42,8 @@ public:
 
 	void DoTransition();
 
+	Scene* GetCurrentScene() const;
+
 	EntityManager* GetEntityManager() const;
 	
 	MissionManager* GetMissionManager() const;
