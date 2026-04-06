@@ -141,10 +141,13 @@ void Enemy::UpdateState(float dt)
 
 		Vector2D playerTile = map->WorldToMap(playerPos.getX(), playerPos.getY());
 		Vector2D enemyTile = map->WorldToMap(position.getX(), position.getY());
+		float pathTimer = 0.0f;
+		float pathInterval = 0.3f;
 
-		if (playerTile != lastPlayerTile) {
+		if (playerTile != lastPlayerTile && (pathTimer += dt) >= pathInterval) {
 			lastPlayerTile = playerTile;
 			PerformPathfinding();
+			pathTimer = 0.0f;
 
 		}
 
@@ -175,15 +178,17 @@ float Enemy::DistanceTo(const Vector2D& v) const
 void Enemy::Move(const Vector2D& target) {
 	//LOG("moving");
 	Vector2D currentPos = GetPosition();
-	std::vector<Vector2D> tiles(pathfinding->pathTiles.begin(), pathfinding->pathTiles.end());
-	int targetIndex = 1;
+	auto& tiles = pathfinding->pathTiles;
 
-	//Checks a bit ahead in the tiles vector
-	if (tiles.size() - 1 > 2) {
-		targetIndex = 2;
+	if (tiles.size() < 2) {
+		velocity = { 0, 0 };
+		return;
 	}
 
-	Vector2D nextTile = tiles[targetIndex];
+	auto it = tiles.begin();
+	std::advance(it, (tiles.size() > 2) ? 2 : 1);
+
+	Vector2D nextTile = *it;
 
 	Vector2D nextWorldPos = map->MapToWorld((int)nextTile.getX(), (int)nextTile.getY());
 	int tileWidth = map->GetTileWidth();
