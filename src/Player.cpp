@@ -68,7 +68,7 @@ bool Player::Update(float dt)
 
 void Player::GodMode()
 {
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
 		godMode = !godMode;
 		if (godMode)
