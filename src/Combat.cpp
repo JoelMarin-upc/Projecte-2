@@ -44,6 +44,7 @@ Combat::~Combat() {
 	Engine::GetInstance().uiManager->DestroyUIElement(log2);
 	Engine::GetInstance().uiManager->DestroyUIElement(log3);
 	Engine::GetInstance().uiManager->DestroyUIElement(log4);
+	Engine::GetInstance().uiManager->DestroyUIElement(hint);
 }
 
 // Called before render is available
@@ -69,6 +70,7 @@ bool Combat::Start() {
 	SDL_Rect b_log2 = { sw - 320, 60, 300, 20 };
 	SDL_Rect b_log3 = { sw - 320, 100, 300, 20 };
 	SDL_Rect b_log4 = { sw - 320, 140, 300, 20 };
+	SDL_Rect b_hint = { 20, 20, 300, 20 };
 	
 	action1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::ACTION1, b_action1, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Attack")));
 	action2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::ACTION2, b_action2, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Stance")));
@@ -82,18 +84,24 @@ bool Combat::Start() {
 
 	endTurn = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::END_TURN, b_endTurn, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("End turn")));
 
-	log1 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG1, b_log1, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	log2 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG2, b_log2, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	log3 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG3, b_log3, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	log4 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG4, b_log4, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	log1 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG1, b_log1, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
+	log2 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG2, b_log2, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
+	log3 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG3, b_log3, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
+	log4 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG4, b_log4, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
 
-	ToggleActions(false);
+	hint = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::HINT, b_hint, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
+
+	action1->active = false;
+	action2->active = false;
+	action3->active = false;
+	action4->active = false;
 	ToggleStances(false);
 
 	isPlayerTurn = true; // calculate from speed stats
 	combatPhase = isPlayerTurn ? DECISION : ENEMY_TURN;
 	endTurn->active = isPlayerTurn;
 	enemyTurnTimerActive = false;
+	if (isPlayerTurn) hint->text = "Select a character";
 
 	// PLAYER TEAM
 
@@ -234,6 +242,7 @@ bool Combat::Update(float dt) {
 		combatPhase = isPlayerTurn ? DECISION : ENEMY_TURN;
 		endTurn->active = isPlayerTurn;
 		turnActions.clear();
+		if (isPlayerTurn) hint->text = "Select a character";
 		break;
 	case ENEMY_TURN:
 		if (enemyTurnTimerActive && enemyTurnTimer.ReadMSec() < enemyTurnMS) return true;
@@ -404,6 +413,8 @@ void Combat::ToggleActions(bool show)
 	action2->active = show;
 	action3->active = show;
 	action4->active = show;
+	if (show) hint->text = "Select an action";
+	else hint->text = "Select a target";
 }
 
 void Combat::ToggleStances(bool show)
@@ -413,6 +424,7 @@ void Combat::ToggleStances(bool show)
 	stance2->active = show;
 	stance3->active = show;
 	stance4->active = show;
+	if (show) hint->text = "Select a stance";
 }
 
 void Combat::KillCombatant(std::shared_ptr<Character> character)
@@ -459,6 +471,14 @@ void Combat::AddTurnAction()
 	if (npc2 && turnAction->selected->id == npc2->id) actionTaken3 = true;
 	if (npc3 && turnAction->selected->id == npc3->id) actionTaken4 = true;
 	turnAction = nullptr;
+	int activeCharacters = 1;
+	for (std::shared_ptr<NPC> c : playerParty->members) if (!c->isDead && !c->hasFled) activeCharacters++;
+	if (isPlayerTurn && turnActions.size() == activeCharacters) {
+		hint->text = "End the turn";
+	}
+	else if (isPlayerTurn && turnActions.size() < activeCharacters) {
+		hint->text = "Select a character";
+	}
 }
 
 void Combat::EndTurn()
@@ -474,6 +494,7 @@ void Combat::EndTurn()
 	log2->text = "";
 	log3->text = "";
 	log4->text = "";
+	hint->text = "";
 }
 
 void Combat::CreateRandomAction(std::shared_ptr<Enemy> enemy)

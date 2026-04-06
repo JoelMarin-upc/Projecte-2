@@ -376,6 +376,8 @@ bool Map::Load(std::string path, std::string fileName)
                     pos.order = object->properties.GetProperty("order")->value_i;
                     pos.position = Vector2D(object->x, object->y);
                     combatData.positions.push_back(pos);
+                }
+            }
 
             if (objectGroup->name == "Accesses") {
                 for (const auto& object : objectGroup->objects) {

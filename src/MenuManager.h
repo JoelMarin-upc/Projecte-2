@@ -57,7 +57,8 @@ enum UIID {
 	STANCE1,
 	STANCE2,
 	STANCE3,
-	STANCE4
+	STANCE4,
+	HINT
 };
 
 class MenuManager : public Module

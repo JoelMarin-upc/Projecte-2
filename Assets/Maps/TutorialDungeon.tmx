@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="22" nextobjectid="95">
- <tileset firstgid="1" name="metadata" tilewidth="16" tileheight="16" tilecount="0" columns="7">
-  <image source="../../Desktop/Projecte-2/Assets/Maps/Metadata.png" width="112" height="16"/>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="22" nextobjectid="97">
+ <tileset firstgid="1" name="metadata" tilewidth="16" tileheight="16" tilecount="7" columns="7">
+  <image source="Tileset - What Remains of You/Metadata.png" width="112" height="16"/>
  </tileset>
  <tileset firstgid="8" name="DungeonDecorative" tilewidth="16" tileheight="16" tilecount="256" columns="16">
   <image source="DungeonDecorative.png" width="256" height="256"/>
@@ -14149,6 +14149,13 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="17" name="NPC"/>
+ <objectgroup id="17" name="NPC">
+  <object id="95" x="764" y="311">
+   <properties>
+    <property name="id" value="CH-005"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
  <objectgroup id="18" name="Items"/>
 </map>

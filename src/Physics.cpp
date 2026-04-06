@@ -418,6 +418,24 @@ void Physics::DestroyBody(Collider* p) const
     p = nullptr;
 }
 
+void Physics::SetCollisionFilter(Collider* p, uint16_t categoryBits, uint16_t maskBits)
+{
+    int shapeCount = b2Body_GetShapeCount(p->body);
+    b2ShapeId shapes[16];
+
+    if (shapeCount > 16) shapeCount = 16;
+
+    b2Body_GetShapes(p->body, shapes, shapeCount);
+
+    for (int i = 0; i < shapeCount; ++i) {
+        b2Filter filter = b2Shape_GetFilter(shapes[i]);
+        filter.categoryBits = categoryBits;
+        filter.maskBits = maskBits;
+
+        b2Shape_SetFilter(shapes[i], filter);
+    }
+}
+
 b2Transform Physics::GetTransform(Collider * p)
 {
     return b2Body_GetTransform(p->body);

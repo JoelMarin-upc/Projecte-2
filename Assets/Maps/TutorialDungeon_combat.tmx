@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="22" nextobjectid="113">
  <tileset firstgid="1" name="metadata" tilewidth="16" tileheight="16" tilecount="7" columns="7">
-  <image source="metadata.png" width="112" height="16"/>
+  <image source="Tileset - What Remains of You/Metadata.png" width="112" height="16"/>
  </tileset>
  <tileset firstgid="8" name="DungeonDecorative" tilewidth="16" tileheight="16" tilecount="256" columns="16">
   <image source="DungeonDecorative.png" width="256" height="256"/>

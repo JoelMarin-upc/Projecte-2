@@ -43,9 +43,6 @@ bool SceneManager::CleanUp()
 
 void SceneManager::LoadScenes()
 {
-	// load from xml
-	scenes = std::list<Scene*>();
-
 	//Registers and stores the id and map file of all scenes�
 	sceneInfos.push_back({ "intro", "", "" });
 	sceneInfos.push_back({ "main menu", "", "" });
@@ -82,7 +79,7 @@ void SceneManager::DoTransition()
 	//Find the scene you want to transition and create it, spawns the player at the request spawn point and releases the queued transition
 	for (const SceneInfo& info : sceneInfos) {
 		if (info.id == pendingSceneID) {
-			currentScene = new Scene(info.id, info.mapPath, info.mapName);
+			currentScene = new Scene(info.id, info.mapPath, info.mapName, info.combatMapName);
 			currentScene->Awake();
 			currentScene->Start(pendingSpawnId);
 			hasQueuedTransition = false;

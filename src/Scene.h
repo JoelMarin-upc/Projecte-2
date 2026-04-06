@@ -87,6 +87,7 @@ public:
 	MissionManager* missionManager;
 	DialogManager* dialogManager;
 
+	std::shared_ptr<Player> player;
 private:
 	
 	Map* map;
@@ -96,7 +97,6 @@ private:
 	std::string combatMapName;
 
 	std::shared_ptr<InteractableItem> testItem;
-	std::shared_ptr<Player> player;
 	SceneData data;
 	XMLHandler* persistance = new XMLHandler();
 	Timer gameTimer;

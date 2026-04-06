@@ -142,8 +142,10 @@ void NPC::OnDialogEnd()
 
 void NPC::Recruit()
 {
-	if (isRecruitConditionFulfilled) {
+	isRecruitConditionFulfilled = true; // for testing
+	if (isRecruitConditionFulfilled && !party) {
 		LOG("%s joined the party!", name.c_str());
+		Engine::GetInstance().sceneManager->currentScene->player->AddPartyMember(std::dynamic_pointer_cast<NPC>(shared_from_this()), true);
 	}
 	else {
 

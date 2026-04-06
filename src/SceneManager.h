@@ -8,6 +8,7 @@ struct SceneInfo {
 	std::string id;
 	std::string mapPath;
 	std::string mapName;
+	std::string combatMapName;
 };
 
 class SceneManager : public Module

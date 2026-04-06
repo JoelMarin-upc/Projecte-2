@@ -164,6 +164,8 @@ public:
 	std::shared_ptr<UILabel> log3 = nullptr;
 	std::shared_ptr<UILabel> log4 = nullptr;
 
+	std::shared_ptr<UILabel> hint = nullptr;
+
 	CombatPhase combatPhase = DECISION;
 	CombatResult combatResult = NO_RESULT;
 

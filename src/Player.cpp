@@ -68,11 +68,19 @@ bool Player::Update(float dt)
 
 void Player::GodMode()
 {
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
 	{
 		godMode = !godMode;
-		if (godMode) b2Body_Disable(colliders[0]->body);
-		else b2Body_Enable(colliders[0]->body);
+		if (godMode)
+		{
+			//b2Body_Disable(colliders[0]->body);
+			speed = 30;
+		}
+		else
+		{
+			//b2Body_Enable(colliders[0]->body);
+			speed = 3;
+		}
 	}
 }
 
@@ -88,7 +96,7 @@ void Player::GetPhysicsValues() {
 
 void Player::Move() {
 	// Move left/right
-	if (godMode) {
+	if (false) {
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) {
 			velocity.y = -speed;
 			currentFacingDirection = UP;
@@ -194,10 +202,11 @@ void Player::HandleAnimations()
 	}
 }
 
-void Player::AddPartyMember(std::shared_ptr<NPC> member)
+void Player::AddPartyMember(std::shared_ptr<NPC> member, bool write)
 {
 	if (!party) party = new Party(std::static_pointer_cast<Player>(shared_from_this()));
-	party->AddMember(member);
+	party->AddMember(member, write);
+	Engine::GetInstance().physics->SetCollisionFilter(member->colliders[0], 0, 0);
 }
 
 void Player::Draw(float dt) {

@@ -34,7 +34,7 @@ public:
 	Vector2D GetPosition();
 	Vector2D GetPositionCenter();
 
-	void AddPartyMember(std::shared_ptr<NPC> member);
+	void AddPartyMember(std::shared_ptr<NPC> member, bool write = false);
 
 private:
 	void GodMode();

@@ -5,6 +5,7 @@
 #include "Audio.h"
 #include "Window.h"
 #include "SceneManager.h"
+#include <unordered_set>
 
 Scene::Scene(std::string _id, std::string _mapsPath, std::string _mapName, std::string _combatMapName)
 {
@@ -56,7 +57,7 @@ bool Scene::Start(std::string spawnId)
 	if (gameStarted)
 	{
 		LoadMap(mapsPath, mapName);
-		LoadScene();
+		//LoadScene();
 	}
 
 	paused = false;
@@ -151,8 +152,8 @@ bool Scene::Update(float dt)
 	}
 
 	///////////// FOR TESTING (remove) /////////////
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("player");
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) for (const auto& entity : entityManager->entities) if (entity->id == "CH-002" || entity->id == "CH-003") player->AddPartyMember(std::dynamic_pointer_cast<NPC>(entity));
+	//if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) StartDialog("player");
+	//if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) for (const auto& entity : entityManager->entities) if (entity->id == "CH-002" || entity->id == "CH-003") player->AddPartyMember(std::dynamic_pointer_cast<NPC>(entity));
 	////////////////////////////////////////////////
 
 	CheckTimers();
@@ -275,8 +276,46 @@ void Scene::LoadScene(std::string spawnId)
 		}
 	}
 
+	std::vector<NPCData> partyMembers = std::vector<NPCData>();
+	for (pugi::xml_node mNode = pNode.child("party").child("member"); mNode != NULL; mNode = mNode.next_sibling("member"))
+	{
+		NPCData member = NPCData();
+		member.id = mNode.attribute("id").as_string();
+		member.position = spawnPos;
+		partyMembers.push_back(member);
+	}
+
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
 	Engine::GetInstance().render->follow = player;
+
+	std::unordered_set<std::string> ids;
+
+	for (const auto& npc : partyMembers) {
+		ids.insert(npc.id);
+	}
+
+	mapData.npcs.erase(
+		std::remove_if(
+			mapData.npcs.begin(),
+			mapData.npcs.end(),
+			[&](const NPCData& npc) {
+				return ids.find(npc.id) != ids.end();
+			}
+		),
+		mapData.npcs.end()
+	);
+
+	for (NPCData member : partyMembers) {
+		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
+			if (cNode.attribute("id").as_string() != member.id) continue;
+			std::string name = cNode.attribute("name").as_string();
+			std::string texture = cNode.attribute("texture").as_string();
+			int type = cNode.attribute("type").as_int();
+			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
+			std::shared_ptr<Entity> m = entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
+			player->AddPartyMember(std::static_pointer_cast<NPC>(m));
+		}
+	}
 
 	for (NPCData npc : mapData.npcs) {
 		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {

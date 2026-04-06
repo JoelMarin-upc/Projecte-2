@@ -1,42 +1,27 @@
+<?xml version="1.0"?>
 <characters>
 	<player id="player" name="main character" texture="goldCoin.png">
-		<inventory>
-			<!--some items-->
-		</inventory>
+		<party>
+			<member id="CH-006" />
+		</party>
+		<inventory />
 	</player>
 	<character id="CH-001" name="Gravekeeper" texture="heart.png" type="3" npcInteractionType="3">
-		<inventory>
-			<!--some items-->
-		</inventory>
+		<inventory />
 	</character>
 	<character id="CH-002" name="Medic" texture="heart.png" type="3" npcInteractionType="3">
-		<inventory>
-			<!--some items-->
-		</inventory>
+		<inventory />
 	</character>
 	<character id="CH-003" name="Thief" texture="heart.png" type="3" npcInteractionType="3">
-		<inventory>
-			<!--some items-->
-		</inventory>
+		<inventory />
 	</character>
 	<character id="CH-004" name="Executioner" texture="heart.png" type="3" npcInteractionType="3">
-		<inventory>
-			<!--some items-->
-		</inventory>
+		<inventory />
 	</character>
-	<character id="CH-002" name="test follower 1" texture="heart.png" type="3" npcInteractionType="1">
-		<inventory>
-			<!--some items-->
-		</inventory>
+	<character id="CH-005" name="enemy" texture="enemy.png" type="5">
+		<inventory />
 	</character>
-	<character id="CH-003" name="test follower 2" texture="heart.png" type="3" npcInteractionType="1">
-		<inventory>
-			<!--some items-->
-		</inventory>
-	</character>
-	<character id="CH-004" name="test enemy" texture="enemy.png" type="5">
-		<inventory>
-			<!--some items-->
-		</inventory>
+	<character id="CH-006" name="follower" texture="heart.png" type="3" npcInteractionType="1">
+		<inventory />
 	</character>
 </characters>
