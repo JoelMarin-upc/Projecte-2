@@ -274,6 +274,58 @@ void Scene::LoadGame()
 	
 }
 
+void Scene::SaveSessionState()
+{
+	std::ifstream src("Assets/Entities/characters.xml", std::ios::binary);
+	std::ofstream dst("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
+	dst << src.rdbuf();
+
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
+	pugi::xml_node characters = doc.child("characters");
+	pugi::xml_node playerNode = characters.child("player");
+
+	if (player) {
+		playerNode.attribute("savedX").set_value(player->position.getX());
+		playerNode.attribute("savedY").set_value(player->position.getY());
+	}
+
+	for (const auto& entity : entityManager->entities) {
+		auto npc = std::dynamic_pointer_cast<NPC>(entity);
+		if (!npc) continue;
+		for (pugi::xml_node cNode = characters.child("character"); cNode; cNode = cNode.next_sibling("character")) {
+			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
+			cNode.attribute("savedX").set_value(npc->position.getX());
+			cNode.attribute("savedY").set_value(npc->position.getY());
+			cNode.attribute("dead").set_value(npc->isDead);
+			break;
+		}
+	}
+
+	playerNode.remove_child("party");
+	pugi::xml_node partyNode = playerNode.append_child("party");
+	if (player && player->party) {
+		for (const auto& member : player->party->members) {
+			pugi::xml_node mNode = partyNode.append_child("member");
+			mNode.append_attribute("id").set_value(member->id.c_str());
+		}
+	}
+
+	doc.save_file("Assets/Entities/characters_session.xml");
+
+	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
+	pugi::xml_node root = dialogDoc.child("dialogs");
+	for (pugi::xml_node treeNode = root.child("tree"); treeNode; treeNode = treeNode.next_sibling("tree")) {
+		std::string treeId = treeNode.attribute("id").as_string();
+		for (DialogTree* tree : dialogManager->dialogs) {
+			if (tree->id == treeId) {
+				treeNode.attribute("done").set_value(tree->done);
+				break;
+			}
+		}
+	}
+	dialogDoc.save_file("Assets/Dialogues/dialogues_session.xml");
+}
+
 void Scene::SaveDialogState()
 {
 	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
@@ -293,7 +345,8 @@ void Scene::SaveDialogState()
 
 void Scene::LoadDialogState()
 {
-	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
+	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues_session.xml");
+	//pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
 	pugi::xml_node root = dialogDoc.child("dialogs");
 
 	for (pugi::xml_node treeNode = root.child("tree"); treeNode != NULL; treeNode = treeNode.next_sibling("tree")) {
@@ -319,7 +372,8 @@ void Scene::LoadScene(std::string spawnId)
 {
 	std::string baseTexturePath = "Assets/Textures/";
 
-	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
+	//pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
 	pugi::xml_node characters = charactersDoc.child("characters");
 	pugi::xml_document itemsDoc = XMLHandler::LoadFile("Assets/Entities/items.xml");
 	pugi::xml_node items = itemsDoc.child("items");
@@ -452,6 +506,7 @@ void Scene::CheckTransitions()
 
 	for (AccessData& t : mapData.accesses) {
 		if (playerPos.getX() >= t.position.getX() && playerPos.getX() <= t.position.getX() + t.width && playerPos.getY() >= t.position.getY() && playerPos.getY() <= t.position.getY() + t.height) {
+			SaveSessionState();
 			Engine::GetInstance().sceneManager->SetCurrentScene(t.targetSceneId, t.targetSpawnId);
 			return;
 		}
@@ -526,16 +581,33 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 
 void Scene::CopyCleanGameData()
 {
-	std::ifstream src1("Assets/Entities/characters_clean.xml", std::ios::binary);
-	std::ofstream dst1("Assets/Entities/characters.xml", std::ios::binary | std::ios::trunc);
-	dst1 << src1.rdbuf();
-	std::ifstream src2("Assets/Entities/items_clean.xml", std::ios::binary);
-	std::ofstream dst2("Assets/Entities/items.xml", std::ios::binary | std::ios::trunc);
-	dst2 << src2.rdbuf();
-	std::ifstream src3("Assets/Dialogues/dialogues_clean.xml", std::ios::binary);
-	std::ofstream dst3("Assets/Dialogues/dialogues.xml", std::ios::binary | std::ios::trunc);
-	dst3 << src3.rdbuf();
+	{
+		std::ifstream src("Assets/Entities/characters_clean.xml", std::ios::binary);
+		std::ofstream dst1("Assets/Entities/characters.xml", std::ios::binary | std::ios::trunc);
+		dst1 << src.rdbuf();
+	}
+	{
+		std::ifstream src("Assets/Entities/characters_clean.xml", std::ios::binary);
+		std::ofstream dst2("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
+		dst2 << src.rdbuf();
+	}
 
+	{
+		std::ifstream src("Assets/Entities/items_clean.xml", std::ios::binary);
+		std::ofstream dst("Assets/Entities/items.xml", std::ios::binary | std::ios::trunc);
+		dst << src.rdbuf();
+	}
+
+	{
+		std::ifstream src("Assets/Dialogues/dialogues_clean.xml", std::ios::binary);
+		std::ofstream dst1("Assets/Dialogues/dialogues.xml", std::ios::binary | std::ios::trunc);
+		dst1 << src.rdbuf();
+	}
+	{
+		std::ifstream src("Assets/Dialogues/dialogues_clean.xml", std::ios::binary);
+		std::ofstream dst2("Assets/Dialogues/dialogues_session.xml", std::ios::binary | std::ios::trunc);
+		dst2 << src.rdbuf();
+	}
 }
 
 bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
@@ -551,10 +623,22 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		Engine::GetInstance().menuManager->HideMenu();
 		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001");
 		break;
-	case CONTINUE_GAME:
+	case CONTINUE_GAME: {
+		{
+			std::ifstream src("Assets/Entities/characters.xml", std::ios::binary);
+			std::ofstream dst("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
+			dst << src.rdbuf();
+		}
+		{
+			std::ifstream src("Assets/Dialogues/dialogues.xml", std::ios::binary);
+			std::ofstream dst("Assets/Dialogues/dialogues_session.xml", std::ios::binary | std::ios::trunc);
+			dst << src.rdbuf();
+		}
+
 		Engine::GetInstance().menuManager->HideMenu();
 		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001"); // take the last scene from the save data
 		break;
+	}
 	case RESUME_GAME:
 		TogglePause();
 		break;

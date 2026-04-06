@@ -55,6 +55,7 @@ public:
 	void TogglePause();
 	void SaveGame();
 	void LoadGame();
+	void SaveSessionState();
 	void SaveDialogState();
 	void LoadDialogState();
 	void LoadMap(std::string mapPath, std::string mapName);
