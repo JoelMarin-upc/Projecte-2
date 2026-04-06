@@ -35,8 +35,8 @@ bool NPC::Start()
 	sensorCollider->listener = this;
 	sensorCollider->etype = EntityType::NPC;
 
-	texW = 32;
-	texH = 32;
+	texW = 30;
+	texH = 30;
 
 	party = nullptr;
 
@@ -70,7 +70,9 @@ void NPC::Draw(float dt)
 	colliders[0]->GetPosition(x, y);
 	position.setX((float)x);
 	position.setY((float)y);
-	Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - 6 - texH / 2/*, &animFrame, facingRight*/);
+	Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2/*, &animFrame, facingRight*/);
+
+	if (party) DrawHealthBar(texture);
 }
 
 bool NPC::CleanUp() {

@@ -88,23 +88,23 @@ bool Scene::Start(std::string spawnId)
 	if (id == "main menu")
 	{
 		Engine::GetInstance().menuManager->ShowMainMenu();
-		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav");
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav", 5000.0f);
 	}
 
 	if (gameStarted) {
 		LoadScene();
 		if (id == "SC-001")
 		{
-			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav");
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav", 5000.0f);
 		}
 		else if (id == "SC-002")
 		{
-			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav");
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav", 5000.0f);
 		}
 		else if (id == "SC-003")
 		{
 			Engine::GetInstance().audio->PlayFx(elevatorFxId);
-			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav");
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
 		}
 	}
 	
@@ -224,9 +224,18 @@ void Scene::TogglePause()
 	paused = !paused;
 	entityManager->paused = paused;
 	//Engine::GetInstance().physics->paused = paused;
-
-	if (paused) Engine::GetInstance().menuManager->ShowPauseMenu();
-	else Engine::GetInstance().menuManager->HideMenu();
+	
+	if (paused) {
+		Engine::GetInstance().audio->pauseMultiplier = 0.3f;
+		Engine::GetInstance().audio->UpdateMusicVolume();
+		Engine::GetInstance().menuManager->ShowPauseMenu();
+	} 
+	else
+	{
+		Engine::GetInstance().audio->pauseMultiplier = 1.0f;
+		Engine::GetInstance().audio->UpdateMusicVolume();
+		Engine::GetInstance().menuManager->HideMenu();
+	}
 }
 
 void Scene::SaveGame()
@@ -377,6 +386,16 @@ void Scene::LoadScene(std::string spawnId)
 	pugi::xml_node characters = charactersDoc.child("characters");
 	pugi::xml_document itemsDoc = XMLHandler::LoadFile("Assets/Entities/items.xml");
 	pugi::xml_node items = itemsDoc.child("items");
+	pugi::xml_document statsDoc = XMLHandler::LoadFile("Assets/Entities/base_stats.xml");
+	pugi::xml_node stats = statsDoc.child("stats");
+
+	Stats baseStats = Stats();
+	for (pugi::xml_node sNode = stats.child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
+		std::string name = sNode.attribute("name").as_string();
+		int value = sNode.attribute("value").as_float();
+		int max = sNode.attribute("max").as_float();
+		baseStats.AddStat(name, value, max);
+	}
 
 	pugi::xml_node pNode = characters.child("player");
 	std::string id = pNode.attribute("id").as_string();
@@ -415,6 +434,8 @@ void Scene::LoadScene(std::string spawnId)
 
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
 	Engine::GetInstance().render->follow = player;
+	Stats s = baseStats;
+	player->stats = new Stats(s);
 
 	//Uncomment when I find a fix
 	/*float savedX = pNode.attribute("savedX").as_float();
@@ -448,8 +469,10 @@ void Scene::LoadScene(std::string spawnId)
 			std::string texture = cNode.attribute("texture").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
-			std::shared_ptr<Entity> m = entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
-			player->AddPartyMember(std::static_pointer_cast<NPC>(m));
+			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
+			Stats s = baseStats;
+			m->stats = new Stats(s);
+			player->AddPartyMember(m);
 		}
 	}
 
@@ -461,12 +484,18 @@ void Scene::LoadScene(std::string spawnId)
 			std::string texture = cNode.attribute("texture").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
+
 			float savedX = cNode.attribute("savedX").as_float();
 			float savedY = cNode.attribute("savedY").as_float();
 			Vector2D spawnPos = (savedX >= 0 && savedY >= 0) ? Vector2D(savedX, savedY) : npc.position;
-			entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType);
+			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType);
 			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
 			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
+
+			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType));
+			Stats s = baseStats;
+			m->stats = new Stats(s);
+
 		}
 	}
 

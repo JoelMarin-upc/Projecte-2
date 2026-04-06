@@ -112,6 +112,7 @@ private:
 	bool gameStarted = false;
 	bool paused = false;
 	bool isOnDialog = false;
+	float previousMusicVolume = 1.0f;
 
 	float combatCooldownSeconds = 5.f;
 	bool hasCombatCooldown = false;
