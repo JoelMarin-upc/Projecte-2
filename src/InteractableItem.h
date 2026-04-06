@@ -7,13 +7,12 @@ enum class ItemInteractionType {
 	PICKUP,
 	TOGGLE,
 	DIALOGUE
-
 };
 
 class InteractableItem : public Item {
 public:
 	InteractableItem(){}
-	InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type, bool canStack);
+	InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type, bool canStack, std::string toggledTexturePath = "");
 
 	virtual ~InteractableItem();
 
@@ -44,6 +43,9 @@ public:
 	bool isPicked = false;
 	bool canStack = false;
 	int count = 1; //Current number of this item in the inventory slot
+	bool isToggled = false;
+	std::string toggledTexturePath = "";
+	SDL_Texture* toggledTexture = nullptr;
 
 protected:
 	//Dialogue type by default

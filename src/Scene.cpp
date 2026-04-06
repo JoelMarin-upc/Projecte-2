@@ -338,7 +338,8 @@ void Scene::LoadScene(std::string spawnId)
 			int interactionType = iNode.attribute("interactionType").as_int();
 			bool canStack = iNode.attribute("canStack").as_bool();
 			std::string itemClass = iNode.attribute("itemClass").as_string("item");
-			entityManager->CreateItem(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack);
+			std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
+			entityManager->CreateItem(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath);
 		}
 	}
 }

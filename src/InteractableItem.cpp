@@ -10,8 +10,9 @@
 #include "EntityManager.h"
 #include "SceneManager.h"
 
-InteractableItem::InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type, bool canStack) : Item(id, name, texturePath, EntityType::INTERACTABLE_ITEM)
+InteractableItem::InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type, bool canStack, std::string _toggledTexturePath) : Item(id, name, texturePath, EntityType::INTERACTABLE_ITEM)
 {
+	toggledTexturePath = _toggledTexturePath;
 	itemInteractionType = type;
 	this->canStack = canStack;
 }
@@ -25,6 +26,7 @@ bool InteractableItem::Awake() {
 bool InteractableItem::Start() {
 	//texturePath = "Assets/Textures/door_open.png";
 	pickupIconPath = "Assets/Textures/item.png";
+	if (toggledTexturePath != "") toggledTexture = Engine::GetInstance().textures->Load(toggledTexturePath.c_str());
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
 	pickupIcon = Engine::GetInstance().textures->Load(pickupIconPath);
 	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -20, -20, 1, 1);
@@ -49,7 +51,7 @@ bool InteractableItem::Update(float dt) {
 	if (!active) {
 		return true;
 	}
-	if (isPlayerInRange) {
+	if (isPlayerInRange && !isToggled) {
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
 			Interact();
 		}
@@ -65,7 +67,10 @@ void InteractableItem::Draw(float dt) {
 
 	int x, y;
 	pbody->GetPosition(x, y);
-	Engine::GetInstance().render->DrawTexture(texture, x - texW, y - texH);
+
+	SDL_Texture* tex = texture;
+	if (isToggled) tex = toggledTexture;
+	Engine::GetInstance().render->DrawTexture(tex, x - texW, y - texH);
 
 	//To draw pick up icon next to the item sprite, adjustable later
 	if (isPlayerInRange) {
@@ -161,5 +166,5 @@ void InteractableItem::Pickup()
 
 void InteractableItem::Toggle()
 {
-	LOG("'%s' toggled", name.c_str());
+	isToggled = !isToggled;
 }

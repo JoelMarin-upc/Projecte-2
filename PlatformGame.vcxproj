@@ -184,7 +184,6 @@
     <ClCompile Include="src\Inventory.cpp" />
     <ClCompile Include="src\Item.cpp" />
     <ClCompile Include="src\KillMission.cpp" />
-    <ClCompile Include="src\Lever.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\MenuManager.cpp" />
@@ -256,7 +255,6 @@
     <ClInclude Include="src\Inventory.h" />
     <ClInclude Include="src\Item.h" />
     <ClInclude Include="src\KillMission.h" />
-    <ClInclude Include="src\Lever.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\MenuManager.h" />
@@ -302,7 +300,9 @@
   <ItemGroup>
     <Xml Include="Assets\Dialogues\test.xml" />
     <Xml Include="Assets\Entities\characters.xml" />
+    <Xml Include="Assets\Entities\characters_clean.xml" />
     <Xml Include="Assets\Entities\items.xml" />
+    <Xml Include="Assets\Entities\items_clean.xml" />
     <Xml Include="config.xml" />
     <Xml Include="gamesave.xml" />
   </ItemGroup>
