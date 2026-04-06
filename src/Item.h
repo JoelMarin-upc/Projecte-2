@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DynamicEntity.h"
+#include "Animation.h"
 #include <SDL3/SDL.h>
 
 struct SDL_Texture;
@@ -35,4 +36,5 @@ protected:
 
 	//L08 TODO 4: Add a physics to an item
 	Collider* pbody;
+
 };
