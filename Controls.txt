@@ -2,8 +2,7 @@ W/UP - Move up
 A/LEFT - Move left
 S/DOWN - Move down
 D/RIGHT - Move right
-F9 - God mode
-F10 - Show collisions
+F10 - God Mode and Show collisions
 1 - Rebel refuge scene
 2 - Shop scene
 3 - Tutorial dungeon scene
