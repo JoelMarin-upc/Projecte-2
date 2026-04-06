@@ -58,7 +58,7 @@ bool DialogManager::CleanUp() {
 void DialogManager::LoadDialogs()
 {
 	dialogs = std::list<DialogTree*>();
-	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Dialogues/test.xml"); // get all dialogues from Assets/Dialogues/...
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml"); // get all dialogues from Assets/Dialogues/...
 	pugi::xml_node root = doc.child("dialogs");
 	for (pugi::xml_node treeNode = root.child("tree"); treeNode != NULL; treeNode = treeNode.next_sibling("tree")) {
 		DialogTree* tree = new DialogTree();
