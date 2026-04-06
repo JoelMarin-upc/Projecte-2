@@ -114,15 +114,15 @@ void Player::Move() {
 			currentFacingDirection = RIGHT;
 		}
 		if ((Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) != KEY_REPEAT &&
-			Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) != KEY_REPEAT) || 
-			(Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT &&
-			Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)){
+			Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) != KEY_REPEAT) && 
+			(Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) != KEY_REPEAT &&
+			Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) != KEY_REPEAT)){
 			velocity.y = 0;
 		}
 		if ((Engine::GetInstance().input->GetKey(SDL_SCANCODE_LEFT) != KEY_REPEAT &&
-			Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) != KEY_REPEAT) ||
-			(Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT &&
-			Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)) {
+			Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) != KEY_REPEAT) &&
+			(Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) != KEY_REPEAT &&
+			Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) != KEY_REPEAT)) {
 			velocity.x = 0;
 		}
 	}
@@ -161,15 +161,15 @@ void Player::Move() {
 			}
 		}
 		if ((Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) != KEY_REPEAT &&
-			Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) != KEY_REPEAT) ||
-			(Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT &&
-			Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)) {
+			Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) != KEY_REPEAT) &&
+			(Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) != KEY_REPEAT &&
+			Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) != KEY_REPEAT)) {
 			velocity.y = 0;
 		}
 		if ((Engine::GetInstance().input->GetKey(SDL_SCANCODE_LEFT) != KEY_REPEAT &&
-			Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) != KEY_REPEAT) ||
-			(Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT &&
-			Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)) {
+			Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) != KEY_REPEAT) &&
+			(Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) != KEY_REPEAT &&
+			Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) != KEY_REPEAT)) {
 			velocity.x = 0;
 		}
 	}

@@ -61,15 +61,16 @@ bool Combat::Start() {
 	int sh = Engine::GetInstance().window->height;
 	int cx = Engine::GetInstance().render->camera.x;
 	int cy = Engine::GetInstance().render->camera.y;
-	SDL_Rect b_action1 = { sw / 2 - 120, sh - 200, 100, 40 };
-	SDL_Rect b_action2 = { sw / 2 + 20, sh - 200, 100, 40 };
-	SDL_Rect b_action3 = { sw / 2 - 120, sh - 100, 100, 40 };
-	SDL_Rect b_action4 = { sw / 2 + 20, sh - 100, 100, 40 };
-	SDL_Rect b_endTurn = { sw - 120, sh - 100, 100, 40 };
-	SDL_Rect b_log1 = { sw - 520, 20, 300, 20 };
-	SDL_Rect b_log2 = { sw - 520, 60, 300, 20 };
-	SDL_Rect b_log3 = { sw - 520, 100, 300, 20 };
-	SDL_Rect b_log4 = { sw - 520, 140, 300, 20 };
+
+	SDL_Rect b_action1 = { sw / 2 - 145, sh - 200, 150, 40 };
+	SDL_Rect b_action2 = { sw / 2 + 45, sh - 200, 150, 40 };
+	SDL_Rect b_action3 = { sw / 2 - 145, sh - 100, 150, 40 };
+	SDL_Rect b_action4 = { sw / 2 + 45, sh - 100, 150, 40 };
+	SDL_Rect b_endTurn = { sw - 165, sh - 100, 150, 40 };
+	SDL_Rect b_log1 = { sw / 2, 20, 300, 20 };
+	SDL_Rect b_log2 = { sw / 2, 60, 300, 20 };
+	SDL_Rect b_log3 = { sw / 2, 100, 300, 20 };
+	SDL_Rect b_log4 = { sw / 2, 140, 300, 20 };
 	SDL_Rect b_hint = { 20, 20, 300, 20 };
 	
 	action1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::ACTION1, b_action1, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Attack")));

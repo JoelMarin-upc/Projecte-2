@@ -126,4 +126,6 @@ public:
 	std::shared_ptr<UIButton> backMenu;
 	std::shared_ptr<UIButton> backMainMenu;
 	std::shared_ptr<UIButton> exit;
+
+	int uiLockFrame = -1;
 };
