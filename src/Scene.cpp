@@ -269,7 +269,11 @@ void Scene::SaveGame()
 			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
 			cNode.attribute("savedX").set_value(npc->position.getX());
 			cNode.attribute("savedY").set_value(npc->position.getY());
-			cNode.attribute("isDead").set_value(npc->isDead);
+			for (int i = 0; i < deadNPCs.size(); ++i) {
+				if (deadNPCs[i] == npc->id) {
+					cNode.attribute("isDead").set_value(true);
+				}
+			}
 			break;
 		}
 	}
@@ -302,11 +306,16 @@ void Scene::SaveSessionState()
 	for (const auto& entity : entityManager->entities) {
 		auto npc = std::dynamic_pointer_cast<NPC>(entity);
 		if (!npc) continue;
-		for (pugi::xml_node cNode = characters.child("character"); cNode; cNode = cNode.next_sibling("character")) {
+		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
 			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
 			cNode.attribute("savedX").set_value(npc->position.getX());
 			cNode.attribute("savedY").set_value(npc->position.getY());
-			cNode.attribute("isDead").set_value(npc->isDead);
+			for (int i = 0; i < deadNPCs.size(); ++i) {
+				if (deadNPCs[i] == npc->id) {
+					cNode.attribute("isDead").set_value(true);
+				}
+			}
+
 			break;
 		}
 	}
@@ -610,6 +619,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 		for (const auto& enemy : enemyParty->members) entityManager->DestroyEntity(enemy);
 		for (const auto& npc : player->party->members) {
 			if (npc->isDead) {
+				deadNPCs.push_back(npc->id);
 				player->party->RemoveMember(npc->id);
 				entityManager->DestroyEntity(npc);
 			}
@@ -622,6 +632,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	case FLED:
 		for (const auto& npc : player->party->members) {
 			if (npc->isDead) {
+				deadNPCs.push_back(npc->id);
 				player->party->RemoveMember(npc->id);
 				entityManager->DestroyEntity(npc);
 			}

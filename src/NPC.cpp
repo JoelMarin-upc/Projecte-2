@@ -54,6 +54,7 @@ bool NPC::Update(float dt)
 			active = false;
 			isDead = true;
 			Engine::GetInstance().entityManager->DestroyEntity(shared_from_this());
+			Engine::GetInstance().sceneManager->currentScene->deadNPCs.push_back(id);
 			return true;
 		}
 	}

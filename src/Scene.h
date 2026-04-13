@@ -98,8 +98,9 @@ public:
 	DialogManager* dialogManager;
 
 	std::shared_ptr<Player> player;
+	std::vector<std::string> deadNPCs;
 private:
-	
+
 	Map* map;
 	Map* combatMap;
 	std::string mapsPath;
