@@ -168,3 +168,15 @@ bool EntityManager::Update(float dt)
 	}
 	return ret;
 }
+
+template<typename T>
+std::vector<std::shared_ptr<T>> EntityManager::GetEntities()
+{
+	std::vector<std::shared_ptr<T>> result;
+		
+	for (const auto& e : entities)
+		if (auto casted = std::dynamic_pointer_cast<T>(e))
+			result.push_back(casted);
+
+	return result;
+}

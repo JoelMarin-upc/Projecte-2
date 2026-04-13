@@ -42,7 +42,25 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-007" name="enemy" texture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">>
+	<character id="CH-007" name="enemy" texture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
+		<stats>
+			<stat name="health" value="150" max="150" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="20"/>
+			<stat name="defense" value="20"/>
+		</stats>
+		<inventory />
+	</character>
+	<character id="CH-008" name="enemy" texture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
+		<stats>
+			<stat name="health" value="150" max="150" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="20"/>
+			<stat name="defense" value="20"/>
+		</stats>
+		<inventory />
+	</character>
+	<character id="CH-009" name="enemy" texture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="150" max="150" />
 			<stat name="speed" value="5"/>

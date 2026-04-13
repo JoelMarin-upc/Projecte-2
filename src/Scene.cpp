@@ -7,6 +7,7 @@
 #include "SceneManager.h"
 #include <unordered_set>
 #include <fstream>
+#include <algorithm>
 
 Scene::Scene(std::string _id, std::string _mapsPath, std::string _mapName, std::string _combatMapName)
 {
@@ -592,10 +593,34 @@ void Scene::EndDialog()
 	}
 }
 
+std::vector<std::shared_ptr<Enemy>> Scene::GetNearEnemies(Vector2D position, float rangePX, std::string enemyID)
+{
+	std::vector<std::shared_ptr<Enemy>> nearEnemies = std::vector<std::shared_ptr<Enemy>>();
+	std::vector<std::shared_ptr<Enemy>> enemies = entityManager->GetEntities<Enemy>();
+	
+	std::sort(enemies.begin(), enemies.end(),
+		[position](const Entity& a, const Entity& b)
+		{
+			return a.position.distanceSquared(position) < b.position.distanceSquared(position);
+		});
+
+	for (const auto e : enemies) {
+		if (e->id == enemyID) continue;
+		if (e->position.distanceSquared(position) > rangePX) continue;
+		nearEnemies.push_back(e);
+		if (nearEnemies.size() == 3) break;
+	}
+	return nearEnemies;
+}
+
 void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
 {
 	if (hasCombatCooldown) return;
 	Engine::GetInstance().render->follow = nullptr;
+
+	auto nearEnemies = GetNearEnemies(player->position, 200, enemy->id);
+	for (const auto& e : nearEnemies) enemy->party->AddMember(e);
+	
 	combat = new Combat(player->party, enemy->party, mapsPath, combatMapName);
 	combat->Awake();
 	combat->Start();
@@ -603,6 +628,7 @@ void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
 
 void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 {
+	std::shared_ptr<Enemy> leader;
 	switch (combatResult)
 	{
 	case WIN:
@@ -627,6 +653,9 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 		}
 		combatTimer.Start();
 		hasCombatCooldown = true;
+		leader = enemyParty->leader;
+		enemyParty->members.clear();
+		enemyParty->AddMember(leader);
 		break;
 	default:
 		break;

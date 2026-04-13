@@ -69,6 +69,7 @@ public:
 	void StartDialog(std::string characterId);
 	void EndDialog();
 
+	std::vector<std::shared_ptr<Enemy>> GetNearEnemies(Vector2D position, float rangePX, std::string enemyID);
 	void StartCombat(std::shared_ptr<Enemy> enemy);
 	void EndCombat(EnemyParty* enemyParty, CombatResult combatResult);
 

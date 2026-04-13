@@ -39,6 +39,9 @@ public:
 
 	void AddEntity(std::shared_ptr<Entity> entity);
 
+	template<typename T>
+	std::vector<std::shared_ptr<T>> GetEntities();
+
 public:
 
 	std::list<std::shared_ptr<Entity>> entities;
