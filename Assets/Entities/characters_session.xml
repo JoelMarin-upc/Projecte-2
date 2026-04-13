@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <characters savedGame="false">
 	<player id="player" name="main character" texture="goldCoin.png" savedX="-1" savedY="-1">
+		<stats>
+			<stat name="health" value="100" max="100" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="30"/>
+			<stat name="defense" value="10"/>
+		</stats>
 		<party>
 			
 		</party>
@@ -19,12 +25,30 @@
 		<inventory />
 	</character>
 	<character id="CH-005" name="enemy" texture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
+		<stats>
+			<stat name="health" value="80" max="80" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="35"/>
+			<stat name="defense" value="5"/>
+		</stats>
 		<inventory />
 	</character>
 	<character id="CH-006" name="follower" texture="heart.png" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false">
+		<stats>
+			<stat name="health" value="100" max="100" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="30"/>
+			<stat name="defense" value="10"/>
+		</stats>
 		<inventory />
 	</character>
 	<character id="CH-007" name="enemy" texture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">>
+		<stats>
+			<stat name="health" value="150" max="150" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="20"/>
+			<stat name="defense" value="20"/>
+		</stats>
 		<inventory />
 	</character>
 </characters>
