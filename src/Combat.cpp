@@ -96,6 +96,11 @@ bool Combat::Start() {
 	action2->active = false;
 	action3->active = false;
 	action4->active = false;
+
+	log1->active = true;
+	log2->active = true;
+	log3->active = true;
+	log4->active = true;
 	ToggleStances(false);
 
 	// PLAYER TEAM
@@ -108,6 +113,7 @@ bool Combat::Start() {
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_player = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_PLAYER, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		player = playerParty->player;
+		i_player->active = true;
 		player->hasFled = false;
 		player->isDead = false;
 		player->position = pos;
@@ -121,6 +127,7 @@ bool Combat::Start() {
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_npc1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC1, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		npc1 = playerParty->members[0];
+		i_npc1->active = true;
 		npc1->hasFled = false;
 		npc1->isDead = false;
 		npc1->position = pos;
@@ -134,6 +141,7 @@ bool Combat::Start() {
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_npc2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC2, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		npc2 = playerParty->members[1];
+		i_npc2->active = true;
 		npc2->hasFled = false;
 		npc2->isDead = false;
 		npc2->position = pos;
@@ -147,6 +155,7 @@ bool Combat::Start() {
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_npc3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC3, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		npc3 = playerParty->members[2];
+		i_npc3->active = true;
 		npc3->hasFled = false;
 		npc3->isDead = false;
 		npc3->position = pos;
@@ -162,6 +171,7 @@ bool Combat::Start() {
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_enemy1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_ENEMY1, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		enemy1 = enemyParty->members[0];
+		i_enemy1->active = true;
 		enemy1->hasFled = false;
 		enemy1->isDead = false;
 		enemy1->position = pos;
@@ -175,6 +185,7 @@ bool Combat::Start() {
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_enemy2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_ENEMY2, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		enemy2 = enemyParty->members[1];
+		i_enemy2->active = true;
 		enemy2->hasFled = false;
 		enemy2->isDead = false;
 		enemy2->position = pos;
@@ -188,6 +199,7 @@ bool Combat::Start() {
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_enemy3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_ENEMY3, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		enemy3 = enemyParty->members[2];
+		i_enemy3->active = true;
 		enemy3->hasFled = false;
 		enemy3->isDead = false;
 		enemy3->position = pos;
@@ -201,6 +213,7 @@ bool Combat::Start() {
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
 		i_enemy4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_ENEMY4, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
 		enemy4 = enemyParty->members[3];
+		i_enemy4->active = true;
 		enemy4->hasFled = false;
 		enemy4->isDead = false;
 		enemy4->position = pos;
