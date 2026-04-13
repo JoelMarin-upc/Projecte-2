@@ -449,6 +449,7 @@ void Scene::LoadScene(std::string spawnId)
 	if (savedX >= 0 && savedY >= 0) {
 		b2Body_SetTransform(player->pbody->body, { PIXEL_TO_METERS(savedX), PIXEL_TO_METERS(savedY) }, b2Rot_identity);
 		player->position = Vector2D(savedX, savedY);
+		LOG("Player position: %d, %d", player->position.getX(), player->position.getY());
 	}*/
 
 	std::unordered_set<std::string> ids;

@@ -49,6 +49,15 @@ bool NPC::Update(float dt)
 		return true;
 	}
 
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
+		if (isRecruitConditionFulfilled) {
+			active = false;
+			isDead = true;
+			Engine::GetInstance().entityManager->DestroyEntity(shared_from_this());
+			return true;
+		}
+	}
+
 	//To make sure that the Sensor follows the pbody
 	int x, y;
 	colliders[0]->GetPosition(x, y);
@@ -66,6 +75,10 @@ bool NPC::Update(float dt)
 
 void NPC::Draw(float dt)
 {
+	if (!active) {
+		return;
+	}
+
 	int x, y;
 	colliders[0]->GetPosition(x, y);
 	position.setX((float)x);
