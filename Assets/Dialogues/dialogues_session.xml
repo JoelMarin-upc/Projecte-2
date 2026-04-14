@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <dialogs>
 	<tree id="DT-001" characterId="player" characterName="Garnik" order="1" done="false">
 		<node id="DN-001" first="true">

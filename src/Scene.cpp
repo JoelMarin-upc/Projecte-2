@@ -180,6 +180,7 @@ bool Scene::Update(float dt)
 			(int)t.width,
 			(int)t.height
 		};
+		LOG("Access position: %d, %d", (int)t.position.getX(), (int)t.position.getY());
 		Engine::GetInstance().render->DrawRectangle(rect, 0, 255, 0, 128, true, true);
 	}
 	/////////////////////
