@@ -53,7 +53,7 @@ public:
 	const char* itemChargeTexture2Path;
 
 	//Declare player parameters
-	float speed = 3.0f;
+	float speed = 4.0f;
 	SDL_Texture* texture;
 	SDL_Texture* textureDamaged = NULL;
 	SDL_Texture* itemChargeTexture0 = NULL;
