@@ -96,7 +96,6 @@ void MenuManager::Load(bool onlyPositions)
 	//Other elements
 	SDL_Rect b_gameOver_lbl = { centerX - 150, centerY, 300, 60 };
 	
-
 	if (onlyPositions) {
 		gameTitle->SetBounds(b_gameTitle);
 		startGame->SetBounds(b_startGame);
@@ -144,6 +143,40 @@ void MenuManager::Load(bool onlyPositions)
 		backMenu = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)BACK_MENU, b_backMenu, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Back", 20)));
 		backMainMenu = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)BACK_MAIN_MENU, b_backMainMenu, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Back to main menu", 5)));
 		exit = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)EXIT, b_exit, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Exit", 20)));
+	}
+
+	LoadInventory(onlyPositions);
+}
+
+void MenuManager::LoadInventory(bool onlyPositions)
+{
+	int sw = Engine::GetInstance().window->width;
+	int sh = Engine::GetInstance().window->height;
+
+	int centerX = sw / 2;
+	int centerY = sh / 2;
+
+	std::vector<SDL_Rect> slotBounds = std::vector<SDL_Rect>();
+	const int margin = 20;
+	const int columns = 3;
+	const int rows = MAX_SLOTS / columns;
+	int x = margin;
+	int y = margin;
+	
+	for (int i = 0; i < MAX_SLOTS; i++) {
+		for (int j = 0; j < MAX_SLOTS; j++) {
+			// crear bounds para cada uno
+		}
+	}
+
+	if (onlyPositions) {
+
+	}
+	else {
+		int hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
+		int clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
+
+
 	}
 }
 
@@ -335,6 +368,10 @@ void MenuManager::ShowPreviousMenu()
 
 void MenuManager::ShowInventory(Inventory* inventory, bool isShop)
 {
-	// SHOW INVENTORY
-	// if (isShop) { right } else { left }
+	if (isShop) {
+		// SHOW INVENTORY RIGHT
+	}
+	else {
+		// SHOW INVENTORY LEFT
+	}
 }

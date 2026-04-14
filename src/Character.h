@@ -25,6 +25,7 @@ public:
 	void DrawHealthBar(SDL_Texture* texture);
 
 	Stats* stats;
+	Inventory* inventory;
 	bool isDead = false;
 	bool hasFled = false;
 };

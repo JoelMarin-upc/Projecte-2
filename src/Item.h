@@ -37,4 +37,8 @@ protected:
 	//L08 TODO 4: Add a physics to an item
 	Collider* pbody;
 
+	SDL_Texture* icon;
+
+	std::string description;
+
 };

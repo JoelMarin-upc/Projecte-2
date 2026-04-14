@@ -43,6 +43,7 @@ private:
 	void Move();
 	void ApplyPhysics();
 	void HandleAnimations();
+	void ShowInventory();
 
 public:
 
@@ -132,10 +133,9 @@ public:
 	bool inBoss = false;
 	int keyCount = 0;
 	bool doorOpen = false;
+	bool showingInventory = false;
 
 	Party* party;
-
-	Inventory inventory;
 
 private:
 	b2Vec2 velocity;

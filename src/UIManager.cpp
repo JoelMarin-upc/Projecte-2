@@ -95,6 +95,20 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 	case UIElementType::IMAGE:
 		uiElement = std::make_shared<UIImage>(id, bounds, params.disabledTex, params.normalTex, params.focusedTex, params.pressedTex, hoverFxId, clickFxId);
 		break;
+	case UIElementType::SLOT:
+		c1 = { 0, 0, 0, 0 };
+		c2 = { 0, 0, 0, 0 };
+		c3 = { 0, 0, 0, 0 };
+		c4 = { 0, 0, 0, 0 };
+		c5 = { 0, 0, 0, 0 };
+		if (colors.size() > 0) c1 = colors[0];
+		if (colors.size() > 1) c2 = colors[1];
+		if (colors.size() > 2) c3 = colors[2];
+		if (colors.size() > 3) c4 = colors[3];
+		if (colors.size() > 4) c5 = colors[4];
+
+		uiElement = std::make_shared<UISlot>(id, bounds, params.text, params.horizotalSpacing, params.verticalSpacing, c1, c2, c3, c4, c5, hoverFxId, clickFxId, params.item);
+		break;
 	}
 
 	//Set the observer

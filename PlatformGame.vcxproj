@@ -207,6 +207,7 @@
     <ClCompile Include="src\Stats.cpp" />
     <ClCompile Include="src\TalkMission.cpp" />
     <ClCompile Include="src\UIImage.cpp" />
+    <ClCompile Include="src\UISlot.cpp" />
     <ClCompile Include="src\UnbreakableObstacle.cpp" />
     <ClCompile Include="src\Weapon.cpp" />
     <ClCompile Include="src\XMLHandler.cpp" />
@@ -279,6 +280,7 @@
     <ClInclude Include="src\Stats.h" />
     <ClInclude Include="src\TalkMission.h" />
     <ClInclude Include="src\UIImage.h" />
+    <ClInclude Include="src\UISlot.h" />
     <ClInclude Include="src\UnbreakableObstacle.h" />
     <ClInclude Include="src\Weapon.h" />
     <ClInclude Include="src\XMLHandler.h" />

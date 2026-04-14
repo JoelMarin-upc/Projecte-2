@@ -87,6 +87,7 @@ public:
 	bool CleanUp();
 
 	void Load(bool onlyPositions);
+	void LoadInventory(bool onlyPositions);
 	void SetObserver(Module* observer);
 	void ShowMainMenu();
 	void ShowPauseMenu();
@@ -128,4 +129,14 @@ public:
 	std::shared_ptr<UIButton> exit;
 
 	int uiLockFrame = -1;
+
+	const int baseSlotsId = 900;
+	std::vector<std::shared_ptr<UISlot>> slots;
+	std::shared_ptr<UILabel> inventoryLabel;
+	std::shared_ptr<UILabel> shopLabel;
+	std::shared_ptr<UIButton> use;
+	std::shared_ptr<UIButton> drop;
+	std::shared_ptr<UIButton> buy;
+	std::shared_ptr<UIButton> sell;
+	std::shared_ptr<UISlider> amount;
 };

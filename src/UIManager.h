@@ -7,6 +7,7 @@
 #include "UICheckbox.h"
 #include "UISlider.h"
 #include "UIImage.h"
+#include "UISlot.h"
 
 #include <list>
 #include <vector>
@@ -55,6 +56,16 @@ public:
 		return p;
 	}
 
+	static UIParameters Slot(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, InteractableItem* item) {
+		UIParameters p = UIParameters();
+		p.disabledTex = disabledTex;
+		p.normalTex = normalTex;
+		p.focusedTex = focusedTex;
+		p.pressedTex = pressedTex;
+		p.item = item;
+		return p;
+	}
+
 	static UIParameters Default() {
 		UIParameters p = UIParameters();
 		p.text = "";
@@ -69,6 +80,7 @@ public:
 		p.normalTex = nullptr;
 		p.focusedTex = nullptr;
 		p.pressedTex = nullptr;
+		p.item = nullptr;
 		return p;
 	}
 
@@ -76,6 +88,7 @@ public:
 	float showValue, min, max, step, value;
 	int spacing, horizotalSpacing, verticalSpacing;
 	bool checked;
+	InteractableItem* item;
 	SDL_Texture* disabledTex;
 	SDL_Texture* normalTex;
 	SDL_Texture* focusedTex;
