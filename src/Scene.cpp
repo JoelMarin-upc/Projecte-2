@@ -58,6 +58,7 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start(std::string spawnId)
 {
+
 	gameStarted = id != "main menu" && id != "intro";
 
 	if (gameStarted)
@@ -69,6 +70,7 @@ bool Scene::Start(std::string spawnId)
 	paused = false;
 	pendingSpawnId = spawnId;
 
+	Engine::GetInstance().render->SetCursorTexture("Assets/Textures/cursor.png");
 	sw = Engine::GetInstance().window->width;
 	sh = Engine::GetInstance().window->height;
 	logo = Engine::GetInstance().textures->Load("Assets/Textures/TeamDayo_Logo.png");

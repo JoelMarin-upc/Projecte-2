@@ -49,6 +49,8 @@ public:
 
 	bool IsOnScreenWorldRect(float x, float y, float w, float h, int margin = 0) const;
 
+	void SetCursorTexture(const char* imagePath);
+
 public:
 
 	SDL_Renderer* renderer;

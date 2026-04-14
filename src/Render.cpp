@@ -4,6 +4,7 @@
 #include "Map.h"
 #include "Log.h"
 #include <sstream>
+#include <SDL3_image/SDL_image.h>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -422,4 +423,11 @@ bool Render::IsOnScreenWorldRect(float x, float y, float w, float h, int margin)
 		objTop <= camBottom;
 
 	return result;
+}
+
+void Render::SetCursorTexture(const char* imagePath)
+{
+	SDL_Surface* surface = IMG_Load(imagePath);
+	SDL_Cursor* cursor = SDL_CreateColorCursor(surface, 0, 0);
+	SDL_SetCursor(cursor);
 }
