@@ -13,10 +13,9 @@ Pathfinding::Pathfinding() {
     //Loads texture to draw the path
     pathTex = Engine::GetInstance().textures.get()->Load("Assets/Maps/metadata.png");
     tileX = Engine::GetInstance().textures.get()->Load("Assets/Textures/x.png");
-    //map = Engine::GetInstance().map.get();
     //layerNav = map->GetNavigationLayer();
-    layerNav = nullptr;
     map = Engine::GetInstance().sceneManager->currentScene->GetMap();
+    layerNav = map->GetNavigationLayer();
 
     // Initialize the costSoFar with all elements set to 0
     //costSoFar = std::vector<std::vector<int>>(map->GetMapSizeInTiles().getX(), std::vector<int>(map->GetMapSizeInTiles().getY(), 0));
@@ -142,40 +141,34 @@ void Pathfinding::DrawPath() {
 
 bool Pathfinding::IsWalkable(int x, int y) {
 
-    // we will have to change after adding navigation layer!!!!!
-    bool isWalkable = false;
+    //Enemy is 32x32 so tiles are 2x2
+    const int size = 2;
 
-    // L11: TODO 3: return true only if x and y are within map limits
-    // and the tile is walkable (not blocked)
+    //Loop over all tiles the enemy occupies
+    for (int dx = 0; dx < size; ++dx)
+    {
+        for (int dy = 0; dy < size; ++dy)
+        {
+            int tx = x + dx;
+            int ty = y + dy;
 
-    /*if (layerNav != nullptr) {
+            //Check map bounds
+            if (tx < 0 || tx >= map->GetMapSizeInTiles().getX() ||
+                ty < 0 || ty >= map->GetMapSizeInTiles().getY())
+            {
+                return false;
+            }
 
-		//Check map limits
-        if (x >= 0 && x < map->GetMapSizeInTiles().getX() &&
-            y >= 0 && y < map->GetMapSizeInTiles().getY()) {
-			//Get the gid of the tile           
-            int gid = layerNav->Get(x, y);
-
-			//Check if the gid is different from the blocked gid
-            if (gid != blockedGid) {
-                isWalkable = true;
+            //Check if the tile is blocked
+            int gid = layerNav->Get(tx, ty);
+            if (gid == blockedGid)
+            {
+                return false;
             }
         }
-	}*/
-    if (map == nullptr) return false;
+    }
 
-    if (x < 0 || x >= map->GetMapSizeInTiles().getX() ||
-        y < 0 || y >= map->GetMapSizeInTiles().getY())
-        return false;
-
-    if (layerNav == nullptr)
-        return true; // fallback: everything walkable
-
-    int gid = layerNav->Get(x, y);
-
-    return gid != blockedGid;
-
-    //return isWalkable;
+    return true;
 }
 
 void Pathfinding::PropagateBFS() {
@@ -373,14 +366,14 @@ int Pathfinding::MovementCost(int x, int y)
 {
     int ret = 1;
 
-    //if ((x >= 0) && (x < map->GetMapSizeInTiles().getX()) && (y >= 0) && (y < map->GetMapSizeInTiles().getY()))
-    //{
-    //    int gid = layerNav->Get(x, y);
-    //    if (gid == highCostGid) {
-    //        ret = 5;
-    //    }
-    //    else ret = 1;
-    //}
+    if ((x >= 0) && (x < map->GetMapSizeInTiles().getX()) && (y >= 0) && (y < map->GetMapSizeInTiles().getY()))
+    {
+        int gid = layerNav->Get(x, y);
+        if (gid == highCostGid) {
+            ret = 5;
+        }
+        else ret = 1;
+    }
 
     return ret;
 }
