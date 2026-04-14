@@ -53,7 +53,7 @@ bool NPC::Update(float dt)
 		if (party != nullptr) {
 			active = false;
 			isDead = true;
-			Engine::GetInstance().sceneManager->currentScene->deadNPCs.push_back(id);
+			Engine::GetInstance().sceneManager->deadNPCs.push_back(id);
 			party->RemoveMember(id);
 			Engine::GetInstance().entityManager->DestroyEntity(shared_from_this());
 			return true;
