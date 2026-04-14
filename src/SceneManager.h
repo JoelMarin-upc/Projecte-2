@@ -61,4 +61,5 @@ public:
 	bool hasQueuedTransition = false;
 
 	bool triggerFirstMonologue = true;
+	std::vector<std::string> deadNPCs;
 };

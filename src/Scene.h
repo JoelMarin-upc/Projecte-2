@@ -99,8 +99,9 @@ public:
 	DialogManager* dialogManager;
 
 	std::shared_ptr<Player> player;
+
 private:
-	
+
 	Map* map;
 	Map* combatMap;
 	std::string mapsPath;

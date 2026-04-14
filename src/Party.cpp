@@ -16,11 +16,11 @@ void Party::AddMember(std::shared_ptr<NPC> member, bool write)
 
 	if (write)
 	{
-		pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+		pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
 		pugi::xml_node party = charactersDoc.child("characters").child("player").child("party");
 		pugi::xml_node mNode = party.append_child("member");
 		mNode.append_attribute("id").set_value(member->id.c_str());
-		charactersDoc.save_file("Assets/Entities/characters.xml");
+		charactersDoc.save_file("Assets/Entities/characters_session.xml");
 	}
 }
 
