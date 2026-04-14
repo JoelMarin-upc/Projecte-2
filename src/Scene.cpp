@@ -269,11 +269,14 @@ void Scene::SaveGame()
 			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
 			cNode.attribute("savedX").set_value(npc->position.getX());
 			cNode.attribute("savedY").set_value(npc->position.getY());
-			for (int i = 0; i < deadNPCs.size(); ++i) {
-				if (deadNPCs[i] == npc->id) {
-					cNode.attribute("isDead").set_value(true);
-				}
-			}
+			break;
+		}
+	}
+
+	for (const std::string& deadId : deadNPCs) {
+		for (pugi::xml_node cNode = characters.child("character"); cNode; cNode = cNode.next_sibling("character")) {
+			if (std::string(cNode.attribute("id").as_string()) != deadId) continue;
+			cNode.attribute("isDead").set_value(true);
 			break;
 		}
 	}
@@ -310,12 +313,14 @@ void Scene::SaveSessionState()
 			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
 			cNode.attribute("savedX").set_value(npc->position.getX());
 			cNode.attribute("savedY").set_value(npc->position.getY());
-			for (int i = 0; i < deadNPCs.size(); ++i) {
-				if (deadNPCs[i] == npc->id) {
-					cNode.attribute("isDead").set_value(true);
-				}
-			}
+			break;
+		}
+	}
 
+	for (const std::string& deadId : deadNPCs) {
+		for (pugi::xml_node cNode = characters.child("character"); cNode; cNode = cNode.next_sibling("character")) {
+			if (std::string(cNode.attribute("id").as_string()) != deadId) continue;
+			cNode.attribute("isDead").set_value(true);
 			break;
 		}
 	}

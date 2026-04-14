@@ -50,11 +50,12 @@ bool NPC::Update(float dt)
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
-		if (isRecruitConditionFulfilled) {
+		if (party != nullptr) {
 			active = false;
 			isDead = true;
-			Engine::GetInstance().entityManager->DestroyEntity(shared_from_this());
 			Engine::GetInstance().sceneManager->currentScene->deadNPCs.push_back(id);
+			party->RemoveMember(id);
+			Engine::GetInstance().entityManager->DestroyEntity(shared_from_this());
 			return true;
 		}
 	}
