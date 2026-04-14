@@ -41,8 +41,10 @@ void Character::TakeStance(Stance stance)
 // returns true if the character is dead
 bool Character::TakeDamage(float damage)
 {
+    if (godMode) return false;
     Stat& defense = stats->GetStat("defense");
 	damage -= defense.getValue();
+    if (damage < 0) damage = 0;
     Stat& health = stats->GetStat("health");
     int hp = health.getValue() - damage;
     if (hp < 0) hp = 0;

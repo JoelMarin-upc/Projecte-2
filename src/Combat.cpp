@@ -272,6 +272,7 @@ bool Combat::PreUpdate() {
 // Called each loop iteration
 bool Combat::Update(float dt) {
 	map->Update(dt);
+	player->GodMode();
 	switch (combatPhase)
 	{
 	case DECISION:
@@ -319,7 +320,7 @@ bool Combat::Update(float dt) {
 		if (!enemyTurnTimerActive)
 		{
 			for (std::shared_ptr<Enemy> enemy : enemyParty->members) {
-				CreateRandomAction(enemy);
+				if (!enemy->isDead) CreateRandomAction(enemy);
 			}
 			enemyTurnTimerActive = true;
 			enemyTurnTimer.Start();
@@ -607,14 +608,14 @@ void Combat::CreateRandomAction(std::shared_ptr<Enemy> enemy)
 	AddTurnAction();
 }
 
-void Combat::DrawHealthBars()
+void Combat::DrawHealthBars() const
 {
-	if (player) player->DrawHealthBar(player->texture);
-	if (npc1) npc1->DrawHealthBar(npc1->texture);
-	if (npc2) npc2->DrawHealthBar(npc2->texture);
-	if (npc3) npc3->DrawHealthBar(npc3->texture);
-	if (enemy1) enemy1->DrawHealthBar(enemy1->texture);
-	if (enemy2) enemy2->DrawHealthBar(enemy2->texture);
-	if (enemy3) enemy3->DrawHealthBar(enemy3->texture);
-	if (enemy4) enemy4->DrawHealthBar(enemy4->texture);
+	if (player && !player->isDead) player->DrawHealthBar(player->texture);
+	if (npc1 && !npc1->isDead) npc1->DrawHealthBar(npc1->texture);
+	if (npc2 && !npc2->isDead) npc2->DrawHealthBar(npc2->texture);
+	if (npc3 && !npc3->isDead) npc3->DrawHealthBar(npc3->texture);
+	if (enemy1 && !enemy1->isDead) enemy1->DrawHealthBar(enemy1->texture);
+	if (enemy2 && !enemy2->isDead) enemy2->DrawHealthBar(enemy2->texture);
+	if (enemy3 && !enemy3->isDead) enemy3->DrawHealthBar(enemy3->texture);
+	if (enemy4 && !enemy4->isDead) enemy4->DrawHealthBar(enemy4->texture);
 }

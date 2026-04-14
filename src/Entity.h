@@ -91,6 +91,7 @@ public:
 	Vector2D position;       
 	bool renderable = true;
 	bool started = false;
+	bool godMode = false;
 
 	int texW, texH;
 

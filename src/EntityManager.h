@@ -40,7 +40,16 @@ public:
 	void AddEntity(std::shared_ptr<Entity> entity);
 
 	template<typename T>
-	std::vector<std::shared_ptr<T>> GetEntities();
+	inline std::vector<std::shared_ptr<T>> GetEntities()
+	{
+		std::vector<std::shared_ptr<T>> result;
+
+		for (const auto& e : entities)
+			if (auto casted = std::dynamic_pointer_cast<T>(e))
+				result.push_back(casted);
+
+		return result;
+	}
 
 public:
 

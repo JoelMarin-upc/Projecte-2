@@ -5,6 +5,9 @@
 #include "Audio.h"
 #include "Window.h"
 #include "SceneManager.h"
+#include "Vector2D.h"
+#include <memory>
+#include <vector>
 #include <unordered_set>
 #include <fstream>
 #include <algorithm>
@@ -599,14 +602,14 @@ std::vector<std::shared_ptr<Enemy>> Scene::GetNearEnemies(Vector2D position, flo
 	std::vector<std::shared_ptr<Enemy>> enemies = entityManager->GetEntities<Enemy>();
 	
 	std::sort(enemies.begin(), enemies.end(),
-		[position](const Entity& a, const Entity& b)
+		[position](std::shared_ptr<Enemy> a, std::shared_ptr<Enemy> b)
 		{
-			return a.position.distanceSquared(position) < b.position.distanceSquared(position);
+			return a->position.distanceEuclidean(position) < b->position.distanceEuclidean(position);
 		});
 
-	for (const auto e : enemies) {
+	for (const auto& e : enemies) {
 		if (e->id == enemyID) continue;
-		if (e->position.distanceSquared(position) > rangePX) continue;
+		if (e->position.distanceEuclidean(position) > rangePX) continue;
 		nearEnemies.push_back(e);
 		if (nearEnemies.size() == 3) break;
 	}
@@ -618,7 +621,7 @@ void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
 	if (hasCombatCooldown) return;
 	Engine::GetInstance().render->follow = nullptr;
 
-	auto nearEnemies = GetNearEnemies(player->position, 200, enemy->id);
+	auto nearEnemies = GetNearEnemies(player->position, 300, enemy->id);
 	for (const auto& e : nearEnemies) enemy->party->AddMember(e);
 	
 	combat = new Combat(player->party, enemy->party, mapsPath, combatMapName);

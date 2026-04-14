@@ -35,9 +35,9 @@ public:
 	Vector2D GetPositionCenter();
 
 	void AddPartyMember(std::shared_ptr<NPC> member, bool write = false);
+	void GodMode();
 
 private:
-	void GodMode();
 	void CheckTimers();
 	void GetPhysicsValues();
 	void Move();
@@ -109,7 +109,6 @@ public:
 	float spearOffset = 25.0f;
 	bool spearCol1 = false;
 	bool spearCol2 = false;
-	bool godMode = false;
 	float godModeSpeed = 0.1f;
 	std::string currentAnimation = "";
 	float deathMS = 600.0f;

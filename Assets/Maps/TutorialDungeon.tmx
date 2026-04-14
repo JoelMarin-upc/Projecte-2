@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="22" nextobjectid="100">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="22" nextobjectid="101">
  <tileset firstgid="1" name="metadata" tilewidth="16" tileheight="16" tilecount="7" columns="7">
   <image source="Tileset - What Remains of You/Metadata.png" width="112" height="16"/>
  </tileset>
@@ -14150,7 +14150,7 @@
   </object>
  </objectgroup>
  <objectgroup id="17" name="NPC">
-  <object id="95" x="764" y="311">
+  <object id="95" x="769.471" y="321.942">
    <properties>
     <property name="id" value="CH-005"/>
    </properties>
@@ -14162,13 +14162,19 @@
    </properties>
    <point/>
   </object>
-  <object id="98" x="751.5" y="380">
+  <object id="98" x="752.868" y="334.866">
    <properties>
     <property name="id" value="CH-008"/>
    </properties>
    <point/>
   </object>
-  <object id="99" x="764" y="557.5">
+  <object id="99" x="753.058" y="379.701">
+   <properties>
+    <property name="id" value="CH-010"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="100" x="767.273" y="361.07">
    <properties>
     <property name="id" value="CH-009"/>
    </properties>

@@ -127,7 +127,7 @@ public:
 
 	void CreateRandomAction(std::shared_ptr<Enemy> enemy);
 
-	void DrawHealthBars();
+	void DrawHealthBars() const;
 
 	Party* playerParty;
 	EnemyParty* enemyParty;
