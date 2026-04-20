@@ -272,6 +272,7 @@ void Scene::SaveGame()
 	//Save player positions
 	playerNode.attribute("savedX").set_value(player->position.getX());
 	playerNode.attribute("savedY").set_value(player->position.getY());
+	SaveCharacterStats(playerNode, player);
 
 	//Save NPC positions and dead state
 	for (const auto& entity : entityManager->entities) {
@@ -281,6 +282,7 @@ void Scene::SaveGame()
 			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
 			cNode.attribute("savedX").set_value(npc->position.getX());
 			cNode.attribute("savedY").set_value(npc->position.getY());
+			SaveCharacterStats(cNode, npc);
 			break;
 		}
 	}
@@ -318,6 +320,7 @@ void Scene::SaveSessionState()
 	if (player) {
 		playerNode.attribute("savedX").set_value(player->position.getX());
 		playerNode.attribute("savedY").set_value(player->position.getY());
+		SaveCharacterStats(playerNode, player);
 	}
 
 	for (const auto& entity : entityManager->entities) {
@@ -327,6 +330,7 @@ void Scene::SaveSessionState()
 			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
 			cNode.attribute("savedX").set_value(npc->position.getX());
 			cNode.attribute("savedY").set_value(npc->position.getY());
+			SaveCharacterStats(cNode, npc);
 			break;
 		}
 	}
@@ -394,6 +398,20 @@ void Scene::LoadDialogState()
 			if (tree->id == treeId) {
 				tree->done = done;
 				break;
+			}
+		}
+	}
+}
+
+void Scene::SaveCharacterStats(pugi::xml_node charNode, std::shared_ptr<Character> character)
+{
+	pugi::xml_node statsNode = charNode.child("stats");
+
+	for (const Stat& stat : character->stats->stats) {
+		pugi::xml_node sNode = statsNode.child("stat");
+		for (pugi::xml_node n = sNode; n != NULL; n = n.next_sibling("stat")) {
+			if (std::string(n.attribute("name").as_string()) == stat.name) {
+				n.attribute("value").set_value(stat.value);
 			}
 		}
 	}
