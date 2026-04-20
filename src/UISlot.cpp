@@ -2,8 +2,9 @@
 #include "Render.h"
 #include "Engine.h"
 #include "Audio.h"
+#include <string>
 
-UISlot::UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId, InteractableItem* item) : UIElement(UIElementType::IMAGE, id)
+UISlot::UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId, InteractableItem* item, int amount) : UIElement(UIElementType::IMAGE, id)
 {
 	this->hoverFxId = hoverFxId;
 	this->clickFxId = clickFxId;
@@ -17,6 +18,7 @@ UISlot::UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, 
 	this->horizotalSpacing = horizotalSpacing;
 	this->verticalSpacing = verticalSpacing;
 	this->item = item;
+	this->amount = amount;
 
 	canClick = true;
 	drawBasic = false;
@@ -29,17 +31,6 @@ UISlot::~UISlot()
 
 bool UISlot::Update(float dt)
 {
-	// draw background square
-	// draw icon
-	// draw name
-	// draw amount
-	// draw description
-
-
-
-
-
-
 	if (state != UIElementState::DISABLED)
 	{
 		// L16: TODO 3: Update the state of the GUiButton according to the mouse position
@@ -71,18 +62,37 @@ bool UISlot::Update(float dt)
 	switch (state)
 	{
 	case UIElementState::DISABLED:
-		Engine::GetInstance().render->DrawTexture(disabledTex, bounds.x, bounds.y, 0.0f);
+		Draw(colorDis);
 		break;
 	case UIElementState::NORMAL:
-		Engine::GetInstance().render->DrawTexture(normalTex, bounds.x, bounds.y, 0.0f);
+		Draw(colorDef);
 		break;
 	case UIElementState::FOCUSED:
-		Engine::GetInstance().render->DrawTexture(focusedTex, bounds.x, bounds.y, 0.0f);
+		Draw(colorHov);
 		break;
 	case UIElementState::PRESSED:
-		Engine::GetInstance().render->DrawTexture(pressedTex, bounds.x, bounds.y, 0.0f);
+		Draw(colorPre);
 		break;
 	}
 
 	return false;
+}
+
+void UISlot::Draw(SDL_Color color)
+{
+	Engine::GetInstance().render->DrawRectangle({ bounds.x, bounds.y, bounds.w, bounds.h }, color.r, color.g, color.b, color.a, true, useCamera);
+	if (!item) return;
+	Engine::GetInstance().render->DrawTexture(item->icon, bounds.x + bounds.w / 2 - item->icon->w / 2, bounds.y, 0.0f);
+	std::string name = item->name;
+	if (amount > 1) name += "(" + std::to_string(amount) + ")";
+	Engine::GetInstance().render->DrawTextMultiline(name.c_str(), bounds.x, bounds.y + item->icon->h, bounds.w, 20, colorTxt);
+	//Engine::GetInstance().render->DrawTextMultiline(std::to_string(amount).c_str(), bounds.x, bounds.y, bounds.w, bounds.h, colorTxt);
+	Engine::GetInstance().render->DrawTextMultiline(item->description.c_str(), bounds.x, bounds.y + item->icon->h + 25, bounds.w, bounds.h - (bounds.y + item->icon->h + 25), colorTxt);
+}
+
+void UISlot::SetItem(InteractableItem* item, int amount)
+{
+	if (!item) amount = 0;
+	this->item = item;
+	this->amount = amount;
 }

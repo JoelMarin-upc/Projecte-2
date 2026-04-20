@@ -56,13 +56,14 @@ public:
 		return p;
 	}
 
-	static UIParameters Slot(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, InteractableItem* item) {
+	static UIParameters Slot(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, InteractableItem* item, int amount) {
 		UIParameters p = UIParameters();
 		p.disabledTex = disabledTex;
 		p.normalTex = normalTex;
 		p.focusedTex = focusedTex;
 		p.pressedTex = pressedTex;
 		p.item = item;
+		p.amount = amount;
 		return p;
 	}
 
@@ -81,12 +82,13 @@ public:
 		p.focusedTex = nullptr;
 		p.pressedTex = nullptr;
 		p.item = nullptr;
+		p.amount = 0;
 		return p;
 	}
 
 	const char* text;
 	float showValue, min, max, step, value;
-	int spacing, horizotalSpacing, verticalSpacing;
+	int spacing, horizotalSpacing, verticalSpacing, amount;
 	bool checked;
 	InteractableItem* item;
 	SDL_Texture* disabledTex;

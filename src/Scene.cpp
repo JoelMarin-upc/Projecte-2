@@ -386,8 +386,6 @@ void Scene::LoadMap(std::string mapPath, std::string mapName)
 
 void Scene::LoadScene(std::string spawnId)
 {
-	std::string baseTexturePath = "Assets/Textures/";
-
 	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
 	//pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
 	pugi::xml_node characters = charactersDoc.child("characters");
@@ -441,13 +439,8 @@ void Scene::LoadScene(std::string spawnId)
 
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
 	Engine::GetInstance().render->follow = player;
-	player->stats = new Stats();
-	for (pugi::xml_node sNode = pNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
-		std::string name = sNode.attribute("name").as_string();
-		int value = sNode.attribute("value").as_float();
-		int max = sNode.attribute("max").as_float();
-		player->stats->AddStat(name, value, max);
-	}
+	player->stats = LoadStats(pNode);
+	player->inventory = LoadInventory(pNode);
 
 	//Uncomment when I find a fix
 	/*float savedX = pNode.attribute("savedX").as_float();
@@ -483,13 +476,8 @@ void Scene::LoadScene(std::string spawnId)
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
-			m->stats = new Stats();
-			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
-				std::string name = sNode.attribute("name").as_string();
-				int value = sNode.attribute("value").as_float();
-				int max = sNode.attribute("max").as_float();
-				m->stats->AddStat(name, value, max);
-			}
+			m->stats = LoadStats(cNode);
+			m->inventory = LoadInventory(cNode);
 			player->AddPartyMember(m);
 		}
 	}
@@ -511,13 +499,8 @@ void Scene::LoadScene(std::string spawnId)
 			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 
 			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType));
-			m->stats = new Stats();
-			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
-				std::string name = sNode.attribute("name").as_string();
-				int value = sNode.attribute("value").as_float();
-				int max = sNode.attribute("max").as_float();
-				m->stats->AddStat(name, value, max);
-			}
+			m->stats = LoadStats(cNode);
+			m->inventory = LoadInventory(cNode);
 		}
 	}
 
@@ -534,6 +517,36 @@ void Scene::LoadScene(std::string spawnId)
 			entityManager->CreateItem(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath);
 		}
 	}
+}
+
+Stats* Scene::LoadStats(pugi::xml_node characterNode)
+{
+	Stats* stats = new Stats();
+	for (pugi::xml_node sNode = characterNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
+		std::string name = sNode.attribute("name").as_string();
+		int value = sNode.attribute("value").as_float();
+		int max = sNode.attribute("max").as_float();
+		stats->AddStat(name, value, max);
+	}
+	return stats;
+}
+
+Inventory* Scene::LoadInventory(pugi::xml_node characterNode)
+{
+	Inventory* inventory = new Inventory();
+	for (pugi::xml_node iNode = characterNode.child("inventory").child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
+		std::string id = iNode.attribute("id").as_string();
+		std::string name = iNode.attribute("name").as_string();
+		std::string texture = iNode.attribute("texture").as_string();
+		int type = iNode.attribute("type").as_int();
+		int interactionType = iNode.attribute("interactionType").as_int();
+		bool canStack = iNode.attribute("canStack").as_bool();
+		std::string itemClass = iNode.attribute("itemClass").as_string("item");
+		std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
+		std::shared_ptr<InteractableItem> item = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(id, name, baseTexturePath + texture, { -999999, -999999 }, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath));
+		inventory->AddItem(item.get());
+	}
+	return inventory;
 }
 
 void Scene::EndScene()

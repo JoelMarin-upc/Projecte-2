@@ -60,6 +60,8 @@ public:
 	void LoadDialogState();
 	void LoadMap(std::string mapPath, std::string mapName);
 	void LoadScene(std::string spawnId = "default");
+	Stats* LoadStats(pugi::xml_node characterNode);
+	Inventory* LoadInventory(pugi::xml_node characterNode);
 	void EndScene();
 	void EndGame();
 	void CheckTimers();
@@ -101,6 +103,8 @@ public:
 	std::shared_ptr<Player> player;
 private:
 	
+	const std::string baseTexturePath = "Assets/Textures/";
+
 	Map* map;
 	Map* combatMap;
 	std::string mapsPath;

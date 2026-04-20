@@ -58,7 +58,14 @@ enum UIID {
 	STANCE2,
 	STANCE3,
 	STANCE4,
-	HINT
+	HINT,
+	INVENTORY_LABEL,
+	SHOP_LABEL,
+	USE,
+	DROP,
+	BUY,
+	SELL,
+	AMOUNT,
 };
 
 class MenuManager : public Module
@@ -131,7 +138,8 @@ public:
 	int uiLockFrame = -1;
 
 	const int baseSlotsId = 900;
-	std::vector<std::shared_ptr<UISlot>> slots;
+	std::vector<std::shared_ptr<UISlot>> inventorySlots;
+	std::vector<std::shared_ptr<UISlot>> shopSlots;
 	std::shared_ptr<UILabel> inventoryLabel;
 	std::shared_ptr<UILabel> shopLabel;
 	std::shared_ptr<UIButton> use;

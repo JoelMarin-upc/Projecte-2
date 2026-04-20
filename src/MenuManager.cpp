@@ -156,27 +156,82 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	int centerX = sw / 2;
 	int centerY = sh / 2;
 
-	std::vector<SDL_Rect> slotBounds = std::vector<SDL_Rect>();
+	SDL_Rect b_inventoryLabel = { 20, 20, 200, 20 };
+	SDL_Rect b_shopLabel = { sw - 220, 20, 200, 20 };
+	SDL_Rect b_use = {};
+	SDL_Rect b_drop = {};
+	SDL_Rect b_buy = {};
+	SDL_Rect b_sell = {};
+	SDL_Rect b_amount = {};
+	std::vector<SDL_Rect> inventorySlotBounds = std::vector<SDL_Rect>();
+	std::vector<SDL_Rect> shopSlotBounds = std::vector<SDL_Rect>();
 	const int margin = 20;
 	const int columns = 3;
 	const int rows = MAX_SLOTS / columns;
 	int x = margin;
-	int y = margin;
+	int y = margin + 40;
 	
-	for (int i = 0; i < MAX_SLOTS; i++) {
-		for (int j = 0; j < MAX_SLOTS; j++) {
-			// crear bounds para cada uno
-		}
-	}
+	for (int i = 0; i < rows; i++)
+		for (int j = 0; j < columns; j++)
+			inventorySlotBounds.push_back({ x * (i + 1), y * (j + 1), 80, 80 });
+
+	x = centerX;
+	y = margin + 40;
+
+	for (int i = 0; i < rows; i++)
+		for (int j = 0; j < columns; j++)
+			shopSlotBounds.push_back({ x * (i + 1), y * (j + 1), 80, 80 });
 
 	if (onlyPositions) {
-
+		inventoryLabel->SetBounds(b_inventoryLabel);
+		shopLabel->SetBounds(b_shopLabel);
+		use->SetBounds(b_use);
+		drop->SetBounds(b_drop);
+		buy->SetBounds(b_buy);
+		sell->SetBounds(b_sell);
+		amount->SetBounds(b_amount);
+		for (int i = 0; i < inventorySlotBounds.size(); i++) {
+			if (inventorySlots.size() <= i) continue;
+			std::shared_ptr<UISlot> slot = inventorySlots[i];
+			slot->SetBounds(inventorySlotBounds[i]);
+		}
+		for (int i = 0; i < shopSlotBounds.size(); i++) {
+			if (shopSlots.size() <= i) continue;
+			std::shared_ptr<UISlot> slot = shopSlots[i];
+			slot->SetBounds(shopSlotBounds[i]);
+		}
 	}
 	else {
 		int hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
 		int clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
 
+		SDL_Color mainColorDef = { 0, 0, 255, 255 };
+		SDL_Color mainColorDis = { 200, 200, 200, 255 };
+		SDL_Color mainColorHov = { 0, 0, 100, 255 };
+		SDL_Color mainColorPre = { 0, 255, 255, 255 };
+		SDL_Color secondaryDef = { 0, 255, 0, 255 };
+		SDL_Color secondaryDis = { 100, 100, 100, 255 };
+		SDL_Color white = { 255, 255, 255, 255 };
+		SDL_Color black = { 0, 0, 0, 255 };
+		SDL_Color yellow = { 255, 255, 0, 255 };
+		SDL_Color blue = { 0, 255, 255, 255 };
+		SDL_Color red = { 255, 0, 0, 0 };
 
+		inventoryLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)INVENTORY_LABEL, b_inventoryLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Inventory")));;
+		shopLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SHOP_LABEL, b_shopLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Shop")));;
+		use = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)USE, b_use, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Use", 5)));
+		drop = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)DROP, b_drop, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Drop", 5)));
+		buy = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)BUY, b_buy, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Buy", 5)));
+		sell = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)SELL, b_sell, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Sell", 5)));
+		amount = std::dynamic_pointer_cast<UISlider>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLIDER, (int)AMOUNT, b_amount, this, { white, mainColorDis, mainColorDef, mainColorHov, mainColorPre, mainColorDis, white }, hoverFxId, clickFxId, UIParameters::Slider(true, 1, 10, 1, 10)));
+		for (int i = 0; i < inventorySlotBounds.size(); i++) {
+			std::shared_ptr<UISlot> slot = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)baseSlotsId + i, inventorySlotBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Default()));
+			inventorySlots.push_back(slot);
+		}
+		for (int i = 0; i < shopSlotBounds.size(); i++) {
+			std::shared_ptr<UISlot> slot = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)baseSlotsId + inventorySlotBounds.size() + i, shopSlotBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Default()));
+			inventorySlots.push_back(slot);
+		}
 	}
 }
 
@@ -201,6 +256,14 @@ void MenuManager::SetObserver(Module* observer)
 	backMenu->observer = observer;
 	backMainMenu->observer = observer;
 	exit->observer = observer;
+	inventoryLabel->observer = observer;
+	shopLabel->observer = observer;
+	use->observer = observer;
+	drop->observer = observer;
+	buy->observer = observer;
+	sell->observer = observer;
+	amount->observer = observer;
+	for (std::shared_ptr<UISlot> slot : inventorySlots) slot->observer = observer;
 }
 
 void MenuManager::ShowMainMenu()
@@ -339,6 +402,24 @@ void MenuManager::HideMenu()
 	backMenu->active = false;
 	backMainMenu->active = false;
 	exit->active = false;
+
+	inventoryLabel->active = false;
+	shopLabel->active = false;
+	use->active = false;
+	drop->active = false;
+	buy->active = false;
+	sell->active = false;
+	amount->active = false;
+	for (std::shared_ptr<UISlot> slot : inventorySlots)
+	{
+		slot->SetItem(nullptr);
+		slot->active = false;
+	}
+	for (std::shared_ptr<UISlot> slot : shopSlots)
+	{
+		slot->SetItem(nullptr);
+		slot->active = false;
+	}
 }
 
 void MenuManager::ShowPreviousMenu()
@@ -369,9 +450,21 @@ void MenuManager::ShowPreviousMenu()
 void MenuManager::ShowInventory(Inventory* inventory, bool isShop)
 {
 	if (isShop) {
-		// SHOW INVENTORY RIGHT
+		for (int i = 0; i < shopSlots.size(); i++) {
+			std::shared_ptr<UISlot> slot = shopSlots[i];
+			slot->active = true;
+			if (i >= inventory->items.size()) continue;
+			InteractableItem* item = inventory->items[i];
+			slot->SetItem(item, item->count);
+		}
 	}
 	else {
-		// SHOW INVENTORY LEFT
+		for (int i = 0; i < inventorySlots.size(); i++) {
+			std::shared_ptr<UISlot> slot = inventorySlots[i];
+			slot->active = true;
+			if (i >= inventory->items.size()) continue;
+			InteractableItem* item = inventory->items[i];
+			slot->SetItem(item, item->count);
+		}
 	}
 }
