@@ -51,13 +51,19 @@ public:
 
 	void SetCursorTexture(const char* imagePath);
 
+	// Convierte coords de ventana/pantalla a coords internas del juego
+	bool WindowToGameCoords(int windowX, int windowY, int& gameX, int& gameY) const;
+
 public:
 
-	SDL_Renderer* renderer;
-	SDL_Rect camera;
-	SDL_Rect viewport;
-	SDL_Color background;
+	SDL_Renderer* renderer = nullptr;
+	SDL_Texture* gameTarget = nullptr;
+
+	SDL_Rect camera{ 0,0,0,0 };
+	SDL_Rect viewport{ 0,0,0,0 };
+	SDL_Color background{ 0,0,0,255 };
+
 	std::shared_ptr<Entity> follow;
 	bool vsync = false;
-	TTF_Font* font;
+	TTF_Font* font = nullptr;
 };

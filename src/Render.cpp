@@ -5,6 +5,7 @@
 #include "Log.h"
 #include <sstream>
 #include <SDL3_image/SDL_image.h>
+#include <cmath>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -16,7 +17,7 @@ Render::Render() : Module()
 	background.r = 0;
 	background.g = 0;
 	background.b = 0;
-	background.a = 0;
+	background.a = 255;
 }
 
 // Destructor
@@ -38,43 +39,52 @@ bool Render::Awake()
 	// SDL3: no flags; create default renderer and set vsync separately
 	renderer = SDL_CreateRenderer(window, nullptr);
 
-	SDL_SetRenderLogicalPresentation(
+	if (renderer == nullptr)
+	{
+		LOG("Could not create the renderer! SDL_Error: %s", SDL_GetError());
+		return false;
+	}
+
+	if (configParameters.child("vsync").attribute("value").as_bool())
+	{
+		if (!SDL_SetRenderVSync(renderer, 1))
+		{
+			LOG("Warning: could not enable vsync: %s", SDL_GetError());
+		}
+		else
+		{
+			LOG("Using vsync");
+		}
+	}
+
+	const int baseW = Engine::GetInstance().window->width;   // 1280
+	const int baseH = Engine::GetInstance().window->height;  // 720
+
+	gameTarget = SDL_CreateTexture(
 		renderer,
-		Engine::GetInstance().window->width,
-		Engine::GetInstance().window->height,
-		SDL_LOGICAL_PRESENTATION_LETTERBOX
+		SDL_PIXELFORMAT_RGBA8888,
+		SDL_TEXTUREACCESS_TARGET,
+		baseW,
+		baseH
 	);
 
-	if (renderer == NULL)
+	if (gameTarget == nullptr)
 	{
-		LOG("Could not create the renderer! SDL_Error: %s\n", SDL_GetError());
-		ret = false;
+		LOG("Could not create gameTarget! SDL_Error: %s", SDL_GetError());
+		return false;
 	}
-	else
-	{
-		if (configParameters.child("vsync").attribute("value").as_bool())
-		{
-			if (!SDL_SetRenderVSync(renderer, 1))
-			{
-				LOG("Warning: could not enable vsync: %s", SDL_GetError());
-			}
-			else
-			{
-				LOG("Using vsync");
-			}
-		}
 
-		camera.w = Engine::GetInstance().window->width * scale;
-		camera.h = Engine::GetInstance().window->height * scale;
-		camera.x = 0;
-		camera.y = 0;
-	}
+	SDL_SetTextureScaleMode(gameTarget, SDL_SCALEMODE_NEAREST);
+
+	camera.w = baseW;
+	camera.h = baseH;
+	camera.x = 0;
+	camera.y = 0;
 
 	TTF_Init();
-
 	font = TTF_OpenFont("Assets/Fonts/Leander.ttf", 25);
 
-	return ret;
+	return true;
 }
 
 // Called before the first frame
@@ -92,6 +102,9 @@ bool Render::Start()
 // Called each loop iteration
 bool Render::PreUpdate()
 {
+	// Renderizamos primero al buffer interno del juego
+	SDL_SetRenderTarget(renderer, gameTarget);
+	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.b, background.a);
 	SDL_RenderClear(renderer);
 	return true;
 }
@@ -103,7 +116,33 @@ bool Render::Update(float dt)
 
 bool Render::PostUpdate(float dt)
 {
-	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.g, background.a);
+	// Volvemos a la pantalla real
+	SDL_SetRenderTarget(renderer, nullptr);
+
+	int screenW = 0;
+	int screenH = 0;
+	if (!SDL_GetRenderOutputSize(renderer, &screenW, &screenH))
+	{
+		LOG("SDL_GetRenderOutputSize failed: %s", SDL_GetError());
+		return false;
+	}
+
+	SDL_FRect dst;
+	dst.x = 0.0f;
+	dst.y = 0.0f;
+	dst.w = (float)screenW;
+	dst.h = (float)screenH;
+
+	// Limpiamos pantalla real
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
+
+	// Escalamos TODO el frame de golpe
+	if (!SDL_RenderTexture(renderer, gameTarget, nullptr, &dst))
+	{
+		LOG("SDL_RenderTexture failed: %s", SDL_GetError());
+		return false;
+	}
 	SDL_RenderPresent(renderer);
 	CameraFollow();
 	return true;
@@ -113,7 +152,27 @@ bool Render::PostUpdate(float dt)
 bool Render::CleanUp()
 {
 	LOG("Destroying SDL render");
-	SDL_DestroyRenderer(renderer);
+
+	if (font != nullptr)
+	{
+		TTF_CloseFont(font);
+		font = nullptr;
+	}
+
+	if (gameTarget != nullptr)
+	{
+		SDL_DestroyTexture(gameTarget);
+		gameTarget = nullptr;
+	}
+
+	if (renderer != nullptr)
+	{
+		SDL_DestroyRenderer(renderer);
+		renderer = nullptr;
+	}
+
+	TTF_Quit();
+
 	return true;
 }
 
@@ -125,43 +184,30 @@ void Render::SetBackgroundColor(SDL_Color color)
 void Render::CameraFollow()
 {
 	if (!follow) return;
-	/*camera.x = -follow->position.getX() + camera.w / 2.f;
-	camera.y = -follow->position.getY() + camera.h / 1.2f;*/
 
 	const float deadZoneWidth = 0.0f;
 	const float deadZoneHeight = 0.0f;
 
-	//float limitLeft = Engine::GetInstance().render->camera.w / 4;
-
-	float leftBound = -camera.x + (camera.w - deadZoneWidth) / 2.f;
-	float rightBound = -camera.x + (camera.w + deadZoneWidth) / 2.f;
-	float topBound = -camera.y + (camera.h - deadZoneHeight) / 2.f;
-	float bottomBound = -camera.y + (camera.h + deadZoneHeight) / 2.f;
+	float leftBound = -camera.x + (camera.w - deadZoneWidth) / 2.0f;
+	float rightBound = -camera.x + (camera.w + deadZoneWidth) / 2.0f;
+	float topBound = -camera.y + (camera.h - deadZoneHeight) / 2.0f;
+	float bottomBound = -camera.y + (camera.h + deadZoneHeight) / 2.0f;
 
 	float playerX = follow->position.getX();
 	float playerY = follow->position.getY();
 
-	//if ((playerX - limitLeft) > 0){
 	if (playerX < leftBound)
-		camera.x = -(playerX - (camera.w - deadZoneWidth) / 2.f);
+		camera.x = (int)roundf(-(playerX - (camera.w - deadZoneWidth) / 2.0f));
 	else if (playerX > rightBound)
-		camera.x = -(playerX - (camera.w + deadZoneWidth) / 2.f);
-	//}
+		camera.x = (int)roundf(-(playerX - (camera.w + deadZoneWidth) / 2.0f));
+
 	if (playerY < topBound)
-		camera.y = -(playerY - (camera.h - deadZoneHeight) / 2.f);
+		camera.y = (int)roundf(-(playerY - (camera.h - deadZoneHeight) / 2.0f));
 	else if (playerY > bottomBound)
-		camera.y = -(playerY - (camera.h + deadZoneHeight) / 2.f);
+		camera.y = (int)roundf(-(playerY - (camera.h + deadZoneHeight) / 2.0f));
 
-	camera.x = roundf(camera.x);
-	camera.y = roundf(camera.y);
-
-	// Optional: clamp camera to world limits
-	//camera.x = std::clamp(camera.x, -worldWidth + (float)camera.w, 0.0f);
-	//camera.y = std::clamp(camera.y, -worldHeight + (float)camera.h, 0.0f);
-
-	/*int mapWidth = Engine::GetInstance().map->mapData.width * Engine::GetInstance().map->mapData.tileWidth;
-	if (camera.x > 0) camera.x = 0;
-	if (std::abs(camera.x) + camera.w > mapWidth) camera.x = -(mapWidth - camera.w);*/
+	camera.x = (int)roundf((float)camera.x);
+	camera.y = (int)roundf((float)camera.y);
 }
 
 void Render::SetViewPort(const SDL_Rect& rect)
@@ -178,18 +224,15 @@ void Render::ResetViewPort()
 bool Render::DrawTexture(SDL_Texture* texture, int x, int y, float speed, const SDL_Rect* section, bool facingRight, double angle, int pivotX, int pivotY, float tileScale) const
 {
 	bool ret = true;
-	int scale = Engine::GetInstance().window->GetScale();
 
 	SDL_FRect rect;
-	rect.x = roundf(camera.x * speed) + (float)(x * scale);
-	rect.y = roundf(camera.y * speed) + (float)(y * scale);
+	rect.x = (float)((int)roundf((float)camera.x * speed) + x);
+	rect.y = (float)((int)roundf((float)camera.y * speed) + y);
 
-
-	if (section != NULL)
+	if (section != nullptr)
 	{
-		// tileScale is 1.0f by default, so all non-map callers are unaffected
-		rect.w = ceilf((float)(section->w * scale * tileScale));
-		rect.h = ceilf((float)(section->h * scale * tileScale));
+		rect.w = (float)((int)roundf((float)section->w * tileScale));
+		rect.h = (float)((int)roundf((float)section->h * tileScale));
 	}
 	else
 	{
@@ -198,13 +241,13 @@ bool Render::DrawTexture(SDL_Texture* texture, int x, int y, float speed, const 
 		{
 			return false;
 		}
-		rect.w = tw * scale;  // tileScale not applied here — no section means
-		rect.h = th * scale;  // it's a full texture (UI, background, etc.)
+		rect.w = tw;
+		rect.h = th;
 	}
 
-	const SDL_FRect* src = NULL;
+	const SDL_FRect* src = nullptr;
 	SDL_FRect srcRect;
-	if (section != NULL)
+	if (section != nullptr)
 	{
 		srcRect.x = (float)section->x;
 		srcRect.y = (float)section->y;
@@ -213,7 +256,7 @@ bool Render::DrawTexture(SDL_Texture* texture, int x, int y, float speed, const 
 		src = &srcRect;
 	}
 
-	SDL_FPoint* p = NULL;
+	SDL_FPoint* p = nullptr;
 	SDL_FPoint pivot;
 	if (pivotX != INT_MAX && pivotY != INT_MAX)
 	{
@@ -222,8 +265,7 @@ bool Render::DrawTexture(SDL_Texture* texture, int x, int y, float speed, const 
 		p = &pivot;
 	}
 
-	int rc = SDL_RenderTextureRotated(renderer, texture, src, &rect, angle, p, facingRight ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL) ? 0 : -1;
-	if (rc != 0)
+	if (!SDL_RenderTextureRotated(renderer, texture, src, &rect, angle, p, facingRight ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL))
 	{
 		LOG("Cannot blit to screen. SDL_RenderTextureRotated error: %s", SDL_GetError());
 		ret = false;
@@ -306,18 +348,15 @@ bool Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b,
 bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera) const
 {
 	bool ret = true;
-	int scale = Engine::GetInstance().window->GetScale();
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 
-	int result = -1;
 	SDL_FPoint points[360];
-
 	float factor = (float)M_PI / 180.0f;
 
-	float cx = (float)((use_camera ? camera.x : 0) + x * scale);
-	float cy = (float)((use_camera ? camera.y : 0) + y * scale);
+	float cx = (float)((use_camera ? camera.x : 0) + x);
+	float cy = (float)((use_camera ? camera.y : 0) + y);
 
 	for (int i = 0; i < 360; ++i)
 	{
@@ -325,11 +364,11 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 		points[i].y = cy + (float)(radius * sin(i * factor));
 	}
 
-	result = SDL_RenderPoints(renderer, points, 360) ? 0 : -1;
+	int result = SDL_RenderPoints(renderer, points, 360) ? 0 : -1;
 
 	if (result != 0)
 	{
-		LOG("Cannot draw quad to screen. SDL_RenderPoints error: %s", SDL_GetError());
+		LOG("Cannot draw circle to screen. SDL_RenderPoints error: %s", SDL_GetError());
 		ret = false;
 	}
 
@@ -338,19 +377,22 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 
 bool Render::DrawText(const char* text, int x, int y, int w, int h, SDL_Color color) const
 {
-	if (!font || !renderer || !text) {
+	if (!font || !renderer || !text)
+	{
 		LOG("DrawText: invalid font/renderer/text");
 		return false;
 	}
 
 	SDL_Surface* surface = TTF_RenderText_Solid(font, text, 0, color);
-	if (!surface) {
+	if (!surface)
+	{
 		LOG("DrawText: TTF_RenderText_Solid failed: %s", SDL_GetError());
 		return false;
 	}
 
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-	if (!texture) {
+	if (!texture)
+	{
 		LOG("DrawText: SDL_CreateTextureFromSurface failed: %s", SDL_GetError());
 		SDL_DestroySurface(surface);
 		return false;
@@ -358,15 +400,13 @@ bool Render::DrawText(const char* text, int x, int y, int w, int h, SDL_Color co
 
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-	/*x = (float)((int)(camera.x) + x);
-	y = (float)((int)(camera.y) + y);*/
-
 	float fw = (float)surface->w;
 	float fh = (float)surface->h;
 
 	SDL_FRect dstrect = { (float)x, (float)y, fw, fh };
 
-	if (!SDL_RenderTexture(renderer, texture, nullptr, &dstrect)) {
+	if (!SDL_RenderTexture(renderer, texture, nullptr, &dstrect))
+	{
 		LOG("DrawText: SDL_RenderTexture failed: %s", SDL_GetError());
 	}
 
@@ -430,4 +470,24 @@ void Render::SetCursorTexture(const char* imagePath)
 	SDL_Surface* surface = IMG_Load(imagePath);
 	SDL_Cursor* cursor = SDL_CreateColorCursor(surface, 0, 0);
 	SDL_SetCursor(cursor);
+}
+
+bool Render::WindowToGameCoords(int windowX, int windowY, int& gameX, int& gameY) const
+{
+	int screenW = 0;
+	int screenH = 0;
+
+	if (!SDL_GetRenderOutputSize(renderer, &screenW, &screenH))
+	{
+		LOG("WindowToGameCoords: SDL_GetRenderOutputSize failed: %s", SDL_GetError());
+		return false;
+	}
+
+	const int baseW = Engine::GetInstance().window->width;
+	const int baseH = Engine::GetInstance().window->height;
+
+	gameX = (int)((float)windowX * (float)baseW / (float)screenW);
+	gameY = (int)((float)windowY * (float)baseH / (float)screenH);
+
+	return true;
 }
