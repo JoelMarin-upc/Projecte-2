@@ -104,6 +104,9 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 	case EntityType::INTERACTABLE_ITEM:
 		entity = std::make_shared<InteractableItem>(id, name, texturePath, interactionType, canStack, toggledTexturePath);
 		break;
+	case EntityType::WEAPON:
+		entity = std::make_shared<Weapon>(id, name, texturePath);
+		break;
 	default:
 		break;
 	}

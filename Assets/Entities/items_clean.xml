@@ -1,4 +1,16 @@
 <items>
 	<item id="IT-001" name="statue" texture="transparent.png" type="4" itemClass="item" interactionType="3" canStack="false" />
 	<item id="LEVER-001" name="Lever" texture="dungeonLeverClosed.png" type="4" itemClass="item" interactionType="2" canStack="false" toggledTexturePath="dungeonLeverOpened.png"/>
+	
+	<!--WEAPONS-->
+	<item id="WP-001" name="Rusty Hoe" texture="item.png" type="4" itemClass="item" interactionType="1" canStack="false" />
+		<stats>
+			<stat name="attack" value="8"/>
+		</stats>
+
+	<!--GEAR-->
+	<item id="GR-001" name="Leather Helmet" texture="item.png" type="4" itemClass="item" interactionType="1" canStack="false" />
+	<stats>
+		<stat name="defense" value="1"/>
+	</stats>
 </items>

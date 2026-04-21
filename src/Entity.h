@@ -12,6 +12,8 @@ enum class EntityType
 	NPC = 3,
 	INTERACTABLE_ITEM = 4,
 	ENEMY = 5,
+	WEAPON = 6,
+	GEAR = 7,
 	UNKNOWN
 };
 
