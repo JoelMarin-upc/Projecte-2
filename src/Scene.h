@@ -140,4 +140,6 @@ private:
 	int logoFxId;
 	int elevatorFxId;
 
+	InteractableItem* selectedItem = nullptr;
+
 };

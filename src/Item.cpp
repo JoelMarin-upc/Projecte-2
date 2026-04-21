@@ -9,9 +9,10 @@
 #include "Physics.h"
 #include "EntityManager.h"
 
-Item::Item(std::string id, std::string name, std::string texturePath, EntityType type) : DynamicEntity(id, name, texturePath, type)
+Item::Item(std::string id, std::string name, std::string description, std::string texturePath, EntityType type) : DynamicEntity(id, name, texturePath, type)
 {
 	name = "item";
+	this->description = description;
 }
 
 Item::~Item() {}

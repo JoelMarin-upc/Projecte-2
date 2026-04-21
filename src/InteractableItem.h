@@ -12,7 +12,7 @@ enum class ItemInteractionType {
 class InteractableItem : public Item {
 public:
 	InteractableItem(){}
-	InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type, bool canStack, std::string toggledTexturePath = "");
+	InteractableItem(std::string id, std::string name, std::string description, std::string texturePath, ItemInteractionType type, bool canStack, std::string toggledTexturePath = "");
 
 	virtual ~InteractableItem();
 

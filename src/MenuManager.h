@@ -66,6 +66,7 @@ enum UIID {
 	BUY,
 	SELL,
 	AMOUNT,
+	SELECTED_ITEM
 };
 
 class MenuManager : public Module
@@ -105,6 +106,7 @@ public:
 	void ShowDeathScreen();
 	void HideMenu();
 	void ShowPreviousMenu();
+	void RedrawInventory();
 
 private:
 	void ShowInventory(Inventory* inventory, bool isShop);
@@ -147,4 +149,8 @@ public:
 	std::shared_ptr<UIButton> buy;
 	std::shared_ptr<UIButton> sell;
 	std::shared_ptr<UISlider> amount;
+	std::shared_ptr<UISlot> selectedItem;
+
+	Inventory* currentInventory = nullptr;
+	Inventory* currentShop = nullptr;
 };

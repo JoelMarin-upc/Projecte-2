@@ -19,6 +19,9 @@ public:
 
 	void SetItem(InteractableItem* item, int amount = 0);
 
+	InteractableItem* item;
+	int amount;
+
 private:
 
 	bool canClick = true;
@@ -30,8 +33,7 @@ private:
 	SDL_Color colorHov;
 	SDL_Color colorPre;
 	SDL_Color colorTxt;
-	InteractableItem* item;
-	int amount;
+	
 };
 
 #pragma once

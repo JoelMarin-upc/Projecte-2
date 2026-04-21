@@ -182,9 +182,12 @@ void Player::HandleAnimations()
 
 void Player::ShowInventory()
 {
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN) showingInventory = !showingInventory;
-	if (showingInventory) Engine::GetInstance().menuManager->ShowInventory(inventory);
-	else Engine::GetInstance().menuManager->HideMenu();
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN)
+	{
+		showingInventory = !showingInventory;
+		if (showingInventory) Engine::GetInstance().menuManager->ShowInventory(inventory);
+		else Engine::GetInstance().menuManager->HideMenu();
+	}
 }
 
 void Player::AddPartyMember(std::shared_ptr<NPC> member, bool write)

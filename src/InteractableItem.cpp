@@ -10,7 +10,7 @@
 #include "EntityManager.h"
 #include "SceneManager.h"
 
-InteractableItem::InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type, bool canStack, std::string _toggledTexturePath) : Item(id, name, texturePath, EntityType::INTERACTABLE_ITEM)
+InteractableItem::InteractableItem(std::string id, std::string name, std::string description, std::string texturePath, ItemInteractionType type, bool canStack, std::string _toggledTexturePath) : Item(id, name, description, texturePath, EntityType::INTERACTABLE_ITEM)
 {
 	toggledTexturePath = _toggledTexturePath;
 	itemInteractionType = type;

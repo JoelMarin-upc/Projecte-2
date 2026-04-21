@@ -508,13 +508,14 @@ void Scene::LoadScene(std::string spawnId)
 		for (pugi::xml_node iNode = items.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
 			if (iNode.attribute("id").as_string() != item.id) continue;
 			std::string name = iNode.attribute("name").as_string();
+			std::string description = iNode.attribute("description").as_string();
 			std::string texture = iNode.attribute("texture").as_string();
 			int type = iNode.attribute("type").as_int();
 			int interactionType = iNode.attribute("interactionType").as_int();
 			bool canStack = iNode.attribute("canStack").as_bool();
 			std::string itemClass = iNode.attribute("itemClass").as_string("item");
 			std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
-			entityManager->CreateItem(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath);
+			entityManager->CreateItem(item.id, name, description, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath);
 		}
 	}
 }
@@ -534,16 +535,18 @@ Stats* Scene::LoadStats(pugi::xml_node characterNode)
 Inventory* Scene::LoadInventory(pugi::xml_node characterNode)
 {
 	Inventory* inventory = new Inventory();
+	if (!characterNode.child("inventory")) return inventory;
 	for (pugi::xml_node iNode = characterNode.child("inventory").child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
 		std::string id = iNode.attribute("id").as_string();
 		std::string name = iNode.attribute("name").as_string();
+		std::string description = iNode.attribute("description").as_string();
 		std::string texture = iNode.attribute("texture").as_string();
 		int type = iNode.attribute("type").as_int();
 		int interactionType = iNode.attribute("interactionType").as_int();
 		bool canStack = iNode.attribute("canStack").as_bool();
 		std::string itemClass = iNode.attribute("itemClass").as_string("item");
 		std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
-		std::shared_ptr<InteractableItem> item = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(id, name, baseTexturePath + texture, { -999999, -999999 }, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath));
+		std::shared_ptr<InteractableItem> item = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(id, name, description, baseTexturePath + texture, { -999999, -999999 }, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath));
 		inventory->AddItem(item.get());
 	}
 	return inventory;
@@ -728,6 +731,17 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 
 	float musicVol;
 	float fxVol;
+	int amount;
+	Gear* g;
+	Weapon* w;
+	Consumable* c;
+	if ((Engine::GetInstance().menuManager->currentMenu == SHOP || Engine::GetInstance().menuManager->currentMenu == INVENTORY) &&
+		uiElement->id >= Engine::GetInstance().menuManager->baseSlotsId) {
+		UISlot* slot = (UISlot*)uiElement;
+		selectedItem = slot->item;
+		Engine::GetInstance().menuManager->selectedItem->SetItem(selectedItem, slot->amount);
+		Engine::GetInstance().menuManager->amount->SetMinMax(1, slot->amount);
+	}
 	switch ((UIID)uiElement->id)
 	{
 	case START_GAME:
@@ -786,6 +800,49 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	case EXIT:
 		exit(0);
+		break;
+	case USE:
+		if (!selectedItem) return true;
+		if (w = dynamic_cast<Weapon*>(selectedItem)) {
+			player->inventory->UnequipWeapon();
+			player->inventory->EquipWeapon(selectedItem->name);
+		}
+		else if (g = dynamic_cast<Gear*>(selectedItem)) {
+			player->inventory->UnequipGear(g->gearSlot);
+			player->inventory->EquipGear(selectedItem->name);
+		}
+		else if (c = dynamic_cast<Consumable*>(selectedItem)) {
+			amount = Engine::GetInstance().menuManager->amount->GetValue();
+			for (int i = 0; i < amount; i++)
+			{
+				// make consumable action
+				player->inventory->RemoveItem(selectedItem->name);
+			}
+		}
+		else {
+			// base InteractableItem class / Equipable class
+		}
+		Engine::GetInstance().menuManager->RedrawInventory();
+		break;
+	case DROP:
+		if (!selectedItem) return true;
+		amount = Engine::GetInstance().menuManager->amount->GetValue();
+		for (int i = 0; i < amount; i++) player->inventory->RemoveItem(selectedItem->name);
+		Engine::GetInstance().menuManager->RedrawInventory();
+		break;
+	case BUY:
+		if (!selectedItem) return true;
+		// remove item from shop
+		// remove money from player
+		// add item to player
+		Engine::GetInstance().menuManager->RedrawInventory();
+		break;
+	case SELL:
+		if (!selectedItem) return true;
+		// remove item from player
+		// add money to player
+		// add item to shop ?
+		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	default:
 		break;
