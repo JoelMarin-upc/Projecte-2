@@ -65,6 +65,8 @@ public:
 	void EndScene();
 	void EndGame();
 	void CheckTimers();
+	void ShowInventory();
+	void UpdateInventory() const;
 
 	void CheckTransitions();
 
@@ -139,6 +141,8 @@ private:
 	int clickFxId;
 	int logoFxId;
 	int elevatorFxId;
+
+	bool showingInventory = false;
 
 	InteractableItem* selectedItem = nullptr;
 

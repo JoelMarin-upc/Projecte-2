@@ -46,10 +46,10 @@ public:
 	bool isToggled = false;
 	std::string toggledTexturePath = "";
 	SDL_Texture* toggledTexture = nullptr;
+	ItemInteractionType itemInteractionType;
 
 protected:
 	//Dialogue type by default
-	ItemInteractionType itemInteractionType;
 
 	SDL_Texture* pickupIcon;
 	const char* pickupIconPath;

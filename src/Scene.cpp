@@ -169,6 +169,7 @@ bool Scene::Update(float dt)
 	////////////////////////////////////////////////
 
 	CheckTimers();
+	if (!isOnDialog && !paused) ShowInventory();
 	map->Update(dt);
 	entityManager->Update(dt);
 	missionManager->Update(dt);
@@ -236,6 +237,7 @@ void Scene::TogglePause()
 		Engine::GetInstance().audio->pauseMultiplier = 0.3f;
 		Engine::GetInstance().audio->UpdateMusicVolume();
 		Engine::GetInstance().menuManager->ShowPauseMenu();
+		showingInventory = false;
 	} 
 	else
 	{
@@ -566,6 +568,48 @@ void Scene::CheckTimers() {
 	if (combatTimer.ReadSec() > combatCooldownSeconds) hasCombatCooldown = false;
 }
 
+void Scene::ShowInventory()
+{
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN)
+	{
+		showingInventory = !showingInventory;
+		entityManager->paused = showingInventory;
+		if (showingInventory) Engine::GetInstance().menuManager->ShowInventory(player->inventory);
+		else Engine::GetInstance().menuManager->HideMenu();
+		if (!showingInventory) UpdateInventory();
+	}
+}
+
+static std::string ExtractFilename(const std::string& full_path) {
+	size_t pos = full_path.find_last_of("/\\");
+	if (pos == std::string::npos) return full_path;
+	return full_path.substr(pos + 1);
+}
+
+void Scene::UpdateInventory() const
+{
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+	pugi::xml_node pNode = doc.child("characters").child("player");
+	pNode.remove_child("inventory");
+	pugi::xml_node invNode = pNode.append_child("inventory");
+	for (InteractableItem* item : player->inventory->items) {
+		if (!item) continue;
+		int count = item->canStack ? item->count : 1;
+		for (int i = 0; i < count; i++) {
+			pugi::xml_node iNode = invNode.append_child("item");
+			iNode.append_attribute("id").set_value(item->id.c_str());
+			iNode.append_attribute("name").set_value(item->name.c_str());
+			iNode.append_attribute("description").set_value(item->description.c_str());
+			iNode.append_attribute("texture").set_value(ExtractFilename(item->texturePath).c_str());
+			iNode.append_attribute("type").set_value((int)item->type);
+			iNode.append_attribute("itemClass").set_value("item"); // TODO: This value depends on the item subclass
+			iNode.append_attribute("interactionType").set_value((int)item->itemInteractionType);
+			iNode.append_attribute("canStack").set_value(item->canStack);
+		}
+	}
+	doc.save_file("Assets/Entities/characters.xml");
+}
+
 //Checks if the player is at a transition rectagle
 void Scene::CheckTransitions()
 {
@@ -636,7 +680,7 @@ std::vector<std::shared_ptr<Enemy>> Scene::GetNearEnemies(Vector2D position, flo
 
 void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
 {
-	if (hasCombatCooldown) return;
+	if (hasCombatCooldown || isOnDialog || showingInventory || paused) return;
 	Engine::GetInstance().render->follow = nullptr;
 
 	auto nearEnemies = GetNearEnemies(player->position, 300, enemy->id);
