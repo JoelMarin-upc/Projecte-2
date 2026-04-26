@@ -169,7 +169,7 @@ bool Scene::Update(float dt)
 	////////////////////////////////////////////////
 
 	CheckTimers();
-	if (!isOnDialog && !paused) ShowInventory();
+	if (!isOnDialog && !paused) ToggleInventory();
 	map->Update(dt);
 	entityManager->Update(dt);
 	missionManager->Update(dt);
@@ -238,6 +238,7 @@ void Scene::TogglePause()
 		Engine::GetInstance().audio->UpdateMusicVolume();
 		Engine::GetInstance().menuManager->ShowPauseMenu();
 		showingInventory = false;
+		showingShop = false;
 	} 
 	else
 	{
@@ -518,6 +519,7 @@ void Scene::LoadScene(std::string spawnId)
 			std::string itemClass = iNode.attribute("itemClass").as_string("item");
 			std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
 			entityManager->CreateItem(item.id, name, description, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath);
+			// load price from item_prices.xml
 		}
 	}
 }
@@ -568,10 +570,14 @@ void Scene::CheckTimers() {
 	if (combatTimer.ReadSec() > combatCooldownSeconds) hasCombatCooldown = false;
 }
 
-void Scene::ShowInventory()
+void Scene::ToggleInventory()
 {
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN)
 	{
+		if (showingShop) {
+			ToggleShop(nullptr);
+			return;
+		}
 		showingInventory = !showingInventory;
 		entityManager->paused = showingInventory;
 		if (showingInventory) Engine::GetInstance().menuManager->ShowInventory(player->inventory);
@@ -580,19 +586,49 @@ void Scene::ShowInventory()
 	}
 }
 
+void Scene::ToggleShop(NPC* shopOwner)
+{
+	showingInventory = shopOwner;
+	entityManager->paused = showingInventory;
+	if (showingInventory) Engine::GetInstance().menuManager->ShowShop(player->inventory, shopOwner->inventory);
+	else
+	{
+		Engine::GetInstance().menuManager->HideMenu();
+		UpdateInventory();
+		UpdateInventory(this->shopOwner);
+	}
+	this->shopOwner = shopOwner;
+}
+
 static std::string ExtractFilename(const std::string& full_path) {
 	size_t pos = full_path.find_last_of("/\\");
 	if (pos == std::string::npos) return full_path;
 	return full_path.substr(pos + 1);
 }
 
-void Scene::UpdateInventory() const
+void Scene::UpdateInventory(NPC* shopOwner) const
 {
 	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
-	pugi::xml_node pNode = doc.child("characters").child("player");
-	pNode.remove_child("inventory");
-	pugi::xml_node invNode = pNode.append_child("inventory");
-	for (InteractableItem* item : player->inventory->items) {
+	pugi::xml_node cNode;
+	std::vector<InteractableItem*> items;
+	if (shopOwner) {
+		for (pugi::xml_node c = doc.child("characters").child("character"); c != NULL; c = c.next_sibling("character")) {
+			if (c.attribute("id").as_string() == shopOwner->id)
+			{
+				cNode = c;
+				break;
+			}
+		}
+		
+		items = shopOwner->inventory->items;
+	}
+	else {
+		cNode = doc.child("characters").child("player");
+		items = player->inventory->items;
+	}
+	cNode.remove_child("inventory");
+	pugi::xml_node invNode = cNode.append_child("inventory");
+	for (InteractableItem* item : items) {
 		if (!item) continue;
 		int count = item->canStack ? item->count : 1;
 		for (int i = 0; i < count; i++) {
@@ -776,14 +812,19 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	float musicVol;
 	float fxVol;
 	int amount;
+	InteractableItem* copy;
 	Gear* g;
 	Weapon* w;
 	Consumable* c;
-	if ((Engine::GetInstance().menuManager->currentMenu == SHOP || Engine::GetInstance().menuManager->currentMenu == INVENTORY) &&
-		uiElement->id >= Engine::GetInstance().menuManager->baseSlotsId) {
+	if ((Engine::GetInstance().menuManager->currentMenu == SHOP || 
+		 Engine::GetInstance().menuManager->currentMenu == INVENTORY) &&
+		uiElement->id >= Engine::GetInstance().menuManager->baseSlotsId) 
+	{
+		selectedItemIsFromShop = false;
+		if (uiElement->id >= Engine::GetInstance().menuManager->baseShopSlotsId) selectedItemIsFromShop = true;
 		UISlot* slot = (UISlot*)uiElement;
 		selectedItem = slot->item;
-		Engine::GetInstance().menuManager->selectedItem->SetItem(selectedItem, slot->amount);
+		Engine::GetInstance().menuManager->selectedItem->SetItem(selectedItem, slot->amount, true);
 		Engine::GetInstance().menuManager->amount->SetMinMax(1, slot->amount);
 	}
 	switch ((UIID)uiElement->id)
@@ -846,7 +887,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		exit(0);
 		break;
 	case USE:
-		if (!selectedItem) return true;
+		if (!selectedItem || selectedItemIsFromShop) return true;
 		if (w = dynamic_cast<Weapon*>(selectedItem)) {
 			player->inventory->UnequipWeapon();
 			player->inventory->EquipWeapon(selectedItem->name);
@@ -869,23 +910,30 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	case DROP:
-		if (!selectedItem) return true;
+		if (!selectedItem || selectedItemIsFromShop) return true;
 		amount = Engine::GetInstance().menuManager->amount->GetValue();
 		for (int i = 0; i < amount; i++) player->inventory->RemoveItem(selectedItem->name);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	case BUY:
-		if (!selectedItem) return true;
-		// remove item from shop
-		// remove money from player
-		// add item to player
+		if (!selectedItem || !selectedItemIsFromShop) return true;
+		amount = Engine::GetInstance().menuManager->amount->GetValue();
+		if (player->inventory->money < selectedItem->price * amount) return true;
+		copy = new InteractableItem(*selectedItem);
+		copy->count = amount;
+		player->inventory->AddItem(copy);
+		for (int i = 0; i < amount; i++) shopOwner->inventory->RemoveItem(selectedItem->name);
+		player->inventory->AddMoney(-selectedItem->price);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	case SELL:
-		if (!selectedItem) return true;
-		// remove item from player
-		// add money to player
-		// add item to shop ?
+		if (!selectedItem || selectedItemIsFromShop) return true;
+		amount = Engine::GetInstance().menuManager->amount->GetValue();
+		copy = new InteractableItem(*selectedItem);
+		copy->count = amount;
+		shopOwner->inventory->AddItem(copy);
+		for (int i = 0; i < amount; i++) player->inventory->RemoveItem(selectedItem->name);
+		player->inventory->AddMoney(selectedItem->price);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	default:

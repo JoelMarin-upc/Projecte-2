@@ -47,6 +47,7 @@ public:
 	std::string toggledTexturePath = "";
 	SDL_Texture* toggledTexture = nullptr;
 	ItemInteractionType itemInteractionType;
+	int price = 10; // TODO: value 10 for testing. will be taken from item_prices.xml
 
 protected:
 	//Dialogue type by default

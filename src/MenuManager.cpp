@@ -157,7 +157,7 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	int centerY = sh / 2;
 
 	SDL_Rect b_inventoryLabel = { 20, 20, 200, 20 };
-	SDL_Rect b_shopLabel = { centerX - 220, 20, 200, 20 };
+	SDL_Rect b_shopLabel = { sw - 220, 20, 200, 20 };
 	SDL_Rect b_use = { centerX - 100, 100, 80, 40};
 	SDL_Rect b_drop = { centerX + 20, 100, 80, 40 };
 	SDL_Rect b_buy = { centerX - 100, 180, 80, 40 };
@@ -234,7 +234,7 @@ void MenuManager::LoadInventory(bool onlyPositions)
 			inventorySlots.push_back(slot);
 		}
 		for (int i = 0; i < shopSlotBounds.size(); i++) {
-			std::shared_ptr<UISlot> slot = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)baseSlotsId + inventorySlotBounds.size() + i, shopSlotBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Default()));
+			std::shared_ptr<UISlot> slot = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)baseShopSlotsId + i, shopSlotBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Default()));
 			shopSlots.push_back(slot);
 		}
 	}
@@ -270,6 +270,7 @@ void MenuManager::SetObserver(Module* observer)
 	amount->observer = observer;
 	selectedItem->observer = observer;
 	for (std::shared_ptr<UISlot> slot : inventorySlots) slot->observer = observer;
+	for (std::shared_ptr<UISlot> slot : shopSlots) slot->observer = observer;
 }
 
 void MenuManager::ShowMainMenu()

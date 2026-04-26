@@ -270,3 +270,9 @@ void Inventory::PrintContents()
 	}
 }
 
+void Inventory::AddMoney(int amount)
+{
+	money += amount;
+	if (money < 0) money = 0;
+}
+

@@ -102,7 +102,7 @@ public:
 	void ShowSettingsMenu();
 	void ShowCreditsMenu();
 	void ShowInventory(Inventory* inventory);
-	void ShowShop(Inventory* customer, Inventory* shop = nullptr);
+	void ShowShop(Inventory* customer, Inventory* shop);
 	void ShowDeathScreen();
 	void HideMenu();
 	void ShowPreviousMenu();
@@ -140,6 +140,7 @@ public:
 	int uiLockFrame = -1;
 
 	const int baseSlotsId = 900;
+	const int baseShopSlotsId = 950;
 	std::vector<std::shared_ptr<UISlot>> inventorySlots;
 	std::vector<std::shared_ptr<UISlot>> shopSlots;
 	std::shared_ptr<UILabel> inventoryLabel;

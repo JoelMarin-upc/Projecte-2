@@ -81,4 +81,11 @@
 		</stats>
 		<inventory />
 	</character>
+	<character id="CH-011" name="Shopkeeper" texture="heart.png" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
+		<inventory>
+			<item id="" name="potion" description="10 HP" texture="potion.png" type="4" itemClass="item" interactionType="1" canStack="true" />
+			<item id="" name="potion" description="10 HP" texture="potion.png" type="4" itemClass="item" interactionType="1" canStack="true" />
+			<item id="" name="sword" description="10 attack" texture="sword.png" type="4" itemClass="item" interactionType="1" canStack="true" />
+		</inventory>
+	</character>
 </characters>

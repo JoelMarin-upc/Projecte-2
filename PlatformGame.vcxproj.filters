@@ -296,8 +296,8 @@
     <ClCompile Include="src\UIImage.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
-    <ClCompile Include="src\Lever.cpp">
-      <Filter>Source Files\Scene\Entities\Items</Filter>
+    <ClCompile Include="src\UISlot.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -511,8 +511,8 @@
     <ClInclude Include="src\UIImage.h">
       <Filter>Source Files\UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\Lever.h">
-      <Filter>Source Files\Scene\Entities\Items</Filter>
+    <ClInclude Include="src\UISlot.h">
+      <Filter>Source Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -524,5 +524,8 @@
     <Xml Include="Assets\Entities\items.xml" />
     <Xml Include="Assets\Dialogues\test.xml" />
     <Xml Include="Assets\Entities\base_stats.xml" />
+    <Xml Include="Assets\Entities\characters_clean.xml" />
+    <Xml Include="Assets\Entities\items_clean.xml" />
+    <Xml Include="Assets\Dialogues\dialogues_clean.xml" />
   </ItemGroup>
 </Project>

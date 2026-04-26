@@ -300,6 +300,7 @@
     <ClInclude Include="src\Zombie.h" />
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="Assets\Dialogues\dialogues_clean.xml" />
     <Xml Include="Assets\Dialogues\test.xml" />
     <Xml Include="Assets\Entities\base_stats.xml" />
     <Xml Include="Assets\Entities\characters.xml" />

@@ -157,6 +157,7 @@ void NPC::Recruit()
 void NPC::OpenShop()
 {
 	LOG("Opening shop for '%s'", name.c_str());
+	Engine::GetInstance().sceneManager->currentScene->ToggleShop(this);
 }
 
 void NPC::OnCollision(Collider* physA, Collider* physB)

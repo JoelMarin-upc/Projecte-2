@@ -4,7 +4,7 @@
 #include "Audio.h"
 #include <string>
 
-UISlot::UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId, InteractableItem* item, int amount) : UIElement(UIElementType::IMAGE, id)
+UISlot::UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId, InteractableItem* item, int amount, bool showPrice) : UIElement(UIElementType::IMAGE, id)
 {
 	this->hoverFxId = hoverFxId;
 	this->clickFxId = clickFxId;
@@ -19,6 +19,7 @@ UISlot::UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, 
 	this->verticalSpacing = verticalSpacing;
 	this->item = item;
 	this->amount = amount;
+	this->showPrice = showPrice;
 
 	canClick = true;
 	drawBasic = false;
@@ -88,11 +89,13 @@ void UISlot::Draw(SDL_Color color)
 	Engine::GetInstance().render->DrawTextMultiline(name.c_str(), bounds.x, bounds.y + item->icon->h, bounds.w, 20, colorTxt);
 	//Engine::GetInstance().render->DrawTextMultiline(std::to_string(amount).c_str(), bounds.x, bounds.y, bounds.w, bounds.h, colorTxt);
 	Engine::GetInstance().render->DrawTextMultiline(item->description.c_str(), bounds.x, bounds.y + item->icon->h + 25, bounds.w, bounds.h - (bounds.y + item->icon->h + 25), colorTxt);
+	if (showPrice) Engine::GetInstance().render->DrawTextMultiline((std::to_string(item->price) + " gold").c_str(), bounds.x, bounds.y + bounds.h - 20, bounds.w, 20, colorTxt);
 }
 
-void UISlot::SetItem(InteractableItem* item, int amount)
+void UISlot::SetItem(InteractableItem* item, int amount, bool showPrice)
 {
 	if (!item) amount = 0;
 	this->item = item;
 	this->amount = amount;
+	this->showPrice = showPrice;
 }

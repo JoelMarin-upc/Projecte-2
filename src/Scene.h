@@ -65,8 +65,9 @@ public:
 	void EndScene();
 	void EndGame();
 	void CheckTimers();
-	void ShowInventory();
-	void UpdateInventory() const;
+	void ToggleInventory();
+	void ToggleShop(NPC* shopOwner);
+	void UpdateInventory(NPC* shopOwner = nullptr) const;
 
 	void CheckTransitions();
 
@@ -143,7 +144,11 @@ private:
 	int elevatorFxId;
 
 	bool showingInventory = false;
+	bool showingShop = false;
 
 	InteractableItem* selectedItem = nullptr;
+	bool selectedItemIsFromShop = false;
+
+	NPC* shopOwner = nullptr;
 
 };
