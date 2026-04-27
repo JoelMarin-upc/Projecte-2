@@ -33,7 +33,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-006" name="follower" texture="Barbara.png" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-006" name="follower" texture="SpriteSheet_Barbara.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="100" max="100" />
 			<stat name="speed" value="5"/>

@@ -3,6 +3,7 @@
 #include "SceneManager.h"
 #include "Log.h"
 #include "Party.h"
+#include "Animation.h"
 //#include <cmath>
 
 NPC::~NPC() {}
@@ -16,7 +17,13 @@ bool NPC::Start()
 	//texturePath = "Assets/Textures/heart.png";
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
 
-
+	//if (!animationsPath.empty()) {
+	//	std::unordered_map<int, std::string> aliases = { {0,"idle"},{16,"move_down"},{20,"move_up"},{24,"move_left"} };
+	//	anims.LoadFromTSX(animationsPath.c_str(), aliases);
+	//	anims.SetCurrent("idle");
+	//	currentAnimation = "idle";
+	//}
+	
 	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -10, 0, 1, 1);
 	pbody = colliders[0];
 	pbody->listener = this;
@@ -85,7 +92,14 @@ void NPC::Draw(float dt)
 	colliders[0]->GetPosition(x, y);
 	position.setX((float)x);
 	position.setY((float)y);
-	Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2/*, &animFrame, facingRight*/);
+	if (!animationsPath.empty()) {
+		anims.Update(dt);
+		const SDL_Rect& animFrame = anims.GetCurrentFrame();
+		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2, 1, &animFrame, isFacingRight);
+	}
+	else {
+		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2);
+	}
 
 	if (party) DrawHealthBar(texture);
 }
@@ -121,6 +135,7 @@ void NPC::Move()
 
 	if (distance < stopDistance || distance == 0.0f) {
 		Engine::GetInstance().physics->SetLinearVelocity(colliders[0], b2Vec2_zero);
+		HandleAnimations(b2Vec2_zero);
 		return;
 	}
 
@@ -130,9 +145,64 @@ void NPC::Move()
 	b2Vec2 velocity = speed * dir;
 
 	Engine::GetInstance().physics->SetLinearVelocity(colliders[0], velocity);
+	HandleAnimations(velocity);
 	int xFinal, yFinal;
 	pbody->GetPosition(xFinal, yFinal);
 	sensorCollider->SetPosition(xFinal, yFinal);
+}
+
+void NPC::HandleAnimations(b2Vec2 velocity)
+{
+	if (animationsPath.empty()) return;
+
+	const float MOVE_THRESHOLD = 0.1f;
+
+	bool isMoving = (std::abs(velocity.x) > MOVE_THRESHOLD || std::abs(velocity.y) > MOVE_THRESHOLD);
+
+	if (isMoving) {
+		if (std::abs(velocity.x) > std::abs(velocity.y)) {
+			if (velocity.x > 0) {
+				facing = "left"; //Actually right, but in the spritesheet the default side facing direction is left
+				isFacingRight = false; //The sprite should be flipped here to display right instead of left
+			}
+			else {
+				facing = "left";
+				isFacingRight = true;
+			}
+		}
+		else {
+			if (velocity.y > 0) {
+				facing = "down";
+			}
+			else {
+				facing = "up";
+			}
+		}
+
+		std::string animName = "move_" + facing;
+		if (currentAnimation != animName) {
+			anims.SetCurrent(animName);
+			currentAnimation = animName;
+		}
+	}
+	else {
+		std::string animName = "idle";
+		if (currentAnimation != animName) {
+			anims.SetCurrent(animName);
+			currentAnimation = animName;
+		}
+	}
+}
+
+void NPC::LoadAnimations()
+{
+	if (animationsPath.empty()) return;
+	std::unordered_map<int, std::string> aliases = {
+		{0, "idle"}, {16, "move_down"}, {20, "move_up"}, {24, "move_left"}
+	};
+	anims.LoadFromTSX(animationsPath.c_str(), aliases);
+	anims.SetCurrent("idle");
+	currentAnimation = "idle";
 }
 
 void NPC::Interact()
@@ -175,6 +245,7 @@ void NPC::OpenShop()
 }
 
 void NPC::OnCollision(Collider* physA, Collider* physB)
+
 {
 	switch (physB->etype) {
 	case EntityType::PLAYER:

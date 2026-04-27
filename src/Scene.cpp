@@ -272,6 +272,7 @@ void Scene::SaveGame()
 	//Save player positions
 	playerNode.attribute("savedX").set_value(player->position.getX());
 	playerNode.attribute("savedY").set_value(player->position.getY());
+	SaveCharacterStats(playerNode, player);
 
 	//Save NPC positions and dead state
 	for (const auto& entity : entityManager->entities) {
@@ -281,6 +282,7 @@ void Scene::SaveGame()
 			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
 			cNode.attribute("savedX").set_value(npc->position.getX());
 			cNode.attribute("savedY").set_value(npc->position.getY());
+			SaveCharacterStats(cNode, npc);
 			break;
 		}
 	}
@@ -318,6 +320,7 @@ void Scene::SaveSessionState()
 	if (player) {
 		playerNode.attribute("savedX").set_value(player->position.getX());
 		playerNode.attribute("savedY").set_value(player->position.getY());
+		SaveCharacterStats(playerNode, player);
 	}
 
 	for (const auto& entity : entityManager->entities) {
@@ -327,6 +330,7 @@ void Scene::SaveSessionState()
 			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
 			cNode.attribute("savedX").set_value(npc->position.getX());
 			cNode.attribute("savedY").set_value(npc->position.getY());
+			SaveCharacterStats(cNode, npc);
 			break;
 		}
 	}
@@ -394,6 +398,20 @@ void Scene::LoadDialogState()
 			if (tree->id == treeId) {
 				tree->done = done;
 				break;
+			}
+		}
+	}
+}
+
+void Scene::SaveCharacterStats(pugi::xml_node charNode, std::shared_ptr<Character> character)
+{
+	pugi::xml_node statsNode = charNode.child("stats");
+
+	for (const Stat& stat : character->stats->stats) {
+		pugi::xml_node sNode = statsNode.child("stat");
+		for (pugi::xml_node n = sNode; n != NULL; n = n.next_sibling("stat")) {
+			if (std::string(n.attribute("name").as_string()) == stat.name) {
+				n.attribute("value").set_value(stat.value);
 			}
 		}
 	}
@@ -507,6 +525,9 @@ void Scene::LoadScene(std::string spawnId)
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
 			m->stats = new Stats();
+			std::string animations = cNode.attribute("animations").as_string();
+			m->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
+			m->LoadAnimations();
 			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
 				std::string name = sNode.attribute("name").as_string();
 				int value = sNode.attribute("value").as_float();
@@ -535,6 +556,11 @@ void Scene::LoadScene(std::string spawnId)
 
 			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType));
 			m->stats = new Stats();
+			if (auto npcPtr = std::dynamic_pointer_cast<NPC>(m)) {
+				std::string animations = cNode.attribute("animations").as_string();
+				npcPtr->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
+				npcPtr->LoadAnimations();
+			}
 			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
 				std::string name = sNode.attribute("name").as_string();
 				int value = sNode.attribute("value").as_float();
