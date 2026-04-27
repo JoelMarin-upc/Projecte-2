@@ -104,9 +104,6 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 	case EntityType::INTERACTABLE_ITEM:
 		entity = std::make_shared<InteractableItem>(id, name, texturePath, interactionType, canStack, toggledTexturePath);
 		break;
-	case EntityType::WEAPON:
-		entity = std::make_shared<Weapon>(id, name, texturePath);
-		break;
 	default:
 		break;
 	}
@@ -118,6 +115,38 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 	entity->Start();
 
 	return entity;
+}
+
+std::shared_ptr<Weapon> EntityManager::CreateWeapon(std::string id, std::string name, std::string texturePath, Vector2D position, pugi::xml_node statsNode)
+{
+	auto w = std::make_shared<Weapon>(id, name, texturePath);
+	
+	for (pugi::xml_node s = statsNode.child("stat"); s; s = s.next_sibling("stat")) {
+		w->stats.AddStat(s.attribute("name").as_string(), s.attribute("value").as_float());
+	}
+
+	w->position = position;
+	w->Awake();
+	w->Start();
+	entities.push_back(w);
+	
+	return w;
+}
+
+std::shared_ptr<Gear> EntityManager::CreateGear(std::string id, std::string name, std::string texturePath, Vector2D position, pugi::xml_node statsNode, GearSlot slot)
+{
+	auto g = std::make_shared<Gear>(id, name, texturePath, slot);
+
+	for (pugi::xml_node s = statsNode.child("stat"); s; s = s.next_sibling("stat")) {
+		g->stats.AddStat(s.attribute("name").as_string(), s.attribute("value").as_float());
+	}
+		
+	g->position = position;
+	g->Awake();
+	g->Start();
+	entities.push_back(g);
+
+	return g;
 }
 
 std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, NPCInteractionType npcInteractionType)

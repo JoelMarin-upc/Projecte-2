@@ -580,7 +580,15 @@ void Scene::LoadScene(std::string spawnId)
 			bool canStack = iNode.attribute("canStack").as_bool();
 			std::string itemClass = iNode.attribute("itemClass").as_string("item");
 			std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
-			entityManager->CreateItem(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath);
+			if (itemClass == "item") {
+				entityManager->CreateItem(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath);
+			}
+			else if (itemClass == "weapon") {
+				entityManager->CreateWeapon(item.id, name, baseTexturePath + texture, item.position, iNode.child("stats"));
+			}
+			else if (itemClass == "gear") {
+				entityManager->CreateGear(item.id, name, baseTexturePath + texture, item.position, iNode.child("stats"), (GearSlot)iNode.attribute("gearSlot").as_int());
+			}
 		}
 	}
 }

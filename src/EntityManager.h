@@ -33,6 +33,10 @@ public:
 
 	std::shared_ptr<Entity> CreateItem(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, ItemInteractionType interactionType = ItemInteractionType::DEFAULT, bool canStack = false, std::string toggledTexturePath = "");
 
+	std::shared_ptr<Weapon> CreateWeapon(std::string id, std::string name, std::string texturePath, Vector2D position, pugi::xml_node statsNode);
+	
+	std::shared_ptr<Gear>   CreateGear(std::string id, std::string name, std::string texturePath, Vector2D position, pugi::xml_node statsNode, GearSlot slot);
+
 	std::shared_ptr<Entity> CreateCharacter(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, NPCInteractionType npcInteractionType = NPCInteractionType::DEFAULT);
 
 	void DestroyEntity(std::shared_ptr<Entity> entity);
