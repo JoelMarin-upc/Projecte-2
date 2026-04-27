@@ -10,7 +10,7 @@
 		<party>
 			
 		</party>
-		<inventory>
+		<inventory gold="50">
 			<item id="" name="sword" description="10 attack" texture="sword.png" type="4" itemClass="item" interactionType="1" canStack="true" />
 			<item id="" name="sword" description="10 attack" texture="sword.png" type="4" itemClass="item" interactionType="1" canStack="true" />
 		</inventory>

@@ -89,13 +89,14 @@ void UISlot::Draw(SDL_Color color)
 	Engine::GetInstance().render->DrawTextMultiline(name.c_str(), bounds.x, bounds.y + item->icon->h, bounds.w, 20, colorTxt);
 	//Engine::GetInstance().render->DrawTextMultiline(std::to_string(amount).c_str(), bounds.x, bounds.y, bounds.w, bounds.h, colorTxt);
 	Engine::GetInstance().render->DrawTextMultiline(item->description.c_str(), bounds.x, bounds.y + item->icon->h + 25, bounds.w, bounds.h - (bounds.y + item->icon->h + 25), colorTxt);
-	if (showPrice) Engine::GetInstance().render->DrawTextMultiline((std::to_string(item->price) + " gold").c_str(), bounds.x, bounds.y + bounds.h - 20, bounds.w, 20, colorTxt);
+	if (showPrice) Engine::GetInstance().render->DrawTextMultiline((std::to_string(price) + " gold").c_str(), bounds.x, bounds.y + bounds.h - 30, bounds.w, 30, colorTxt);
 }
 
-void UISlot::SetItem(InteractableItem* item, int amount, bool showPrice)
+void UISlot::SetItem(InteractableItem* item, int amount, bool showPrice, bool sellingPrice)
 {
 	if (!item) amount = 0;
+	else this->price = sellingPrice ? (int)floor(item->price * SELLING_PRICE_RATIO) : item->price;
 	this->item = item;
 	this->amount = amount;
-	this->showPrice = showPrice;
+	this->showPrice = showPrice;	
 }

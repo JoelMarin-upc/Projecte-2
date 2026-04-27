@@ -21,7 +21,7 @@ UISlider::UISlider(int id, SDL_Rect bounds, bool showValue, float min, float max
 	this->colorTxt = colorText;
 
 	this->showValue = showValue;
-	SetMinMax(min, max);
+	SetMinMax(min, max, step);
 }
 
 UISlider::~UISlider()
@@ -94,7 +94,7 @@ void UISlider::SetBounds(SDL_Rect bounds) {
 		(int)(t * (sliderMaxX - sliderMinX));
 }
 
-void UISlider::SetMinMax(float min, float max)
+void UISlider::SetMinMax(float min, float max, float step)
 {
 	this->min = min;
 	this->max = max;

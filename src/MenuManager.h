@@ -60,6 +60,7 @@ enum UIID {
 	STANCE4,
 	HINT,
 	INVENTORY_LABEL,
+	MONEY_LABEL,
 	SHOP_LABEL,
 	USE,
 	DROP,
@@ -144,6 +145,7 @@ public:
 	std::vector<std::shared_ptr<UISlot>> inventorySlots;
 	std::vector<std::shared_ptr<UISlot>> shopSlots;
 	std::shared_ptr<UILabel> inventoryLabel;
+	std::shared_ptr<UILabel> moneyLabel;
 	std::shared_ptr<UILabel> shopLabel;
 	std::shared_ptr<UIButton> use;
 	std::shared_ptr<UIButton> drop;

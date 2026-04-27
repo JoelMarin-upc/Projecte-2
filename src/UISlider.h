@@ -19,7 +19,7 @@ public:
 
 	float GetValue() const { return value; }
 
-	void SetMinMax(float min, float max);
+	void SetMinMax(float min, float max, float step);
 
 	// Called each loop iteration
 	bool Update(float dt);

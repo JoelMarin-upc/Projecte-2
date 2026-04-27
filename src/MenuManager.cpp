@@ -157,13 +157,14 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	int centerY = sh / 2;
 
 	SDL_Rect b_inventoryLabel = { 20, 20, 200, 20 };
-	SDL_Rect b_shopLabel = { sw - 220, 20, 200, 20 };
+	SDL_Rect b_moneyLabel = { centerX - 60, 20, 100, 20 };
+	SDL_Rect b_shopLabel = { sw - 120, 20, 100, 20 };
 	SDL_Rect b_use = { centerX - 100, 100, 80, 40};
 	SDL_Rect b_drop = { centerX + 20, 100, 80, 40 };
-	SDL_Rect b_buy = { centerX - 100, 180, 80, 40 };
-	SDL_Rect b_sell = { centerX + 20, 180, 80, 40 };
-	SDL_Rect b_amount = { centerX - 100, 260, 200, 40 };
-	SDL_Rect b_selectedItem = { centerX - 100, sh - 120, 200, 100 };
+	SDL_Rect b_buy = { centerX - 100, 160, 80, 40 };
+	SDL_Rect b_sell = { centerX + 20, 160, 80, 40 };
+	SDL_Rect b_amount = { centerX - 100, 220, 200, 40 };
+	SDL_Rect b_selectedItem = { centerX - 100, sh - 240, 200, 200 };
 	std::vector<SDL_Rect> inventorySlotBounds = std::vector<SDL_Rect>();
 	std::vector<SDL_Rect> shopSlotBounds = std::vector<SDL_Rect>();
 	const int margin = 20;
@@ -186,6 +187,7 @@ void MenuManager::LoadInventory(bool onlyPositions)
 
 	if (onlyPositions) {
 		inventoryLabel->SetBounds(b_inventoryLabel);
+		moneyLabel->SetBounds(b_moneyLabel);
 		shopLabel->SetBounds(b_shopLabel);
 		use->SetBounds(b_use);
 		drop->SetBounds(b_drop);
@@ -220,8 +222,9 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		SDL_Color blue = { 0, 255, 255, 255 };
 		SDL_Color red = { 255, 0, 0, 0 };
 
-		inventoryLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)INVENTORY_LABEL, b_inventoryLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Inventory")));;
-		shopLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SHOP_LABEL, b_shopLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Shop")));;
+		inventoryLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)INVENTORY_LABEL, b_inventoryLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Inventory")));
+		moneyLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)MONEY_LABEL, b_moneyLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Gold: ")));
+		shopLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SHOP_LABEL, b_shopLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Shop")));
 		use = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)USE, b_use, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Use", 5)));
 		drop = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)DROP, b_drop, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Drop", 5)));
 		buy = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)BUY, b_buy, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Buy", 5)));
@@ -262,6 +265,7 @@ void MenuManager::SetObserver(Module* observer)
 	backMainMenu->observer = observer;
 	exit->observer = observer;
 	inventoryLabel->observer = observer;
+	moneyLabel->observer = observer;
 	shopLabel->observer = observer;
 	use->observer = observer;
 	drop->observer = observer;
@@ -411,6 +415,7 @@ void MenuManager::HideMenu()
 	exit->active = false;
 
 	inventoryLabel->active = false;
+	moneyLabel->active = false;
 	shopLabel->active = false;
 	use->active = false;
 	drop->active = false;
@@ -484,6 +489,8 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop)
 	else {
 		currentInventory = inventory;
 		inventoryLabel->active = true;
+		moneyLabel->text = "Gold: " + std::to_string(inventory->gold);
+		moneyLabel->active = true;
 		use->active = true;
 		drop->active = true;
 		for (int i = 0; i < inventorySlots.size(); i++) {

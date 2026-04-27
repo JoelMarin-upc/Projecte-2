@@ -32,7 +32,7 @@ public:
 	bool IsFull();
 	void PrintContents();
 
-	void AddMoney(int amount);
+	void AddGold(int amount);
 
 public:
 	std::vector<InteractableItem*> items;
@@ -41,5 +41,5 @@ public:
 	Gear* equippedBoots = nullptr;
 	Weapon* equippedWeapon = nullptr;
 
-	int money = 50; // TODO: get and set money from characters xml (attribute of inventory)
+	int gold = 0;
 };

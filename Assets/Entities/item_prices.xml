@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<prices>
+	<price itemName="sword" gold="10"/>
+	<price itemName="potion" gold="5"/>
+</prices>

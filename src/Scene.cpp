@@ -518,8 +518,8 @@ void Scene::LoadScene(std::string spawnId)
 			bool canStack = iNode.attribute("canStack").as_bool();
 			std::string itemClass = iNode.attribute("itemClass").as_string("item");
 			std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
-			entityManager->CreateItem(item.id, name, description, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath);
-			// load price from item_prices.xml
+			std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(item.id, name, description, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath));
+			newItem->price = FindPrice(newItem->name);
 		}
 	}
 }
@@ -540,6 +540,7 @@ Inventory* Scene::LoadInventory(pugi::xml_node characterNode)
 {
 	Inventory* inventory = new Inventory();
 	if (!characterNode.child("inventory")) return inventory;
+	inventory->gold = characterNode.child("inventory").attribute("gold").as_int();
 	for (pugi::xml_node iNode = characterNode.child("inventory").child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
 		std::string id = iNode.attribute("id").as_string();
 		std::string name = iNode.attribute("name").as_string();
@@ -551,9 +552,24 @@ Inventory* Scene::LoadInventory(pugi::xml_node characterNode)
 		std::string itemClass = iNode.attribute("itemClass").as_string("item");
 		std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
 		std::shared_ptr<InteractableItem> item = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(id, name, description, baseTexturePath + texture, { -999999, -999999 }, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath));
+		item->price = FindPrice(item->name);
 		inventory->AddItem(item.get());
 	}
 	return inventory;
+}
+
+int Scene::FindPrice(std::string itemName)
+{
+	int price = 0;
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/item_prices.xml");
+	for (pugi::xml_node pNode = doc.child("prices").child("price"); pNode != NULL; pNode = pNode.next_sibling("price")) {
+		if (pNode.attribute("itemName").as_string() == itemName)
+		{
+			price = pNode.attribute("gold").as_int();
+			break;
+		}
+	}
+	return price;
 }
 
 void Scene::EndScene()
@@ -590,12 +606,17 @@ void Scene::ToggleShop(NPC* shopOwner)
 {
 	showingInventory = shopOwner;
 	entityManager->paused = showingInventory;
-	if (showingInventory) Engine::GetInstance().menuManager->ShowShop(player->inventory, shopOwner->inventory);
+	if (showingInventory)
+	{
+		Engine::GetInstance().menuManager->ShowShop(player->inventory, shopOwner->inventory);
+		showingShop = true;
+	}
 	else
 	{
 		Engine::GetInstance().menuManager->HideMenu();
 		UpdateInventory();
 		UpdateInventory(this->shopOwner);
+		showingShop = false;
 	}
 	this->shopOwner = shopOwner;
 }
@@ -611,6 +632,7 @@ void Scene::UpdateInventory(NPC* shopOwner) const
 	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
 	pugi::xml_node cNode;
 	std::vector<InteractableItem*> items;
+	int gold = 0;
 	if (shopOwner) {
 		for (pugi::xml_node c = doc.child("characters").child("character"); c != NULL; c = c.next_sibling("character")) {
 			if (c.attribute("id").as_string() == shopOwner->id)
@@ -625,9 +647,11 @@ void Scene::UpdateInventory(NPC* shopOwner) const
 	else {
 		cNode = doc.child("characters").child("player");
 		items = player->inventory->items;
+		gold = player->inventory->gold;
 	}
 	cNode.remove_child("inventory");
 	pugi::xml_node invNode = cNode.append_child("inventory");
+	invNode.append_attribute("gold").set_value(gold);
 	for (InteractableItem* item : items) {
 		if (!item) continue;
 		int count = item->canStack ? item->count : 1;
@@ -824,8 +848,8 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		if (uiElement->id >= Engine::GetInstance().menuManager->baseShopSlotsId) selectedItemIsFromShop = true;
 		UISlot* slot = (UISlot*)uiElement;
 		selectedItem = slot->item;
-		Engine::GetInstance().menuManager->selectedItem->SetItem(selectedItem, slot->amount, true);
-		Engine::GetInstance().menuManager->amount->SetMinMax(1, slot->amount);
+		Engine::GetInstance().menuManager->selectedItem->SetItem(selectedItem, slot->amount, true, !selectedItemIsFromShop);
+		Engine::GetInstance().menuManager->amount->SetMinMax(1, slot->amount, 1);
 	}
 	switch ((UIID)uiElement->id)
 	{
@@ -918,12 +942,12 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	case BUY:
 		if (!selectedItem || !selectedItemIsFromShop) return true;
 		amount = Engine::GetInstance().menuManager->amount->GetValue();
-		if (player->inventory->money < selectedItem->price * amount) return true;
+		if (player->inventory->gold < selectedItem->price * amount) return true;
 		copy = new InteractableItem(*selectedItem);
 		copy->count = amount;
 		player->inventory->AddItem(copy);
 		for (int i = 0; i < amount; i++) shopOwner->inventory->RemoveItem(selectedItem->name);
-		player->inventory->AddMoney(-selectedItem->price);
+		player->inventory->AddGold(-selectedItem->price * amount);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	case SELL:
@@ -933,7 +957,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		copy->count = amount;
 		shopOwner->inventory->AddItem(copy);
 		for (int i = 0; i < amount; i++) player->inventory->RemoveItem(selectedItem->name);
-		player->inventory->AddMoney(selectedItem->price);
+		player->inventory->AddGold((int)floor(selectedItem->price * SELLING_PRICE_RATIO) * amount);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	default:

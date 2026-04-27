@@ -307,6 +307,7 @@
     <Xml Include="Assets\Entities\characters_clean.xml" />
     <Xml Include="Assets\Entities\items.xml" />
     <Xml Include="Assets\Entities\items_clean.xml" />
+    <Xml Include="Assets\Entities\item_prices.xml" />
     <Xml Include="config.xml" />
     <Xml Include="gamesave.xml" />
   </ItemGroup>

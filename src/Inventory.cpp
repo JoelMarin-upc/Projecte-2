@@ -270,9 +270,9 @@ void Inventory::PrintContents()
 	}
 }
 
-void Inventory::AddMoney(int amount)
+void Inventory::AddGold(int amount)
 {
-	money += amount;
-	if (money < 0) money = 0;
+	gold += amount;
+	if (gold < 0) gold = 0;
 }
 

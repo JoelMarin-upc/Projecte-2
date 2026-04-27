@@ -62,6 +62,7 @@ public:
 	void LoadScene(std::string spawnId = "default");
 	Stats* LoadStats(pugi::xml_node characterNode);
 	Inventory* LoadInventory(pugi::xml_node characterNode);
+	int FindPrice(std::string itemName);
 	void EndScene();
 	void EndGame();
 	void CheckTimers();

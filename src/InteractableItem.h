@@ -2,6 +2,8 @@
 
 #include "Item.h"
 
+const float SELLING_PRICE_RATIO = 0.7f;
+
 enum class ItemInteractionType {
 	DEFAULT,
 	PICKUP,

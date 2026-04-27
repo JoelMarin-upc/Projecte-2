@@ -17,7 +17,7 @@ public:
 
 	void Draw(SDL_Color color);
 
-	void SetItem(InteractableItem* item, int amount = 0, bool showPrice = false);
+	void SetItem(InteractableItem* item, int amount = 0, bool showPrice = false, bool sellingPrice = false);
 
 	InteractableItem* item;
 	int amount;
@@ -27,6 +27,7 @@ private:
 	bool canClick = true;
 	bool drawBasic = false;
 	bool showPrice = false;
+	int price = 0;
 	int horizotalSpacing;
 	int verticalSpacing;
 	SDL_Color colorDef;
