@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="SpriteSheet_Barbara" tilewidth="32" tileheight="32" tilecount="30" columns="5">
- <image source="SpriteSheet_Barbara.png" width="160" height="192"/>
+<tileset version="1.10" tiledversion="1.11.2" name="SpriteSheet_Barbara" tilewidth="32" tileheight="32" tilecount="64" columns="16">
+ <image source="../../../../../Downloads/SpriteSheet_Barbara.png" width="512" height="128"/>
  <tile id="0">
   <animation>
-   <frame tileid="0" duration="100"/>
-   <frame tileid="1" duration="100"/>
-   <frame tileid="2" duration="100"/>
-   <frame tileid="3" duration="100"/>
-   <frame tileid="4" duration="100"/>
-   <frame tileid="5" duration="100"/>
-   <frame tileid="6" duration="100"/>
-   <frame tileid="7" duration="100"/>
-   <frame tileid="8" duration="100"/>
-   <frame tileid="9" duration="100"/>
-   <frame tileid="10" duration="100"/>
-   <frame tileid="11" duration="100"/>
-   <frame tileid="12" duration="100"/>
-   <frame tileid="13" duration="100"/>
-   <frame tileid="14" duration="100"/>
-   <frame tileid="15" duration="100"/>
+   <frame tileid="0" duration="150"/>
+   <frame tileid="1" duration="150"/>
+   <frame tileid="2" duration="150"/>
+   <frame tileid="3" duration="150"/>
+   <frame tileid="4" duration="150"/>
+   <frame tileid="5" duration="150"/>
+   <frame tileid="6" duration="150"/>
+   <frame tileid="7" duration="150"/>
+   <frame tileid="8" duration="150"/>
+   <frame tileid="9" duration="150"/>
+   <frame tileid="10" duration="150"/>
+   <frame tileid="11" duration="150"/>
+   <frame tileid="12" duration="150"/>
+   <frame tileid="13" duration="150"/>
+   <frame tileid="14" duration="150"/>
+   <frame tileid="15" duration="150"/>
   </animation>
  </tile>
  <tile id="16">
@@ -29,20 +29,20 @@
    <frame tileid="19" duration="150"/>
   </animation>
  </tile>
- <tile id="20">
+ <tile id="32">
   <animation>
-   <frame tileid="20" duration="150"/>
-   <frame tileid="21" duration="150"/>
-   <frame tileid="22" duration="150"/>
-   <frame tileid="23" duration="150"/>
+   <frame tileid="32" duration="150"/>
+   <frame tileid="33" duration="150"/>
+   <frame tileid="34" duration="150"/>
+   <frame tileid="35" duration="150"/>
   </animation>
  </tile>
- <tile id="24">
+ <tile id="48">
   <animation>
-   <frame tileid="24" duration="150"/>
-   <frame tileid="25" duration="150"/>
-   <frame tileid="26" duration="150"/>
-   <frame tileid="27" duration="150"/>
+   <frame tileid="48" duration="150"/>
+   <frame tileid="49" duration="150"/>
+   <frame tileid="50" duration="150"/>
+   <frame tileid="51" duration="150"/>
   </animation>
  </tile>
 </tileset>
