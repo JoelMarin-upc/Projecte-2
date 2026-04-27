@@ -90,6 +90,9 @@
     </None>
     <None Include="Assets\Maps\RebelRefuge.tmx" />
     <None Include="Assets\Maps\TutorialDungeon.tmx" />
+    <None Include="Assets\Textures\Barbara_SpriteSheet.tsx">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio.cpp">
