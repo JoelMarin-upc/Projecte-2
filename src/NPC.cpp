@@ -3,6 +3,7 @@
 #include "SceneManager.h"
 #include "Log.h"
 #include "Party.h"
+#include "Animation.h"
 //#include <cmath>
 
 NPC::~NPC() {}
@@ -121,6 +122,7 @@ void NPC::Move()
 
 	if (distance < stopDistance || distance == 0.0f) {
 		Engine::GetInstance().physics->SetLinearVelocity(colliders[0], b2Vec2_zero);
+		HandleAnimations(b2Vec2_zero);
 		return;
 	}
 
@@ -130,9 +132,51 @@ void NPC::Move()
 	b2Vec2 velocity = speed * dir;
 
 	Engine::GetInstance().physics->SetLinearVelocity(colliders[0], velocity);
+	HandleAnimations(velocity);
 	int xFinal, yFinal;
 	pbody->GetPosition(xFinal, yFinal);
 	sensorCollider->SetPosition(xFinal, yFinal);
+}
+
+void NPC::HandleAnimations(b2Vec2 velocity)
+{
+	if (animationsPath.empty()) return;
+
+	const float MOVE_THRESHOLD = 0.1f;
+
+	bool isMoving = (std::abs(velocity.x) > MOVE_THRESHOLD || std::abs(velocity.y) > MOVE_THRESHOLD);
+
+	if (isMoving) {
+		if (std::abs(velocity.x) > std::abs(velocity.y)) {
+			if (velocity.x > 0) {
+				facing = "right";
+			}
+			else {
+				facing = "left";
+			}
+		}
+		else {
+			if (velocity.y > 0) {
+				facing = "down";
+			}
+			else {
+				facing = "up";
+			}
+		}
+
+		std::string animName = "walk_" + facing;
+		if (currentAnimation != animName) {
+			anims.SetCurrent(animName);
+			currentAnimation = animName;
+		}
+	}
+	else {
+		std::string animName = "idle_" + facing;
+		if (currentAnimation != animName) {
+			anims.SetCurrent(animName);
+			currentAnimation = animName;
+		}
+	}
 }
 
 void NPC::Interact()
