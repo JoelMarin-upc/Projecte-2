@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Item.h"
+#include "Stats.h"
 
 const float SELLING_PRICE_RATIO = 0.7f;
 
@@ -49,7 +50,8 @@ public:
 	std::string toggledTexturePath = "";
 	SDL_Texture* toggledTexture = nullptr;
 	ItemInteractionType itemInteractionType;
-	int price = 10; // TODO: value 10 for testing. will be taken from item_prices.xml
+	int price = 0;
+	Stats* stats = nullptr;
 
 protected:
 	//Dialogue type by default

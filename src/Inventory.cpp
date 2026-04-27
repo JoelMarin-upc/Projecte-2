@@ -27,7 +27,7 @@ bool Inventory::Cleanup()
 	return true;
 }
 
-bool Inventory::AddItem(InteractableItem* item)
+bool Inventory::AddItem(std::shared_ptr<InteractableItem> item)
 {
 	if (IsFull()) {
 		LOG("The inventory is full, the item could not be added");
@@ -57,7 +57,7 @@ bool Inventory::RemoveItem(std::string& itemName)
 		return false;
 	}
 
-	InteractableItem* item = items[i];
+	std::shared_ptr<InteractableItem> item = items[i];
 
 	if (item->canStack && item->count > 1) {
 		item->count--;
@@ -90,7 +90,7 @@ bool Inventory::EquipWeapon(std::string& itemName)
 	}
 
 	//Make sure that the item is of type Weapon
-	Weapon* w = dynamic_cast<Weapon*>(items[i]);
+	std::shared_ptr<Weapon> w = std::dynamic_pointer_cast<Weapon>(items[i]);
 	if (!w)	{
 		LOG("%s is not a Weapon", itemName.c_str());
 		return false;
@@ -134,14 +134,14 @@ bool Inventory::EquipGear(std::string& itemName)
 	}
 
 	//Make sure that the item is of type Gear
-	Gear* g = dynamic_cast<Gear*>(items[i]);
+	std::shared_ptr<Gear> g = std::dynamic_pointer_cast<Gear>(items[i]);
 	if (!g) {
 		LOG("%s isn't a Gear item", itemName.c_str());
 		return false;
 	}
 
 	//Get the currently equipped gear in that slot (nullptr if not equipped anything)
-	Gear* slot = GetGearSlot(g->gearSlot);
+	std::shared_ptr<Gear> slot = GetGearSlot(g->gearSlot);
 
 	//If there's gear equipped in that slot
 	if (slot) {
@@ -175,7 +175,7 @@ bool Inventory::EquipGear(std::string& itemName)
 bool Inventory::UnequipGear(GearSlot slot)
 {
 	//Get gear from slot
-	Gear* gear = GetGearSlot(slot);
+	std::shared_ptr<Gear> gear = GetGearSlot(slot);
 
 	if (!gear) {
 		LOG("The slot is already empty");
@@ -216,7 +216,7 @@ bool Inventory::UnequipWeapon()
 	return true;
 }
 
-Gear* Inventory::GetGearSlot(GearSlot slot)
+std::shared_ptr<Gear> Inventory::GetGearSlot(GearSlot slot)
 {
 	switch (slot) {
 	case GearSlot::HELMET:

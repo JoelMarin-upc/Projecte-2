@@ -9,7 +9,7 @@ class UISlot : public UIElement
 
 public:
 
-	UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId, InteractableItem* item, int amount = 0, bool showPrice = false);
+	UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId, std::shared_ptr<InteractableItem> item, int amount = 0, bool showPrice = false);
 	virtual ~UISlot();
 
 	// Called each loop iteration
@@ -17,9 +17,9 @@ public:
 
 	void Draw(SDL_Color color);
 
-	void SetItem(InteractableItem* item, int amount = 0, bool showPrice = false, bool sellingPrice = false);
+	void SetItem(std::shared_ptr<InteractableItem> item, int amount = 0, bool showPrice = false, bool sellingPrice = false);
 
-	InteractableItem* item;
+	std::shared_ptr<InteractableItem> item;
 	int amount;
 
 private:

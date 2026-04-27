@@ -47,16 +47,17 @@ public:
 		return p;
 	}
 
-	static UIParameters Image(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex) {
+	static UIParameters Image(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, SDL_Color* background = nullptr) {
 		UIParameters p = UIParameters();
 		p.disabledTex = disabledTex;
 		p.normalTex = normalTex;
 		p.focusedTex = focusedTex;
 		p.pressedTex = pressedTex;
+		p.background = background;
 		return p;
 	}
 
-	static UIParameters Slot(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, InteractableItem* item, int amount) {
+	static UIParameters Slot(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, std::shared_ptr<InteractableItem> item, int amount) {
 		UIParameters p = UIParameters();
 		p.disabledTex = disabledTex;
 		p.normalTex = normalTex;
@@ -90,11 +91,12 @@ public:
 	float showValue, min, max, step, value;
 	int spacing, horizotalSpacing, verticalSpacing, amount;
 	bool checked;
-	InteractableItem* item;
+	std::shared_ptr<InteractableItem> item;
 	SDL_Texture* disabledTex;
 	SDL_Texture* normalTex;
 	SDL_Texture* focusedTex;
 	SDL_Texture* pressedTex;
+	SDL_Color* background;
 };
 
 class UIManager : public Module

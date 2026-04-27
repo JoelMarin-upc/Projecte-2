@@ -8,11 +8,13 @@ class UIImage : public UIElement
 
 public:
 
-	UIImage(int id, SDL_Rect bounds, SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, int hoverFxId, int clickFxId);
+	UIImage(int id, SDL_Rect bounds, SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, int hoverFxId, int clickFxId, SDL_Color* background = nullptr);
 	virtual ~UIImage();
 
 	// Called each loop iteration
 	bool Update(float dt);
+
+	void SetImage(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex);
 
 private:
 
@@ -22,6 +24,5 @@ private:
 	SDL_Texture* normalTex;
 	SDL_Texture* focusedTex;
 	SDL_Texture* pressedTex;
+	SDL_Color* background;
 };
-
-#pragma once

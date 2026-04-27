@@ -139,7 +139,7 @@ void InteractableItem::Pickup()
 	for (const auto& e : Engine::GetInstance().sceneManager->currentScene->entityManager->entities) {
 		Player* player = dynamic_cast<Player*>(e.get());
 		if (player) {
-			if (player->inventory->AddItem(this)) {
+			if (player->inventory->AddItem(std::make_shared<InteractableItem>(this))) {
 				isPicked = true;
 				isPlayerInRange = false;
 				active = false;

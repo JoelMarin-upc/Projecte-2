@@ -94,7 +94,7 @@ std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, std::string 
 	return entity;
 }
 
-std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string name, std::string description, std::string texturePath, Vector2D position, EntityType type, ItemInteractionType interactionType, bool canStack, std::string toggledTexturePath)
+std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string name, std::string description, std::string texturePath, Vector2D position, std::string itemClass, EntityType type, ItemInteractionType interactionType, bool canStack, std::string toggledTexturePath, GearSlot slot)
 {
 	std::shared_ptr<Entity> entity = std::make_shared<Entity>();
 
@@ -102,7 +102,10 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 	switch (type)
 	{
 	case EntityType::INTERACTABLE_ITEM:
-		entity = std::make_shared<InteractableItem>(id, name, description, texturePath, interactionType, canStack, toggledTexturePath);
+		if (itemClass == "weapon") entity = std::make_shared<Weapon>(id, name, description, texturePath, canStack);
+		if (itemClass == "gear") entity = std::make_shared<Gear>(id, name, description, texturePath, slot, canStack);
+		if (itemClass == "consumable") entity = std::make_shared<Consumable>(id, name, description, texturePath, canStack);
+		else entity = std::make_shared<InteractableItem>(id, name, description, texturePath, interactionType, canStack, toggledTexturePath);
 		break;
 	default:
 		break;

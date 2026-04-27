@@ -11,8 +11,8 @@
 			
 		</party>
 		<inventory gold="50">
-			<item id="" name="sword" description="10 attack" texture="sword.png" type="4" itemClass="item" interactionType="1" canStack="true" />
-			<item id="" name="sword" description="10 attack" texture="sword.png" type="4" itemClass="item" interactionType="1" canStack="true" />
+			<item id="" name="sword" description="10 attack" texture="sword.png" type="4" itemClass="weapon" interactionType="1" canStack="true" />
+			<item id="" name="sword" description="10 attack" texture="sword.png" type="4" itemClass="weapon" interactionType="1" canStack="true" />
 		</inventory>
 	</player>
 	<character id="CH-001" name="Gravekeeper" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
@@ -83,9 +83,10 @@
 	</character>
 	<character id="CH-011" name="Shopkeeper" texture="heart.png" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
 		<inventory>
-			<item id="" name="potion" description="10 HP" texture="potion.png" type="4" itemClass="item" interactionType="1" canStack="true" />
-			<item id="" name="potion" description="10 HP" texture="potion.png" type="4" itemClass="item" interactionType="1" canStack="true" />
-			<item id="" name="sword" description="10 attack" texture="sword.png" type="4" itemClass="item" interactionType="1" canStack="true" />
+			<item id="" name="potion" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true" />
+			<item id="" name="potion" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true" />
+			<item id="" name="sword" description="30 attack" texture="sword.png" type="4" itemClass="weapon" interactionType="1" canStack="true" />
+			<item id="" name="helmet" description="20 defense" texture="helmet.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="0" />
 		</inventory>
 	</character>
 </characters>

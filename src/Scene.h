@@ -62,7 +62,7 @@ public:
 	void LoadScene(std::string spawnId = "default");
 	Stats* LoadStats(pugi::xml_node characterNode);
 	Inventory* LoadInventory(pugi::xml_node characterNode);
-	int FindPrice(std::string itemName);
+	void LoadItemDefinition(std::shared_ptr<InteractableItem> item);
 	void EndScene();
 	void EndGame();
 	void CheckTimers();
@@ -147,8 +147,9 @@ private:
 	bool showingInventory = false;
 	bool showingShop = false;
 
-	InteractableItem* selectedItem = nullptr;
+	std::shared_ptr<InteractableItem> selectedItem = nullptr;
 	bool selectedItemIsFromShop = false;
+	bool isUnequipping = false;
 
 	NPC* shopOwner = nullptr;
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "InteractableItem.h"
-#include "Stats.h"
 
 class Equipable : public InteractableItem
 {
@@ -19,7 +18,6 @@ public:
 	}
 
 public:
-	Stats stats;
 	bool isEquipped = false;
 };
 

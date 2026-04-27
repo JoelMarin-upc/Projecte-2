@@ -4,7 +4,7 @@
 #include "Audio.h"
 #include <string>
 
-UISlot::UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId, InteractableItem* item, int amount, bool showPrice) : UIElement(UIElementType::IMAGE, id)
+UISlot::UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId, std::shared_ptr<InteractableItem> item, int amount, bool showPrice) : UIElement(UIElementType::IMAGE, id)
 {
 	this->hoverFxId = hoverFxId;
 	this->clickFxId = clickFxId;
@@ -92,7 +92,7 @@ void UISlot::Draw(SDL_Color color)
 	if (showPrice) Engine::GetInstance().render->DrawTextMultiline((std::to_string(price) + " gold").c_str(), bounds.x, bounds.y + bounds.h - 30, bounds.w, 30, colorTxt);
 }
 
-void UISlot::SetItem(InteractableItem* item, int amount, bool showPrice, bool sellingPrice)
+void UISlot::SetItem(std::shared_ptr<InteractableItem> item, int amount, bool showPrice, bool sellingPrice)
 {
 	if (!item) amount = 0;
 	else this->price = sellingPrice ? (int)floor(item->price * SELLING_PRICE_RATIO) : item->price;

@@ -67,6 +67,10 @@ enum UIID {
 	BUY,
 	SELL,
 	AMOUNT,
+	HELMET,
+	BODY,
+	BOOTS,
+	WEAPON,
 	SELECTED_ITEM
 };
 
@@ -152,6 +156,10 @@ public:
 	std::shared_ptr<UIButton> buy;
 	std::shared_ptr<UIButton> sell;
 	std::shared_ptr<UISlider> amount;
+	std::shared_ptr<UIImage> helmet;
+	std::shared_ptr<UIImage> body;
+	std::shared_ptr<UIImage> boots;
+	std::shared_ptr<UIImage> weapon;
 	std::shared_ptr<UISlot> selectedItem;
 
 	Inventory* currentInventory = nullptr;

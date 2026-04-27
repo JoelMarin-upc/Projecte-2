@@ -527,6 +527,6 @@
     <Xml Include="Assets\Entities\characters_clean.xml" />
     <Xml Include="Assets\Entities\items_clean.xml" />
     <Xml Include="Assets\Dialogues\dialogues_clean.xml" />
-    <Xml Include="Assets\Entities\item_prices.xml" />
+    <Xml Include="Assets\Entities\items_def.xml" />
   </ItemGroup>
 </Project>

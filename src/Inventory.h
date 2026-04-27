@@ -18,7 +18,7 @@ public:
 	bool Update();
 	bool Cleanup();
 
-	bool AddItem(InteractableItem* item);
+	bool AddItem(std::shared_ptr<InteractableItem> item);
 	bool RemoveItem(std::string& itemName);
 	bool HasItem(std::string& itemName);
 
@@ -27,7 +27,7 @@ public:
 	bool UnequipGear(GearSlot slot);
 	bool UnequipWeapon();
 
-	Gear* GetGearSlot(GearSlot slot);
+	std::shared_ptr<Gear> GetGearSlot(GearSlot slot);
 	int FindItem(std::string& itemName);
 	bool IsFull();
 	void PrintContents();
@@ -35,11 +35,11 @@ public:
 	void AddGold(int amount);
 
 public:
-	std::vector<InteractableItem*> items;
-	Gear* equippedHelmet = nullptr;
-	Gear* equippedBody = nullptr;
-	Gear* equippedBoots = nullptr;
-	Weapon* equippedWeapon = nullptr;
+	std::vector<std::shared_ptr<InteractableItem>> items;
+	std::shared_ptr<Gear> equippedHelmet = nullptr;
+	std::shared_ptr<Gear> equippedBody = nullptr;
+	std::shared_ptr<Gear> equippedBoots = nullptr;
+	std::shared_ptr<Weapon> equippedWeapon = nullptr;
 
 	int gold = 0;
 };

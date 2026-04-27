@@ -3,7 +3,7 @@
 #include "Engine.h"
 #include "Audio.h"
 
-UIImage::UIImage(int id, SDL_Rect bounds, SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, int hoverFxId, int clickFxId) : UIElement(UIElementType::IMAGE, id)
+UIImage::UIImage(int id, SDL_Rect bounds, SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, int hoverFxId, int clickFxId, SDL_Color* background) : UIElement(UIElementType::IMAGE, id)
 {
 	this->hoverFxId = hoverFxId;
 	this->clickFxId = clickFxId;
@@ -12,6 +12,7 @@ UIImage::UIImage(int id, SDL_Rect bounds, SDL_Texture* disabledTex, SDL_Texture*
 	this->normalTex = normalTex;
 	this->focusedTex = focusedTex;
 	this->pressedTex = pressedTex;
+	this->background = background;
 
 	canClick = true;
 	drawBasic = false;
@@ -55,18 +56,28 @@ bool UIImage::Update(float dt)
 	switch (state)
 	{
 	case UIElementState::DISABLED:
-		Engine::GetInstance().render->DrawTexture(disabledTex, bounds.x, bounds.y, 0.0f);
+		if (disabledTex) Engine::GetInstance().render->DrawTexture(disabledTex, bounds.x, bounds.y, 0.0f);
 		break;
 	case UIElementState::NORMAL:
-		Engine::GetInstance().render->DrawTexture(normalTex, bounds.x, bounds.y, 0.0f);
+		if (normalTex) Engine::GetInstance().render->DrawTexture(normalTex, bounds.x, bounds.y, 0.0f);
 		break;
 	case UIElementState::FOCUSED:
-		Engine::GetInstance().render->DrawTexture(focusedTex, bounds.x, bounds.y, 0.0f);
+		if (focusedTex) Engine::GetInstance().render->DrawTexture(focusedTex, bounds.x, bounds.y, 0.0f);
 		break;
 	case UIElementState::PRESSED:
-		Engine::GetInstance().render->DrawTexture(pressedTex, bounds.x, bounds.y, 0.0f);
+		if (pressedTex) Engine::GetInstance().render->DrawTexture(pressedTex, bounds.x, bounds.y, 0.0f);
 		break;
 	}
 
-	return false;
+	if (background) Engine::GetInstance().render->DrawRectangle(bounds, background->r, background->g, background->b, background->a, true, false);
+
+	return true;
+}
+
+void UIImage::SetImage(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex)
+{
+	this->disabledTex = disabledTex;
+	this->normalTex = normalTex;
+	this->focusedTex = focusedTex;
+	this->pressedTex = pressedTex;
 }

@@ -93,7 +93,7 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 		break;
 
 	case UIElementType::IMAGE:
-		uiElement = std::make_shared<UIImage>(id, bounds, params.disabledTex, params.normalTex, params.focusedTex, params.pressedTex, hoverFxId, clickFxId);
+		uiElement = std::make_shared<UIImage>(id, bounds, params.disabledTex, params.normalTex, params.focusedTex, params.pressedTex, hoverFxId, clickFxId, params.background);
 		break;
 	case UIElementType::SLOT:
 		c1 = { 0, 0, 0, 0 };
