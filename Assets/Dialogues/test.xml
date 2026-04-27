@@ -421,7 +421,7 @@
 	</tree>
 	<tree id="DT-099" characterId="CH-006" characterName="follower" order="1" done="false">
 		<node id="DN-001" first="true">
-			Hello, i'll help you!
+			Guau Guau! (Hello, i'll help you!)
 			<answer leadsToNodeId="">
 				Okay
 			</answer>
