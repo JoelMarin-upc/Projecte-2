@@ -30,6 +30,7 @@ public:
 	bool CleanUp();
 	void Move();
 	void HandleAnimations(b2Vec2 velocity);
+	void LoadAnimations();
 	void Interact();
 	void OnDialogEnd();
 	void Recruit();
@@ -42,8 +43,9 @@ public:
 	bool isRecruitConditionFulfilled = false;
 	Party* party;
 	std::string animationsPath;
-	std::string facing;
+	std::string facing = "down";
 	std::string currentAnimation = "";
+	bool isFacingRight = false;
 private:
 	AnimationSet anims;
 	NPCInteractionType npcInteractionType;
