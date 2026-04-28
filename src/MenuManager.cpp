@@ -44,6 +44,35 @@ bool MenuManager::CleanUp() { return true; }
 void MenuManager::Load(bool onlyPositions)
 {
 	SDL_Texture* title = Engine::GetInstance().textures->Load("Assets/Textures/Game_Title.png");
+	SDL_Texture* backNormal = Engine::GetInstance().textures->Load("Assets/Textures/backButtonNormal.png");
+	SDL_Texture* backHov = Engine::GetInstance().textures->Load("Assets/Textures/backButtonHover.png");
+	SDL_Texture* backPres = Engine::GetInstance().textures->Load("Assets/Textures/backButtonPressed.png");
+	SDL_Texture* backDis = backNormal;
+	SDL_Texture* continueNormal = Engine::GetInstance().textures->Load("Assets/Textures/continueButtonNormal.png");
+	SDL_Texture* continueHov = Engine::GetInstance().textures->Load("Assets/Textures/continueButtonHover.png");
+	SDL_Texture* continuePres = Engine::GetInstance().textures->Load("Assets/Textures/continueButtonPressed.png");
+	SDL_Texture* continueDis = Engine::GetInstance().textures->Load("Assets/Textures/continueButtonDissabled.png");
+	SDL_Texture* creditsNormal = Engine::GetInstance().textures->Load("Assets/Textures/creditsButtonNormal.png");
+	SDL_Texture* creditsHov = Engine::GetInstance().textures->Load("Assets/Textures/creditsButtonHover.png");
+	SDL_Texture* creditsPres = Engine::GetInstance().textures->Load("Assets/Textures/creditsButtonPressed.png");
+	SDL_Texture* creditsDis = creditsNormal;
+	SDL_Texture* exitNormal = Engine::GetInstance().textures->Load("Assets/Textures/exitButtonNormal.png");
+	SDL_Texture* exitHov = Engine::GetInstance().textures->Load("Assets/Textures/exitButtonHover.png");
+	SDL_Texture* exitPres = Engine::GetInstance().textures->Load("Assets/Textures/exitButtonPressed.png");
+	SDL_Texture* exitDis = exitNormal;
+	SDL_Texture* resumeNormal = Engine::GetInstance().textures->Load("Assets/Textures/resumeButtonNormal.png");
+	SDL_Texture* resumeHov = Engine::GetInstance().textures->Load("Assets/Textures/resumeButtonHover.png");
+	SDL_Texture* resumePres = Engine::GetInstance().textures->Load("Assets/Textures/resumeButtonPressed.png");
+	SDL_Texture* resumeDis = resumeNormal;
+	SDL_Texture* settingsNormal = Engine::GetInstance().textures->Load("Assets/Textures/settingsButtonNormal.png");
+	SDL_Texture* settingsHov = Engine::GetInstance().textures->Load("Assets/Textures/settingsButtonHover.png");
+	SDL_Texture* settingsPres = Engine::GetInstance().textures->Load("Assets/Textures/settingsButtonPressed.png");
+	SDL_Texture* settingsDis = settingsNormal;
+	SDL_Texture* startNormal = Engine::GetInstance().textures->Load("Assets/Textures/startButtonNormal.png");
+	SDL_Texture* startHov = Engine::GetInstance().textures->Load("Assets/Textures/startButtonHover.png");
+	SDL_Texture* startPres = Engine::GetInstance().textures->Load("Assets/Textures/startButtonPressed.png");
+	SDL_Texture* startDis = startNormal;
+
 
 	SDL_Color mainColorDef = { 0, 0, 255, 255 };
 	SDL_Color mainColorDis = { 200, 200, 200, 255 };
@@ -124,15 +153,15 @@ void MenuManager::Load(bool onlyPositions)
 		int clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
 
 		// MENUS
-		gameTitle = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)GAME_TITLE, b_gameTitle, this, {  }, hoverFxId, clickFxId, UIParameters::Image(title, title, title, title)));;
-		startGame = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)START_GAME, b_startGame, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Start Game", 5)));
+		gameTitle = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)GAME_TITLE, b_gameTitle, this, {  }, hoverFxId, clickFxId, UIParameters::Image(title, title, title, title)));
+		startGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)START_GAME, b_startGame, this, {  }, hoverFxId, clickFxId, UIParameters::Image(startDis, startNormal, startHov, startPres)));
 		pausedLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)PAUSED_LABEL, b_paused_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("PAUSED")));
 		gameOverLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)GAME_OVER_LABEL , b_gameOver_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("GAME OVER")));
 		settingsLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SETTINGS_LABEL, b_settings_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("SETTINGS")));
-		continueGame = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)CONTINUE_GAME, b_continueGame, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Continue Game", 5)));
-		resumeGame = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)RESUME_GAME, b_resume, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Resume", 5)));
-		settingsButton = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)SETTINGS_BUTTON, b_settings, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Settings", 5)));
-		creditsButton = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)CREDITS_BUTTON, b_credits_btn, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Credits", 5)));
+		continueGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)CONTINUE_GAME, b_continueGame, this, { }, hoverFxId, clickFxId, UIParameters::Image(continueDis, continueNormal, continueHov, continuePres)));
+		resumeGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)RESUME_GAME, b_resume, this, { }, hoverFxId, clickFxId, UIParameters::Image(resumeDis, resumeNormal, resumeHov, resumePres)));
+		settingsButton = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)SETTINGS_BUTTON, b_settings, this, { }, hoverFxId, clickFxId, UIParameters::Image(settingsDis, settingsNormal, settingsHov, settingsPres)));
+		creditsButton = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)CREDITS_BUTTON, b_credits_btn, this, { }, hoverFxId, clickFxId, UIParameters::Image(creditsDis, creditsNormal, creditsHov, creditsPres)));
 		creditsLabel1 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)CREDITS_LABEL, b_credits1, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("This game was made by TEAMDAYO, a game studio created by")));
 		creditsLabel2 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)CREDITS_LABEL, b_credits2, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Clara Sanchez, Sofia Barja, Yin Ye, Kirsten Neubauer and Joel Marin.")));
 		musicVolumeLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)MUSIC_VOLUME_LABEL, b_musicVolume_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Music volume")));
@@ -141,9 +170,9 @@ void MenuManager::Load(bool onlyPositions)
 		fxVolumeSlider = std::dynamic_pointer_cast<UISlider>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLIDER, (int)FX_VOLUME, b_fxVolume, this, { white, mainColorDis, mainColorDef, mainColorHov, mainColorPre, mainColorDis, white }, hoverFxId, clickFxId, UIParameters::Slider(true, 0, 10, 1, 10)));
 		fullscreenLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)FULLSCREEN_LABEL, b_fullscreen_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Fullscreen")));
 		fullscreenCheckbox = std::dynamic_pointer_cast<UICheckbox>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::CHECKBOX, (int)FULLSCREEN, b_fullscreen, this, { mainColorDef, mainColorHov, mainColorDis, black, secondaryDef, secondaryDis }, hoverFxId, clickFxId, UIParameters::Checkbox(5, false)));
-		backMenu = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)BACK_MENU, b_backMenu, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Back", 20)));
-		backMainMenu = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)BACK_MAIN_MENU, b_backMainMenu, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Back to main menu", 5)));
-		exit = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)EXIT, b_exit, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Exit", 20)));
+		backMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MENU, b_backMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
+		backMainMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MAIN_MENU, b_backMainMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
+		exit = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)EXIT, b_exit, this, { }, hoverFxId, clickFxId, UIParameters::Image(exitDis, exitNormal, exitHov, exitPres)));
 	}
 }
 

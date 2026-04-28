@@ -109,11 +109,11 @@ public:
 	std::shared_ptr<UIImage> studioLogo;
 	std::shared_ptr<UILabel> pausedLabel;
 	std::shared_ptr<UILabel> gameOverLabel;
-	std::shared_ptr<UIButton> startGame;
-	std::shared_ptr<UIButton> continueGame;
-	std::shared_ptr<UIButton> resumeGame;
-	std::shared_ptr<UIButton> settingsButton;
-	std::shared_ptr<UIButton> creditsButton;
+	std::shared_ptr<UIImage> startGame;
+	std::shared_ptr<UIImage> continueGame;
+	std::shared_ptr<UIImage> resumeGame;
+	std::shared_ptr<UIImage> settingsButton;
+	std::shared_ptr<UIImage> creditsButton;
 	std::shared_ptr<UILabel> settingsLabel;
 	std::shared_ptr<UILabel> creditsLabel1;
 	std::shared_ptr<UILabel> creditsLabel2;
@@ -123,9 +123,9 @@ public:
 	std::shared_ptr<UISlider> fxVolumeSlider;
 	std::shared_ptr<UILabel> fullscreenLabel;
 	std::shared_ptr<UICheckbox> fullscreenCheckbox;
-	std::shared_ptr<UIButton> backMenu;
-	std::shared_ptr<UIButton> backMainMenu;
-	std::shared_ptr<UIButton> exit;
+	std::shared_ptr<UIImage> backMenu;
+	std::shared_ptr<UIImage> backMainMenu;
+	std::shared_ptr<UIImage> exit;
 
 	int uiLockFrame = -1;
 };
