@@ -198,7 +198,7 @@ void NPC::LoadAnimations()
 {
 	if (animationsPath.empty()) return;
 	std::unordered_map<int, std::string> aliases = {
-		{0, "idle"}, {16, "move_down"}, {20, "move_up"}, {24, "move_left"}
+		{0, "idle"}, {16, "move_down"}, {32, "move_up"}, {48, "move_left"}
 	};
 	anims.LoadFromTSX(animationsPath.c_str(), aliases);
 	anims.SetCurrent("idle");

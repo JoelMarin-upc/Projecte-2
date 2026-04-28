@@ -37,7 +37,7 @@ bool Player::Start() {
 	//anims.LoadFromTSX(animationsPath, aliases);
 	//texturePath = "Assets/Textures/goldCoin.png";
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -10, 0, 1, 1);
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -100, 0, 1, 1);
 
 	colliders[0]->etype = EntityType::PLAYER;
 	pbody = colliders[0];
