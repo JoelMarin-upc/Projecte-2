@@ -480,6 +480,10 @@ void Scene::LoadScene(std::string spawnId)
 	}
 
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+	std::string animations = pNode.attribute("animations").as_string();
+	player->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
+	player->LoadAnimations();
+
 	Engine::GetInstance().render->follow = player;
 	player->stats = new Stats();
 	for (pugi::xml_node sNode = pNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
@@ -528,6 +532,7 @@ void Scene::LoadScene(std::string spawnId)
 			std::string animations = cNode.attribute("animations").as_string();
 			m->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
 			m->LoadAnimations();
+			m->CreateColliders();
 			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
 				std::string name = sNode.attribute("name").as_string();
 				int value = sNode.attribute("value").as_float();
@@ -560,6 +565,7 @@ void Scene::LoadScene(std::string spawnId)
 				std::string animations = cNode.attribute("animations").as_string();
 				npcPtr->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
 				npcPtr->LoadAnimations();
+				npcPtr->CreateColliders();
 			}
 			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
 				std::string name = sNode.attribute("name").as_string();
