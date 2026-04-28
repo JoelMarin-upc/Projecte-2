@@ -58,6 +58,7 @@ public:
 	void SaveSessionState();
 	void SaveDialogState();
 	void LoadDialogState();
+	void SaveCharacterStats(pugi::xml_node charNode, std::shared_ptr<Character> character);
 	void LoadMap(std::string mapPath, std::string mapName);
 	void LoadScene(std::string spawnId = "default");
 	Stats* LoadStats(pugi::xml_node characterNode);
@@ -105,8 +106,8 @@ public:
 	DialogManager* dialogManager;
 
 	std::shared_ptr<Player> player;
+
 private:
-	
 	const std::string baseTexturePath = "Assets/Textures/";
 
 	Map* map;

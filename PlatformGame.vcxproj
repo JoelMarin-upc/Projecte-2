@@ -148,6 +148,7 @@
     <None Include="Assets\Maps\RebelRefuge.tmx" />
     <None Include="Assets\Maps\TutorialDungeon.tmx" />
     <None Include="Assets\Textures\AnimationSheet_Character.tsx" />
+    <None Include="Assets\Textures\Barbara_SpriteSheet.tsx" />
     <None Include="Assets\Textures\bat.tsx" />
     <None Include="Assets\Textures\bat32.tsx" />
     <None Include="Assets\Textures\Boss.tsx" />
@@ -305,6 +306,7 @@
     <Xml Include="Assets\Entities\base_stats.xml" />
     <Xml Include="Assets\Entities\characters.xml" />
     <Xml Include="Assets\Entities\characters_clean.xml" />
+    <Xml Include="Assets\Entities\characters_session.xml" />
     <Xml Include="Assets\Entities\items.xml" />
     <Xml Include="Assets\Entities\items_clean.xml" />
     <Xml Include="Assets\Entities\items_def.xml" />

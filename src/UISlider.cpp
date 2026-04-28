@@ -32,13 +32,20 @@ UISlider::~UISlider()
 void UISlider::SetValueFromMouse()
 {
 	Vector2D mousePos = Engine::GetInstance().input->GetMousePosition();
-	float logicalX, logicalY;
-	SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mousePos.getX(), mousePos.getY(), &logicalX, &logicalY);
+
+	int gameX = 0;
+	int gameY = 0;
+	Engine::GetInstance().render->WindowToGameCoords(
+		(int)mousePos.getX(),
+		(int)mousePos.getY(),
+		gameX,
+		gameY
+	);
 
 	int sliderMinX = bounds.x;
 	int sliderMaxX = bounds.x + bounds.w - boundsSlider.w;
 
-	int newSliderX = (int)(logicalX - boundsSlider.w * 0.5f);
+	int newSliderX = gameX - boundsSlider.w / 2;
 
 	if (newSliderX < sliderMinX)
 		newSliderX = sliderMinX;
@@ -121,11 +128,27 @@ bool UISlider::Update(float dt)
 	Engine::GetInstance().render->DrawRectangle(bounds, 0, 0, 0, 255, true, false);
 
 	Vector2D mousePos = Engine::GetInstance().input->GetMousePosition();
+
+	int gameX = 0;
+	int gameY = 0;
+	Engine::GetInstance().render->WindowToGameCoords(
+		(int)mousePos.getX(),
+		(int)mousePos.getY(),
+		gameX,
+		gameY
+	);
+
 	bool mouseOverSlider =
-		mousePos.getX() > boundsSlider.x &&
-		mousePos.getX() < boundsSlider.x + boundsSlider.w &&
-		mousePos.getY() > boundsSlider.y &&
-		mousePos.getY() < boundsSlider.y + boundsSlider.h;
+		gameX > boundsSlider.x &&
+		gameX < boundsSlider.x + boundsSlider.w &&
+		gameY > boundsSlider.y &&
+		gameY < boundsSlider.y + boundsSlider.h;
+
+	bool mouseOverBar =
+		gameX > bounds.x &&
+		gameX < bounds.x + bounds.w &&
+		gameY > bounds.y &&
+		gameY < bounds.y + bounds.h;
 
 	if (state != UIElementState::DISABLED)
 	{
@@ -143,25 +166,30 @@ bool UISlider::Update(float dt)
 		}
 		else
 		{
-			float mouseX, mouseY;
-			SDL_GetMouseState(&mouseX, &mouseY);
+			if (mouseOverBar)
+			{
+				if (state != UIElementState::FOCUSED &&
+					state != UIElementState::PRESSED &&
+					hoverFxId != -1)
+				{
+					Engine::GetInstance().audio->PlayFx(hoverFxId);
+				}
 
-			float logicalX, logicalY;
-			SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mouseX, mouseY, &logicalX, &logicalY);
-
-			//If the position of the mouse if inside the bounds of the button 
-			if (logicalX > bounds.x && logicalX < bounds.x + bounds.w && logicalY > bounds.y && logicalY < bounds.y + bounds.h) {
-				if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED && hoverFxId != -1) Engine::GetInstance().audio->PlayFx(hoverFxId);
 				state = UIElementState::FOCUSED;
 			}
 			else
+			{
 				state = UIElementState::NORMAL;
+			}
 
-			if (logicalX > bounds.x && logicalX < bounds.x + bounds.w && logicalY > bounds.y && logicalY < bounds.y + bounds.h &&
+			if (mouseOverBar &&
 				Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 			{
-				if (clickFxId != -1) Engine::GetInstance().audio->PlayFx(clickFxId);
+				if (clickFxId != -1)
+					Engine::GetInstance().audio->PlayFx(clickFxId);
+
 				state = UIElementState::PRESSED;
+				SetValueFromMouse();
 			}
 		}
 	}
@@ -169,38 +197,48 @@ bool UISlider::Update(float dt)
 	switch (state)
 	{
 	case UIElementState::DISABLED:
-		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDis.r, colorBarDis.g, colorBarDis.b, colorBarDis.a, true, useCamera);
-		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderDis.r, colorSliderDis.g, colorSliderDis.b, colorSliderDis.a, true, useCamera);
+		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDis.r, colorBarDis.g, colorBarDis.b, colorBarDis.a, true, false);
+		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderDis.r, colorSliderDis.g, colorSliderDis.b, colorSliderDis.a, true, false);
 		break;
+
 	case UIElementState::NORMAL:
 		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDef.r, colorBarDef.g, colorBarDef.b, colorBarDef.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderDef.r, colorSliderDef.g, colorSliderDef.b, colorSliderDef.a, true, useCamera);
+		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderDef.r, colorSliderDef.g, colorSliderDef.b, colorSliderDef.a, true, false);
 		break;
+
 	case UIElementState::FOCUSED:
 		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDef.r, colorBarDef.g, colorBarDef.b, colorBarDef.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderHov.r, colorSliderHov.g, colorSliderHov.b, colorSliderHov.a, true, useCamera);
+		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderHov.r, colorSliderHov.g, colorSliderHov.b, colorSliderHov.a, true, false);
 		break;
+
 	case UIElementState::PRESSED:
 		Engine::GetInstance().render->DrawRectangle(bounds, colorBarDef.r, colorBarDef.g, colorBarDef.b, colorBarDef.a, true, false);
-		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderPre.r, colorSliderPre.g, colorSliderPre.b, colorSliderPre.a, true, useCamera);
+		Engine::GetInstance().render->DrawRectangle(boundsSlider, colorSliderPre.r, colorSliderPre.g, colorSliderPre.b, colorSliderPre.a, true, false);
 		break;
 	}
 
 	if (showValue)
 	{
-		step = fabsf(step);
+		float tmpStep = fabsf(step);
 		int decimals = 0;
 
-		while (step < 1.0f && decimals < 6)
+		while (tmpStep < 1.0f && decimals < 6)
 		{
-			step *= 10.0f;
+			tmpStep *= 10.0f;
 			decimals++;
 		}
 
 		std::ostringstream oss;
 		oss << std::fixed << std::setprecision(decimals) << value;
-		
-		Engine::GetInstance().render->DrawText(oss.str().c_str(), boundsSlider.x, boundsSlider.y, boundsSlider.w, boundsSlider.h, colorTxt);
+
+		Engine::GetInstance().render->DrawText(
+			oss.str().c_str(),
+			boundsSlider.x,
+			boundsSlider.y,
+			boundsSlider.w,
+			boundsSlider.h,
+			colorTxt
+		);
 	}
 
 	return false;

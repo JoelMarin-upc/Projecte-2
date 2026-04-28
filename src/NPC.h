@@ -28,7 +28,10 @@ public:
 	bool Update(float dt);
 	void Draw(float dt);
 	bool CleanUp();
+	void CreateColliders();
 	void Move();
+	void HandleAnimations(b2Vec2 velocity);
+	void LoadAnimations();
 	void Interact();
 	void OnDialogEnd();
 	void Recruit();
@@ -40,7 +43,12 @@ public:
 	bool isPlayerInRange = false;
 	bool isRecruitConditionFulfilled = false;
 	Party* party;
+	std::string animationsPath;
+	std::string facing = "down";
+	std::string currentAnimation = "";
+	bool isFacingRight = false;
 private:
+	AnimationSet anims;
 	NPCInteractionType npcInteractionType;
 	Collider* pbody = nullptr;
 	Collider* sensorCollider = nullptr;

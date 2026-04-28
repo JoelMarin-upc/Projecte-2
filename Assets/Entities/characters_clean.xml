@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <characters savedGame="false">
-	<player id="player" name="main character" texture="goldCoin.png" savedX="-1" savedY="-1">
+	<player id="player" name="main character" texture="SpriteSheet_Garnik.png" animations="Garnik_SpriteSheet.tsx" savedX="-1" savedY="-1">
 		<stats>
 			<stat name="health" value="100" max="100" />
 			<stat name="speed" value="5"/>
@@ -36,7 +36,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-006" name="follower" texture="heart.png" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-006" name="follower" texture="SpriteSheet_Barbara.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="100" max="100" />
 			<stat name="speed" value="5"/>

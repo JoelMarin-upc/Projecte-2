@@ -253,6 +253,12 @@ void Scene::TogglePause()
 
 void Scene::SaveGame()
 {
+	std::ifstream src("Assets/Entities/characters_session.xml", std::ios::binary);
+	std::ofstream dst("Assets/Entities/characters.xml", std::ios::binary | std::ios::trunc);
+	dst << src.rdbuf();
+	src.close();
+	dst.close();
+
 	pugi::xml_document charDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
 	pugi::xml_node characters = charDoc.child("characters");
 	pugi::xml_node playerNode = characters.child("player");
@@ -272,6 +278,7 @@ void Scene::SaveGame()
 	//Save player positions
 	playerNode.attribute("savedX").set_value(player->position.getX());
 	playerNode.attribute("savedY").set_value(player->position.getY());
+	SaveCharacterStats(playerNode, player);
 
 	//Save NPC positions and dead state
 	for (const auto& entity : entityManager->entities) {
@@ -281,7 +288,15 @@ void Scene::SaveGame()
 			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
 			cNode.attribute("savedX").set_value(npc->position.getX());
 			cNode.attribute("savedY").set_value(npc->position.getY());
-			cNode.attribute("isDead").set_value(npc->isDead);
+			SaveCharacterStats(cNode, npc);
+			break;
+		}
+	}
+
+	for (const std::string& deadId : Engine::GetInstance().sceneManager->deadNPCs) {
+		for (pugi::xml_node cNode = characters.child("character"); cNode; cNode = cNode.next_sibling("character")) {
+			if (std::string(cNode.attribute("id").as_string()) != deadId) continue;
+			cNode.attribute("isDead").set_value(true);
 			break;
 		}
 	}
@@ -301,6 +316,8 @@ void Scene::SaveSessionState()
 	std::ifstream src("Assets/Entities/characters.xml", std::ios::binary);
 	std::ofstream dst("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
 	dst << src.rdbuf();
+	src.close();
+	dst.close();
 
 	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
 	pugi::xml_node characters = doc.child("characters");
@@ -309,16 +326,25 @@ void Scene::SaveSessionState()
 	if (player) {
 		playerNode.attribute("savedX").set_value(player->position.getX());
 		playerNode.attribute("savedY").set_value(player->position.getY());
+		SaveCharacterStats(playerNode, player);
 	}
 
 	for (const auto& entity : entityManager->entities) {
 		auto npc = std::dynamic_pointer_cast<NPC>(entity);
 		if (!npc) continue;
-		for (pugi::xml_node cNode = characters.child("character"); cNode; cNode = cNode.next_sibling("character")) {
+		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
 			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
 			cNode.attribute("savedX").set_value(npc->position.getX());
 			cNode.attribute("savedY").set_value(npc->position.getY());
-			cNode.attribute("isDead").set_value(npc->isDead);
+			SaveCharacterStats(cNode, npc);
+			break;
+		}
+	}
+
+	for (const std::string& deadId : Engine::GetInstance().sceneManager->deadNPCs) {
+		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
+			if (std::string(cNode.attribute("id").as_string()) != deadId) continue;
+			cNode.attribute("isDead").set_value(true);
 			break;
 		}
 	}
@@ -378,6 +404,20 @@ void Scene::LoadDialogState()
 			if (tree->id == treeId) {
 				tree->done = done;
 				break;
+			}
+		}
+	}
+}
+
+void Scene::SaveCharacterStats(pugi::xml_node charNode, std::shared_ptr<Character> character)
+{
+	pugi::xml_node statsNode = charNode.child("stats");
+
+	for (const Stat& stat : character->stats->stats) {
+		pugi::xml_node sNode = statsNode.child("stat");
+		for (pugi::xml_node n = sNode; n != NULL; n = n.next_sibling("stat")) {
+			if (std::string(n.attribute("name").as_string()) == stat.name) {
+				n.attribute("value").set_value(stat.value);
 			}
 		}
 	}
@@ -444,6 +484,10 @@ void Scene::LoadScene(std::string spawnId)
 	}
 
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+	std::string animations = pNode.attribute("animations").as_string();
+	player->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
+	player->LoadAnimations();
+
 	Engine::GetInstance().render->follow = player;
 	player->stats = LoadStats(pNode);
 	player->inventory = LoadInventory(pNode);
@@ -454,6 +498,7 @@ void Scene::LoadScene(std::string spawnId)
 	if (savedX >= 0 && savedY >= 0) {
 		b2Body_SetTransform(player->pbody->body, { PIXEL_TO_METERS(savedX), PIXEL_TO_METERS(savedY) }, b2Rot_identity);
 		player->position = Vector2D(savedX, savedY);
+		LOG("Player position: %d, %d", player->position.getX(), player->position.getY());
 	}*/
 
 	std::unordered_set<std::string> ids;
@@ -484,6 +529,10 @@ void Scene::LoadScene(std::string spawnId)
 			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
+			std::string animations = cNode.attribute("animations").as_string();
+			m->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
+			m->LoadAnimations();
+			m->CreateColliders();
 			player->AddPartyMember(m);
 		}
 	}
@@ -505,8 +554,15 @@ void Scene::LoadScene(std::string spawnId)
 			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 
 			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType));
+
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
+			if (auto npcPtr = std::dynamic_pointer_cast<NPC>(m)) {
+				std::string animations = cNode.attribute("animations").as_string();
+				npcPtr->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
+				npcPtr->LoadAnimations();
+				npcPtr->CreateColliders();
+			}
 		}
 	}
 
@@ -791,6 +847,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 		for (const auto& enemy : enemyParty->members) entityManager->DestroyEntity(enemy);
 		for (const auto& npc : player->party->members) {
 			if (npc->isDead) {
+				Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
 				player->party->RemoveMember(npc->id);
 				entityManager->DestroyEntity(npc);
 			}
@@ -803,6 +860,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	case FLED:
 		for (const auto& npc : player->party->members) {
 			if (npc->isDead) {
+				Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
 				player->party->RemoveMember(npc->id);
 				entityManager->DestroyEntity(npc);
 			}
@@ -827,29 +885,41 @@ void Scene::CopyCleanGameData()
 		std::ifstream src("Assets/Entities/characters_clean.xml", std::ios::binary);
 		std::ofstream dst1("Assets/Entities/characters.xml", std::ios::binary | std::ios::trunc);
 		dst1 << src.rdbuf();
+		src.close();
+		dst1.close();
 	}
 	{
 		std::ifstream src("Assets/Entities/characters_clean.xml", std::ios::binary);
 		std::ofstream dst2("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
 		dst2 << src.rdbuf();
+		src.close();
+		dst2.close();
 	}
 
 	{
 		std::ifstream src("Assets/Entities/items_clean.xml", std::ios::binary);
 		std::ofstream dst("Assets/Entities/items.xml", std::ios::binary | std::ios::trunc);
 		dst << src.rdbuf();
+		src.close();
+		dst.close();
 	}
 
 	{
 		std::ifstream src("Assets/Dialogues/dialogues_clean.xml", std::ios::binary);
 		std::ofstream dst1("Assets/Dialogues/dialogues.xml", std::ios::binary | std::ios::trunc);
 		dst1 << src.rdbuf();
+		src.close();
+		dst1.close();
 	}
 	{
 		std::ifstream src("Assets/Dialogues/dialogues_clean.xml", std::ios::binary);
 		std::ofstream dst2("Assets/Dialogues/dialogues_session.xml", std::ios::binary | std::ios::trunc);
 		dst2 << src.rdbuf();
+		src.close();
+		dst2.close();
 	}
+
+	Engine::GetInstance().sceneManager->deadNPCs.clear();
 }
 
 Vector2D Scene::GetPlayerPosition() {
@@ -922,11 +992,15 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 			std::ifstream src("Assets/Entities/characters.xml", std::ios::binary);
 			std::ofstream dst("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
 			dst << src.rdbuf();
+			src.close();
+			dst.close();
 		}
 		{
 			std::ifstream src("Assets/Dialogues/dialogues.xml", std::ios::binary);
 			std::ofstream dst("Assets/Dialogues/dialogues_session.xml", std::ios::binary | std::ios::trunc);
 			dst << src.rdbuf();
+			src.close();
+			dst.close();
 		}
 
 		Engine::GetInstance().menuManager->HideMenu();
