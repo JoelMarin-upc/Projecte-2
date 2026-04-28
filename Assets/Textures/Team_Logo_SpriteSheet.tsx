@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="Team_Logo_SpriteSheet" tilewidth="1920" tileheight="1080" tilecount="24" columns="5">
+<tileset version="1.10" tiledversion="1.11.2" name="Team_Logo_SpriteSheet" tilewidth="1920" tileheight="1080" tilecount="24" columns="4">
  <image source="Team_Logo_SpriteSheet.png" width="9600" height="5400" />
  <tile id="0">
   <animation>
@@ -24,9 +24,13 @@
    <frame tileid="18" duration="100" />
    <frame tileid="19" duration="60" />
    <frame tileid="20" duration="800" />
-   <frame tileid="21" duration="100" />
-   <frame tileid="22" duration="100" />
-   <frame tileid="23" duration="100" />
+  </animation>
+ </tile>
+ <tile id="21">
+  <animation>
+   <frame tileid="21" duration="150" />
+   <frame tileid="22" duration="150" />
+   <frame tileid="23" duration="150" />
   </animation>
  </tile>
 </tileset>
