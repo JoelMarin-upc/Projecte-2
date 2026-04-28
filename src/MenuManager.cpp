@@ -169,6 +169,7 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	SDL_Rect b_weapon = { centerX + 5, centerY - 30, 60, 60 };
 	SDL_Rect b_amount = { centerX - 100, 180, 200, 40 };
 	SDL_Rect b_selectedItem = { centerX - 100, sh - 200, 200, 160 };
+	SDL_Rect b_exitShop = { sw - 240, 15, 100, 30 };
 	std::vector<SDL_Rect> inventorySlotBounds = std::vector<SDL_Rect>();
 	std::vector<SDL_Rect> shopSlotBounds = std::vector<SDL_Rect>();
 	const int margin = 10;
@@ -204,6 +205,7 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		boots->SetBounds(b_boots);
 		weapon->SetBounds(b_weapon);
 		selectedItem->SetBounds(b_selectedItem);
+		exitShop->SetBounds(b_exitShop);
 		for (int i = 0; i < inventorySlotBounds.size(); i++) {
 			if (inventorySlots.size() <= i) continue;
 			std::shared_ptr<UISlot> slot = inventorySlots[i];
@@ -249,6 +251,7 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		weapon->state = UIElementState::DISABLED;
 		selectedItem = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)SELECTED_ITEM, b_selectedItem, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Default()));
 		selectedItem->state = UIElementState::DISABLED;
+		exitShop = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)EXIT_SHOP, b_exitShop, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Exit", 5, 5)));
 		for (int i = 0; i < inventorySlotBounds.size(); i++) {
 			std::shared_ptr<UISlot> slot = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)baseSlotsId + i, inventorySlotBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Default()));
 			inventorySlots.push_back(slot);
@@ -294,6 +297,7 @@ void MenuManager::SetObserver(Module* observer)
 	boots->observer = observer;
 	weapon->observer = observer;
 	selectedItem->observer = observer;
+	exitShop->observer = observer;
 	for (std::shared_ptr<UISlot> slot : inventorySlots) slot->observer = observer;
 	for (std::shared_ptr<UISlot> slot : shopSlots) slot->observer = observer;
 }
@@ -449,6 +453,7 @@ void MenuManager::HideMenu()
 	weapon->active = false;
 	selectedItem->SetItem(nullptr);
 	selectedItem->active = false;
+	exitShop->active = false;
 	for (std::shared_ptr<UISlot> slot : inventorySlots)
 	{
 		slot->SetItem(nullptr);
@@ -502,6 +507,7 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop)
 		shopLabel->active = true;
 		buy->active = true;
 		sell->active = true;
+		exitShop->active = true;
 		for (int i = 0; i < shopSlots.size(); i++) {
 			std::shared_ptr<UISlot> slot = shopSlots[i];
 			slot->active = true;

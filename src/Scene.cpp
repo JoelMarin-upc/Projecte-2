@@ -1020,6 +1020,9 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		player->inventory->AddGold((int)floor(selectedItem->price * SELLING_PRICE_RATIO) * amount);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
+	case EXIT_SHOP:
+		if (showingShop) ToggleShop(nullptr);
+		break;
 	default:
 		break;
 	}

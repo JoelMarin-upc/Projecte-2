@@ -71,7 +71,8 @@ enum UIID {
 	BODY,
 	BOOTS,
 	WEAPON,
-	SELECTED_ITEM
+	SELECTED_ITEM,
+	EXIT_SHOP
 };
 
 class MenuManager : public Module
@@ -161,6 +162,7 @@ public:
 	std::shared_ptr<UIImage> boots;
 	std::shared_ptr<UIImage> weapon;
 	std::shared_ptr<UISlot> selectedItem;
+	std::shared_ptr<UIButton> exitShop;
 
 	Inventory* currentInventory = nullptr;
 	Inventory* currentShop = nullptr;
