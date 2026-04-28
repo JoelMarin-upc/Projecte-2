@@ -36,15 +36,15 @@ bool Player::Start() {
 	//std::unordered_map<int, std::string> aliases = { {0,"idle"},{24,"move"},{40,"jump"},{32,"fall"},{48,"death"},{64,"throw"},{45,"falling"}};
 	//anims.LoadFromTSX(animationsPath, aliases);
 	//texturePath = "Assets/Textures/goldCoin.png";
+	texW = 32;
+	texH = 64;
+
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -100, 0, 1, 1);
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -110, 0, 1, 1);
 
 	colliders[0]->etype = EntityType::PLAYER;
 	pbody = colliders[0];
 	pbody->listener = this;
-
-	texW = 30;
-	texH = 30;
 
 	party = new Party(std::static_pointer_cast<Player>(shared_from_this()));
 

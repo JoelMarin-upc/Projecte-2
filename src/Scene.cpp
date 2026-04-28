@@ -532,6 +532,7 @@ void Scene::LoadScene(std::string spawnId)
 			std::string animations = cNode.attribute("animations").as_string();
 			m->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
 			m->LoadAnimations();
+			m->CreateColliders();
 			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
 				std::string name = sNode.attribute("name").as_string();
 				int value = sNode.attribute("value").as_float();
@@ -564,6 +565,7 @@ void Scene::LoadScene(std::string spawnId)
 				std::string animations = cNode.attribute("animations").as_string();
 				npcPtr->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
 				npcPtr->LoadAnimations();
+				npcPtr->CreateColliders();
 			}
 			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
 				std::string name = sNode.attribute("name").as_string();

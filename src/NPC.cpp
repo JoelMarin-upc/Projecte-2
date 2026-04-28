@@ -22,25 +22,7 @@ bool NPC::Start()
 	//	anims.LoadFromTSX(animationsPath.c_str(), aliases);
 	//	anims.SetCurrent("idle");
 	//	currentAnimation = "idle";
-	//}
-	
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -10, 0, 1, 1);
-	pbody = colliders[0];
-	pbody->listener = this;
-	pbody->etype = EntityType::NPC;
-
-	b2Body_SetFixedRotation(pbody->body, true);
-
-	b2MassData massData;
-	massData.mass = 1000.0f;
-	massData.center = { 0.0f, 0.0f };
-	massData.rotationalInertia = 0.0f;
-	b2Body_SetMassData(pbody->body, massData);
-
-	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 20, 20, 1, 1);
-	sensorCollider = colliders[1];
-	sensorCollider->listener = this;
-	sensorCollider->etype = EntityType::NPC;
+	//}	
 
 	texW = 30;
 	texH = 30;
@@ -109,6 +91,49 @@ bool NPC::CleanUp() {
 	return true;
 }
 
+void NPC::CreateColliders()
+{
+	if (animationsPath.empty()) {
+		AddCollider(ColliderType::CIRCLE, texture, 0, 0, -10, 0, 1, 1);
+		pbody = colliders[0];
+		pbody->listener = this;
+		pbody->etype = EntityType::NPC;
+
+		b2Body_SetFixedRotation(pbody->body, true);
+
+		b2MassData massData;
+		massData.mass = 1000.0f;
+		massData.center = { 0.0f, 0.0f };
+		massData.rotationalInertia = 0.0f;
+		b2Body_SetMassData(pbody->body, massData);
+
+		AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 20, 20, 1, 1);
+		sensorCollider = colliders[1];
+		sensorCollider->listener = this;
+		sensorCollider->etype = EntityType::NPC;
+
+		return;
+	}
+
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -500, 0, 1, 1);
+	pbody = colliders[0];
+	pbody->listener = this;
+	pbody->etype = EntityType::NPC;
+
+	b2Body_SetFixedRotation(pbody->body, true);
+
+	b2MassData massData;
+	massData.mass = 1000.0f;
+	massData.center = { 0.0f, 0.0f };
+	massData.rotationalInertia = 0.0f;
+	b2Body_SetMassData(pbody->body, massData);
+
+	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, -470, 20, 1, 1);
+	sensorCollider = colliders[1];
+	sensorCollider->listener = this;
+	sensorCollider->etype = EntityType::NPC;
+}
+
 void NPC::Move()
 {
 	if (!party || !party->player) return;
@@ -162,12 +187,12 @@ void NPC::HandleAnimations(b2Vec2 velocity)
 	if (isMoving) {
 		if (std::abs(velocity.x) > std::abs(velocity.y)) {
 			if (velocity.x > 0) {
-				facing = "left"; //Actually right, but in the spritesheet the default side facing direction is left
-				isFacingRight = false; //The sprite should be flipped here to display right instead of left
+				facing = "right";
+				isFacingRight = true;
 			}
 			else {
-				facing = "left";
-				isFacingRight = true;
+				facing = "right"; //Actually left, but in the spritesheet the default side facing direction is right
+				isFacingRight = false; //The sprite is flipped here to display left instead of right
 			}
 		}
 		else {
@@ -198,7 +223,7 @@ void NPC::LoadAnimations()
 {
 	if (animationsPath.empty()) return;
 	std::unordered_map<int, std::string> aliases = {
-		{0, "idle"}, {16, "move_down"}, {32, "move_up"}, {48, "move_left"}
+		{0, "idle"}, {16, "move_down"}, {32, "move_up"}, {48, "move_right"}
 	};
 	anims.LoadFromTSX(animationsPath.c_str(), aliases);
 	anims.SetCurrent("idle");
