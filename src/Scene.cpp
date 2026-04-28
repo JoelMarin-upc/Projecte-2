@@ -480,6 +480,10 @@ void Scene::LoadScene(std::string spawnId)
 	}
 
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+	std::string animations = pNode.attribute("animations").as_string();
+	player->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
+	player->LoadAnimations();
+
 	Engine::GetInstance().render->follow = player;
 	player->stats = new Stats();
 	for (pugi::xml_node sNode = pNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {

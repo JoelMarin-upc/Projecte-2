@@ -157,22 +157,30 @@ void Player::ApplyPhysics() {
 
 void Player::HandleAnimations()
 {
-	if (isThrow1 && isThrow2) return;
+	if (animationsPath.empty()) return;
 
-	if (!isJumping) {
-		if (abs(velocity.x) > 0.2) {
-			if (currentAnimation != "move") anims.SetCurrent("move");
-			currentAnimation = "move";
+	bool isMoving = (std::abs(velocity.x) > 0.1f || std::abs(velocity.y) > 0.1f);
+
+	if (isMoving) {
+		if (std::abs(velocity.x) > std::abs(velocity.y)) {
+			facing = "left";                     
+			isFacingRight = (velocity.x > 0);
 		}
 		else {
-			if (currentAnimation != "idle") anims.SetCurrent("idle");
-			currentAnimation = "idle";
+			facing = (velocity.y > 0) ? "down" : "up";
 		}
 
+		std::string animName = "move_" + facing;
+		if (currentAnimation != animName) {
+			anims.SetCurrent(animName);
+			currentAnimation = animName;
+		}
 	}
-	else if (velocity.y > 0.2) {
-		anims.SetCurrent("falling");
-		currentAnimation = "falling";
+	else {
+		if (currentAnimation != "idle") {
+			anims.SetCurrent("idle");
+			currentAnimation = "idle";
+		}
 	}
 }
 
@@ -193,7 +201,12 @@ void Player::Draw(float dt) {
 	position.setX((float)x);
 	position.setY((float)y);
 	SDL_Texture* tex = damaged ? textureDamaged : texture;
-	Engine::GetInstance().render->DrawTexture(tex, x - texW / 2, y - texH / 2/*, &animFrame, facingRight*/);
+
+	if (!animationsPath.empty()) {
+		anims.Update(dt);
+		const SDL_Rect& animFrame = anims.GetCurrentFrame();
+		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2, 1, &animFrame, isFacingRight);
+	}
 
 	/*if (!isActive) return;
 	tex = itemChargeTexture0;
@@ -205,6 +218,17 @@ void Player::Draw(float dt) {
 	Engine::GetInstance().render->DrawTexture(tex, x - 8, y -8);*/
 
 	DrawHealthBar(tex);
+}
+
+void Player::LoadAnimations()
+{
+	if (animationsPath.empty()) return;
+	std::unordered_map<int, std::string> aliases = {
+		{0, "idle"}, {4, "move_down"}, {8, "move_up"}, {12, "move_left"}
+	};
+	anims.LoadFromTSX(animationsPath.c_str(), aliases);
+	anims.SetCurrent("idle");
+	currentAnimation = "idle";
 }
 
 bool Player::CleanUp()
