@@ -6,6 +6,9 @@
 #include "Window.h"
 #include "SceneManager.h"
 #include "Vector2D.h"
+#include "Weapon.h"
+#include "Gear.h"
+#include "Consumable.h"
 #include <memory>
 #include <vector>
 #include <unordered_set>
@@ -852,7 +855,8 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		Engine::GetInstance().menuManager->amount->SetMinMax(1, slot->amount, 1);
 		const char* text = "Use";
 		isUnequipping = false;
-		if (w = std::dynamic_pointer_cast<Weapon>(selectedItem)) {
+		std::shared_ptr<Equipable> e = std::dynamic_pointer_cast<Equipable>(selectedItem);
+		if (w = std::dynamic_pointer_cast<Weapon>(e)) {
 			text = "Equip";
 			if (player->inventory->equippedWeapon->name == w->name)
 			{
@@ -860,7 +864,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 				isUnequipping = true;
 			}
 		}
-		else if (g = std::dynamic_pointer_cast<Gear>(selectedItem)) {
+		else if (g = std::dynamic_pointer_cast<Gear>(e)) {
 			text = "Equip";
 			if (player->inventory->GetGearSlot(g->gearSlot)->name == g->name)
 			{

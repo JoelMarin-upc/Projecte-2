@@ -102,7 +102,10 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 	switch (type)
 	{
 	case EntityType::INTERACTABLE_ITEM:
-		if (itemClass == "weapon") entity = std::make_shared<Weapon>(id, name, description, texturePath, canStack);
+		if (itemClass == "weapon")
+		{
+			entity = std::make_shared<Weapon>(id, name, description, texturePath, canStack);
+		}
 		if (itemClass == "gear") entity = std::make_shared<Gear>(id, name, description, texturePath, slot, canStack);
 		if (itemClass == "consumable") entity = std::make_shared<Consumable>(id, name, description, texturePath, canStack);
 		else entity = std::make_shared<InteractableItem>(id, name, description, texturePath, interactionType, canStack, toggledTexturePath);
