@@ -8,7 +8,7 @@ class UIImage : public UIElement
 
 public:
 
-	UIImage(int id, SDL_Rect bounds, SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, int hoverFxId, int clickFxId, SDL_Color* background = nullptr);
+	UIImage(int id, SDL_Rect bounds, SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, int hoverFxId, int clickFxId, SDL_Color* background = nullptr, bool drawImageOnCenter = false);
 	virtual ~UIImage();
 
 	// Called each loop iteration
@@ -20,6 +20,7 @@ private:
 
 	bool canClick = true;
 	bool drawBasic = false;
+	bool drawImageOnCenter = false;
 	SDL_Texture* disabledTex;
 	SDL_Texture* normalTex;
 	SDL_Texture* focusedTex;

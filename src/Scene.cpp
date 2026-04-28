@@ -542,9 +542,10 @@ Stats* Scene::LoadStats(pugi::xml_node node)
 Inventory* Scene::LoadInventory(pugi::xml_node characterNode)
 {
 	Inventory* inventory = new Inventory();
-	if (!characterNode.child("inventory")) return inventory;
-	inventory->gold = characterNode.child("inventory").attribute("gold").as_int();
-	for (pugi::xml_node iNode = characterNode.child("inventory").child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
+	pugi::xml_node inventoryNode = characterNode.child("inventory");
+	if (!inventoryNode) return inventory;
+	inventory->gold = inventoryNode.attribute("gold").as_int();
+	for (pugi::xml_node iNode = inventoryNode.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
 		std::string id = iNode.attribute("id").as_string();
 		std::string name = iNode.attribute("name").as_string();
 		std::string description = iNode.attribute("description").as_string();
@@ -559,6 +560,15 @@ Inventory* Scene::LoadInventory(pugi::xml_node characterNode)
 		LoadItemDefinition(item);
 		inventory->AddItem(item);
 	}
+	std::string equippedWeapon = inventoryNode.attribute("equippedWeapon").as_string();
+	std::string equippedHelmet = inventoryNode.attribute("equippedHelmet").as_string();
+	std::string equippedBody = inventoryNode.attribute("equippedBody").as_string();
+	std::string equippedBoots = inventoryNode.attribute("equippedBoots").as_string();
+	if (equippedWeapon != "") inventory->EquipWeapon(equippedWeapon);
+	if (equippedHelmet != "") inventory->EquipGear(equippedHelmet);
+	if (equippedBody != "") inventory->EquipGear(equippedBody);
+	if (equippedBoots != "") inventory->EquipGear(equippedBoots);
+
 	return inventory;
 }
 
@@ -635,6 +645,7 @@ void Scene::UpdateInventory(NPC* shopOwner) const
 	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
 	pugi::xml_node cNode;
 	std::vector< std::shared_ptr<InteractableItem>> items;
+	Inventory* inventory;
 	int gold = 0;
 	if (shopOwner) {
 		for (pugi::xml_node c = doc.child("characters").child("character"); c != NULL; c = c.next_sibling("character")) {
@@ -646,11 +657,13 @@ void Scene::UpdateInventory(NPC* shopOwner) const
 		}
 		
 		items = shopOwner->inventory->items;
+		inventory = shopOwner->inventory;
 	}
 	else {
 		cNode = doc.child("characters").child("player");
 		items = player->inventory->items;
 		gold = player->inventory->gold;
+		inventory = player->inventory;
 	}
 	cNode.remove_child("inventory");
 	pugi::xml_node invNode = cNode.append_child("inventory");
@@ -665,11 +678,26 @@ void Scene::UpdateInventory(NPC* shopOwner) const
 			iNode.append_attribute("description").set_value(item->description.c_str());
 			iNode.append_attribute("texture").set_value(ExtractFilename(item->texturePath).c_str());
 			iNode.append_attribute("type").set_value((int)item->type);
-			iNode.append_attribute("itemClass").set_value("item"); // TODO: This value depends on the item subclass
+			const char* itemClass = "item";
+			int slot = -1;
+			if (std::dynamic_pointer_cast<Weapon>(item)) itemClass = "weapon";
+			else if (auto g = std::dynamic_pointer_cast<Gear>(item))
+			{
+				itemClass = "gear";
+				slot = (int)g->gearSlot;
+			}
+			else if (std::dynamic_pointer_cast<Consumable>(item)) itemClass = "consumable";
+			iNode.append_attribute("itemClass").set_value(itemClass);
 			iNode.append_attribute("interactionType").set_value((int)item->itemInteractionType);
 			iNode.append_attribute("canStack").set_value(item->canStack);
+			if (slot != -1) iNode.append_attribute("slot").set_value(slot);
 		}
 	}
+	if (inventory->equippedWeapon) invNode.append_attribute("equippedWeapon").set_value(inventory->equippedWeapon->name.c_str());
+	if (inventory->equippedHelmet) invNode.append_attribute("equippedHelmet").set_value(inventory->equippedHelmet->name.c_str());
+	if (inventory->equippedBody) invNode.append_attribute("equippedBody").set_value(inventory->equippedBody->name.c_str());
+	if (inventory->equippedBoots) invNode.append_attribute("equippedBoots").set_value(inventory->equippedBoots->name.c_str());
+
 	doc.save_file("Assets/Entities/characters.xml");
 }
 
@@ -832,6 +860,12 @@ Vector2D Scene::GetPlayerPosition() {
 	return Vector2D(0, 0);
 }
 
+static std::shared_ptr<InteractableItem> CopyItem(std::shared_ptr<InteractableItem> item) {
+	if (std::shared_ptr<Weapon> w = std::dynamic_pointer_cast<Weapon>(item)) return std::make_shared<Weapon>(*w);
+	else if (std::shared_ptr<Gear> g = std::dynamic_pointer_cast<Gear>(item)) return std::make_shared<Gear>(*g);
+	else if (std::shared_ptr<Consumable> c = std::dynamic_pointer_cast<Consumable>(item)) return std::make_shared<Consumable>(*c);
+}
+
 bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	
 	if (Engine::GetInstance().uiManager->uiLockFrame == Engine::GetInstance().frameCount) return true;
@@ -855,24 +889,26 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		Engine::GetInstance().menuManager->amount->SetMinMax(1, slot->amount, 1);
 		const char* text = "Use";
 		isUnequipping = false;
-		std::shared_ptr<Equipable> e = std::dynamic_pointer_cast<Equipable>(selectedItem);
-		if (w = std::dynamic_pointer_cast<Weapon>(e)) {
+		if (w = std::dynamic_pointer_cast<Weapon>(selectedItem)) {
 			text = "Equip";
-			if (player->inventory->equippedWeapon->name == w->name)
+			if (player->inventory->equippedWeapon && player->inventory->equippedWeapon->name == w->name)
 			{
 				text = "Unequip";
 				isUnequipping = true;
 			}
 		}
-		else if (g = std::dynamic_pointer_cast<Gear>(e)) {
+		else if (g = std::dynamic_pointer_cast<Gear>(selectedItem)) {
 			text = "Equip";
-			if (player->inventory->GetGearSlot(g->gearSlot)->name == g->name)
+			std::shared_ptr<Gear> equipped = player->inventory->GetGearSlot(g->gearSlot);
+			if (equipped && equipped->name == g->name)
 			{
 				text = "Unequip";
 				isUnequipping = true;
 			}
 		}
 		Engine::GetInstance().menuManager->use->text = text;
+		Engine::GetInstance().menuManager->use->active = !selectedItemIsFromShop;
+		Engine::GetInstance().menuManager->drop->active = !selectedItemIsFromShop;
 	}
 	switch ((UIID)uiElement->id)
 	{
@@ -967,7 +1003,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		if (!selectedItem || !selectedItemIsFromShop) return true;
 		amount = Engine::GetInstance().menuManager->amount->GetValue();
 		if (player->inventory->gold < selectedItem->price * amount) return true;
-		copy = std::make_shared<InteractableItem>(*selectedItem);
+		copy = CopyItem(selectedItem);
 		copy->count = amount;
 		player->inventory->AddItem(copy);
 		for (int i = 0; i < amount; i++) shopOwner->inventory->RemoveItem(selectedItem->name);
@@ -977,7 +1013,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	case SELL:
 		if (!selectedItem || selectedItemIsFromShop) return true;
 		amount = Engine::GetInstance().menuManager->amount->GetValue();
-		copy = std::make_shared<InteractableItem>(*selectedItem);
+		copy = CopyItem(selectedItem);
 		copy->count = amount;
 		shopOwner->inventory->AddItem(copy);
 		for (int i = 0; i < amount; i++) player->inventory->RemoveItem(selectedItem->name);

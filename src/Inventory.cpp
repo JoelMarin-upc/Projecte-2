@@ -3,7 +3,7 @@
 #include "Equipable.h"
 
 Inventory::Inventory() {
-
+	
 }
 
 Inventory::~Inventory()
@@ -64,6 +64,10 @@ bool Inventory::RemoveItem(std::string& itemName)
 		LOG("Removed one %s from the stack, now %d", itemName.c_str(), item->count);
 	}
 	else {
+		if (equippedWeapon == items[i]) equippedWeapon = nullptr;
+		if (equippedHelmet == items[i]) equippedHelmet = nullptr;
+		if (equippedBody == items[i]) equippedBody = nullptr;
+		if (equippedBoots == items[i]) equippedBoots = nullptr;
 		items[i]->Destroy();
 		items.erase(items.begin() + i);
 		LOG("Removed %s from inventory", itemName.c_str());
@@ -99,22 +103,22 @@ bool Inventory::EquipWeapon(std::string& itemName)
 	//If there's weapon equipped in that slot
 	if (equippedWeapon)	{
 		//Remove new weapon from inventory
-		items.erase(items.begin() + i);
+		//items.erase(items.begin() + i);
 
 		//Check if inventory is full, fail to swap weapon if full
-		if (IsFull())	{
-			items.insert(items.begin() + i, w);
-			LOG("No free slot for previously equipped weapon %s", equippedWeapon->name.c_str());
-			return false;
-		}
+		//if (IsFull())	{
+		//	items.insert(items.begin() + i, w);
+		//	LOG("No free slot for previously equipped weapon %s", equippedWeapon->name.c_str());
+		//	return false;
+		//}
 		//Unequip old weapon and put back in the inventory
 		equippedWeapon->OnUnequip();
-		items.push_back(equippedWeapon);
+		//items.push_back(equippedWeapon);
 		LOG("Unequipped %s back to inventory", equippedWeapon->name.c_str());
 	}
 	//If the weapon slot was empty
 	else {
-		items.erase(items.begin() + i);
+		//items.erase(items.begin() + i);
 	}
 
 	//Equip the new gear
@@ -146,28 +150,29 @@ bool Inventory::EquipGear(std::string& itemName)
 	//If there's gear equipped in that slot
 	if (slot) {
 		//Remove new gear from inventory
-		items.erase(items.begin() + i);
+		//items.erase(items.begin() + i);
 
 		//Check if inventory is full, fail to swap gear if full
-		if (IsFull()) {
-			items.insert(items.begin() + i, g);
-			LOG("no free slot available");
-			return false;
-		}
+		//if (IsFull()) {
+		//	items.insert(items.begin() + i, g);
+		//	LOG("no free slot available");
+		//	return false;
+		//}
 
 		//Unequip old gear and put back in the inventory
 		slot->OnUnequip();
-		items.push_back(slot);
+		//items.push_back(slot);
 		LOG("Unequipped '%s' back to inventory", slot->id.c_str());
 	}
 
 	//If the gear slot was empty
 	else {
-		items.erase(items.begin() + i);
+		//items.erase(items.begin() + i);
 	}
 
 	//Equip the new gear
-	slot = g;
+	SetGearSlot(g, g->gearSlot);
+	slot = GetGearSlot(g->gearSlot);
 	slot->OnEquip();
 	return true;
 }
@@ -182,15 +187,16 @@ bool Inventory::UnequipGear(GearSlot slot)
 		return true;
 	}
 
-	if (IsFull()) {
-		LOG("Inventory full, cannot unequip %s", gear->name.c_str());
-		return false;
-	}
+	//if (IsFull()) {
+	//	LOG("Inventory full, cannot unequip %s", gear->name.c_str());
+	//	return false;
+	//}
 
 	//Remove gear effects and add back to inventory
 	gear->OnUnequip();
-	items.push_back(gear);
+	//items.push_back(gear);
 	LOG("Unequipped gear %s to inventory", gear->name.c_str());
+	SetGearSlot(nullptr, gear->gearSlot);
 	gear = nullptr;
 	return true;
 }
@@ -203,14 +209,14 @@ bool Inventory::UnequipWeapon()
 		return true;
 	}
 
-	if (IsFull()) {
-		LOG("Inventory full, cannot unequip %s", equippedWeapon->name.c_str());
-		return false;
-	}
+	//if (IsFull()) {
+	//	LOG("Inventory full, cannot unequip %s", equippedWeapon->name.c_str());
+	//	return false;
+	//}
 
 	//Remove weapon effects and add back to inventory
 	equippedWeapon->OnUnequip();
-	items.push_back(equippedWeapon);
+	//items.push_back(equippedWeapon);
 	LOG("Unequipped weapon %s to inventory", equippedWeapon->id.c_str());
 	equippedWeapon = nullptr;
 	return true;
@@ -227,6 +233,23 @@ std::shared_ptr<Gear> Inventory::GetGearSlot(GearSlot slot)
 		break;
 	case GearSlot::BOOTS:
 		return equippedBoots;
+		break;
+	default:
+		break;
+	}
+}
+
+void Inventory::SetGearSlot(std::shared_ptr<Gear> gear, GearSlot slot)
+{
+	switch (slot) {
+	case GearSlot::HELMET:
+		equippedHelmet = gear;
+		break;
+	case GearSlot::BODY:
+		equippedBody = gear;
+		break;
+	case GearSlot::BOOTS:
+		equippedBoots = gear;
 		break;
 	default:
 		break;

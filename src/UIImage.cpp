@@ -3,7 +3,7 @@
 #include "Engine.h"
 #include "Audio.h"
 
-UIImage::UIImage(int id, SDL_Rect bounds, SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, int hoverFxId, int clickFxId, SDL_Color* background) : UIElement(UIElementType::IMAGE, id)
+UIImage::UIImage(int id, SDL_Rect bounds, SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, int hoverFxId, int clickFxId, SDL_Color* background, bool drawImageOnCenter) : UIElement(UIElementType::IMAGE, id)
 {
 	this->hoverFxId = hoverFxId;
 	this->clickFxId = clickFxId;
@@ -13,6 +13,7 @@ UIImage::UIImage(int id, SDL_Rect bounds, SDL_Texture* disabledTex, SDL_Texture*
 	this->focusedTex = focusedTex;
 	this->pressedTex = pressedTex;
 	this->background = background;
+	this->drawImageOnCenter = drawImageOnCenter;
 
 	canClick = true;
 	drawBasic = false;
@@ -53,23 +54,29 @@ bool UIImage::Update(float dt)
 		}
 	}
 
+	SDL_Texture* texture = nullptr;
+
 	switch (state)
 	{
 	case UIElementState::DISABLED:
-		if (disabledTex) Engine::GetInstance().render->DrawTexture(disabledTex, bounds.x, bounds.y, 0.0f);
+		if (disabledTex) texture = disabledTex;
 		break;
 	case UIElementState::NORMAL:
-		if (normalTex) Engine::GetInstance().render->DrawTexture(normalTex, bounds.x, bounds.y, 0.0f);
+		if (normalTex) texture = normalTex;
 		break;
 	case UIElementState::FOCUSED:
-		if (focusedTex) Engine::GetInstance().render->DrawTexture(focusedTex, bounds.x, bounds.y, 0.0f);
+		if (focusedTex) texture = focusedTex;
 		break;
 	case UIElementState::PRESSED:
-		if (pressedTex) Engine::GetInstance().render->DrawTexture(pressedTex, bounds.x, bounds.y, 0.0f);
+		if (pressedTex) texture = pressedTex;
 		break;
 	}
 
+	SDL_Rect rect = bounds;
+	if (texture && drawImageOnCenter) rect = { bounds.x + bounds.w / 2 - texture->w / 2, bounds.y + bounds.h / 2 - texture->h / 2, bounds.w, bounds.h };
+
 	if (background) Engine::GetInstance().render->DrawRectangle(bounds, background->r, background->g, background->b, background->a, true, false);
+	if (texture) Engine::GetInstance().render->DrawTexture(texture, rect.x, rect.y, 0.0f);
 
 	return true;
 }

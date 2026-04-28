@@ -15,4 +15,19 @@
 			<stat name="defense" value="20" />
 		</stats>
 	</item>
+	<item itemName="armor" gold="15">
+		<stats>
+			<stat name="defense" value="30" />
+		</stats>
+	</item>
+	<item itemName="leather boots" gold="5">
+		<stats>
+			<stat name="defense" value="5" />
+		</stats>
+	</item>
+	<item itemName="steel boots" gold="8">
+		<stats>
+			<stat name="defense" value="10" />
+		</stats>
+	</item>
 </items>

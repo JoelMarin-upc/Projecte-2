@@ -159,10 +159,10 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	SDL_Rect b_inventoryLabel = { 20, 20, 200, 20 };
 	SDL_Rect b_moneyLabel = { centerX - 60, 20, 100, 20 };
 	SDL_Rect b_shopLabel = { sw - 120, 20, 100, 20 };
-	SDL_Rect b_use = { centerX - 100, 60, 80, 40};
-	SDL_Rect b_drop = { centerX + 20, 60, 80, 40 };
-	SDL_Rect b_buy = { centerX - 100, 120, 80, 40 };
-	SDL_Rect b_sell = { centerX + 20, 120, 80, 40 };
+	SDL_Rect b_use = { centerX - 110, 60, 90, 40};
+	SDL_Rect b_drop = { centerX + 10, 60, 90, 40 };
+	SDL_Rect b_buy = { centerX - 110, 120, 90, 40 };
+	SDL_Rect b_sell = { centerX + 10, 120, 90, 40 };
 	SDL_Rect b_helmet = { centerX - 65, centerY - 100, 60, 60 };
 	SDL_Rect b_body = { centerX - 65, centerY - 30, 60, 60 };
 	SDL_Rect b_boots = { centerX - 65, centerY + 40, 60, 60 };
@@ -171,23 +171,24 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	SDL_Rect b_selectedItem = { centerX - 100, sh - 200, 200, 160 };
 	std::vector<SDL_Rect> inventorySlotBounds = std::vector<SDL_Rect>();
 	std::vector<SDL_Rect> shopSlotBounds = std::vector<SDL_Rect>();
-	const int margin = 20;
+	const int margin = 10;
 	const int columns = 4;
 	const int rows = MAX_SLOTS / columns;
 	int x = margin;
 	int y = margin + 40;
-	int boxSize = 140;
+	int boxW = 160;
+	int boxY = 150;
 
 	for (int i = 0; i < rows; i++)
 		for (int j = 0; j < columns; j++)
-			inventorySlotBounds.push_back({ x + boxSize * i + margin * i, y + boxSize * j + margin * j, boxSize, boxSize});
+			inventorySlotBounds.push_back({ x + boxW * i + margin * i, y + boxY * j + margin * j, boxW, boxY });
 
 	x = sw;
 	y = margin + 40;
 
 	for (int i = 0; i < rows; i++)
 		for (int j = 0; j < columns; j++)
-			shopSlotBounds.push_back({ x - boxSize * i - margin * i - boxSize - margin, y + boxSize * j + margin * j, boxSize, boxSize });
+			shopSlotBounds.push_back({ x - boxW * i - margin * i - boxW - margin, y + boxY * j + margin * j, boxW, boxY });
 
 	if (onlyPositions) {
 		inventoryLabel->SetBounds(b_inventoryLabel);
@@ -238,13 +239,13 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		buy = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)BUY, b_buy, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Buy", 5)));
 		sell = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)SELL, b_sell, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Sell", 5)));
 		amount = std::dynamic_pointer_cast<UISlider>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLIDER, (int)AMOUNT, b_amount, this, { white, mainColorDis, mainColorDef, mainColorHov, mainColorPre, mainColorDis, white }, hoverFxId, clickFxId, UIParameters::Slider(true, 1, 10, 1, 10)));
-		helmet = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)HELMET, b_helmet, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Image(nullptr, nullptr, nullptr, nullptr, new SDL_Color(mainColorDef))));
+		helmet = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)HELMET, b_helmet, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Image(nullptr, nullptr, nullptr, nullptr, new SDL_Color(mainColorDef), true)));
 		helmet->state = UIElementState::DISABLED;
-		body = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BODY, b_body, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Image(nullptr, nullptr, nullptr, nullptr, new SDL_Color(mainColorDef))));
+		body = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BODY, b_body, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Image(nullptr, nullptr, nullptr, nullptr, new SDL_Color(mainColorDef), true)));
 		body->state = UIElementState::DISABLED;
-		boots = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BOOTS, b_boots, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Image(nullptr, nullptr, nullptr, nullptr, new SDL_Color(mainColorDef))));
+		boots = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BOOTS, b_boots, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Image(nullptr, nullptr, nullptr, nullptr, new SDL_Color(mainColorDef), true)));
 		boots->state = UIElementState::DISABLED;
-		weapon = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)WEAPON, b_weapon, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Image(nullptr, nullptr, nullptr, nullptr, new SDL_Color(mainColorDef))));
+		weapon = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)WEAPON, b_weapon, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Image(nullptr, nullptr, nullptr, nullptr, new SDL_Color(mainColorDef), true)));
 		weapon->state = UIElementState::DISABLED;
 		selectedItem = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)SELECTED_ITEM, b_selectedItem, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Default()));
 		selectedItem->state = UIElementState::DISABLED;
@@ -515,6 +516,7 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop)
 		inventoryLabel->active = true;
 		moneyLabel->text = "Gold: " + std::to_string(inventory->gold);
 		moneyLabel->active = true;
+		use->text = "Use";
 		use->active = true;
 		drop->active = true;
 		for (int i = 0; i < inventorySlots.size(); i++) {
@@ -525,13 +527,17 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop)
 			std::shared_ptr<InteractableItem> item = inventory->items[i];
 			slot->SetItem(item, item->count);
 		}
+		helmet->active = true;
+		body->active = true;
+		boots->active = true;
+		weapon->active = true;
+		if (inventory->equippedHelmet) helmet->SetImage(inventory->equippedHelmet->icon, inventory->equippedHelmet->icon, inventory->equippedHelmet->icon, inventory->equippedHelmet->icon);
+		else helmet->SetImage(nullptr, nullptr, nullptr, nullptr);
+		if (inventory->equippedBody) body->SetImage(inventory->equippedBody->icon, inventory->equippedBody->icon, inventory->equippedBody->icon, inventory->equippedBody->icon);
+		else body->SetImage(nullptr, nullptr, nullptr, nullptr);
+		if (inventory->equippedBoots) boots->SetImage(inventory->equippedBoots->icon, inventory->equippedBoots->icon, inventory->equippedBoots->icon, inventory->equippedBoots->icon);
+		else boots->SetImage(nullptr, nullptr, nullptr, nullptr);
+		if (inventory->equippedWeapon) weapon->SetImage(inventory->equippedWeapon->icon, inventory->equippedWeapon->icon, inventory->equippedWeapon->icon, inventory->equippedWeapon->icon);
+		else weapon->SetImage(nullptr, nullptr, nullptr, nullptr);
 	}
-	helmet->active = true;
-	body->active = true;
-	boots->active = true;
-	weapon->active = true;
-	if (inventory->equippedHelmet) helmet->SetImage(inventory->equippedHelmet->icon, inventory->equippedHelmet->icon, inventory->equippedHelmet->icon, inventory->equippedHelmet->icon);
-	if (inventory->equippedBody) body->SetImage(inventory->equippedBody->icon, inventory->equippedBody->icon, inventory->equippedBody->icon, inventory->equippedBody->icon);
-	if (inventory->equippedBoots) boots->SetImage(inventory->equippedBoots->icon, inventory->equippedBoots->icon, inventory->equippedBoots->icon, inventory->equippedBoots->icon);
-	if (inventory->equippedWeapon) weapon->SetImage(inventory->equippedWeapon->icon, inventory->equippedWeapon->icon, inventory->equippedWeapon->icon, inventory->equippedWeapon->icon);
 }
