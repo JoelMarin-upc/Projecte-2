@@ -35,12 +35,14 @@ bool UISlot::Update(float dt)
 	if (state != UIElementState::DISABLED)
 	{
 		// L16: TODO 3: Update the state of the GUiButton according to the mouse position
-		Vector2D mousePos = Engine::GetInstance().input->GetMousePosition();
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mousePos.getX(), mousePos.getY(), &logicalX, &logicalY);
+		float mouseX, mouseY;
+		SDL_GetMouseState(&mouseX, &mouseY);
+		int gameX, gameY;
+		//SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mousePos.getX(), mousePos.getY(), &gameX, &gameY);
+		Engine::GetInstance().render->WindowToGameCoords((int)mouseX, (int)mouseY, gameX, gameY);
 
 		//If the position of the mouse if inside the bounds of the button 
-		if (logicalX > bounds.x && logicalX < bounds.x + bounds.w && logicalY > bounds.y && logicalY < bounds.y + bounds.h) {
+		if (gameX > bounds.x && gameX < bounds.x + bounds.w && gameY > bounds.y && gameY < bounds.y + bounds.h) {
 			
 			if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED && hoverFxId != -1) Engine::GetInstance().audio->PlayFx(hoverFxId);
 

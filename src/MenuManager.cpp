@@ -158,7 +158,7 @@ void MenuManager::LoadInventory(bool onlyPositions)
 
 	SDL_Rect b_inventoryLabel = { 20, 20, 200, 20 };
 	SDL_Rect b_moneyLabel = { centerX - 60, 20, 100, 20 };
-	SDL_Rect b_shopLabel = { sw - 120, 20, 100, 20 };
+	SDL_Rect b_shopLabel = { sw - 80, 20, 60, 20 };
 	SDL_Rect b_use = { centerX - 110, 60, 90, 40};
 	SDL_Rect b_drop = { centerX + 10, 60, 90, 40 };
 	SDL_Rect b_buy = { centerX - 110, 120, 90, 40 };
@@ -169,7 +169,7 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	SDL_Rect b_weapon = { centerX + 5, centerY - 30, 60, 60 };
 	SDL_Rect b_amount = { centerX - 100, 180, 200, 40 };
 	SDL_Rect b_selectedItem = { centerX - 100, sh - 200, 200, 160 };
-	SDL_Rect b_exitShop = { sw - 240, 15, 100, 30 };
+	SDL_Rect b_exitShop = { sw - 200, 15, 100, 30 };
 	std::vector<SDL_Rect> inventorySlotBounds = std::vector<SDL_Rect>();
 	std::vector<SDL_Rect> shopSlotBounds = std::vector<SDL_Rect>();
 	const int margin = 10;
