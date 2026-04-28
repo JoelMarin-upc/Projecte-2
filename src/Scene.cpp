@@ -58,7 +58,6 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start(std::string spawnId)
 {
-
 	gameStarted = id != "main menu" && id != "intro";
 
 	if (gameStarted)
@@ -80,15 +79,21 @@ bool Scene::Start(std::string spawnId)
 	//logoFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("logo").as_string());
 	logoFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/logo.wav");
 	elevatorFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/elevator.wav");
+	studioLogoTexture = Engine::GetInstance().textures->Load("Assets/Textures/Team_Logo_SpriteSheet.png");
 
 
 	Engine::GetInstance().menuManager->SetObserver(this);
 
 	if (id == "intro")
 	{
+		studioLogoTimer.Start();
 		Engine::GetInstance().menuManager->HideMenu();
-		studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));
-		studioLogo->active = true;
+		std::unordered_map<int, std::string> aliases = {{0, "ease_in"}};
+		studioLogoAnims.LoadFromTSX("Assets/Textures/Team_Logo_SpriteSheet.tsx", aliases);
+		studioLogoAnims.SetCurrent("ease_in");
+
+		/*studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));
+		studioLogo->active = true;*/
 		Engine::GetInstance().audio->PlayFx(logoFxId);
 	}
 
@@ -145,9 +150,13 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	if (id == "intro") {
-		if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
-			studioLogo->active = false;
-			studioLogo->Destroy();
+		studioLogoAnims.Update(dt);
+		const SDL_Rect& animFrame = studioLogoAnims.GetCurrentFrame();
+		Engine::GetInstance().render->DrawTexture(studioLogoTexture, Engine::GetInstance().window->width - 1600, Engine::GetInstance().window->height - 1080, 1, &animFrame);
+
+		if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN || studioLogoTimer.ReadMSec() >= 2410) {
+			/*studioLogo->active = false;
+			studioLogo->Destroy();*/
 			Engine::GetInstance().audio->StopFx();
 			Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
 		}

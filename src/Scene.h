@@ -138,4 +138,7 @@ private:
 	int logoFxId;
 	int elevatorFxId;
 
+	Timer studioLogoTimer;
+	AnimationSet studioLogoAnims;
+	SDL_Texture* studioLogoTexture;
 };
