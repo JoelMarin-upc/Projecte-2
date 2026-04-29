@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<items>
+	<item itemName="sword" gold="10">
+		<stats>
+			<stat name="attack" value="30"/>
+		</stats>
+	</item>
+	<item itemName="potion" gold="5">
+		<stats>
+			<stat name="health" value="20" />
+		</stats>
+	</item>
+	<item itemName="helmet" gold="12">
+		<stats>
+			<stat name="defense" value="20" />
+		</stats>
+	</item>
+	<item itemName="armor" gold="15">
+		<stats>
+			<stat name="defense" value="30" />
+		</stats>
+	</item>
+	<item itemName="leather boots" gold="5">
+		<stats>
+			<stat name="defense" value="5" />
+		</stats>
+	</item>
+	<item itemName="steel boots" gold="8">
+		<stats>
+			<stat name="defense" value="10" />
+		</stats>
+	</item>
+</items>

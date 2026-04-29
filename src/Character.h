@@ -2,6 +2,7 @@
 
 #include "DynamicEntity.h"
 #include "Consumable.h"
+#include "Inventory.h"
 
 enum Stance {
 	REST,
@@ -24,7 +25,8 @@ public:
 	void CheckModifiers();
 	void DrawHealthBar(SDL_Texture* texture);
 
-	Stats* stats;
+	Stats* stats = nullptr;
+	Inventory* inventory = nullptr;
 	bool isDead = false;
 	bool hasFled = false;
 };

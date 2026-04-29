@@ -28,6 +28,7 @@ public:
 	bool Update(float dt);
 	void Draw(float dt);
 	bool CleanUp();
+	void CreateColliders();
 	void Move();
 	void HandleAnimations(b2Vec2 velocity);
 	void LoadAnimations();

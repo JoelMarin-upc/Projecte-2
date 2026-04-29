@@ -31,7 +31,7 @@ public:
 
 	std::shared_ptr<Entity> CreateEntity(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, ItemInteractionType interactionType = ItemInteractionType::DEFAULT, NPCInteractionType npcInteractionType = NPCInteractionType::DEFAULT);
 
-	std::shared_ptr<Entity> CreateItem(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, ItemInteractionType interactionType = ItemInteractionType::DEFAULT, bool canStack = false, std::string toggledTexturePath = "");
+	std::shared_ptr<Entity> CreateItem(std::string id, std::string name, std::string description, std::string texturePath, Vector2D position, std::string itemClass, EntityType type, ItemInteractionType interactionType = ItemInteractionType::DEFAULT, bool canStack = false, std::string toggledTexturePath = "", GearSlot slot = GearSlot::BODY);
 
 	std::shared_ptr<Entity> CreateCharacter(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, NPCInteractionType npcInteractionType = NPCInteractionType::DEFAULT);
 

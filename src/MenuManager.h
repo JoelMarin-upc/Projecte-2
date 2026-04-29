@@ -58,7 +58,21 @@ enum UIID {
 	STANCE2,
 	STANCE3,
 	STANCE4,
-	HINT
+	HINT,
+	INVENTORY_LABEL,
+	MONEY_LABEL,
+	SHOP_LABEL,
+	USE,
+	DROP,
+	BUY,
+	SELL,
+	AMOUNT,
+	HELMET,
+	BODY,
+	BOOTS,
+	WEAPON,
+	SELECTED_ITEM,
+	EXIT_SHOP
 };
 
 class MenuManager : public Module
@@ -87,16 +101,18 @@ public:
 	bool CleanUp();
 
 	void Load(bool onlyPositions);
+	void LoadInventory(bool onlyPositions);
 	void SetObserver(Module* observer);
 	void ShowMainMenu();
 	void ShowPauseMenu();
 	void ShowSettingsMenu();
 	void ShowCreditsMenu();
 	void ShowInventory(Inventory* inventory);
-	void ShowShop(Inventory* customer, Inventory* shop = nullptr);
+	void ShowShop(Inventory* customer, Inventory* shop);
 	void ShowDeathScreen();
 	void HideMenu();
 	void ShowPreviousMenu();
+	void RedrawInventory();
 
 private:
 	void ShowInventory(Inventory* inventory, bool isShop);
@@ -128,4 +144,26 @@ public:
 	std::shared_ptr<UIImage> exit;
 
 	int uiLockFrame = -1;
+
+	const int baseSlotsId = 900;
+	const int baseShopSlotsId = 950;
+	std::vector<std::shared_ptr<UISlot>> inventorySlots;
+	std::vector<std::shared_ptr<UISlot>> shopSlots;
+	std::shared_ptr<UILabel> inventoryLabel;
+	std::shared_ptr<UILabel> moneyLabel;
+	std::shared_ptr<UILabel> shopLabel;
+	std::shared_ptr<UIButton> use;
+	std::shared_ptr<UIButton> drop;
+	std::shared_ptr<UIButton> buy;
+	std::shared_ptr<UIButton> sell;
+	std::shared_ptr<UISlider> amount;
+	std::shared_ptr<UIImage> helmet;
+	std::shared_ptr<UIImage> body;
+	std::shared_ptr<UIImage> boots;
+	std::shared_ptr<UIImage> weapon;
+	std::shared_ptr<UISlot> selectedItem;
+	std::shared_ptr<UIButton> exitShop;
+
+	Inventory* currentInventory = nullptr;
+	Inventory* currentShop = nullptr;
 };

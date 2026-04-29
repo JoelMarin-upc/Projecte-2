@@ -3,7 +3,7 @@
 #include "Equipable.h"
 
 Inventory::Inventory() {
-
+	
 }
 
 Inventory::~Inventory()
@@ -27,7 +27,7 @@ bool Inventory::Cleanup()
 	return true;
 }
 
-bool Inventory::AddItem(InteractableItem* item)
+bool Inventory::AddItem(std::shared_ptr<InteractableItem> item)
 {
 	if (IsFull()) {
 		LOG("The inventory is full, the item could not be added");
@@ -57,13 +57,17 @@ bool Inventory::RemoveItem(std::string& itemName)
 		return false;
 	}
 
-	InteractableItem* item = items[i];
+	std::shared_ptr<InteractableItem> item = items[i];
 
 	if (item->canStack && item->count > 1) {
 		item->count--;
 		LOG("Removed one %s from the stack, now %d", itemName.c_str(), item->count);
 	}
 	else {
+		if (equippedWeapon == items[i]) equippedWeapon = nullptr;
+		if (equippedHelmet == items[i]) equippedHelmet = nullptr;
+		if (equippedBody == items[i]) equippedBody = nullptr;
+		if (equippedBoots == items[i]) equippedBoots = nullptr;
 		items[i]->Destroy();
 		items.erase(items.begin() + i);
 		LOG("Removed %s from inventory", itemName.c_str());
@@ -90,7 +94,7 @@ bool Inventory::EquipWeapon(std::string& itemName)
 	}
 
 	//Make sure that the item is of type Weapon
-	Weapon* w = dynamic_cast<Weapon*>(items[i]);
+	std::shared_ptr<Weapon> w = std::dynamic_pointer_cast<Weapon>(items[i]);
 	if (!w)	{
 		LOG("%s is not a Weapon", itemName.c_str());
 		return false;
@@ -99,22 +103,22 @@ bool Inventory::EquipWeapon(std::string& itemName)
 	//If there's weapon equipped in that slot
 	if (equippedWeapon)	{
 		//Remove new weapon from inventory
-		items.erase(items.begin() + i);
+		//items.erase(items.begin() + i);
 
 		//Check if inventory is full, fail to swap weapon if full
-		if (IsFull())	{
-			items.insert(items.begin() + i, w);
-			LOG("No free slot for previously equipped weapon %s", equippedWeapon->name.c_str());
-			return false;
-		}
+		//if (IsFull())	{
+		//	items.insert(items.begin() + i, w);
+		//	LOG("No free slot for previously equipped weapon %s", equippedWeapon->name.c_str());
+		//	return false;
+		//}
 		//Unequip old weapon and put back in the inventory
 		equippedWeapon->OnUnequip();
-		items.push_back(equippedWeapon);
+		//items.push_back(equippedWeapon);
 		LOG("Unequipped %s back to inventory", equippedWeapon->name.c_str());
 	}
 	//If the weapon slot was empty
 	else {
-		items.erase(items.begin() + i);
+		//items.erase(items.begin() + i);
 	}
 
 	//Equip the new gear
@@ -134,40 +138,41 @@ bool Inventory::EquipGear(std::string& itemName)
 	}
 
 	//Make sure that the item is of type Gear
-	Gear* g = dynamic_cast<Gear*>(items[i]);
+	std::shared_ptr<Gear> g = std::dynamic_pointer_cast<Gear>(items[i]);
 	if (!g) {
 		LOG("%s isn't a Gear item", itemName.c_str());
 		return false;
 	}
 
 	//Get the currently equipped gear in that slot (nullptr if not equipped anything)
-	Gear* slot = GetGearSlot(g->gearSlot);
+	std::shared_ptr<Gear> slot = GetGearSlot(g->gearSlot);
 
 	//If there's gear equipped in that slot
 	if (slot) {
 		//Remove new gear from inventory
-		items.erase(items.begin() + i);
+		//items.erase(items.begin() + i);
 
 		//Check if inventory is full, fail to swap gear if full
-		if (IsFull()) {
-			items.insert(items.begin() + i, g);
-			LOG("no free slot available");
-			return false;
-		}
+		//if (IsFull()) {
+		//	items.insert(items.begin() + i, g);
+		//	LOG("no free slot available");
+		//	return false;
+		//}
 
 		//Unequip old gear and put back in the inventory
 		slot->OnUnequip();
-		items.push_back(slot);
+		//items.push_back(slot);
 		LOG("Unequipped '%s' back to inventory", slot->id.c_str());
 	}
 
 	//If the gear slot was empty
 	else {
-		items.erase(items.begin() + i);
+		//items.erase(items.begin() + i);
 	}
 
 	//Equip the new gear
-	slot = g;
+	SetGearSlot(g, g->gearSlot);
+	slot = GetGearSlot(g->gearSlot);
 	slot->OnEquip();
 	return true;
 }
@@ -175,22 +180,23 @@ bool Inventory::EquipGear(std::string& itemName)
 bool Inventory::UnequipGear(GearSlot slot)
 {
 	//Get gear from slot
-	Gear* gear = GetGearSlot(slot);
+	std::shared_ptr<Gear> gear = GetGearSlot(slot);
 
 	if (!gear) {
 		LOG("The slot is already empty");
 		return true;
 	}
 
-	if (IsFull()) {
-		LOG("Inventory full, cannot unequip %s", gear->name.c_str());
-		return false;
-	}
+	//if (IsFull()) {
+	//	LOG("Inventory full, cannot unequip %s", gear->name.c_str());
+	//	return false;
+	//}
 
 	//Remove gear effects and add back to inventory
 	gear->OnUnequip();
-	items.push_back(gear);
+	//items.push_back(gear);
 	LOG("Unequipped gear %s to inventory", gear->name.c_str());
+	SetGearSlot(nullptr, gear->gearSlot);
 	gear = nullptr;
 	return true;
 }
@@ -203,20 +209,20 @@ bool Inventory::UnequipWeapon()
 		return true;
 	}
 
-	if (IsFull()) {
-		LOG("Inventory full, cannot unequip %s", equippedWeapon->name.c_str());
-		return false;
-	}
+	//if (IsFull()) {
+	//	LOG("Inventory full, cannot unequip %s", equippedWeapon->name.c_str());
+	//	return false;
+	//}
 
 	//Remove weapon effects and add back to inventory
 	equippedWeapon->OnUnequip();
-	items.push_back(equippedWeapon);
+	//items.push_back(equippedWeapon);
 	LOG("Unequipped weapon %s to inventory", equippedWeapon->id.c_str());
 	equippedWeapon = nullptr;
 	return true;
 }
 
-Gear* Inventory::GetGearSlot(GearSlot slot)
+std::shared_ptr<Gear> Inventory::GetGearSlot(GearSlot slot)
 {
 	switch (slot) {
 	case GearSlot::HELMET:
@@ -227,6 +233,23 @@ Gear* Inventory::GetGearSlot(GearSlot slot)
 		break;
 	case GearSlot::BOOTS:
 		return equippedBoots;
+		break;
+	default:
+		break;
+	}
+}
+
+void Inventory::SetGearSlot(std::shared_ptr<Gear> gear, GearSlot slot)
+{
+	switch (slot) {
+	case GearSlot::HELMET:
+		equippedHelmet = gear;
+		break;
+	case GearSlot::BODY:
+		equippedBody = gear;
+		break;
+	case GearSlot::BOOTS:
+		equippedBoots = gear;
 		break;
 	default:
 		break;
@@ -268,5 +291,11 @@ void Inventory::PrintContents()
 	if (equippedBoots) {
 		LOG("Boots: %s", equippedBoots->name.c_str());
 	}
+}
+
+void Inventory::AddGold(int amount)
+{
+	gold += amount;
+	if (gold < 0) gold = 0;
 }
 

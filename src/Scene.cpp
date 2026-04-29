@@ -6,6 +6,9 @@
 #include "Window.h"
 #include "SceneManager.h"
 #include "Vector2D.h"
+#include "Weapon.h"
+#include "Gear.h"
+#include "Consumable.h"
 #include <memory>
 #include <vector>
 #include <unordered_set>
@@ -169,6 +172,7 @@ bool Scene::Update(float dt)
 	////////////////////////////////////////////////
 
 	CheckTimers();
+	if (!isOnDialog && !paused) ToggleInventory();
 	map->Update(dt);
 	entityManager->Update(dt);
 	missionManager->Update(dt);
@@ -236,6 +240,8 @@ void Scene::TogglePause()
 		Engine::GetInstance().audio->pauseMultiplier = 0.3f;
 		Engine::GetInstance().audio->UpdateMusicVolume();
 		Engine::GetInstance().menuManager->ShowPauseMenu();
+		showingInventory = false;
+		showingShop = false;
 	} 
 	else
 	{
@@ -426,8 +432,6 @@ void Scene::LoadMap(std::string mapPath, std::string mapName)
 
 void Scene::LoadScene(std::string spawnId)
 {
-	std::string baseTexturePath = "Assets/Textures/";
-
 	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
 	//pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
 	pugi::xml_node characters = charactersDoc.child("characters");
@@ -480,14 +484,13 @@ void Scene::LoadScene(std::string spawnId)
 	}
 
 	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+	std::string animations = pNode.attribute("animations").as_string();
+	player->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
+	player->LoadAnimations();
+
 	Engine::GetInstance().render->follow = player;
-	player->stats = new Stats();
-	for (pugi::xml_node sNode = pNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
-		std::string name = sNode.attribute("name").as_string();
-		int value = sNode.attribute("value").as_float();
-		int max = sNode.attribute("max").as_float();
-		player->stats->AddStat(name, value, max);
-	}
+	player->stats = LoadStats(pNode);
+	player->inventory = LoadInventory(pNode);
 
 	//Uncomment when I find a fix
 	/*float savedX = pNode.attribute("savedX").as_float();
@@ -524,16 +527,12 @@ void Scene::LoadScene(std::string spawnId)
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
-			m->stats = new Stats();
+			m->stats = LoadStats(cNode);
+			m->inventory = LoadInventory(cNode);
 			std::string animations = cNode.attribute("animations").as_string();
 			m->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
 			m->LoadAnimations();
-			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
-				std::string name = sNode.attribute("name").as_string();
-				int value = sNode.attribute("value").as_float();
-				int max = sNode.attribute("max").as_float();
-				m->stats->AddStat(name, value, max);
-			}
+			m->CreateColliders();
 			player->AddPartyMember(m);
 		}
 	}
@@ -555,17 +554,14 @@ void Scene::LoadScene(std::string spawnId)
 			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 
 			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType));
-			m->stats = new Stats();
+
+			m->stats = LoadStats(cNode);
+			m->inventory = LoadInventory(cNode);
 			if (auto npcPtr = std::dynamic_pointer_cast<NPC>(m)) {
 				std::string animations = cNode.attribute("animations").as_string();
 				npcPtr->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
 				npcPtr->LoadAnimations();
-			}
-			for (pugi::xml_node sNode = cNode.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
-				std::string name = sNode.attribute("name").as_string();
-				int value = sNode.attribute("value").as_float();
-				int max = sNode.attribute("max").as_float();
-				m->stats->AddStat(name, value, max);
+				npcPtr->CreateColliders();
 			}
 		}
 	}
@@ -574,13 +570,73 @@ void Scene::LoadScene(std::string spawnId)
 		for (pugi::xml_node iNode = items.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
 			if (iNode.attribute("id").as_string() != item.id) continue;
 			std::string name = iNode.attribute("name").as_string();
+			std::string description = iNode.attribute("description").as_string();
 			std::string texture = iNode.attribute("texture").as_string();
 			int type = iNode.attribute("type").as_int();
 			int interactionType = iNode.attribute("interactionType").as_int();
 			bool canStack = iNode.attribute("canStack").as_bool();
 			std::string itemClass = iNode.attribute("itemClass").as_string("item");
 			std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
-			entityManager->CreateItem(item.id, name, baseTexturePath + texture, item.position, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath);
+			std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(item.id, name, description, baseTexturePath + texture, item.position, itemClass, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath));
+			LoadItemDefinition(newItem);
+		}
+	}
+}
+
+Stats* Scene::LoadStats(pugi::xml_node node)
+{
+	Stats* stats = new Stats();
+	for (pugi::xml_node sNode = node.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
+		std::string name = sNode.attribute("name").as_string();
+		int value = sNode.attribute("value").as_float();
+		int max = sNode.attribute("max").as_float();
+		stats->AddStat(name, value, max);
+	}
+	return stats;
+}
+
+Inventory* Scene::LoadInventory(pugi::xml_node characterNode)
+{
+	Inventory* inventory = new Inventory();
+	pugi::xml_node inventoryNode = characterNode.child("inventory");
+	if (!inventoryNode) return inventory;
+	inventory->gold = inventoryNode.attribute("gold").as_int();
+	for (pugi::xml_node iNode = inventoryNode.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
+		std::string id = iNode.attribute("id").as_string();
+		std::string name = iNode.attribute("name").as_string();
+		std::string description = iNode.attribute("description").as_string();
+		std::string texture = iNode.attribute("texture").as_string();
+		int type = iNode.attribute("type").as_int();
+		int interactionType = iNode.attribute("interactionType").as_int();
+		bool canStack = iNode.attribute("canStack").as_bool();
+		std::string itemClass = iNode.attribute("itemClass").as_string("item");
+		std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
+		int slot = iNode.attribute("slot").as_int();
+		std::shared_ptr<InteractableItem> item = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(id, name, description, baseTexturePath + texture, { -999999, -999999 }, itemClass, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath, (GearSlot)slot));
+		LoadItemDefinition(item);
+		inventory->AddItem(item);
+	}
+	std::string equippedWeapon = inventoryNode.attribute("equippedWeapon").as_string();
+	std::string equippedHelmet = inventoryNode.attribute("equippedHelmet").as_string();
+	std::string equippedBody = inventoryNode.attribute("equippedBody").as_string();
+	std::string equippedBoots = inventoryNode.attribute("equippedBoots").as_string();
+	if (equippedWeapon != "") inventory->EquipWeapon(equippedWeapon);
+	if (equippedHelmet != "") inventory->EquipGear(equippedHelmet);
+	if (equippedBody != "") inventory->EquipGear(equippedBody);
+	if (equippedBoots != "") inventory->EquipGear(equippedBoots);
+
+	return inventory;
+}
+
+void Scene::LoadItemDefinition(std::shared_ptr<InteractableItem> item)
+{
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/items_def.xml");
+	for (pugi::xml_node iNode = doc.child("items").child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
+		if (iNode.attribute("itemName").as_string() == item->name)
+		{
+			item->price = iNode.attribute("gold").as_int();
+			item->stats = LoadStats(iNode);
+			return;
 		}
 	}
 }
@@ -597,6 +653,108 @@ void Scene::EndGame()
 
 void Scene::CheckTimers() {
 	if (combatTimer.ReadSec() > combatCooldownSeconds) hasCombatCooldown = false;
+}
+
+void Scene::ToggleInventory()
+{
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN)
+	{
+		if (showingShop) {
+			ToggleShop(nullptr);
+			return;
+		}
+		showingInventory = !showingInventory;
+		entityManager->paused = showingInventory;
+		if (showingInventory) Engine::GetInstance().menuManager->ShowInventory(player->inventory);
+		else Engine::GetInstance().menuManager->HideMenu();
+		if (!showingInventory) UpdateInventory();
+	}
+}
+
+void Scene::ToggleShop(NPC* shopOwner)
+{
+	showingInventory = shopOwner;
+	entityManager->paused = showingInventory;
+	if (showingInventory)
+	{
+		Engine::GetInstance().menuManager->ShowShop(player->inventory, shopOwner->inventory);
+		showingShop = true;
+	}
+	else
+	{
+		Engine::GetInstance().menuManager->HideMenu();
+		UpdateInventory();
+		UpdateInventory(this->shopOwner);
+		showingShop = false;
+	}
+	this->shopOwner = shopOwner;
+}
+
+static std::string ExtractFilename(const std::string& full_path) {
+	size_t pos = full_path.find_last_of("/\\");
+	if (pos == std::string::npos) return full_path;
+	return full_path.substr(pos + 1);
+}
+
+void Scene::UpdateInventory(NPC* shopOwner) const
+{
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
+	pugi::xml_node cNode;
+	std::vector< std::shared_ptr<InteractableItem>> items;
+	Inventory* inventory;
+	int gold = 0;
+	if (shopOwner) {
+		for (pugi::xml_node c = doc.child("characters").child("character"); c != NULL; c = c.next_sibling("character")) {
+			if (c.attribute("id").as_string() == shopOwner->id)
+			{
+				cNode = c;
+				break;
+			}
+		}
+		
+		items = shopOwner->inventory->items;
+		inventory = shopOwner->inventory;
+	}
+	else {
+		cNode = doc.child("characters").child("player");
+		items = player->inventory->items;
+		gold = player->inventory->gold;
+		inventory = player->inventory;
+	}
+	cNode.remove_child("inventory");
+	pugi::xml_node invNode = cNode.append_child("inventory");
+	invNode.append_attribute("gold").set_value(gold);
+	for (std::shared_ptr<InteractableItem> item : items) {
+		if (!item) continue;
+		int count = item->canStack ? item->count : 1;
+		for (int i = 0; i < count; i++) {
+			pugi::xml_node iNode = invNode.append_child("item");
+			iNode.append_attribute("id").set_value(item->id.c_str());
+			iNode.append_attribute("name").set_value(item->name.c_str());
+			iNode.append_attribute("description").set_value(item->description.c_str());
+			iNode.append_attribute("texture").set_value(ExtractFilename(item->texturePath).c_str());
+			iNode.append_attribute("type").set_value((int)item->type);
+			const char* itemClass = "item";
+			int slot = -1;
+			if (std::dynamic_pointer_cast<Weapon>(item)) itemClass = "weapon";
+			else if (auto g = std::dynamic_pointer_cast<Gear>(item))
+			{
+				itemClass = "gear";
+				slot = (int)g->gearSlot;
+			}
+			else if (std::dynamic_pointer_cast<Consumable>(item)) itemClass = "consumable";
+			iNode.append_attribute("itemClass").set_value(itemClass);
+			iNode.append_attribute("interactionType").set_value((int)item->itemInteractionType);
+			iNode.append_attribute("canStack").set_value(item->canStack);
+			if (slot != -1) iNode.append_attribute("slot").set_value(slot);
+		}
+	}
+	if (inventory->equippedWeapon) invNode.append_attribute("equippedWeapon").set_value(inventory->equippedWeapon->name.c_str());
+	if (inventory->equippedHelmet) invNode.append_attribute("equippedHelmet").set_value(inventory->equippedHelmet->name.c_str());
+	if (inventory->equippedBody) invNode.append_attribute("equippedBody").set_value(inventory->equippedBody->name.c_str());
+	if (inventory->equippedBoots) invNode.append_attribute("equippedBoots").set_value(inventory->equippedBoots->name.c_str());
+
+	doc.save_file("Assets/Entities/characters.xml");
 }
 
 //Checks if the player is at a transition rectagle
@@ -669,7 +827,7 @@ std::vector<std::shared_ptr<Enemy>> Scene::GetNearEnemies(Vector2D position, flo
 
 void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
 {
-	if (hasCombatCooldown) return;
+	if (hasCombatCooldown || isOnDialog || showingInventory || paused) return;
 	Engine::GetInstance().render->follow = nullptr;
 
 	auto nearEnemies = GetNearEnemies(player->position, 300, enemy->id);
@@ -772,12 +930,56 @@ Vector2D Scene::GetPlayerPosition() {
 	return Vector2D(0, 0);
 }
 
+static std::shared_ptr<InteractableItem> CopyItem(std::shared_ptr<InteractableItem> item) {
+	if (std::shared_ptr<Weapon> w = std::dynamic_pointer_cast<Weapon>(item)) return std::make_shared<Weapon>(*w);
+	else if (std::shared_ptr<Gear> g = std::dynamic_pointer_cast<Gear>(item)) return std::make_shared<Gear>(*g);
+	else if (std::shared_ptr<Consumable> c = std::dynamic_pointer_cast<Consumable>(item)) return std::make_shared<Consumable>(*c);
+}
+
 bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	
 	if (Engine::GetInstance().uiManager->uiLockFrame == Engine::GetInstance().frameCount) return true;
 
 	float musicVol;
 	float fxVol;
+	int amount;
+	std::shared_ptr<InteractableItem> copy;
+	std::shared_ptr<Gear> g;
+	std::shared_ptr<Weapon> w;
+	std::shared_ptr<Consumable> c;
+	if ((Engine::GetInstance().menuManager->currentMenu == SHOP || 
+		 Engine::GetInstance().menuManager->currentMenu == INVENTORY) &&
+		uiElement->id >= Engine::GetInstance().menuManager->baseSlotsId) 
+	{
+		selectedItemIsFromShop = false;
+		if (uiElement->id >= Engine::GetInstance().menuManager->baseShopSlotsId) selectedItemIsFromShop = true;
+		UISlot* slot = (UISlot*)uiElement;
+		selectedItem = slot->item;
+		Engine::GetInstance().menuManager->selectedItem->SetItem(selectedItem, slot->amount, true, !selectedItemIsFromShop);
+		Engine::GetInstance().menuManager->amount->SetMinMax(1, slot->amount, 1);
+		const char* text = "Use";
+		isUnequipping = false;
+		if (w = std::dynamic_pointer_cast<Weapon>(selectedItem)) {
+			text = "Equip";
+			if (player->inventory->equippedWeapon && player->inventory->equippedWeapon->name == w->name)
+			{
+				text = "Unequip";
+				isUnequipping = true;
+			}
+		}
+		else if (g = std::dynamic_pointer_cast<Gear>(selectedItem)) {
+			text = "Equip";
+			std::shared_ptr<Gear> equipped = player->inventory->GetGearSlot(g->gearSlot);
+			if (equipped && equipped->name == g->name)
+			{
+				text = "Unequip";
+				isUnequipping = true;
+			}
+		}
+		Engine::GetInstance().menuManager->use->text = text;
+		Engine::GetInstance().menuManager->use->active = !selectedItemIsFromShop;
+		Engine::GetInstance().menuManager->drop->active = !selectedItemIsFromShop;
+	}
 	switch ((UIID)uiElement->id)
 	{
 	case START_GAME:
@@ -840,6 +1042,60 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	case EXIT:
 		exit(0);
+		break;
+	case USE:
+		if (!selectedItem || selectedItemIsFromShop) return true;
+		if (w = std::dynamic_pointer_cast<Weapon>(selectedItem)) {
+			player->inventory->UnequipWeapon();
+			if (!isUnequipping) player->inventory->EquipWeapon(selectedItem->name);
+		}
+		else if (g = std::dynamic_pointer_cast<Gear>(selectedItem)) {
+			player->inventory->UnequipGear(g->gearSlot);
+			if (!isUnequipping) player->inventory->EquipGear(selectedItem->name);
+		}
+		else if (c = std::dynamic_pointer_cast<Consumable>(selectedItem)) {
+			amount = Engine::GetInstance().menuManager->amount->GetValue();
+			for (int i = 0; i < amount; i++)
+			{
+				// make consumable action
+				player->inventory->RemoveItem(selectedItem->name);
+			}
+		}
+		else {
+			// base InteractableItem class / Equipable class
+		}
+		Engine::GetInstance().menuManager->use->text = "Use";
+		Engine::GetInstance().menuManager->RedrawInventory();
+		break;
+	case DROP:
+		if (!selectedItem || selectedItemIsFromShop) return true;
+		amount = Engine::GetInstance().menuManager->amount->GetValue();
+		for (int i = 0; i < amount; i++) player->inventory->RemoveItem(selectedItem->name);
+		Engine::GetInstance().menuManager->RedrawInventory();
+		break;
+	case BUY:
+		if (!selectedItem || !selectedItemIsFromShop) return true;
+		amount = Engine::GetInstance().menuManager->amount->GetValue();
+		if (player->inventory->gold < selectedItem->price * amount) return true;
+		copy = CopyItem(selectedItem);
+		copy->count = amount;
+		player->inventory->AddItem(copy);
+		for (int i = 0; i < amount; i++) shopOwner->inventory->RemoveItem(selectedItem->name);
+		player->inventory->AddGold(-selectedItem->price * amount);
+		Engine::GetInstance().menuManager->RedrawInventory();
+		break;
+	case SELL:
+		if (!selectedItem || selectedItemIsFromShop) return true;
+		amount = Engine::GetInstance().menuManager->amount->GetValue();
+		copy = CopyItem(selectedItem);
+		copy->count = amount;
+		shopOwner->inventory->AddItem(copy);
+		for (int i = 0; i < amount; i++) player->inventory->RemoveItem(selectedItem->name);
+		player->inventory->AddGold((int)floor(selectedItem->price * SELLING_PRICE_RATIO) * amount);
+		Engine::GetInstance().menuManager->RedrawInventory();
+		break;
+	case EXIT_SHOP:
+		if (showingShop) ToggleShop(nullptr);
 		break;
 	default:
 		break;

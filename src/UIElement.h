@@ -19,7 +19,8 @@ enum class UIElementType
 	INPUTBOX,
 	VALUEBOX,
 	SPINNER,
-	IMAGE
+	IMAGE,
+	SLOT
 };
 
 enum class UIElementState

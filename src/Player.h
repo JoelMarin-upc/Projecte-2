@@ -26,6 +26,8 @@ public:
 	bool Update(float dt);
 	void Draw(float dt);
 
+	void LoadAnimations();
+
 	bool CleanUp();
 
 	void OnCollision(Collider* physA, Collider* physB);
@@ -46,8 +48,12 @@ private:
 
 public:
 
+	std::string animationsPath;
+	std::string facing = "down";
+	std::string currentAnimation = "";
+	bool isFacingRight = false;
+
 	const char* textureDamagedPath;
-	const char* animationsPath;
 	const char* itemChargeTexture0Path;
 	const char* itemChargeTexture1Path;
 	const char* itemChargeTexture2Path;
@@ -110,7 +116,6 @@ public:
 	bool spearCol1 = false;
 	bool spearCol2 = false;
 	float godModeSpeed = 0.1f;
-	std::string currentAnimation = "";
 	float deathMS = 600.0f;
 	Timer walkTimer;
 	float walkMS = 400.0f;
@@ -134,8 +139,6 @@ public:
 	bool doorOpen = false;
 
 	Party* party;
-
-	Inventory inventory;
 
 private:
 	b2Vec2 velocity;
