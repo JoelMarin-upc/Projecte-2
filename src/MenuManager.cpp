@@ -97,11 +97,11 @@ void MenuManager::Load(bool onlyPositions)
 
 	//Main menu elements
 	SDL_Rect b_gameTitle = { centerX - title->w / 2, centerY - title->h/2 - 150, 0, 0 };
-	SDL_Rect b_startGame = { centerX - 140, centerY + 10, 280, 50 };
-	SDL_Rect b_continueGame = { centerX - 125, centerY + 80, 250, 35 };
-	SDL_Rect b_settings = { centerX - 125, centerY + 130, 250, 35 };
-	SDL_Rect b_credits_btn = { centerX - 125, centerY + 180, 250, 35 };
-	SDL_Rect b_exit = { centerX - 125, centerY + 230, 250, 35 };
+	SDL_Rect b_startGame = { centerX - 75, centerY, 144, 64 };
+	SDL_Rect b_continueGame = { centerX - 100, centerY + 70, 192, 64 };
+	SDL_Rect b_settings = { centerX - 100, centerY + 140, 192, 64 };
+	SDL_Rect b_credits_btn = { centerX - 90, centerY + 210, 176, 64 };
+	SDL_Rect b_exit = { centerX - 75, centerY + 280, 144, 64 };
 	
 	//Settings menu elements
 	SDL_Rect b_settings_lbl = { centerX - 100, centerY - 200, 200, 40 };
@@ -111,16 +111,16 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_fxVolume = { centerX + 100, centerY - 50, 200, 25 };
 	SDL_Rect b_fullscreen_lbl = { centerX - 300, centerY - 0, 200, 25 };
 	SDL_Rect b_fullscreen = { centerX + 100, centerY - 0, 25, 25 };
-	SDL_Rect b_backMenu = { centerX - 125, centerY + 50, 250, 35 };
+	SDL_Rect b_backMenu = { centerX - 100, centerY + 210, 144, 64 };
 
 	//Credits menu elements
 	SDL_Rect b_credits1 = { centerX - 500, centerY - 200, 1000, 25 };
 	SDL_Rect b_credits2 = { centerX - 500, centerY - 160, 1000, 25 };
-	SDL_Rect b_backMainMenu = { centerX - 125, centerY + 180, 250, 35 };
+	SDL_Rect b_backMainMenu = { centerX - 75, centerY + 210, 144, 64 };
 
 	//Pause menu elements
 	SDL_Rect b_paused_lbl = { centerX - 60, centerY - 10, 200, 40 };
-	SDL_Rect b_resume = { centerX - 125, centerY + 80, 250, 35 };
+	SDL_Rect b_resume = { centerX - 95, centerY + 70, 176, 64 };
 
 	//Other elements
 	SDL_Rect b_gameOver_lbl = { centerX - 150, centerY, 300, 60 };
