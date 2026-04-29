@@ -266,6 +266,16 @@ int Inventory::FindItem(std::string& itemName)
 	return -1;
 }
 
+std::shared_ptr<InteractableItem> Inventory::GetItem(std::string& itemName)
+{
+	for (int i = 0; i < items.size(); ++i) {
+		if (items[i]->name == itemName) {
+			return items[i];
+		}
+	}
+	return nullptr;
+}
+
 bool Inventory::IsFull()
 {
 	if ((int)items.size() >= MAX_SLOTS) {

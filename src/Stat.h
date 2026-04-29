@@ -3,6 +3,7 @@
 class Stat {
 public: 
 	Stat(std::string name, float value, float maxValue) : name(name), value(value), maxValue(maxValue), modifier(1.f), modifierTurnsLeft(-1) {};
+	Stat(std::string name, float value, float maxValue, int turns) : name(name), value(value), maxValue(maxValue), modifier(1.f), modifierTurnsLeft(turns) {};
 
 	std::string name;
 	float value;

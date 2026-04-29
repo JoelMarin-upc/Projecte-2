@@ -6,13 +6,21 @@ float Character::Attack()
     return attack.getValue();
 }
 
-Consumable* Character::UseConsumable(std::string type)
+std::shared_ptr<Consumable> Character::UseConsumable(std::string type)
 {
-    return nullptr;
+    std::shared_ptr<Consumable> copy = nullptr;
+    std::shared_ptr<InteractableItem> item = inventory->GetItem(type);
+    if (std::shared_ptr<Consumable> c = std::dynamic_pointer_cast<Consumable>(item)) copy = std::make_shared<Consumable>(*c);
+    inventory->RemoveItem(type);
+    return copy;
 }
 
-void Character::TakeConsumable(Consumable* consumable)
+void Character::TakeConsumable(std::shared_ptr<Consumable> consumable)
 {
+    for (Stat stat : consumable->stats->stats) {
+        if (stat.name == "health") stats->AddToStat(stat.name, stat.value);
+        else stats->ApplyModifier(stat.name, stat.value, stat.modifierTurnsLeft);
+    }
 }
 
 void Character::TakeStance(Stance stance)

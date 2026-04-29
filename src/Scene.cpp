@@ -588,9 +588,10 @@ Stats* Scene::LoadStats(pugi::xml_node node)
 	Stats* stats = new Stats();
 	for (pugi::xml_node sNode = node.child("stats").child("stat"); sNode != NULL; sNode = sNode.next_sibling("stat")) {
 		std::string name = sNode.attribute("name").as_string();
-		int value = sNode.attribute("value").as_float();
-		int max = sNode.attribute("max").as_float();
-		stats->AddStat(name, value, max);
+		float value = sNode.attribute("value").as_float();
+		float max = sNode.attribute("max").as_float();
+		int turns = sNode.attribute("turns").as_int(-1);
+		stats->AddStat(name, value, max, turns);
 	}
 	return stats;
 }

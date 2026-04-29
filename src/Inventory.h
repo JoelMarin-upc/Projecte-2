@@ -30,6 +30,7 @@ public:
 	std::shared_ptr<Gear> GetGearSlot(GearSlot slot);
 	void SetGearSlot(std::shared_ptr<Gear> gear, GearSlot slot);
 	int FindItem(std::string& itemName);
+	std::shared_ptr<InteractableItem> GetItem(std::string& itemName);
 	bool IsFull();
 	void PrintContents();
 

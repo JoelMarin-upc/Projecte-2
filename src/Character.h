@@ -18,8 +18,8 @@ public:
 	Character(std::string id, std::string name, std::string texturePath, EntityType type) : DynamicEntity(id, name, texturePath, type) {}
 
 	float Attack();
-	Consumable* UseConsumable(std::string type);
-	void TakeConsumable(Consumable* consumable);
+	std::shared_ptr<Consumable> UseConsumable(std::string type);
+	void TakeConsumable(std::shared_ptr<Consumable> consumable);
 	void TakeStance(Stance stance);
 	bool TakeDamage(float damage);
 	void CheckModifiers();
