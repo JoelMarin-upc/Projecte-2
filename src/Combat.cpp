@@ -1,6 +1,7 @@
 #include "Combat.h"
 #include "NPC.h"
 #include "Enemy.h"
+#include "SceneManager.h"
 #include "Window.h"
 #include <random>
 #include <thread>
@@ -273,6 +274,7 @@ bool Combat::PreUpdate() {
 bool Combat::Update(float dt) {
 	map->Update(dt);
 	player->GodMode();
+	std::vector<std::shared_ptr<Character>> members;
 	switch (combatPhase)
 	{
 	case DECISION:
@@ -285,7 +287,19 @@ bool Combat::Update(float dt) {
 				if (action->target->TakeDamage(action->selected->Attack())) KillCombatant(action->target);
 				break;
 			case TAKE_STANCE:
-				action->selected->TakeStance(action->stance);
+				if (isPlayerTurn) {
+					if (player->id != action->selected->id) members.push_back(player);
+					
+					for (auto& member : playerParty->members)
+						if (member->id != action->selected->id)
+							members.push_back(member);
+				}
+				else {
+					for (auto& member : enemyParty->members) 
+						if (member->id != action->selected->id) 
+							members.push_back(member);
+				}
+				action->selected->TakeStance(action->stance, members);
 				break;
 			case TAKE_CONSUMABLE:
 				action->target->TakeConsumable(action->selected->UseConsumable(action->consumableType));
@@ -356,6 +370,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 	{
 	case C_PLAYER:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || (turnAction->action == TAKE_CONSUMABLE && turnAction->consumableType == "")) return true;
 			turnAction->target = player;
 			AddTurnAction();
 		}
@@ -368,6 +383,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	case C_NPC1:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || (turnAction->action == TAKE_CONSUMABLE && turnAction->consumableType == "")) return true;
 			turnAction->target = npc1;
 			AddTurnAction();
 		}
@@ -380,6 +396,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	case C_NPC2:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || (turnAction->action == TAKE_CONSUMABLE && turnAction->consumableType == "")) return true;
 			turnAction->target = npc2;
 			AddTurnAction();
 		}
@@ -392,6 +409,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	case C_NPC3:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || (turnAction->action == TAKE_CONSUMABLE && turnAction->consumableType == "")) return true;
 			turnAction->target = npc3;
 			AddTurnAction();
 		}
@@ -404,24 +422,28 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	case C_ENEMY1:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || turnAction->action == TAKE_CONSUMABLE) return true;
 			turnAction->target = enemy1;
 			AddTurnAction();
 		}
 		break;
 	case C_ENEMY2:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || turnAction->action == TAKE_CONSUMABLE) return true;
 			turnAction->target = enemy2;
 			AddTurnAction();
 		}
 		break;
 	case C_ENEMY3:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || turnAction->action == TAKE_CONSUMABLE) return true;
 			turnAction->target = enemy3;
 			AddTurnAction();
 		}
 		break;
 	case C_ENEMY4:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || turnAction->action == TAKE_CONSUMABLE) return true;
 			turnAction->target = enemy4;
 			AddTurnAction();
 		}
@@ -441,6 +463,8 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		if (!turnAction || !turnAction->selected) return true;
 		turnAction->action = Action::TAKE_CONSUMABLE;
 		ToggleActions(false);
+		hint->text = "Select a consumable";
+		Engine::GetInstance().sceneManager->currentScene->ToggleInventoryForCombat();
 		break;
 	case ACTION4:
 		if (!turnAction || !turnAction->selected) return true;
@@ -497,6 +521,14 @@ void Combat::ToggleStances(bool show)
 	stance3->active = show;
 	stance4->active = show;
 	if (show) hint->text = "Select a stance";
+}
+
+void Combat::SelectConsumable(std::string consumableName)
+{
+	if (!turnAction || turnAction->action != TAKE_CONSUMABLE) return;
+	turnAction->consumableType = consumableName;
+	Engine::GetInstance().sceneManager->currentScene->ToggleInventoryForCombat();
+	ToggleActions(false);
 }
 
 void Combat::KillCombatant(std::shared_ptr<Character> character)

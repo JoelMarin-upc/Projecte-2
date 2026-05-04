@@ -7,7 +7,7 @@ float Stat::setValue(float v)
 	return value;
 }
 
-float Stat::getValue() const
+float Stat::getValue(float externalModifier) const
 {
-	return value * modifier;
+	return (value + externalModifier) * modifier;
 }

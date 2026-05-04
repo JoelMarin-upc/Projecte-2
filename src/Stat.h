@@ -12,5 +12,5 @@ public:
 	int modifierTurnsLeft;
 
 	float setValue(float v);
-	float getValue() const;
+	float getValue(float externalModifier = 0) const;
 };

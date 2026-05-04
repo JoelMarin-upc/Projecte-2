@@ -3,11 +3,14 @@
 float Character::Attack()
 {
     Stat& attack = stats->GetStat("attack");
-    return attack.getValue();
+    float weaponModifier = 0;
+    if (inventory->equippedWeapon) weaponModifier = inventory->equippedWeapon->stats->GetStat("attack").value;
+    return attack.getValue(weaponModifier);
 }
 
 std::shared_ptr<Consumable> Character::UseConsumable(std::string type)
 {
+    if (type == "") return nullptr;
     std::shared_ptr<Consumable> copy = nullptr;
     std::shared_ptr<InteractableItem> item = inventory->GetItem(type);
     if (std::shared_ptr<Consumable> c = std::dynamic_pointer_cast<Consumable>(item)) copy = std::make_shared<Consumable>(*c);
@@ -17,13 +20,14 @@ std::shared_ptr<Consumable> Character::UseConsumable(std::string type)
 
 void Character::TakeConsumable(std::shared_ptr<Consumable> consumable)
 {
+    if (!consumable) return;
     for (Stat stat : consumable->stats->stats) {
         if (stat.name == "health") stats->AddToStat(stat.name, stat.value);
         else stats->ApplyModifier(stat.name, stat.value, stat.modifierTurnsLeft);
     }
 }
 
-void Character::TakeStance(Stance stance)
+void Character::TakeStance(Stance stance, std::vector<std::shared_ptr<Character>> affectedCharacters)
 {
     switch (stance)
     {
@@ -37,7 +41,8 @@ void Character::TakeStance(Stance stance)
         stats->ApplyModifier("attack", 1.8f, 1);
         break;
     case ASSIST:
-        // *1.2 damage rest of the team
+        for (std::shared_ptr<Character> member : affectedCharacters) 
+            member->stats->ApplyModifier("attack", 1.2f, 1);
         break;
     case NO_STANCE:
         break;
@@ -50,8 +55,12 @@ void Character::TakeStance(Stance stance)
 bool Character::TakeDamage(float damage)
 {
     if (godMode) return false;
+    float gearModifier = 0;
+    if (inventory->equippedHelmet) gearModifier += inventory->equippedHelmet->stats->GetStat("defense").value;
+    if (inventory->equippedBody) gearModifier += inventory->equippedBody->stats->GetStat("defense").value;
+    if (inventory->equippedBoots) gearModifier += inventory->equippedBoots->stats->GetStat("defense").value;
     Stat& defense = stats->GetStat("defense");
-	damage -= defense.getValue();
+	damage -= defense.getValue(gearModifier);
     if (damage < 0) damage = 0;
     Stat& health = stats->GetStat("health");
     int hp = health.getValue() - damage;

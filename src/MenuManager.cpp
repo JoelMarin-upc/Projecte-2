@@ -547,3 +547,26 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop)
 		else weapon->SetImage(nullptr, nullptr, nullptr, nullptr);
 	}
 }
+
+void MenuManager::ShowCombatInventory(Inventory* inventory)
+{
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
+
+	previousMenu = currentMenu;
+	HideMenu();
+	currentMenu = COMBAT_INVENTORY;
+
+	std::vector<std::shared_ptr<InteractableItem>> consumables = std::vector<std::shared_ptr<InteractableItem>>();
+	for (auto& item : inventory->items)
+		if (std::dynamic_pointer_cast<Consumable>(item)) 
+			consumables.push_back(item);
+
+	for (int i = 0; i < inventorySlots.size(); i++) {
+		std::shared_ptr<UISlot> slot = inventorySlots[i];
+		slot->active = true;
+		slot->SetItem(nullptr);
+		if (i >= consumables.size()) continue;
+		std::shared_ptr<InteractableItem> consumable = consumables[i];
+		slot->SetItem(consumable, consumable->count);
+	}
+}

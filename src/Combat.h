@@ -48,7 +48,7 @@ struct TurnAction {
 		switch (this->action) {
 		case ATTACK:
 			action = "Attack";
-			action += " (" + std::to_string((int)selected->stats->GetStat("attack").getValue()) + ")";
+			action += " (" + std::to_string((int)selected->Attack()) + ")";
 			break;
 		case TAKE_STANCE:
 			action = "Take Stance";
@@ -115,6 +115,7 @@ public:
 
 	void ToggleActions(bool show);
 	void ToggleStances(bool show);
+	void SelectConsumable(std::string consumableName);
 
 	void KillCombatant(std::shared_ptr<Character> character);
 	void CombatantFlees(std::shared_ptr<Character> character);
@@ -177,7 +178,7 @@ public:
 	bool actionTaken3 = false;
 	bool actionTaken4 = false;
 
-	bool isPlayerTurn;
+	bool isPlayerTurn = false;
 	
 	const int enemyTurnMS = 4000;
 	bool enemyTurnTimerActive = false;

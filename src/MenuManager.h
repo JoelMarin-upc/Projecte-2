@@ -12,6 +12,7 @@ enum MenuType {
 	CREDITS,
 	INVENTORY,
 	SHOP,
+	COMBAT_INVENTORY,
 	DEATHSCREEN,
 	NONE
 };
@@ -113,6 +114,7 @@ public:
 	void HideMenu();
 	void ShowPreviousMenu();
 	void RedrawInventory();
+	void ShowCombatInventory(Inventory* inventory);
 
 private:
 	void ShowInventory(Inventory* inventory, bool isShop);

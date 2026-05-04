@@ -672,6 +672,13 @@ void Scene::ToggleInventory()
 	}
 }
 
+void Scene::ToggleInventoryForCombat()
+{
+	showingInventoryForCombat = !showingInventoryForCombat;
+	if (showingInventoryForCombat) Engine::GetInstance().menuManager->ShowCombatInventory(player->inventory);
+	else Engine::GetInstance().menuManager->HideMenu();
+}
+
 void Scene::ToggleShop(NPC* shopOwner)
 {
 	showingInventory = shopOwner;
@@ -877,6 +884,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	}
 	delete combat;
 	combat = nullptr;
+	UpdateInventory();
 	Engine::GetInstance().render->follow = player;
 }
 
@@ -949,13 +957,18 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	std::shared_ptr<Weapon> w;
 	std::shared_ptr<Consumable> c;
 	if ((Engine::GetInstance().menuManager->currentMenu == SHOP || 
-		 Engine::GetInstance().menuManager->currentMenu == INVENTORY) &&
+		 Engine::GetInstance().menuManager->currentMenu == INVENTORY ||
+		 Engine::GetInstance().menuManager->currentMenu == COMBAT_INVENTORY) &&
 		uiElement->id >= Engine::GetInstance().menuManager->baseSlotsId) 
 	{
-		selectedItemIsFromShop = false;
-		if (uiElement->id >= Engine::GetInstance().menuManager->baseShopSlotsId) selectedItemIsFromShop = true;
 		UISlot* slot = (UISlot*)uiElement;
 		selectedItem = slot->item;
+		if (showingInventoryForCombat && combat) {
+			if (c = std::dynamic_pointer_cast<Consumable>(selectedItem)) combat->SelectConsumable(c->name);
+			return true;
+		}
+		selectedItemIsFromShop = false;
+		if (uiElement->id >= Engine::GetInstance().menuManager->baseShopSlotsId) selectedItemIsFromShop = true;
 		Engine::GetInstance().menuManager->selectedItem->SetItem(selectedItem, slot->amount, true, !selectedItemIsFromShop);
 		Engine::GetInstance().menuManager->amount->SetMinMax(1, slot->amount, 1);
 		const char* text = "Use";
@@ -1048,18 +1061,17 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		if (!selectedItem || selectedItemIsFromShop) return true;
 		if (w = std::dynamic_pointer_cast<Weapon>(selectedItem)) {
 			player->inventory->UnequipWeapon();
-			if (!isUnequipping) player->inventory->EquipWeapon(selectedItem->name);
+			if (!isUnequipping) player->inventory->EquipWeapon(w->name);
 		}
 		else if (g = std::dynamic_pointer_cast<Gear>(selectedItem)) {
 			player->inventory->UnequipGear(g->gearSlot);
-			if (!isUnequipping) player->inventory->EquipGear(selectedItem->name);
+			if (!isUnequipping) player->inventory->EquipGear(g->name);
 		}
 		else if (c = std::dynamic_pointer_cast<Consumable>(selectedItem)) {
 			amount = Engine::GetInstance().menuManager->amount->GetValue();
 			for (int i = 0; i < amount; i++)
 			{
-				// make consumable action
-				player->inventory->RemoveItem(selectedItem->name);
+				player->TakeConsumable(player->UseConsumable(c->name));
 			}
 		}
 		else {

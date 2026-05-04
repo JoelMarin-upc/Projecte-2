@@ -68,6 +68,7 @@ public:
 	void EndGame();
 	void CheckTimers();
 	void ToggleInventory();
+	void ToggleInventoryForCombat();
 	void ToggleShop(NPC* shopOwner);
 	void UpdateInventory(NPC* shopOwner = nullptr) const;
 
@@ -146,6 +147,7 @@ private:
 	int elevatorFxId;
 
 	bool showingInventory = false;
+	bool showingInventoryForCombat = false;
 	bool showingShop = false;
 
 	std::shared_ptr<InteractableItem> selectedItem = nullptr;

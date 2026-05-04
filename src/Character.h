@@ -3,6 +3,8 @@
 #include "DynamicEntity.h"
 #include "Consumable.h"
 #include "Inventory.h"
+#include "Party.h"
+#include "EnemyParty.h"
 
 enum Stance {
 	REST,
@@ -20,7 +22,7 @@ public:
 	float Attack();
 	std::shared_ptr<Consumable> UseConsumable(std::string type);
 	void TakeConsumable(std::shared_ptr<Consumable> consumable);
-	void TakeStance(Stance stance);
+	void TakeStance(Stance stance, std::vector<std::shared_ptr<Character>> affectedCharacters = std::vector<std::shared_ptr<Character>>());
 	bool TakeDamage(float damage);
 	void CheckModifiers();
 	void DrawHealthBar(SDL_Texture* texture);
