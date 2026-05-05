@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Mission.h"
-#include "Entity.h"
 #include <list>
-#include <memory>
+#include <vector>
 
 class MissionManager
 {
@@ -27,11 +26,28 @@ public:
 	bool CleanUp();
 
 	// Additional methods
-	std::shared_ptr<Entity> CreateMission(Mission* mission);
+	void LoadMissions();
+	void SaveMissions();
+	Mission* AddMission(std::string missionId, std::string targetId, std::string targetName, MissionReward reward = MissionReward(), std::vector<std::string> unlocksMissions = std::vector<std::string>());
+	MissionReward CompleteMission(std::string missionId);
+	std::vector<Mission*> GetActiveMissions();
+
+	template<typename T>
+	inline std::vector<T*> GetMissions(bool onlyActive)
+	{
+		std::vector<T*> result;
+
+		for (const auto& m : missions) {
+			if (onlyActive && !m->active) continue;
+			if (T* casted = static_cast<T*>(m)) result.push_back(casted);
+		}
+
+		return result;
+	}
 
 public:
 
-	std::list<std::shared_ptr<Mission>> missions;
+	std::list<Mission*> missions;
 	bool paused = false;
 
 };

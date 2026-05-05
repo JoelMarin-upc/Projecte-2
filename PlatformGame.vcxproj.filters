@@ -302,6 +302,9 @@
     <ClCompile Include="src\UISlot.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\BringMission.cpp">
+      <Filter>Source Files\Scene\Missions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio.h">
@@ -516,6 +519,9 @@
     </ClInclude>
     <ClInclude Include="src\UISlot.h">
       <Filter>Source Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BringMission.h">
+      <Filter>Source Files\Scene\Missions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

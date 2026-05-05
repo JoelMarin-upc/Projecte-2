@@ -13,6 +13,7 @@ enum MenuType {
 	INVENTORY,
 	SHOP,
 	COMBAT_INVENTORY,
+	MISSION_JOURNAL,
 	DEATHSCREEN,
 	NONE
 };
@@ -76,6 +77,8 @@ enum UIID {
 	EXIT_SHOP
 };
 
+const float POP_UP_MILLISECONDS = 5000.f;
+
 class MenuManager : public Module
 {
 public:
@@ -111,6 +114,8 @@ public:
 	void ShowInventory(Inventory* inventory);
 	void ShowShop(Inventory* customer, Inventory* shop);
 	void ShowDeathScreen();
+	void ShowMissionPopup(Mission* mission, float popUpMiliseconds = POP_UP_MILLISECONDS);
+	void ShowMissionJournal(MissionManager* missions);
 	void HideMenu();
 	void ShowPreviousMenu();
 	void RedrawInventory();

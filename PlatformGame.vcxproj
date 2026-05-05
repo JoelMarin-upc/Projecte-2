@@ -162,6 +162,7 @@
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\BreakableObstacle.cpp" />
+    <ClCompile Include="src\BringMission.cpp" />
     <ClCompile Include="src\Building.cpp" />
     <ClCompile Include="src\Character.cpp" />
     <ClCompile Include="src\CollectMission.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Audio.h" />
     <ClInclude Include="src\BreakableObstacle.h" />
+    <ClInclude Include="src\BringMission.h" />
     <ClInclude Include="src\Building.h" />
     <ClInclude Include="src\Character.h" />
     <ClInclude Include="src\CollectMission.h" />

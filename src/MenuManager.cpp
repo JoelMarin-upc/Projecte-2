@@ -413,6 +413,24 @@ void MenuManager::ShowDeathScreen()
 	exit->active = true;
 }
 
+void MenuManager::ShowMissionPopup(Mission* mission, float popUpMiliseconds)
+{
+	// for popUpMiliseconds (time)
+	// if completed show reward
+	// else show pending mission
+}
+
+void MenuManager::ShowMissionJournal(MissionManager* missions)
+{
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
+
+	previousMenu = currentMenu;
+	HideMenu();
+	currentMenu = MISSION_JOURNAL;
+
+	// show active missions
+}
+
 void MenuManager::HideMenu()
 {
 	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
