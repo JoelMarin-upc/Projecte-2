@@ -83,11 +83,13 @@ void Character::CheckModifiers()
     }
 }
 
-void Character::DrawHealthBar(SDL_Texture* texture)
+void Character::DrawHealthBar(const SDL_Rect& rect)
 {
-    int healthW = texture->w * stats->GetStat("health").getValue() / stats->GetStat("health").maxValue;
-    int x = position.getX() - texture->w / 2;
-    int y = position.getY() - texture->h / 2;
-    Engine::GetInstance().render->DrawRectangle({ x, y - 15, texture->w, 10 }, 255, 0, 0);
+    int healthW = rect.w * stats->GetStat("health").getValue() / stats->GetStat("health").maxValue;
+    int x = position.getX() - rect.w / 2;
+    int y = position.getY() - rect.h / 2;
+    Engine::GetInstance().render->DrawRectangle({ x, y - 15, rect.w, 10 }, 255, 0, 0);
     Engine::GetInstance().render->DrawRectangle({ x, y - 15, healthW, 10 }, 0, 255, 0);
 }
+
+void Character::DrawHealthBar(SDL_Texture* texture) { DrawHealthBar({0, 0, texture->w, texture->h }); }

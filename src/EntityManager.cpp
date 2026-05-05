@@ -72,15 +72,17 @@ std::shared_ptr<Entity> EntityManager::CreateEntity(std::string id, std::string 
 	//L04: TODO 3a: Instantiate entity according to the type and add the new entity to the list of Entities
 	switch (type)
 	{
+	/*
 	case EntityType::PLAYER:
 		entity = std::make_shared<Player>(id, name, texturePath);
 		break;
 	case EntityType::NPC:
 		entity = std::make_shared<NPC>(id, name, texturePath, npcInteractionType);
 		break;
-	/*case EntityType::INTERACTABLE_ITEM:
+	case EntityType::INTERACTABLE_ITEM:
 		entity = std::make_shared<InteractableItem>(id, name, texturePath, interactionType);
-		break;*/
+		break;
+	*/
 	default:
 		break;
 	}
@@ -120,7 +122,7 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 	return entity;
 }
 
-std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::string name, std::string texturePath, Vector2D position, EntityType type, NPCInteractionType npcInteractionType)
+std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, Vector2D position, EntityType type, NPCInteractionType npcInteractionType)
 {
 	std::shared_ptr<Entity> entity = std::make_shared<Entity>();
 
@@ -128,13 +130,13 @@ std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::stri
 	switch (type)
 	{
 	case EntityType::PLAYER:
-		entity = std::make_shared<Player>(id, name, texturePath);
+		entity = std::make_shared<Player>(id, name, texturePath, combatTexturePath);
 		break;
 	case EntityType::NPC:
-		entity = std::make_shared<NPC>(id, name, texturePath, npcInteractionType);
+		entity = std::make_shared<NPC>(id, name, texturePath, combatTexturePath, npcInteractionType);
 		break;
 	case EntityType::ENEMY:
-		entity = std::make_shared<Enemy>(id, name, texturePath);
+		entity = std::make_shared<Enemy>(id, name, texturePath, combatTexturePath);
 		break;
 	default:
 		break;

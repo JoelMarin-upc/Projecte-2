@@ -452,6 +452,7 @@ void Scene::LoadScene(std::string spawnId)
 	std::string id = pNode.attribute("id").as_string();
 	std::string name = pNode.attribute("name").as_string();
 	std::string texture = pNode.attribute("texture").as_string();
+	std::string combatTexture = pNode.attribute("combatTexture").as_string();
 
 	//Loads the spawnpoint
 	Vector2D spawnPos(0, 0);
@@ -483,7 +484,7 @@ void Scene::LoadScene(std::string spawnId)
 		partyMembers.push_back(member);
 	}
 
-	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
 	std::string animations = pNode.attribute("animations").as_string();
 	player->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
 	player->LoadAnimations();
@@ -524,9 +525,10 @@ void Scene::LoadScene(std::string spawnId)
 			if (cNode.attribute("isDead").as_bool(false)) break;
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
+			std::string combatTexture = cNode.attribute("combatTexture").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
-			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
+			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
 			std::string animations = cNode.attribute("animations").as_string();
@@ -543,6 +545,7 @@ void Scene::LoadScene(std::string spawnId)
 			if (cNode.attribute("isDead").as_bool(false)) break;
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
+			std::string combatTexture = cNode.attribute("combatTexture").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 
@@ -553,7 +556,7 @@ void Scene::LoadScene(std::string spawnId)
 			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
 			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 
-			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType));
+			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType));
 
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);

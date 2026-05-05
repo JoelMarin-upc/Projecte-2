@@ -108,7 +108,7 @@ bool Combat::Start() {
 
 	if (playerParty->player)
 	{
-		SDL_Texture* tex = playerParty->player->texture;
+		SDL_Texture* tex = playerParty->player->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 0) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -122,7 +122,7 @@ bool Combat::Start() {
 
 	if (playerParty->members.size() > 0)
 	{
-		SDL_Texture* tex = playerParty->members[0]->texture;
+		SDL_Texture* tex = playerParty->members[0]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 1) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -136,7 +136,7 @@ bool Combat::Start() {
 
 	if (playerParty->members.size() > 1)
 	{
-		SDL_Texture* tex = playerParty->members[1]->texture;
+		SDL_Texture* tex = playerParty->members[1]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 2) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -150,7 +150,7 @@ bool Combat::Start() {
 
 	if (playerParty->members.size() > 2)
 	{
-		SDL_Texture* tex = playerParty->members[2]->texture;
+		SDL_Texture* tex = playerParty->members[2]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 3) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -166,7 +166,7 @@ bool Combat::Start() {
 
 	if (enemyParty->members.size() > 0)
 	{
-		SDL_Texture* tex = enemyParty->members[0]->texture;
+		SDL_Texture* tex = enemyParty->members[0]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (cPos.isEnemy && cPos.order == 0) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -180,7 +180,7 @@ bool Combat::Start() {
 
 	if (enemyParty->members.size() > 1)
 	{
-		SDL_Texture* tex = enemyParty->members[1]->texture;
+		SDL_Texture* tex = enemyParty->members[1]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (cPos.isEnemy && cPos.order == 1) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -194,7 +194,7 @@ bool Combat::Start() {
 
 	if (enemyParty->members.size() > 2)
 	{
-		SDL_Texture* tex = enemyParty->members[2]->texture;
+		SDL_Texture* tex = enemyParty->members[2]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (cPos.isEnemy && cPos.order == 2) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -208,7 +208,7 @@ bool Combat::Start() {
 
 	if (enemyParty->members.size() > 3)
 	{
-		SDL_Texture* tex = enemyParty->members[3]->texture;
+		SDL_Texture* tex = enemyParty->members[3]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (cPos.isEnemy && cPos.order == 3) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -616,41 +616,55 @@ void Combat::CreateRandomAction(std::shared_ptr<Enemy> enemy)
 {
 	turnAction = new TurnAction();
 	turnAction->selected = enemy;
-	//int action = random_int(1, 3); <-- when consumables are implemeted, 4 if flee is possible
-	int action = random_int(1, 2);
+	
+	std::vector<std::string> consumables = std::vector<std::string>();
+	for (auto& item : enemy->inventory->items) {
+		if (std::shared_ptr<Consumable> c = std::dynamic_pointer_cast<Consumable>(item)) {
+			consumables.push_back(c->name);
+		}
+	}
+
+	int action = 0;
+	if (consumables.size() > 0) action = random_int(1, 3);
+	else action = random_int(1, 2);
+
 	if (action == 1) {
 		turnAction->action = Action::ATTACK;
-		int activeCharacters = 1;
-		for (std::shared_ptr<NPC> c : playerParty->members) if (!c->isDead && !c->hasFled) activeCharacters++;
-		int target = random_int(1, activeCharacters);
-		if (target == 1) turnAction->target = player;
-		else if (target == 2) turnAction->target = npc1;
-		else if (target == 3) turnAction->target = npc2;
-		else if (target == 4) turnAction->target = npc3;
+		int activeCharactersNum = 1;
+		std::vector<std::shared_ptr<Character>> activeCharacters = std::vector<std::shared_ptr<Character>>();
+		activeCharacters.push_back(player);
+		for (std::shared_ptr<NPC> c : playerParty->members)	{
+			if (!c->isDead && !c->hasFled) {
+				activeCharactersNum++;
+				activeCharacters.push_back(c);
+			}
+		}
+		int target = random_int(1, activeCharactersNum) - 1;
+		turnAction->target = activeCharacters[target];
 	}
 	else if (action == 2) {
 		turnAction->action = Action::TAKE_STANCE;
-		int stance = random_int(1, 4);
-		if (stance == 1) turnAction->stance = Stance::ASSIST;
-		else if (stance == 2) turnAction->stance = Stance::CONCENTRATE;
-		else if (stance == 3) turnAction->stance = Stance::DEFEND;
-		else if (stance == 4) turnAction->stance = Stance::REST;
+		int stance = random_int(1, 4) - 1;
+		turnAction->stance = (Stance)stance;
 	}
-	//else if (action == 3) {                       <-- when consumables are implemeted
-	// turnAction->action = Action::TAKE_CONSUMABLE;
-	//}
+	else if (action == 3) {
+		turnAction->action = Action::TAKE_CONSUMABLE;
+		int selectedConsumable = random_int(1, consumables.size()) - 1;
+		turnAction->consumableType = consumables[selectedConsumable];
+		turnAction->target = enemy;
+	}
 
 	AddTurnAction();
 }
 
 void Combat::DrawHealthBars() const
 {
-	if (player && !player->isDead) player->DrawHealthBar(player->texture);
-	if (npc1 && !npc1->isDead) npc1->DrawHealthBar(npc1->texture);
-	if (npc2 && !npc2->isDead) npc2->DrawHealthBar(npc2->texture);
-	if (npc3 && !npc3->isDead) npc3->DrawHealthBar(npc3->texture);
-	if (enemy1 && !enemy1->isDead) enemy1->DrawHealthBar(enemy1->texture);
-	if (enemy2 && !enemy2->isDead) enemy2->DrawHealthBar(enemy2->texture);
-	if (enemy3 && !enemy3->isDead) enemy3->DrawHealthBar(enemy3->texture);
-	if (enemy4 && !enemy4->isDead) enemy4->DrawHealthBar(enemy4->texture);
+	if (player && !player->isDead) player->DrawHealthBar(player->combatTexture);
+	if (npc1 && !npc1->isDead) npc1->DrawHealthBar(npc1->combatTexture);
+	if (npc2 && !npc2->isDead) npc2->DrawHealthBar(npc2->combatTexture);
+	if (npc3 && !npc3->isDead) npc3->DrawHealthBar(npc3->combatTexture);
+	if (enemy1 && !enemy1->isDead) enemy1->DrawHealthBar(enemy1->combatTexture);
+	if (enemy2 && !enemy2->isDead) enemy2->DrawHealthBar(enemy2->combatTexture);
+	if (enemy3 && !enemy3->isDead) enemy3->DrawHealthBar(enemy3->combatTexture);
+	if (enemy4 && !enemy4->isDead) enemy4->DrawHealthBar(enemy4->combatTexture);
 }

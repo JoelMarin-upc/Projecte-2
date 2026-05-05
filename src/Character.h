@@ -17,7 +17,7 @@ enum Stance {
 class Character : public DynamicEntity {
 public:
 	Character() {}
-	Character(std::string id, std::string name, std::string texturePath, EntityType type) : DynamicEntity(id, name, texturePath, type) {}
+	Character(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, EntityType type) : DynamicEntity(id, name, texturePath, combatTexturePath, type) {}
 
 	float Attack();
 	std::shared_ptr<Consumable> UseConsumable(std::string type);
@@ -25,10 +25,12 @@ public:
 	void TakeStance(Stance stance, std::vector<std::shared_ptr<Character>> affectedCharacters = std::vector<std::shared_ptr<Character>>());
 	bool TakeDamage(float damage);
 	void CheckModifiers();
+	void DrawHealthBar(const SDL_Rect& rect);
 	void DrawHealthBar(SDL_Texture* texture);
 
 	Stats* stats = nullptr;
 	Inventory* inventory = nullptr;
+	SDL_Texture* combatTexture = nullptr;
 	bool isDead = false;
 	bool hasFled = false;
 };

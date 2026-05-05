@@ -17,7 +17,7 @@ enum class NPCInteractionType {
 class NPC : public AICharacter {
 public:
 	NPC(){}
-	NPC(std::string id, std::string name, std::string texturePath, NPCInteractionType type = NPCInteractionType::DEFAULT) : AICharacter(id, name, texturePath, EntityType::NPC) {
+	NPC(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, NPCInteractionType type = NPCInteractionType::DEFAULT) : AICharacter(id, name, texturePath, combatTexturePath, EntityType::NPC) {
 		npcInteractionType = type;
 	}
 	virtual ~NPC();

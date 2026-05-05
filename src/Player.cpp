@@ -12,7 +12,7 @@
 #include "SceneManager.h"
 #include <memory>
 
-Player::Player(std::string id, std::string name, std::string texturePath) : Character(id, name, texturePath, EntityType::PLAYER)
+Player::Player(std::string id, std::string name, std::string texturePath, std::string combatTexturePath) : Character(id, name, texturePath, combatTexturePath, EntityType::PLAYER)
 {
 }
 
@@ -40,6 +40,8 @@ bool Player::Start() {
 	texH = 64;
 
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
+	if (combatTexturePath != "") combatTexture = Engine::GetInstance().textures->Load(combatTexturePath.c_str());
+
 	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -110, 0, 1, 1);
 
 	colliders[0]->etype = EntityType::PLAYER;
@@ -206,6 +208,7 @@ void Player::Draw(float dt) {
 		anims.Update(dt);
 		const SDL_Rect& animFrame = anims.GetCurrentFrame();
 		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2, 1, &animFrame, isFacingRight);
+		DrawHealthBar(animFrame);
 	}
 
 	/*if (!isActive) return;
@@ -216,8 +219,6 @@ void Player::Draw(float dt) {
 	}
 	else if (hasItem1 && canThrow1) tex = itemChargeTexture1;
 	Engine::GetInstance().render->DrawTexture(tex, x - 8, y -8);*/
-
-	DrawHealthBar(tex);
 }
 
 void Player::LoadAnimations()
