@@ -94,7 +94,7 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_resume = { centerX - 125, centerY + 80, 250, 35 };
 
 	//Other elements
-	SDL_Rect b_gameOver_lbl = { centerX - 150, centerY, 300, 60 };
+	SDL_Rect b_gameOver_lbl = { centerX - 90, centerY - 100, 300, 60 };
 	
 	if (onlyPositions) {
 		gameTitle->SetBounds(b_gameTitle);

@@ -51,36 +51,53 @@ struct TurnAction {
 			action += " (" + std::to_string((int)selected->Attack()) + ")";
 			break;
 		case TAKE_STANCE:
-			action = "Take Stance";
+			switch (stance) {
+			case ASSIST:
+				action = "Assist";
+				break;
+			case CONCENTRATE:
+				action = "Concentrate";
+				break;
+			case DEFEND:
+				action = "Defend";
+				break;
+			case REST:
+				action = "Rest";
+				break;
+			default:
+				action = "Take Stance";
+				break;
+			}
+
+			switch (stance)
+			{
+			case REST:
+				action += " (15 percent chance of extra turn)";
+				break;
+			case DEFEND:
+				action += " (defense x2)";
+				break;
+			case CONCENTRATE:
+				action += " (attack x1.8)";
+				break;
+			case ASSIST:
+				action += " (attack x1.2 rest of the party)";
+				break;
+			case NO_STANCE:
+				break;
+			default:
+				break;
+			}
 			break;
 		case TAKE_CONSUMABLE:
 			action = "Take Consumable";
+			if (consumableType != "") action += " (" + consumableType + ")";
 			break;
 		case FLEE:
 			action = "Flee";
 			break;
 		}
 		std::string s = selected->name + " -> " + action;
-		if (stance != NO_STANCE)
-		{
-			std::string stance;
-			switch (this->stance) {
-			case ASSIST:
-				stance = "Assist";
-				break;
-			case CONCENTRATE:
-				stance = "Concentrate";
-				break;
-			case DEFEND:
-				stance = "Defend";
-				break;
-			case REST:
-				stance = "Rest";
-				break;
-			}
-			s += "(" + stance + ")";
-		}
-		if (consumableType != "") s += "(" + consumableType + ")";
 		if (target) s += " -> " + target->name;
 		return s;
 	}
@@ -187,5 +204,8 @@ public:
 	TurnAction* turnAction = nullptr;
 
 	std::vector<TurnAction*> turnActions;
+
+	int chanceForSecondTurn = 0;
+	int unitOfChanceForSecondTurn = 15;
 	
 };

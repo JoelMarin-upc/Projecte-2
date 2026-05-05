@@ -649,6 +649,8 @@ void Scene::EndScene()
 
 void Scene::EndGame()
 {
+	gameStarted = false;
+	entityManager->DestroyEntity(player);
 	Engine::GetInstance().menuManager->ShowDeathScreen();
 }
 

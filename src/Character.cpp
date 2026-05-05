@@ -32,7 +32,7 @@ void Character::TakeStance(Stance stance, std::vector<std::shared_ptr<Character>
     switch (stance)
     {
     case REST:
-        // +1 action next turn
+        // +15% chance to get another turn (handled on Combat.cpp)
         break;
     case DEFEND:
         stats->ApplyModifier("defense", 2.f, 1);

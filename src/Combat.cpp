@@ -68,10 +68,10 @@ bool Combat::Start() {
 	SDL_Rect b_action3 = { sw / 2 - 145, sh - 100, 150, 40 };
 	SDL_Rect b_action4 = { sw / 2 + 45, sh - 100, 150, 40 };
 	SDL_Rect b_endTurn = { sw - 165, sh - 100, 150, 40 };
-	SDL_Rect b_log1 = { sw / 2, 20, 300, 20 };
-	SDL_Rect b_log2 = { sw / 2, 60, 300, 20 };
-	SDL_Rect b_log3 = { sw / 2, 100, 300, 20 };
-	SDL_Rect b_log4 = { sw / 2, 140, 300, 20 };
+	SDL_Rect b_log1 = { sw / 2 - 100, 20, 300, 20 };
+	SDL_Rect b_log2 = { sw / 2 - 100, 60, 300, 20 };
+	SDL_Rect b_log3 = { sw / 2 - 100, 100, 300, 20 };
+	SDL_Rect b_log4 = { sw / 2 - 100, 140, 300, 20 };
 	SDL_Rect b_hint = { 20, 20, 300, 20 };
 	
 	action1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::ACTION1, b_action1, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Attack")));
@@ -299,6 +299,7 @@ bool Combat::Update(float dt) {
 						if (member->id != action->selected->id) 
 							members.push_back(member);
 				}
+				if (action->stance == REST) chanceForSecondTurn += unitOfChanceForSecondTurn;
 				action->selected->TakeStance(action->stance, members);
 				break;
 			case TAKE_CONSUMABLE:
@@ -312,6 +313,8 @@ bool Combat::Update(float dt) {
 			}
 		}
 		isPlayerTurn = !isPlayerTurn;
+		if (random_int(1, 100) < chanceForSecondTurn) isPlayerTurn = !isPlayerTurn;
+		chanceForSecondTurn = 0;
 		combatPhase = isPlayerTurn ? DECISION : ENEMY_TURN;
 		endTurn->active = isPlayerTurn;
 		turnActions.clear();
