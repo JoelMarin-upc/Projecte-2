@@ -434,4 +434,12 @@
 			</answer>
 		</node>
 	</tree>
+	<tree id="DT-097" characterId="CH-011" characterName="Shopkeeper" order="1" done="false" isRepeatable="true">
+		<node id="DN-001" first="true">
+			Hello, welcome to my shop.
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
 </dialogs>

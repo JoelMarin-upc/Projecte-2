@@ -432,6 +432,8 @@ void Scene::LoadMap(std::string mapPath, std::string mapName)
 
 void Scene::LoadScene(std::string spawnId)
 {
+	LoadItemDefinitions();
+
 	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
 	//pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
 	pugi::xml_node characters = charactersDoc.child("characters");
@@ -573,15 +575,8 @@ void Scene::LoadScene(std::string spawnId)
 		for (pugi::xml_node iNode = items.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
 			if (iNode.attribute("id").as_string() != item.id) continue;
 			std::string name = iNode.attribute("name").as_string();
-			std::string description = iNode.attribute("description").as_string();
-			std::string texture = iNode.attribute("texture").as_string();
-			int type = iNode.attribute("type").as_int();
-			int interactionType = iNode.attribute("interactionType").as_int();
-			bool canStack = iNode.attribute("canStack").as_bool();
-			std::string itemClass = iNode.attribute("itemClass").as_string("item");
-			std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
-			std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(item.id, name, description, baseTexturePath + texture, item.position, itemClass, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath));
-			LoadItemDefinition(newItem);
+			ItemDef* def = GetItemDefinition(item.id, name);
+			std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath));
 		}
 	}
 }
@@ -608,16 +603,9 @@ Inventory* Scene::LoadInventory(pugi::xml_node characterNode)
 	for (pugi::xml_node iNode = inventoryNode.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
 		std::string id = iNode.attribute("id").as_string();
 		std::string name = iNode.attribute("name").as_string();
-		std::string description = iNode.attribute("description").as_string();
-		std::string texture = iNode.attribute("texture").as_string();
-		int type = iNode.attribute("type").as_int();
-		int interactionType = iNode.attribute("interactionType").as_int();
-		bool canStack = iNode.attribute("canStack").as_bool();
-		std::string itemClass = iNode.attribute("itemClass").as_string("item");
-		std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
-		int slot = iNode.attribute("slot").as_int();
-		std::shared_ptr<InteractableItem> item = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(id, name, description, baseTexturePath + texture, { -999999, -999999 }, itemClass, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath, (GearSlot)slot));
-		LoadItemDefinition(item);
+		ItemDef* def = GetItemDefinition(id, name);
+		
+		std::shared_ptr<InteractableItem> item = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, { -999999, -999999 }, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
 		inventory->AddItem(item);
 	}
 	std::string equippedWeapon = inventoryNode.attribute("equippedWeapon").as_string();
@@ -632,17 +620,40 @@ Inventory* Scene::LoadInventory(pugi::xml_node characterNode)
 	return inventory;
 }
 
-void Scene::LoadItemDefinition(std::shared_ptr<InteractableItem> item)
+void Scene::LoadItemDefinitions()
 {
+	itemDefs = std::unordered_map<std::string, ItemDef*>();
 	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/items_def.xml");
 	for (pugi::xml_node iNode = doc.child("items").child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
-		if (iNode.attribute("itemName").as_string() == item->name)
-		{
-			item->price = iNode.attribute("gold").as_int();
-			item->stats = LoadStats(iNode);
-			return;
-		}
+		ItemDef* def = new ItemDef();
+		def->id = iNode.attribute("id").as_string();
+		def->name = iNode.attribute("name").as_string();
+		def->description = iNode.attribute("description").as_string();
+		def->texturePath = iNode.attribute("texture").as_string();
+		def->type = (EntityType)iNode.attribute("type").as_int();
+		def->interactionType = (ItemInteractionType)iNode.attribute("interactionType").as_int();
+		def->canStack = iNode.attribute("canStack").as_bool();
+		def->itemClass = iNode.attribute("itemClass").as_string("item");
+		def->toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
+		def->slot = iNode.attribute("slot").as_int();
+		def->gold = iNode.attribute("gold").as_int();
+		def->stats = LoadStats(iNode);
+
+		std::string key = def->id;
+		if (key == "") key = def->name;
+		itemDefs.insert({ key, def });
 	}
+}
+
+ItemDef* Scene::GetItemDefinition(std::string id, std::string name)
+{
+	auto it = itemDefs.find(id);
+	if (it != itemDefs.end()) return it->second;
+
+	it = itemDefs.find(name);
+	if (it != itemDefs.end()) return it->second;
+
+	return nullptr;
 }
 
 void Scene::EndScene()
@@ -744,7 +755,7 @@ void Scene::UpdateInventory(NPC* shopOwner) const
 			pugi::xml_node iNode = invNode.append_child("item");
 			iNode.append_attribute("id").set_value(item->id.c_str());
 			iNode.append_attribute("name").set_value(item->name.c_str());
-			iNode.append_attribute("description").set_value(item->description.c_str());
+			/*iNode.append_attribute("description").set_value(item->description.c_str());
 			iNode.append_attribute("texture").set_value(ExtractFilename(item->texturePath).c_str());
 			iNode.append_attribute("type").set_value((int)item->type);
 			const char* itemClass = "item";
@@ -759,7 +770,7 @@ void Scene::UpdateInventory(NPC* shopOwner) const
 			iNode.append_attribute("itemClass").set_value(itemClass);
 			iNode.append_attribute("interactionType").set_value((int)item->itemInteractionType);
 			iNode.append_attribute("canStack").set_value(item->canStack);
-			if (slot != -1) iNode.append_attribute("slot").set_value(slot);
+			if (slot != -1) iNode.append_attribute("slot").set_value(slot);*/
 		}
 	}
 	if (inventory->equippedWeapon) invNode.append_attribute("equippedWeapon").set_value(inventory->equippedWeapon->name.c_str());

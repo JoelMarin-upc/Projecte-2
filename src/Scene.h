@@ -14,6 +14,7 @@
 #include "MenuManager.h"
 #include "Combat.h"
 #include "EnemyParty.h"
+#include <unordered_map>
 
 struct SDL_Texture;
 
@@ -63,7 +64,8 @@ public:
 	void LoadScene(std::string spawnId = "default");
 	Stats* LoadStats(pugi::xml_node characterNode);
 	Inventory* LoadInventory(pugi::xml_node characterNode);
-	void LoadItemDefinition(std::shared_ptr<InteractableItem> item);
+	void LoadItemDefinitions();
+	ItemDef* GetItemDefinition(std::string id, std::string name);
 	void EndScene();
 	void EndGame();
 	void CheckTimers();
@@ -156,4 +158,5 @@ private:
 
 	NPC* shopOwner = nullptr;
 
+	std::unordered_map<std::string, ItemDef*> itemDefs;
 };

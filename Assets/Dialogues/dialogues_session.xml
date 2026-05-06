@@ -1,5 +1,6 @@
+<?xml version="1.0"?>
 <dialogs>
-	<tree id="DT-001" characterId="player" characterName="Garnik" order="1" done="false">
+	<tree id="DT-001" characterId="player" characterName="Garnik" order="1" done="true">
 		<node id="DN-001" first="true">
 			I always end up wandering to this place…      
 			<answer leadsToNodeId="DN-002">
@@ -429,6 +430,14 @@
 	<tree id="DT-098" characterId="Lever" characterName="" order="1" done="false">
 		<node id="DN-001" first="true">
 			The lever has been pulled
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-097" characterId="CH-011" characterName="Shopkeeper" order="1" done="false" isRepeatable="true">
+		<node id="DN-001" first="true">
+			Hello, welcome to my shop.
 			<answer leadsToNodeId="">
 				Continue
 			</answer>

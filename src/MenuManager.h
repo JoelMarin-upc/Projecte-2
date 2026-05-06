@@ -3,6 +3,7 @@
 #include "Module.h"
 #include "Inventory.h"
 #include "UIManager.h"
+#include "MissionManager.h"
 #include <list>
 
 enum MenuType {
