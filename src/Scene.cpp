@@ -72,33 +72,40 @@ bool Scene::Start(std::string spawnId)
 	Engine::GetInstance().render->SetCursorTexture("Assets/Textures/cursor.png");
 	sw = Engine::GetInstance().window->width;
 	sh = Engine::GetInstance().window->height;
-	logo = Engine::GetInstance().textures->Load("Assets/Textures/TeamDayo_Logo.png");
-	b_logo = { sw/2 - logo->w/2, sh/2 - logo->h/2, 0, 0 };
+	/*logo = Engine::GetInstance().textures->Load("Assets/Textures/TeamDayo_Logo.png");
+	b_logo = { sw/2 - logo->w/2, sh/2 - logo->h/2, 0, 0 };*/
 	hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
 	clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
 	//logoFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("logo").as_string());
 	logoFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/logo.wav");
 	elevatorFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/elevator.wav");
-	studioLogoTexture = Engine::GetInstance().textures->Load("Assets/Textures/Team_Logo_SpriteSheet.png");
+	//studioLogoTexture = Engine::GetInstance().textures->Load("Assets/Textures/Team_Logo_SpriteSheet.png");
+	//gameTitleTexture = Engine::GetInstance().textures->Load("Assets/Textures/Title_Logo_SpriteSheet.png");
 
 
 	Engine::GetInstance().menuManager->SetObserver(this);
 
 	if (id == "intro")
 	{
-		studioLogoTimer.Start();
 		Engine::GetInstance().menuManager->HideMenu();
-		std::unordered_map<int, std::string> aliases = {{0, "ease_in"}};
-		studioLogoAnims.LoadFromTSX("Assets/Textures/Team_Logo_SpriteSheet.tsx", aliases);
-		studioLogoAnims.SetCurrent("ease_in");
+		//std::unordered_map<int, std::string> aliases = {{0, "ease_in"}};
+		//studioLogoAnims.LoadFromTSX("Assets/Textures/Team_Logo_SpriteSheet.tsx", aliases);
+		//studioLogoAnims.PlayOnce("ease_in");
 
 		/*studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));
 		studioLogo->active = true;*/
-		Engine::GetInstance().audio->PlayFx(logoFxId);
+		//Engine::GetInstance().audio->PlayFx(logoFxId);
 	}
 
 	if (id == "main menu")
 	{
+		/*std::unordered_map<int, std::string> aliases = {{0, "ease_in"}, {7, "ease_out"}};
+		gameTitleAnims.LoadFromTSX("Assets/Textures/Title_Logo_SpriteSheet.tsx", aliases);
+		gameTitleAnims.SetCurrent("ease_in");
+		titleEaseInDone = false;
+		titleEaseOutPlaying = false;
+		titleEaseOutDone = false;*/
+
 		Engine::GetInstance().menuManager->ShowMainMenu();
 		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav", 5000.0f);
 	}
@@ -150,16 +157,22 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	if (id == "intro") {
-		studioLogoAnims.Update(dt);
-		const SDL_Rect& animFrame = studioLogoAnims.GetCurrentFrame();
-		Engine::GetInstance().render->DrawTexture(studioLogoTexture, Engine::GetInstance().window->width - 1600, Engine::GetInstance().window->height - 1080, 1, &animFrame);
+		//studioLogoAnims.Update(dt);
+		//const SDL_Rect& animFrame = studioLogoAnims.GetCurrentFrame();
+		//Engine::GetInstance().render->DrawTexture(studioLogoTexture, Engine::GetInstance().window->width - 1600, Engine::GetInstance().window->height - 1080, 1, &animFrame);
 
-		if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN || studioLogoTimer.ReadMSec() >= 2410) {
-			/*studioLogo->active = false;
-			studioLogo->Destroy();*/
-			Engine::GetInstance().audio->StopFx();
-			Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
-		}
+		//if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN || studioLogoTimer.ReadMSec() >= 2410) {
+		//	/*studioLogo->active = false;
+		//	studioLogo->Destroy();*/
+		//	Engine::GetInstance().audio->StopFx();
+		//	Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		//}
+		UpdateIntroScreen(dt);
+	}
+	if (id == "main menu") {
+		/*gameTitleAnims.Update(dt);
+		const SDL_Rect& animFrame = gameTitleAnims.GetCurrentFrame();
+		Engine::GetInstance().render->DrawTexture(gameTitleTexture, Engine::GetInstance().window->width - 1600, Engine::GetInstance().window->height - 1080, 1, &animFrame);*/
 	}
 
 	if (!gameStarted) return true;
@@ -232,6 +245,124 @@ bool Scene::CleanUp()
 	dialogManager = nullptr;
 
 	return true;
+}
+
+void Scene::UpdateFadePhase(float dt)
+{
+	if (fadePhase == FadePhase::NO_FADE) {
+		return;
+	}
+
+	float delta = dt / 1000.0f;
+
+	switch (fadePhase) {
+	case FadePhase::FADE_IN:
+		fadeAlpha -= fadeSpeed * delta;
+		if (fadeAlpha <= 0.0f) {
+			fadeAlpha = 0.0f;
+			fadePhase = FadePhase::HOLD;
+		}
+		break;
+
+	case FadePhase::HOLD:
+		break;
+
+	case FadePhase::FADE_OUT:
+		fadeAlpha += fadeSpeed * delta;
+		if (fadeAlpha >= 255.0f) {
+			fadeAlpha = 255.0f;
+			fadePhase = FadePhase::NO_FADE;
+			if (fadePendingScene) {
+				fadePendingScene = false;
+				Engine::GetInstance().sceneManager->SetCurrentScene(fadeTargetScene);
+			}
+		}
+		break;
+
+	default: 
+		break;
+	}
+}
+
+void Scene::DrawFadeOverlay()
+{
+	SDL_Rect fadeRect = { fadeRectX, fadeRectY, fadeRectW, fadeRectH };
+
+	if (fadeAlpha > 0.0f) {
+		Engine::GetInstance().render->DrawRectangle(fadeRect, 0, 0, 0, (Uint8)fadeAlpha, true);
+	}
+}
+
+void Scene::UpdateIntroScreen(float dt)
+{
+	auto render = Engine::GetInstance().render;
+
+	if (!studioLogoTexture) {
+		studioLogoTexture = Engine::GetInstance().textures->Load("Assets/Textures/Team_Logo_SpriteSheet.png");
+		std::unordered_map<int, std::string> aliases = { {0, "ease_in"} };
+		studioLogoAnims.LoadFromTSX("Assets/Textures/Team_Logo_SpriteSheet.tsx", aliases);
+		studioLogoAnims.PlayOnce("ease_in");
+		titleEaseInDone = false;
+
+		fadeAlpha = 0.0f;
+		fadePhase = FadePhase::HOLD;
+		fadeRectX = -render->camera.x;
+		fadeRectY = -render->camera.y;
+		fadeRectW = render->camera.w;
+		fadeRectH = render->camera.h;
+		introAnimDurationMs = 1500.0f; 
+		introAnimElapsedMs = 0.0f;
+
+		Engine::GetInstance().audio->PlayFx(logoFxId);
+	}
+
+	bool clicked = Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN;
+	if (clicked && fadePhase != FadePhase::FADE_OUT) {
+		fadePhase = FadePhase::FADE_OUT;
+		fadeTargetScene = "main menu";
+		fadePendingScene = true;
+		Engine::GetInstance().audio->StopFx();
+	}
+
+	studioLogoAnims.Update(dt);
+
+	if (!titleEaseInDone) {
+		introAnimElapsedMs += dt;
+		if (introAnimElapsedMs >= introAnimDurationMs) {
+			titleEaseInDone = true;
+			transitionTimer = 0.0f;
+		}
+	}
+
+	if (titleEaseInDone && fadePhase == FadePhase::HOLD) {
+		transitionTimer += dt / 1000.0f;
+		if (transitionTimer >= 5.0f) {
+			fadePhase = FadePhase::FADE_OUT;
+			fadeTargetScene = "main menu";
+			fadePendingScene = true;
+			Engine::GetInstance().audio->StopFx();
+		}
+	}
+
+	const SDL_Rect& frame = studioLogoAnims.GetCurrentFrame();
+
+	float tw = 0, th = 0;
+	SDL_GetTextureSize(studioLogoTexture, &tw, &th);
+
+	int cols = (int)(tw / frame.w);
+	int rows = (int)(th / frame.h);
+
+	int centeredX = -render->camera.x + (render->camera.w - frame.w) / 2;
+	int centeredY = -render->camera.y + (render->camera.h - frame.h) / 2;
+
+	render->DrawTexture(studioLogoTexture, centeredX, centeredY, 1, &frame);
+
+	UpdateFadePhase(dt);
+	DrawFadeOverlay();
+}
+
+void Scene::UpdateMainMenu(float dt)
+{
 }
 
 void Scene::TogglePause()

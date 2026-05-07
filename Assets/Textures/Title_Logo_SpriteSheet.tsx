@@ -10,6 +10,10 @@
                 <frame tileid="4" duration="60" />
                 <frame tileid="5" duration="60" />
                 <frame tileid="6" duration="2000" />
+            </animation>
+        </tile>
+        <tile id="7">
+            <animation>
                 <frame tileid="7" duration="60" />
                 <frame tileid="8" duration="60" />
                 <frame tileid="9" duration="60" />
