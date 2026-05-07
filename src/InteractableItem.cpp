@@ -10,7 +10,7 @@
 #include "EntityManager.h"
 #include "SceneManager.h"
 
-InteractableItem::InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type, bool canStack, std::string _toggledTexturePath) : Item(id, name, texturePath, EntityType::INTERACTABLE_ITEM)
+InteractableItem::InteractableItem(std::string id, std::string name, std::string description, std::string texturePath, ItemInteractionType type, bool canStack, std::string _toggledTexturePath) : Item(id, name, description, texturePath, EntityType::INTERACTABLE_ITEM)
 {
 	toggledTexturePath = _toggledTexturePath;
 	itemInteractionType = type;
@@ -28,6 +28,7 @@ bool InteractableItem::Start() {
 	pickupIconPath = "Assets/Textures/item.png";
 	if (toggledTexturePath != "") toggledTexture = Engine::GetInstance().textures->Load(toggledTexturePath.c_str());
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
+	icon = texture;
 	pickupIcon = Engine::GetInstance().textures->Load(pickupIconPath);
 	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -20, -20, 1, 1);
 	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 50, 50, 1, 1);
@@ -138,7 +139,7 @@ void InteractableItem::Pickup()
 	for (const auto& e : Engine::GetInstance().sceneManager->currentScene->entityManager->entities) {
 		Player* player = dynamic_cast<Player*>(e.get());
 		if (player) {
-			if (player->inventory.AddItem(this)) {
+			if (player->inventory->AddItem(std::make_shared<InteractableItem>(*this))) {
 				isPicked = true;
 				isPlayerInRange = false;
 				active = false;
@@ -151,7 +152,7 @@ void InteractableItem::Pickup()
 					Engine::GetInstance().physics->DeletePhysBody(sensorCollider);
 					sensorCollider = nullptr;
 				}
-				player->inventory.PrintContents();
+				player->inventory->PrintContents();
 				LOG("'%s' picked up", name.c_str());
 				return;
 			}

@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Item.h"
+#include "Stats.h"
+
+const float SELLING_PRICE_RATIO = 0.7f;
 
 enum class ItemInteractionType {
 	DEFAULT,
@@ -12,7 +15,7 @@ enum class ItemInteractionType {
 class InteractableItem : public Item {
 public:
 	InteractableItem(){}
-	InteractableItem(std::string id, std::string name, std::string texturePath, ItemInteractionType type, bool canStack, std::string toggledTexturePath = "");
+	InteractableItem(std::string id, std::string name, std::string description, std::string texturePath, ItemInteractionType type, bool canStack, std::string toggledTexturePath = "");
 
 	virtual ~InteractableItem();
 
@@ -46,10 +49,12 @@ public:
 	bool isToggled = false;
 	std::string toggledTexturePath = "";
 	SDL_Texture* toggledTexture = nullptr;
+	ItemInteractionType itemInteractionType;
+	int price = 0;
+	Stats* stats = nullptr;
 
 protected:
 	//Dialogue type by default
-	ItemInteractionType itemInteractionType;
 
 	SDL_Texture* pickupIcon;
 	const char* pickupIconPath;
