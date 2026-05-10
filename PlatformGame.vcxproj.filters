@@ -538,5 +538,8 @@
     <Xml Include="Assets\Dialogues\dialogues_clean.xml" />
     <Xml Include="Assets\Entities\items_def.xml" />
     <Xml Include="Assets\Entities\characters_session.xml" />
+    <Xml Include="Assets\Missions\missions_clean.xml" />
+    <Xml Include="Assets\Missions\missions.xml" />
+    <Xml Include="Assets\Missions\missions_session.xml" />
   </ItemGroup>
 </Project>

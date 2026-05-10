@@ -36,13 +36,12 @@ bool MenuManager::PreUpdate() { return true; }
 
 bool MenuManager::Update(float dt) 
 {
-	if (!popUpQueue.empty()) {
+	if (!showingPopUp && !popUpQueue.empty()) {
 		ShowMissionPopup(popUpQueue.front());
 		popUpQueue.pop();
 	}
-	if (showingPopUp) {
-		popUpSeconds -= popUpTimer.ReadSec();
-		if (popUpSeconds <= 0) HideMissionPopup();
+	if (showingPopUp && popUpTimer.ReadSec() > popUpSeconds) {
+		HideMissionPopup();
 	}
 	return true; 
 }
@@ -64,6 +63,7 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Color secondaryDis = { 100, 100, 100, 255 };
 	SDL_Color white = { 255, 255, 255, 255 };
 	SDL_Color black = { 0, 0, 0, 255 };
+	SDL_Color green = { 0, 255, 0, 255 };
 	SDL_Color yellow = { 255, 255, 0, 255 };
 	SDL_Color blue = { 0, 255, 255, 255 };
 	SDL_Color red = { 255, 0, 0, 0 };
@@ -84,6 +84,11 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_settings = { centerX - 125, centerY + 130, 250, 35 };
 	SDL_Rect b_credits_btn = { centerX - 125, centerY + 180, 250, 35 };
 	SDL_Rect b_exit = { centerX - 125, centerY + 230, 250, 35 };
+
+	SDL_Rect b_popUpTitle = { 20, 20, 300, 40 };
+	SDL_Rect b_popUp = { 20, 80, sw / 3 * 2, 100 };
+
+	SDL_Rect b_missionJournalTitle = { 20, 20, 200, 60 };
 	
 	//Settings menu elements
 	SDL_Rect b_settings_lbl = { centerX - 100, centerY - 200, 200, 40 };
@@ -128,6 +133,14 @@ void MenuManager::Load(bool onlyPositions)
 		backMenu->SetBounds(b_backMenu);
 		backMainMenu->SetBounds(b_backMainMenu);
 		exit->SetBounds(b_exit);
+		missionPopUpTitle->SetBounds(b_popUpTitle);
+		missionPopUp->SetBounds(b_popUp);
+		missionJournalTitle->SetBounds(b_missionJournalTitle);
+		for (int i = 0; i < missionJournal.size(); i++) {
+			int y = (i + 1) * 100;
+			SDL_Rect bounds = { 20, y, sw - 40, 80 };
+			missionJournal[i]->SetBounds(bounds);
+		}
 	}
 	else {
 		int hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
@@ -154,6 +167,23 @@ void MenuManager::Load(bool onlyPositions)
 		backMenu = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)BACK_MENU, b_backMenu, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Back", 20)));
 		backMainMenu = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)BACK_MAIN_MENU, b_backMainMenu, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Back to main menu", 5)));
 		exit = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)EXIT, b_exit, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Exit", 20)));
+		
+		missionPopUpTitle = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)POPUP_TITLE, b_popUpTitle, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, green }, hoverFxId, clickFxId, UIParameters::Button("", 20)));
+		missionPopUp = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)POPUP, b_popUp, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("", 20)));
+		missionPopUpTitle->state = UIElementState::DISABLED;
+		missionPopUp->state = UIElementState::DISABLED;
+
+		missionJournalTitle = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)MISSION_JOURNAL_TITLE, b_missionJournalTitle, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Mission journal", 20)));
+		missionJournalTitle->state = UIElementState::DISABLED;
+
+		int journalEntries = (sw - 100) / 100;
+		for (int i = 0; i < journalEntries; i++) {
+			int y = (i + 1) * 100;
+			SDL_Rect bounds = { 20, y, sw - 40, 80 };
+			std::shared_ptr<UIButton> mission = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, baseJournalId + i, bounds, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("", 20)));
+			mission->state = UIElementState::DISABLED;
+			missionJournal.push_back(mission);
+		}
 	}
 
 	LoadInventory(onlyPositions);
@@ -295,6 +325,9 @@ void MenuManager::SetObserver(Module* observer)
 	backMenu->observer = observer;
 	backMainMenu->observer = observer;
 	exit->observer = observer;
+	missionPopUpTitle->observer = observer;
+	missionPopUp->observer = observer;
+	missionJournalTitle->observer = observer;
 	inventoryLabel->observer = observer;
 	moneyLabel->observer = observer;
 	shopLabel->observer = observer;
@@ -311,6 +344,7 @@ void MenuManager::SetObserver(Module* observer)
 	exitShop->observer = observer;
 	for (std::shared_ptr<UISlot> slot : inventorySlots) slot->observer = observer;
 	for (std::shared_ptr<UISlot> slot : shopSlots) slot->observer = observer;
+	for (std::shared_ptr<UIButton> mission : missionJournal) mission->observer = observer;
 }
 
 void MenuManager::ShowMainMenu()
@@ -432,6 +466,7 @@ void MenuManager::AddMissionPopup(Mission* mission)
 void MenuManager::ShowMissionPopup(Mission* mission, float popUpSeconds)
 {
 	this->popUpSeconds = popUpSeconds;
+	popUpTimer = Timer();
 	showingPopUp = true;
 	missionPopUpTitle->active = true;
 	missionPopUp->active = true;
@@ -451,7 +486,7 @@ void MenuManager::HideMissionPopup()
 	}
 }
 
-void MenuManager::ShowMissionJournal(MissionManager* missions)
+void MenuManager::ShowMissionJournal(MissionManager* missionManager)
 {
 	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 
@@ -459,7 +494,13 @@ void MenuManager::ShowMissionJournal(MissionManager* missions)
 	HideMenu();
 	currentMenu = MISSION_JOURNAL;
 
-	// show active missions
+	missionJournalTitle->active = true;
+	std::vector<Mission*> missions = missionManager->GetActiveMissions();
+	for (int i = 0; i < missions.size(); i++) {
+		if (i >= missionJournal.size()) break;
+		missionJournal[i]->active = true;
+		missionJournal[i]->text = missions[i]->ToString();
+	}
 }
 
 void MenuManager::HideMenu()
@@ -487,6 +528,12 @@ void MenuManager::HideMenu()
 	backMenu->active = false;
 	backMainMenu->active = false;
 	exit->active = false;
+	missionPopUpTitle->active = false;
+	missionPopUp->active = false;
+	showingPopUp = false;
+	popUpQueue = std::queue<Mission*>();
+	missionJournalTitle->active = false;
+	for (std::shared_ptr<UIButton> mission : missionJournal) mission->active = false;
 
 	inventoryLabel->active = false;
 	moneyLabel->active = false;

@@ -1,8 +1,21 @@
 #pragma once
 
 #include "Mission.h"
+#include "TalkMission.h"
+#include "ReachMission.h"
+#include "KillMission.h"
+#include "CollectMission.h"
+#include "BringMission.h"
 #include <list>
 #include <vector>
+
+enum MissionType {
+	TALK,
+	REACH,
+	KILL,
+	COLLECT,
+	BRING
+};
 
 class MissionManager
 {
@@ -27,7 +40,8 @@ public:
 
 	// Additional methods
 	void LoadMissions();
-	Mission* AddMission(std::string missionId, std::string targetId, std::string targetName, MissionReward reward = MissionReward(), std::vector<std::string> unlocksMissions = std::vector<std::string>(), bool active, bool completed);
+	Mission* AddMission(MissionType type, std::string missionId, std::string targetId, std::string targetName, std::string itemName, MissionReward reward = MissionReward(), std::vector<std::string> unlocksMissions = std::vector<std::string>(), bool active = false, bool completed = false);
+	Mission* ActivateMission(std::string missionId);
 	Mission* CompleteMission(std::string missionId);
 	std::vector<Mission*> GetActiveMissions();
 

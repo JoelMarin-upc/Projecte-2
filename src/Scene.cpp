@@ -124,6 +124,7 @@ bool Scene::Start(std::string spawnId)
 	dialogManager->Start();
 
 	if (gameStarted) {
+		CheckCompletedMissions<ReachMission>(id, "");
 		LoadDialogState();
 	}
 
@@ -133,7 +134,6 @@ bool Scene::Start(std::string spawnId)
 			Engine::GetInstance().sceneManager->triggerFirstMonologue = false;
 		}
 	}
-
 
 	return true;
 }
@@ -160,6 +160,8 @@ bool Scene::Update(float dt)
 
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN || Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) TogglePause();
 	
+	missionManager->Update(dt);
+	
 	if (combat) {
 		combat->Update(dt);
 		if (combat->combatResult != CombatResult::NO_RESULT) EndCombat(combat->enemyParty, combat->combatResult);
@@ -172,10 +174,13 @@ bool Scene::Update(float dt)
 	////////////////////////////////////////////////
 
 	CheckTimers();
-	if (!isOnDialog && !paused) ToggleInventory();
+	if (!isOnDialog && !paused)
+	{
+		ToggleInventory();
+		ToggleJournal();
+	}
 	map->Update(dt);
 	entityManager->Update(dt);
-	missionManager->Update(dt);
 	dialogManager->Update(dt);
 
 	if (gameStarted && !paused && !isOnDialog) {
@@ -547,6 +552,7 @@ void Scene::LoadScene(std::string spawnId)
 	Engine::GetInstance().render->follow = player;
 	player->stats = LoadStats(pNode);
 	player->inventory = LoadInventory(pNode);
+	player->inventory->isPlayerInventory = true;
 
 	//Uncomment when I find a fix
 	/*float savedX = pNode.attribute("savedX").as_float();
@@ -754,6 +760,15 @@ void Scene::ToggleInventoryForCombat()
 	else Engine::GetInstance().menuManager->HideMenu();
 }
 
+void Scene::ToggleJournal()
+{
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_J) == KEY_DOWN)
+	{
+		if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) Engine::GetInstance().menuManager->HideMenu();
+		else Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);
+	}
+}
+
 void Scene::ToggleShop(NPC* shopOwner)
 {
 	showingInventory = shopOwner;
@@ -845,6 +860,7 @@ void Scene::CompleteMission(std::string missionId)
 	Mission* mission = missionManager->CompleteMission(missionId);
 	if (!mission) return;
 	Engine::GetInstance().menuManager ->AddMissionPopup(mission);
+	for (Mission* unlock : mission->unlocksMissionsValues) Engine::GetInstance().menuManager->AddMissionPopup(unlock);
 	player->inventory->AddGold(mission->reward.gold);
 	if (mission->reward.itemName == "") return;
 	ItemDef* def = GetItemDefinition("", mission->reward.itemName);
@@ -872,6 +888,8 @@ void Scene::StartDialog(std::string characterId)
 {
 	if (!gameStarted) return;
 	if (isOnDialog) return;
+	CheckCompletedMissions<TalkMission>(characterId, "");
+	CheckCompletedMissions<BringMission>(characterId, "");
 	if (!dialogManager->SetCurrentDialog(characterId)) return;
 	isOnDialog = true;
 	activeDialogId = characterId;
@@ -887,6 +905,10 @@ void Scene::EndDialog()
 	if (!activeDialogId.empty()) {
 		if (activeDialogId == "statue") {
 			SaveGame();
+		}
+		if (activeDialogId == "player") {
+			Mission* mission = missionManager->ActivateMission("MI-000");
+			if (mission) Engine::GetInstance().menuManager->AddMissionPopup(mission);
 		}
 		for (const auto& entity : entityManager->entities) {
 			if (entity->id == activeDialogId) {
@@ -939,7 +961,10 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	switch (combatResult)
 	{
 	case WIN:
-		for (const auto& enemy : enemyParty->members) entityManager->DestroyEntity(enemy);
+		for (const auto& enemy : enemyParty->members) {
+			CheckCompletedMissions<KillMission>(enemy->id, enemy->name);
+			entityManager->DestroyEntity(enemy);
+		}
 		for (const auto& npc : player->party->members) {
 			if (npc->isDead) {
 				Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);

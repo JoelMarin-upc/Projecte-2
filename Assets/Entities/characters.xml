@@ -87,7 +87,7 @@
 		<inventory />
 	</character>
 	<character id="CH-011" name="Shopkeeper" texture="heart.png" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
-		<inventory gold="0">
+		<inventory>
 			<item id="" name="potion" />
 			<item id="" name="potion" />
 			<item id="" name="sword" />

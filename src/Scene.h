@@ -73,6 +73,7 @@ public:
 	void CheckTimers();
 	void ToggleInventory();
 	void ToggleInventoryForCombat();
+	void ToggleJournal();
 	void ToggleShop(NPC* shopOwner);
 	void UpdateInventory(NPC* shopOwner = nullptr) const;
 	void CompleteMission(std::string missionId);
@@ -99,6 +100,21 @@ public:
 
 	bool GetGameStarted() {
 		return gameStarted;
+	}
+
+	template<typename T>
+	inline void CheckCompletedMissions(std::string targetId, std::string targetName) {
+		std::vector<T*> missions = missionManager->GetMissions<T>(true);
+		for (T* mission : missions) {
+			if ((targetId != "" && mission->targetId == targetId) || 
+				(targetName != "" && mission->targetName == targetName)) {
+				if (BringMission* bringMission = dynamic_cast<BringMission*>(mission)) {
+					if (player->inventory->HasItem(bringMission->itemName)) player->inventory->RemoveItem(bringMission->itemName);
+					else continue;
+				}
+				CompleteMission(mission->id);
+			}
+		}
 	}
 
 	bool hasEnded;

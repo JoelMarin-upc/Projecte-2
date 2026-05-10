@@ -16,17 +16,20 @@ public:
 	Mission(std::string id, std::string targetId, std::string targetName, MissionReward reward, std::vector<std::string> unlocksMissions, bool active, bool completed = false) : id(id), targetId(targetId), targetName(targetName), reward(reward), unlocksMissions(unlocksMissions), active(active), completed(completed) {}
 	inline virtual std::string ToString() { return ""; }
 	inline virtual std::string ToStringReward() 
-	{ 
+	{
+		if (reward.gold == 0 && reward.itemName == "") return "";
 		std::string s = "Reward: ";
 		if (reward.gold != 0) s += std::to_string(reward.gold) + " gold";
 		if (reward.gold != 0 && reward.itemName != "") s += ", ";
 		if (reward.itemName != "") s += reward.itemName;
+		return s;
 	}
 	std::string id = "";
 	std::string targetId = "";
 	std::string targetName = "";
 	MissionReward reward = MissionReward();
 	std::vector<std::string> unlocksMissions = std::vector<std::string>();
+	std::vector<Mission*> unlocksMissionsValues = std::vector<Mission*>();
 	bool active = false;
 	bool completed = false;
 private:

@@ -312,6 +312,9 @@
     <Xml Include="Assets\Entities\items.xml" />
     <Xml Include="Assets\Entities\items_clean.xml" />
     <Xml Include="Assets\Entities\items_def.xml" />
+    <Xml Include="Assets\Missions\missions.xml" />
+    <Xml Include="Assets\Missions\missions_clean.xml" />
+    <Xml Include="Assets\Missions\missions_session.xml" />
     <Xml Include="config.xml" />
     <Xml Include="gamesave.xml" />
   </ItemGroup>

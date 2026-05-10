@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <characters savedGame="false">
-	<player id="player" name="main character" texture="SpriteSheet_Garnik.png" combatTexture="garnikCombat.png" animations="Garnik_SpriteSheet.tsx" savedX="2685" savedY="2368">
+	<player id="player" name="main character" texture="SpriteSheet_Garnik.png" combatTexture="garnikCombat.png" animations="Garnik_SpriteSheet.tsx" savedX="2697" savedY="2367">
 		<stats>
 			<stat name="health" value="100" max="100" />
 			<stat name="speed" value="5" />
@@ -13,7 +13,7 @@
 		</inventory>
 		<party />
 	</player>
-	<character id="CH-001" name="Gravekeeper" texture="heart.png" type="3" npcInteractionType="3" savedX="3008" savedY="2910" isDead="false">
+	<character id="CH-001" name="Gravekeeper" texture="heart.png" type="3" npcInteractionType="3" savedX="3008" savedY="2911" isDead="false">
 		<inventory />
 	</character>
 	<character id="CH-002" name="Medic" texture="heart.png" type="3" npcInteractionType="3" savedX="2959" savedY="2399" isDead="false">
