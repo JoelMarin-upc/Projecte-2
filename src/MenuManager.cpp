@@ -123,7 +123,7 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_resume = { centerX - 95, centerY + 70, 176, 64 };
 
 	//Other elements
-	SDL_Rect b_gameOver_lbl = { centerX - 150, centerY, 300, 60 };
+	SDL_Rect b_gameOver_lbl = { centerX - 90, centerY - 100, 300, 60 };
 	
 	if (onlyPositions) {
 		gameTitle->SetBounds(b_gameTitle);
@@ -574,5 +574,28 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop)
 		else boots->SetImage(nullptr, nullptr, nullptr, nullptr);
 		if (inventory->equippedWeapon) weapon->SetImage(inventory->equippedWeapon->icon, inventory->equippedWeapon->icon, inventory->equippedWeapon->icon, inventory->equippedWeapon->icon);
 		else weapon->SetImage(nullptr, nullptr, nullptr, nullptr);
+	}
+}
+
+void MenuManager::ShowCombatInventory(Inventory* inventory)
+{
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
+
+	previousMenu = currentMenu;
+	HideMenu();
+	currentMenu = COMBAT_INVENTORY;
+
+	std::vector<std::shared_ptr<InteractableItem>> consumables = std::vector<std::shared_ptr<InteractableItem>>();
+	for (auto& item : inventory->items)
+		if (std::dynamic_pointer_cast<Consumable>(item)) 
+			consumables.push_back(item);
+
+	for (int i = 0; i < inventorySlots.size(); i++) {
+		std::shared_ptr<UISlot> slot = inventorySlots[i];
+		slot->active = true;
+		slot->SetItem(nullptr);
+		if (i >= consumables.size()) continue;
+		std::shared_ptr<InteractableItem> consumable = consumables[i];
+		slot->SetItem(consumable, consumable->count);
 	}
 }

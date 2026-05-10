@@ -23,6 +23,13 @@ struct SceneData {
 	std::string musicPath;
 };
 
+enum FadePhase {
+	NO_FADE,
+	FADE_IN,
+	HOLD,
+	FADE_OUT
+};
+
 class Scene : public Module
 {
 public:
@@ -52,6 +59,10 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void UpdateFadePhase(float dt);
+	void DrawFadeOverlay();
+	void UpdateIntroScreen(float dt);
+	void UpdateGameTitle(float dt);
 	void TogglePause();
 	void SaveGame();
 	void LoadGame();
@@ -68,6 +79,7 @@ public:
 	void EndGame();
 	void CheckTimers();
 	void ToggleInventory();
+	void ToggleInventoryForCombat();
 	void ToggleShop(NPC* shopOwner);
 	void UpdateInventory(NPC* shopOwner = nullptr) const;
 
@@ -145,7 +157,31 @@ private:
 	int logoFxId;
 	int elevatorFxId;
 
+
+	float introAnimDurationMs = 0.0f;
+	float introAnimElapsedMs = 0.0f;
+	AnimationSet studioLogoAnims;
+	SDL_Texture* studioLogoTexture = nullptr;
+	AnimationSet gameTitleAnims;
+	SDL_Texture* gameTitleTexture = nullptr;
+	bool isTitleEaseOutDone = false;
+	bool isTitleEaseOutPlaying = false;
+	bool isTitleEaseInDone = false;
+
+	FadePhase fadePhase = FadePhase::NO_FADE;
+	float fadeAlpha = 255.0f;
+	float fadeSpeed = 300.0f;
+	std::string fadeTargetScene = "";
+	bool fadePendingScene = false;
+	int fadeRectX = 0;
+	int fadeRectY = 0;
+	int fadeRectH = 0;
+	int fadeRectW = 0;
+	float transitionTimer = 0.0f;
+	float transitionDuration = 0.1f;
+
 	bool showingInventory = false;
+	bool showingInventoryForCombat = false;
 	bool showingShop = false;
 
 	std::shared_ptr<InteractableItem> selectedItem = nullptr;
@@ -153,5 +189,4 @@ private:
 	bool isUnequipping = false;
 
 	NPC* shopOwner = nullptr;
-
 };

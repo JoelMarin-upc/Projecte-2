@@ -16,6 +16,7 @@ bool NPC::Start()
 {
 	//texturePath = "Assets/Textures/heart.png";
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
+	if (combatTexturePath != "") combatTexture = Engine::GetInstance().textures->Load(combatTexturePath.c_str());
 
 	//if (!animationsPath.empty()) {
 	//	std::unordered_map<int, std::string> aliases = { {0,"idle"},{16,"move_down"},{20,"move_up"},{24,"move_left"} };
@@ -78,12 +79,14 @@ void NPC::Draw(float dt)
 		anims.Update(dt);
 		const SDL_Rect& animFrame = anims.GetCurrentFrame();
 		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2, 1, &animFrame, isFacingRight);
+		if (party) DrawHealthBar(animFrame);
 	}
 	else {
 		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2);
+		if (party) DrawHealthBar(texture);
 	}
 
-	if (party) DrawHealthBar(texture);
+	
 }
 
 bool NPC::CleanUp() {

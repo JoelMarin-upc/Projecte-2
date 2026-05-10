@@ -15,7 +15,7 @@ class Player : public Character//, public std::enable_shared_from_this<Player>
 {
 public:
 
-	Player(std::string id, std::string name, std::string texturePath);
+	Player(std::string id, std::string name, std::string texturePath, std::string combatTexturePath);
 	
 	virtual ~Player();
 
