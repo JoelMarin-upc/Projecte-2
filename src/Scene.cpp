@@ -317,7 +317,7 @@ void Scene::UpdateIntroScreen(float dt)
 		fadeRectY = -render->camera.y;
 		fadeRectW = render->camera.w;
 		fadeRectH = render->camera.h;
-		introAnimDurationMs = 1500.0f;
+		introAnimDurationMs = 1200.0f;
 		introAnimElapsedMs = 0.0f;
 
 		Engine::GetInstance().audio->PlayFx(logoFxId);
