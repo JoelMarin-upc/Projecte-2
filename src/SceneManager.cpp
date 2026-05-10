@@ -46,6 +46,7 @@ void SceneManager::LoadScenes()
 	//Registers and stores the id and map file of all scenes�
 	sceneInfos.push_back({ "intro", "", "" });
 	sceneInfos.push_back({ "main menu", "", "" });
+	sceneInfos.push_back({ "game title", "", "" });
 	sceneInfos.push_back({ "SC-001", mapsPath, "RebelRefuge.tmx" });
 	sceneInfos.push_back({ "SC-002", mapsPath, "GroceriesShop.tmx" });
 	sceneInfos.push_back({ "SC-003", mapsPath, "TutorialDungeon.tmx", "TutorialDungeon_combat.tmx" });

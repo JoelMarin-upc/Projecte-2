@@ -306,7 +306,7 @@ void Scene::UpdateIntroScreen(float dt)
 		std::unordered_map<int, std::string> aliases = { {0, "ease_in"} };
 		studioLogoAnims.LoadFromTSX("Assets/Textures/Team_Logo_SpriteSheet.tsx", aliases);
 		studioLogoAnims.PlayOnce("ease_in");
-		titleEaseInDone = false;
+		isTitleEaseInDone = false;
 
 		fadeAlpha = 0.0f;
 		fadePhase = FadePhase::HOLD;
@@ -314,7 +314,7 @@ void Scene::UpdateIntroScreen(float dt)
 		fadeRectY = -render->camera.y;
 		fadeRectW = render->camera.w;
 		fadeRectH = render->camera.h;
-		introAnimDurationMs = 1500.0f; 
+		introAnimDurationMs = 1500.0f;
 		introAnimElapsedMs = 0.0f;
 
 		Engine::GetInstance().audio->PlayFx(logoFxId);
@@ -330,15 +330,15 @@ void Scene::UpdateIntroScreen(float dt)
 
 	studioLogoAnims.Update(dt);
 
-	if (!titleEaseInDone) {
+	if (!isTitleEaseInDone) {
 		introAnimElapsedMs += dt;
 		if (introAnimElapsedMs >= introAnimDurationMs) {
-			titleEaseInDone = true;
+			isTitleEaseInDone = true;
 			transitionTimer = 0.0f;
 		}
 	}
 
-	if (titleEaseInDone && fadePhase == FadePhase::HOLD) {
+	if (isTitleEaseInDone && fadePhase == FadePhase::HOLD) {
 		transitionTimer += dt / 1000.0f;
 		if (transitionTimer >= 5.0f) {
 			fadePhase = FadePhase::FADE_OUT;
@@ -348,25 +348,17 @@ void Scene::UpdateIntroScreen(float dt)
 		}
 	}
 
+	const float LOGO_SCALE = 0.5f;
 	const SDL_Rect& frame = studioLogoAnims.GetCurrentFrame();
-
-	float tw = 0, th = 0;
-	SDL_GetTextureSize(studioLogoTexture, &tw, &th);
-
-	int cols = (int)(tw / frame.w);
-	int rows = (int)(th / frame.h);
-
-	int centeredX = -render->camera.x + (render->camera.w - frame.w) / 2;
-	int centeredY = -render->camera.y + (render->camera.h - frame.h) / 2;
-
-	render->DrawTexture(studioLogoTexture, centeredX, centeredY, 1, &frame);
+	int scaledW = (int)(frame.w * LOGO_SCALE);
+	int scaledH = (int)(frame.h * LOGO_SCALE);
+	int centeredX = -render->camera.x + (render->camera.w - scaledW) / 2;
+	int centeredY = -render->camera.y + (render->camera.h - scaledH) / 2;
+	render->DrawTexture(studioLogoTexture, centeredX, centeredY, 1, &frame, true, 0, INT_MAX, INT_MAX, LOGO_SCALE);
 
 	UpdateFadePhase(dt);
 	DrawFadeOverlay();
-}
 
-void Scene::UpdateMainMenu(float dt)
-{
 }
 
 void Scene::TogglePause()

@@ -62,7 +62,6 @@ public:
 	void UpdateFadePhase(float dt);
 	void DrawFadeOverlay();
 	void UpdateIntroScreen(float dt);
-	void UpdateMainMenu(float dt);
 	void TogglePause();
 	void SaveGame();
 	void LoadGame();
@@ -164,9 +163,9 @@ private:
 	SDL_Texture* studioLogoTexture = nullptr;
 	AnimationSet gameTitleAnims;
 	SDL_Texture* gameTitleTexture = nullptr;
-	bool titleEaseOutDone = false;
-	bool titleEaseOutPlaying = false;
-	bool titleEaseInDone = false;
+	bool isTitleEaseOutDone = false;
+	bool isTitleEaseOutPlaying = false;
+	bool isTitleEaseInDone = false;
 
 	FadePhase fadePhase = FadePhase::NO_FADE;
 	float fadeAlpha = 255.0f;
