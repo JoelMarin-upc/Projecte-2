@@ -61,7 +61,7 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start(std::string spawnId)
 {
-	gameStarted = id != "main menu" && id != "intro";
+	gameStarted = id != "main menu" && id != "intro" && id != "game title";
 
 	if (gameStarted)
 	{
@@ -176,6 +176,9 @@ bool Scene::Update(float dt)
 		/*gameTitleAnims.Update(dt);
 		const SDL_Rect& animFrame = gameTitleAnims.GetCurrentFrame();
 		Engine::GetInstance().render->DrawTexture(gameTitleTexture, Engine::GetInstance().window->width - 1600, Engine::GetInstance().window->height - 1080, 1, &animFrame);*/
+	}
+	if (id == "game title") {
+		UpdateGameTitle(dt);
 	}
 
 	if (!gameStarted) return true;
@@ -359,6 +362,51 @@ void Scene::UpdateIntroScreen(float dt)
 	UpdateFadePhase(dt);
 	DrawFadeOverlay();
 
+}
+
+void Scene::UpdateGameTitle(float dt)
+{
+	auto render = Engine::GetInstance().render;
+
+	if (!gameTitleTexture) {
+		gameTitleTexture = Engine::GetInstance().textures->Load("Assets/Textures/game_title.png");
+
+		fadeAlpha = 255.0f;
+		fadePhase = FadePhase::FADE_IN;
+		fadeSpeed = 150.0f;
+		fadeRectX = -render->camera.x;
+		fadeRectY = -render->camera.y;
+		fadeRectW = render->camera.w;
+		fadeRectH = render->camera.h;
+		transitionTimer = 0.0f;
+	}
+
+	int texW, texH;
+	const float TITLE_SCALE = 0.5f;
+	Engine::GetInstance().textures->GetSize(gameTitleTexture, texW, texH);
+	int centeredX = -render->camera.x + (render->camera.w - texW) / 2;
+	int centeredY = -render->camera.y + (render->camera.h - texH) / 2;
+	render->DrawTexture(gameTitleTexture, centeredX, centeredY, 1, nullptr, true, 0, INT_MAX, INT_MAX, TITLE_SCALE);
+
+	bool clicked = Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN;
+	if (clicked && fadePhase != FadePhase::FADE_OUT) {
+		fadePhase = FadePhase::FADE_OUT;
+		fadeTargetScene = "SC-001";
+		fadePendingScene = true;
+		Engine::GetInstance().audio->StopFx();
+	}
+
+	if (fadePhase == FadePhase::HOLD) {
+		transitionTimer += dt / 1000.0f;
+		if (transitionTimer >= 1.5f) {
+			fadePhase = FadePhase::FADE_OUT;
+			fadePendingScene = true;
+			fadeTargetScene = "SC-001";
+		}
+	}
+
+	UpdateFadePhase(dt);
+	DrawFadeOverlay();
 }
 
 void Scene::TogglePause()
@@ -1136,7 +1184,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	case START_GAME:
 		CopyCleanGameData();
 		Engine::GetInstance().menuManager->HideMenu();
-		Engine::GetInstance().sceneManager->SetCurrentScene("SC-001");
+		Engine::GetInstance().sceneManager->SetCurrentScene("game title");
 		break;
 	case CONTINUE_GAME: {
 		{

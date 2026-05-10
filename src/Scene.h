@@ -62,6 +62,7 @@ public:
 	void UpdateFadePhase(float dt);
 	void DrawFadeOverlay();
 	void UpdateIntroScreen(float dt);
+	void UpdateGameTitle(float dt);
 	void TogglePause();
 	void SaveGame();
 	void LoadGame();
