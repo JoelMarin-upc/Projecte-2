@@ -34,7 +34,18 @@ bool MenuManager::Start()
 
 bool MenuManager::PreUpdate() { return true; }
 
-bool MenuManager::Update(float dt) { return true; }
+bool MenuManager::Update(float dt) 
+{
+	if (!popUpQueue.empty()) {
+		ShowMissionPopup(popUpQueue.front());
+		popUpQueue.pop();
+	}
+	if (showingPopUp) {
+		popUpSeconds -= popUpTimer.ReadSec();
+		if (popUpSeconds <= 0) HideMissionPopup();
+	}
+	return true; 
+}
 
 bool MenuManager::PostUpdate(float dt) { return true; }
 
@@ -413,11 +424,31 @@ void MenuManager::ShowDeathScreen()
 	exit->active = true;
 }
 
-void MenuManager::ShowMissionPopup(Mission* mission, float popUpMiliseconds)
+void MenuManager::AddMissionPopup(Mission* mission)
 {
-	// for popUpMiliseconds (time)
-	// if completed show reward
-	// else show pending mission
+	popUpQueue.push(mission);
+}
+
+void MenuManager::ShowMissionPopup(Mission* mission, float popUpSeconds)
+{
+	this->popUpSeconds = popUpSeconds;
+	showingPopUp = true;
+	missionPopUpTitle->active = true;
+	missionPopUp->active = true;
+	missionPopUpTitle->text = mission->completed ? "MISSION COMPLETED" : "NEW MISSION";
+	missionPopUp->text = mission->ToString();
+}
+
+void MenuManager::HideMissionPopup()
+{
+	showingPopUp = false;
+	missionPopUpTitle->active = false;
+	missionPopUp->active = false;
+	if (!popUpQueue.empty())
+	{
+		ShowMissionPopup(popUpQueue.front());
+		popUpQueue.pop();
+	}
 }
 
 void MenuManager::ShowMissionJournal(MissionManager* missions)

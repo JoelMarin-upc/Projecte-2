@@ -4,7 +4,9 @@
 #include "Inventory.h"
 #include "UIManager.h"
 #include "MissionManager.h"
+#include "Timer.h"
 #include <list>
+#include <queue>
 
 enum MenuType {
 	MAIN,
@@ -78,7 +80,7 @@ enum UIID {
 	EXIT_SHOP
 };
 
-const float POP_UP_MILLISECONDS = 5000.f;
+const float POP_UP_SECONDS = 5.f;
 
 class MenuManager : public Module
 {
@@ -115,7 +117,9 @@ public:
 	void ShowInventory(Inventory* inventory);
 	void ShowShop(Inventory* customer, Inventory* shop);
 	void ShowDeathScreen();
-	void ShowMissionPopup(Mission* mission, float popUpMiliseconds = POP_UP_MILLISECONDS);
+	void AddMissionPopup(Mission* mission);
+	void ShowMissionPopup(Mission* mission, float popUpSeconds = POP_UP_SECONDS);
+	void HideMissionPopup();
 	void ShowMissionJournal(MissionManager* missions);
 	void HideMenu();
 	void ShowPreviousMenu();
@@ -151,6 +155,9 @@ public:
 	std::shared_ptr<UIButton> backMainMenu;
 	std::shared_ptr<UIButton> exit;
 
+	std::shared_ptr<UIButton> missionPopUpTitle;
+	std::shared_ptr<UIButton> missionPopUp;
+
 	int uiLockFrame = -1;
 
 	const int baseSlotsId = 900;
@@ -174,4 +181,9 @@ public:
 
 	Inventory* currentInventory = nullptr;
 	Inventory* currentShop = nullptr;
+
+	std::queue<Mission*> popUpQueue = std::queue<Mission*>();
+	Timer popUpTimer;
+	float popUpSeconds = 0.f;
+	bool showingPopUp = false;
 };

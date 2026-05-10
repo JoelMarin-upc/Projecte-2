@@ -59,6 +59,8 @@ public:
 	void SaveSessionState();
 	void SaveDialogState();
 	void LoadDialogState();
+	void SaveMissionState();
+	void LoadMissionState();
 	void SaveCharacterStats(pugi::xml_node charNode, std::shared_ptr<Character> character);
 	void LoadMap(std::string mapPath, std::string mapName);
 	void LoadScene(std::string spawnId = "default");
@@ -73,6 +75,7 @@ public:
 	void ToggleInventoryForCombat();
 	void ToggleShop(NPC* shopOwner);
 	void UpdateInventory(NPC* shopOwner = nullptr) const;
+	void CompleteMission(std::string missionId);
 
 	void CheckTransitions();
 

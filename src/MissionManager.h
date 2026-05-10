@@ -27,9 +27,8 @@ public:
 
 	// Additional methods
 	void LoadMissions();
-	void SaveMissions();
-	Mission* AddMission(std::string missionId, std::string targetId, std::string targetName, MissionReward reward = MissionReward(), std::vector<std::string> unlocksMissions = std::vector<std::string>());
-	MissionReward CompleteMission(std::string missionId);
+	Mission* AddMission(std::string missionId, std::string targetId, std::string targetName, MissionReward reward = MissionReward(), std::vector<std::string> unlocksMissions = std::vector<std::string>(), bool active, bool completed);
+	Mission* CompleteMission(std::string missionId);
 	std::vector<Mission*> GetActiveMissions();
 
 	template<typename T>
