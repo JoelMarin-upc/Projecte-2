@@ -85,7 +85,7 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_credits_btn = { centerX - 125, centerY + 180, 250, 35 };
 	SDL_Rect b_exit = { centerX - 125, centerY + 230, 250, 35 };
 
-	SDL_Rect b_popUpTitle = { 20, 20, 300, 40 };
+	SDL_Rect b_popUpTitle = { 20, 20, 350, 40 };
 	SDL_Rect b_popUp = { 20, 80, sw / 3 * 2, 100 };
 
 	SDL_Rect b_missionJournalTitle = { 20, 20, 200, 60 };

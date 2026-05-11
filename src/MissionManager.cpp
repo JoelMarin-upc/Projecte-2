@@ -39,7 +39,7 @@ void MissionManager::LoadMissions()
 		bool active = missionNode.attribute("active").as_bool();
 		bool completed = missionNode.attribute("completed").as_bool();
 		std::vector<std::string> unlocksMissions;
-		for (pugi::xml_node unlockNode = missionNode.child("unlocks").child("mission"); unlockNode != NULL; unlockNode = unlockNode.next_sibling("unlock")) {
+		for (pugi::xml_node unlockNode = missionNode.child("unlocks").child("mission"); unlockNode != NULL; unlockNode = unlockNode.next_sibling("mission")) {
 			std::string unlockId = unlockNode.attribute("id").as_string();
 			if (unlockId != "") unlocksMissions.push_back(unlockId);
 		}
@@ -113,4 +113,12 @@ std::vector<Mission*> MissionManager::GetActiveMissions()
 	std::vector<Mission*> activeMissions = std::vector<Mission*>();
 	for (Mission* mission : missions) if (mission->active) activeMissions.push_back(mission);
 	return activeMissions;
+}
+
+bool MissionManager::IsMissionCompleted(std::string missionId)
+{
+	for (Mission* mission : missions)
+		if (mission->id == missionId)
+			return mission->completed;
+	return false;
 }

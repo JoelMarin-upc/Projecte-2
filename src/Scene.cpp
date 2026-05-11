@@ -124,8 +124,9 @@ bool Scene::Start(std::string spawnId)
 	dialogManager->Start();
 
 	if (gameStarted) {
-		CheckCompletedMissions<ReachMission>(id, "");
 		LoadDialogState();
+		LoadMissionState();
+		CheckCompletedMissions<ReachMission>(id, "");
 	}
 
 	if (id == "SC-001") {
@@ -309,6 +310,7 @@ void Scene::SaveGame()
 	charDoc.save_file("Assets/Entities/characters.xml");
 	SaveDialogState();
 	SaveMissionState();
+	UpdateInventory();
 	LOG("GAME SAVED");
 }
 
@@ -319,6 +321,8 @@ void Scene::LoadGame()
 
 void Scene::SaveSessionState()
 {
+	UpdateInventory(nullptr);
+
 	std::ifstream src("Assets/Entities/characters.xml", std::ios::binary);
 	std::ofstream dst("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
 	dst << src.rdbuf();
@@ -332,6 +336,7 @@ void Scene::SaveSessionState()
 	if (player) {
 		playerNode.attribute("savedX").set_value(player->position.getX());
 		playerNode.attribute("savedY").set_value(player->position.getY());
+		//playerNode.child("inventory").attribute("gold").set_value(player->inventory->gold);
 		SaveCharacterStats(playerNode, player);
 	}
 
@@ -587,9 +592,10 @@ void Scene::LoadScene(std::string spawnId)
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
 			std::string combatTexture = cNode.attribute("combatTexture").as_string();
+			std::string recuitMissionId = cNode.attribute("recuitMissionId").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
-			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
+			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId));
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
 			std::string animations = cNode.attribute("animations").as_string();
@@ -607,6 +613,7 @@ void Scene::LoadScene(std::string spawnId)
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
 			std::string combatTexture = cNode.attribute("combatTexture").as_string();
+			std::string recuitMissionId = cNode.attribute("recuitMissionId").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 
@@ -617,7 +624,7 @@ void Scene::LoadScene(std::string spawnId)
 			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
 			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 
-			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType));
+			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId));
 
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
@@ -635,7 +642,9 @@ void Scene::LoadScene(std::string spawnId)
 			if (iNode.attribute("id").as_string() != item.id) continue;
 			std::string name = iNode.attribute("name").as_string();
 			ItemDef* def = GetItemDefinition(item.id, name);
-			std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath));
+			std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+			newItem->price = def->gold;
+			newItem->stats = def->stats;
 		}
 	}
 }
@@ -665,6 +674,8 @@ Inventory* Scene::LoadInventory(pugi::xml_node characterNode)
 		ItemDef* def = GetItemDefinition(id, name);
 		
 		std::shared_ptr<InteractableItem> item = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, { -999999, -999999 }, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+		item->price = def->gold;
+		item->stats = def->stats;
 		inventory->AddItem(item);
 	}
 	std::string equippedWeapon = inventoryNode.attribute("equippedWeapon").as_string();
@@ -865,6 +876,8 @@ void Scene::CompleteMission(std::string missionId)
 	if (mission->reward.itemName == "") return;
 	ItemDef* def = GetItemDefinition("", mission->reward.itemName);
 	std::shared_ptr<InteractableItem> item = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, { -999999, -999999 }, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+	item->price = def->gold;
+	item->stats = def->stats;
 	player->inventory->AddItem(item);
 }
 

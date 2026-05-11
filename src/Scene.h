@@ -15,6 +15,8 @@
 #include "Combat.h"
 #include "EnemyParty.h"
 #include <unordered_map>
+#include <type_traits>
+#include <typeinfo>
 
 struct SDL_Texture;
 
@@ -103,15 +105,25 @@ public:
 	}
 
 	template<typename T>
+	bool HandleMissionItem(T* mission)
+	{
+		return true;
+	}
+
+	template<>
+	bool HandleMissionItem<BringMission>(BringMission* mission)
+	{
+		if (player->inventory->HasItem(mission->itemName)) return player->inventory->RemoveItem(mission->itemName);
+		else return false;
+	}
+
+	template<typename T>
 	inline void CheckCompletedMissions(std::string targetId, std::string targetName) {
 		std::vector<T*> missions = missionManager->GetMissions<T>(true);
 		for (T* mission : missions) {
 			if ((targetId != "" && mission->targetId == targetId) || 
 				(targetName != "" && mission->targetName == targetName)) {
-				if (BringMission* bringMission = dynamic_cast<BringMission*>(mission)) {
-					if (player->inventory->HasItem(bringMission->itemName)) player->inventory->RemoveItem(bringMission->itemName);
-					else continue;
-				}
+				if (!HandleMissionItem<T>(mission)) continue;
 				CompleteMission(mission->id);
 			}
 		}

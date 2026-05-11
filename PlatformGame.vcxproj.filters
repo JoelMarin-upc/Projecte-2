@@ -541,5 +541,7 @@
     <Xml Include="Assets\Missions\missions_clean.xml" />
     <Xml Include="Assets\Missions\missions.xml" />
     <Xml Include="Assets\Missions\missions_session.xml" />
+    <Xml Include="Assets\Dialogues\dialogues.xml" />
+    <Xml Include="Assets\Dialogues\dialogues_session.xml" />
   </ItemGroup>
 </Project>

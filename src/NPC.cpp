@@ -257,13 +257,13 @@ void NPC::OnDialogEnd()
 
 void NPC::Recruit()
 {
-	isRecruitConditionFulfilled = true; // for testing
+	isRecruitConditionFulfilled = recuitMissionId == "" || Engine::GetInstance().sceneManager->GetMissionManager()->IsMissionCompleted(recuitMissionId);
 	if (isRecruitConditionFulfilled && !party) {
 		LOG("%s joined the party!", name.c_str());
 		Engine::GetInstance().sceneManager->currentScene->player->AddPartyMember(std::dynamic_pointer_cast<NPC>(shared_from_this()), true);
 	}
-	else {
-
+	else if (recuitMissionId != "") {
+		Engine::GetInstance().sceneManager->GetMissionManager()->ActivateMission(recuitMissionId);
 	}
 }
 

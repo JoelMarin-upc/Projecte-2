@@ -44,6 +44,7 @@ public:
 	Mission* ActivateMission(std::string missionId);
 	Mission* CompleteMission(std::string missionId);
 	std::vector<Mission*> GetActiveMissions();
+	bool IsMissionCompleted(std::string missionId);
 
 	template<typename T>
 	inline std::vector<T*> GetMissions(bool onlyActive)
@@ -52,7 +53,7 @@ public:
 
 		for (const auto& m : missions) {
 			if (onlyActive && !m->active) continue;
-			if (T* casted = static_cast<T*>(m)) result.push_back(casted);
+			if (T* casted = dynamic_cast<T*>(m)) result.push_back(casted);
 		}
 
 		return result;
