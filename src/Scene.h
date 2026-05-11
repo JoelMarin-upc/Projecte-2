@@ -14,6 +14,7 @@
 #include "MenuManager.h"
 #include "Combat.h"
 #include "EnemyParty.h"
+#include "DungeonExit.h"
 
 struct SDL_Texture;
 
@@ -82,6 +83,8 @@ public:
 	void ToggleInventoryForCombat();
 	void ToggleShop(NPC* shopOwner);
 	void UpdateInventory(NPC* shopOwner = nullptr) const;
+
+	void OnLeverToggled();
 
 	void CheckTransitions();
 
@@ -189,4 +192,5 @@ private:
 	bool isUnequipping = false;
 
 	NPC* shopOwner = nullptr;
+	DungeonExit* dungeonExit = nullptr;
 };

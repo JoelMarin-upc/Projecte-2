@@ -950,6 +950,13 @@ void Scene::UpdateInventory(NPC* shopOwner) const
 	doc.save_file("Assets/Entities/characters.xml");
 }
 
+void Scene::OnLeverToggled()
+{
+	if (dungeonExit) {
+		dungeonExit->Unlock();
+	}
+}
+
 //Checks if the player is at a transition rectagle
 void Scene::CheckTransitions()
 {
@@ -957,6 +964,9 @@ void Scene::CheckTransitions()
 	Vector2D playerPos = player->position;
 
 	for (AccessData& t : mapData.accesses) {
+		if (t.targetSpawnId == "refuge_from_dungeon" && dungeonExit && !dungeonExit->isToggled) {
+			continue;
+		}
 		if (playerPos.getX() >= t.position.getX() && playerPos.getX() <= t.position.getX() + t.width && playerPos.getY() >= t.position.getY() && playerPos.getY() <= t.position.getY() + t.height) {
 			SaveSessionState();
 			Engine::GetInstance().sceneManager->SetCurrentScene(t.targetSceneId, t.targetSpawnId);

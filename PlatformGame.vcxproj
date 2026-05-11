@@ -172,6 +172,8 @@
     <ClCompile Include="src\DialogManager.cpp" />
     <ClCompile Include="src\DialogNode.cpp" />
     <ClCompile Include="src\DialogTree.cpp" />
+    <ClCompile Include="src\DungeonExit.cpp" />
+    <ClCompile Include="src\DungeonLever.cpp" />
     <ClCompile Include="src\DynamicEntity.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\EnemyParty.cpp" />
@@ -243,6 +245,8 @@
     <ClInclude Include="src\DialogManager.h" />
     <ClInclude Include="src\DialogNode.h" />
     <ClInclude Include="src\DialogTree.h" />
+    <ClInclude Include="src\DungeonExit.h" />
+    <ClInclude Include="src\DungeonLever.h" />
     <ClInclude Include="src\DynamicEntity.h" />
     <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\EnemyParty.h" />
