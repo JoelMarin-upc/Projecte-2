@@ -111,6 +111,8 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_fxVolume = { centerX + 100, centerY - 50, 200, 25 };
 	SDL_Rect b_fullscreen_lbl = { centerX - 300, centerY - 0, 200, 25 };
 	SDL_Rect b_fullscreen = { centerX + 100, centerY - 0, 25, 25 };
+	SDL_Rect b_vsync_lbl = { centerX - 300, centerY + 50, 200, 25 };
+	SDL_Rect b_vsync = { centerX + 100, centerY + 50, 25, 25 };
 	SDL_Rect b_backMenu = { centerX - 100, centerY + 210, 144, 64 };
 
 	//Credits menu elements
@@ -142,7 +144,10 @@ void MenuManager::Load(bool onlyPositions)
 		fxVolumeLabel->SetBounds(b_fxVolume_lbl);
 		fxVolumeSlider->SetBounds(b_fxVolume);
 		fullscreenLabel->SetBounds(b_fullscreen_lbl);
+		vsyncLabel->SetBounds(b_vsync_lbl);
+		vsyncCheckbox->SetBounds(b_vsync);
 		fullscreenCheckbox->SetBounds(b_fullscreen);
+
 		backMenu->SetBounds(b_backMenu);
 		backMainMenu->SetBounds(b_backMainMenu);
 		exit->SetBounds(b_exit);
@@ -169,6 +174,8 @@ void MenuManager::Load(bool onlyPositions)
 		fxVolumeSlider = std::dynamic_pointer_cast<UISlider>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLIDER, (int)FX_VOLUME, b_fxVolume, this, { white, mainColorDis, mainColorDef, mainColorHov, mainColorPre, mainColorDis, white }, hoverFxId, clickFxId, UIParameters::Slider(true, 0, 10, 1, 10)));
 		fullscreenLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)FULLSCREEN_LABEL, b_fullscreen_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Fullscreen")));
 		fullscreenCheckbox = std::dynamic_pointer_cast<UICheckbox>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::CHECKBOX, (int)FULLSCREEN, b_fullscreen, this, { mainColorDef, mainColorHov, mainColorDis, black, secondaryDef, secondaryDis }, hoverFxId, clickFxId, UIParameters::Checkbox(5, false)));
+		vsyncLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)VSYNC_LABEL, b_vsync_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("VSync")));
+		vsyncCheckbox = std::dynamic_pointer_cast<UICheckbox>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::CHECKBOX, (int)VSYNC, b_vsync, this, { mainColorDef, mainColorHov, mainColorDis, black, secondaryDef, secondaryDis }, hoverFxId, clickFxId, UIParameters::Checkbox(5, false)));
 		backMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MENU, b_backMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
 		backMainMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MAIN_MENU, b_backMainMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
 		exit = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)EXIT, b_exit, this, { }, hoverFxId, clickFxId, UIParameters::Image(exitDis, exitNormal, exitHov, exitPres)));
@@ -310,6 +317,8 @@ void MenuManager::SetObserver(Module* observer)
 	fxVolumeSlider->observer = observer;
 	fullscreenLabel->observer = observer;
 	fullscreenCheckbox->observer = observer;
+	vsyncLabel->observer = observer;
+	vsyncCheckbox->observer = observer;
 	backMenu->observer = observer;
 	backMainMenu->observer = observer;
 	exit->observer = observer;
@@ -390,6 +399,10 @@ void MenuManager::ShowSettingsMenu()
 	fullscreenLabel->active = true;
 	fullscreenCheckbox->active = true;
 	fullscreenCheckbox->checked = Engine::GetInstance().window->fullscreen;
+	vsyncLabel->active = true;
+	vsyncCheckbox->active = true;
+	vsyncCheckbox->checked = Engine::GetInstance().vsyncEnabled;
+
 	backMenu->active = true;
 }
 
@@ -464,6 +477,8 @@ void MenuManager::HideMenu()
 	fxVolumeSlider->active = false;
 	fullscreenLabel->active = false;
 	fullscreenCheckbox->active = false;
+	vsyncLabel->active = false;
+	vsyncCheckbox->active = false;
 	backMenu->active = false;
 	backMainMenu->active = false;
 	exit->active = false;

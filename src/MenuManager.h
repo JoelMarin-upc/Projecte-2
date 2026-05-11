@@ -35,6 +35,8 @@ enum UIID {
 	FX_VOLUME,
 	FULLSCREEN_LABEL,
 	FULLSCREEN,
+	VSYNC_LABEL,
+	VSYNC,
 	BACK_MENU,
 	BACK_MAIN_MENU,
 	EXIT,
@@ -141,6 +143,8 @@ public:
 	std::shared_ptr<UISlider> fxVolumeSlider;
 	std::shared_ptr<UILabel> fullscreenLabel;
 	std::shared_ptr<UICheckbox> fullscreenCheckbox;
+	std::shared_ptr<UILabel> vsyncLabel;
+	std::shared_ptr<UICheckbox> vsyncCheckbox;
 	std::shared_ptr<UIImage> backMenu;
 	std::shared_ptr<UIImage> backMainMenu;
 	std::shared_ptr<UIImage> exit;

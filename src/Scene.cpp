@@ -1227,6 +1227,9 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		Engine::GetInstance().window->SetFullscreen(((UICheckbox*)uiElement)->checked);
 		Engine::GetInstance().menuManager->Load(true);
 		break;
+	case VSYNC:
+		Engine::GetInstance().SetVSync(Engine::GetInstance().menuManager->vsyncCheckbox->checked);
+		break;
 	case BACK_MENU:
 		Engine::GetInstance().menuManager->ShowPreviousMenu();
 		break;
