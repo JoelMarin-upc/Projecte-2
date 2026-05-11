@@ -47,6 +47,7 @@ private:
 
 	DialogTree* currentDialog;
 	SDL_Texture* dialogBox;
+	SDL_Texture* answerBox;
 	std::shared_ptr<UILabel> dialogText;
 	std::shared_ptr<UILabel> speakerName;
 	std::shared_ptr<UIButton> answer1;
