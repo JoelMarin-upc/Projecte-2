@@ -1,17 +1,19 @@
 <?xml version="1.0"?>
 <characters savedGame="false">
-	<player id="player" name="main character" texture="SpriteSheet_Garnik.png" combatTexture="garnikCombat.png" animations="Garnik_SpriteSheet.tsx" savedX="1496" savedY="269">
+	<player id="player" name="main character" texture="SpriteSheet_Garnik.png" combatTexture="garnikCombat.png" animations="Garnik_SpriteSheet.tsx" savedX="-1" savedY="-1">
 		<stats>
-			<stat name="health" value="50" max="100" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="30" />
-			<stat name="defense" value="10" />
+			<stat name="health" value="100" max="100" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="30"/>
+			<stat name="defense" value="10"/>
 		</stats>
+		<party>
+			
+		</party>
 		<inventory gold="50">
 			<item id="" name="sword" description="30 attack" texture="sword.png" type="4" itemClass="weapon" interactionType="1" canStack="true" />
 			<item id="" name="sword" description="30 attack" texture="sword.png" type="4" itemClass="weapon" interactionType="1" canStack="true" />
 		</inventory>
-		<party />
 	</player>
 	<character id="CH-001" name="Gravekeeper" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
 		<inventory />
@@ -28,18 +30,18 @@
 	<character id="CH-005" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="80" max="80" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="35" />
-			<stat name="defense" value="5" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="35"/>
+			<stat name="defense" value="5"/>
 		</stats>
 		<inventory />
 	</character>
 	<character id="CH-006" name="follower" texture="SpriteSheet_Barbara.png" combatTexture="barbaraCombat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="100" max="100" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="30" />
-			<stat name="defense" value="10" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="30"/>
+			<stat name="defense" value="10"/>
 		</stats>
 		<inventory>
 			<item id="" name="potion" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true" />
@@ -48,9 +50,9 @@
 	<character id="CH-007" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="150" max="150" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="20" />
-			<stat name="defense" value="20" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="20"/>
+			<stat name="defense" value="20"/>
 		</stats>
 		<inventory>
 			<item id="" name="potion" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true" />
@@ -59,18 +61,18 @@
 	<character id="CH-008" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="150" max="150" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="20" />
-			<stat name="defense" value="20" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="20"/>
+			<stat name="defense" value="20"/>
 		</stats>
 		<inventory />
 	</character>
 	<character id="CH-009" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="80" max="80" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="35" />
-			<stat name="defense" value="5" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="35"/>
+			<stat name="defense" value="5"/>
 		</stats>
 		<inventory>
 			<item id="" name="potion" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true" />
@@ -80,9 +82,9 @@
 	<character id="CH-010" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="80" max="80" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="35" />
-			<stat name="defense" value="5" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="35"/>
+			<stat name="defense" value="5"/>
 		</stats>
 		<inventory />
 	</character>
