@@ -3,7 +3,10 @@
 #include "Module.h"
 #include "Inventory.h"
 #include "UIManager.h"
+#include "MissionManager.h"
+#include "Timer.h"
 #include <list>
+#include <queue>
 
 enum MenuType {
 	MAIN,
@@ -13,6 +16,7 @@ enum MenuType {
 	INVENTORY,
 	SHOP,
 	COMBAT_INVENTORY,
+	MISSION_JOURNAL,
 	DEATHSCREEN,
 	NONE
 };
@@ -40,6 +44,9 @@ enum UIID {
 	BACK_MENU,
 	BACK_MAIN_MENU,
 	EXIT,
+	POPUP_TITLE,
+	POPUP,
+	MISSION_JOURNAL_TITLE,
 	C_PLAYER,
 	C_NPC1,
 	C_NPC2,
@@ -78,6 +85,8 @@ enum UIID {
 	EXIT_SHOP
 };
 
+const float POP_UP_SECONDS = 5.f;
+
 class MenuManager : public Module
 {
 public:
@@ -113,6 +122,10 @@ public:
 	void ShowInventory(Inventory* inventory);
 	void ShowShop(Inventory* customer, Inventory* shop);
 	void ShowDeathScreen();
+	void AddMissionPopup(Mission* mission);
+	void ShowMissionPopup(Mission* mission, float popUpSeconds = POP_UP_SECONDS);
+	void HideMissionPopup();
+	void ShowMissionJournal(MissionManager* missionManager);
 	void HideMenu();
 	void ShowPreviousMenu();
 	void RedrawInventory();
@@ -149,6 +162,13 @@ public:
 	std::shared_ptr<UIImage> backMainMenu;
 	std::shared_ptr<UIImage> exit;
 
+	std::shared_ptr<UIButton> missionPopUpTitle;
+	std::shared_ptr<UIButton> missionPopUp;
+
+	std::shared_ptr<UIButton> missionJournalTitle;
+	std::vector<std::shared_ptr<UIButton>> missionJournal;
+	const int baseJournalId = 800;
+
 	int uiLockFrame = -1;
 
 	const int baseSlotsId = 900;
@@ -172,4 +192,9 @@ public:
 
 	Inventory* currentInventory = nullptr;
 	Inventory* currentShop = nullptr;
+
+	std::queue<Mission*> popUpQueue = std::queue<Mission*>();
+	Timer popUpTimer;
+	float popUpSeconds = 0.f;
+	bool showingPopUp = false;
 };

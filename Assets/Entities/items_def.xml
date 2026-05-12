@@ -1,33 +1,35 @@
 <?xml version="1.0"?>
 <items>
-	<item itemName="sword" gold="10">
+	<item id="" name="sword" gold="10" description="30 attack" texture="sword.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
 		<stats>
 			<stat name="attack" value="30"/>
 		</stats>
 	</item>
-	<item itemName="potion" gold="5">
+	<item id="" name="potion" gold="5" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true">
 		<stats>
 			<stat name="health" value="20" />
 		</stats>
 	</item>
-	<item itemName="helmet" gold="12">
+	<item id="" name="helmet" gold="12" description="20 defense" texture="helmet.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="0">
 		<stats>
 			<stat name="defense" value="20" />
 		</stats>
 	</item>
-	<item itemName="armor" gold="15">
+	<item id="" name="armor" gold="15" description="30 defense" texture="armor.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="1">
 		<stats>
 			<stat name="defense" value="30" />
 		</stats>
 	</item>
-	<item itemName="leather boots" gold="5">
+	<item id="" name="leather boots" gold="5" description="5 defense" texture="boots1.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="2">
 		<stats>
 			<stat name="defense" value="5" />
 		</stats>
 	</item>
-	<item itemName="steel boots" gold="8">
+	<item id="" name="steel boots" gold="8" description="10 defense" texture="boots2.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="2">
 		<stats>
 			<stat name="defense" value="10" />
 		</stats>
 	</item>
+	<item id="IT-001" name="statue" texture="transparent.png" type="4" itemClass="item" interactionType="3" canStack="false"/>
+	<item id="LEVER-001" name="Lever" texture="dungeonLeverClosed.png" type="4" itemClass="item" interactionType="2" canStack="false" toggledTexturePath="dungeonLeverOpened.png"/>
 </items>

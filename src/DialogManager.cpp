@@ -65,6 +65,7 @@ void DialogManager::LoadDialogs()
 		tree->id = treeNode.attribute("id").as_string();
 		tree->characterId = treeNode.attribute("characterId").as_string();
 		tree->characterName = treeNode.attribute("characterName").as_string();
+		tree->missionId = treeNode.attribute("missionId").as_string();
 		tree->order = treeNode.attribute("order").as_int();
 		tree->done = treeNode.attribute("done").as_bool();
 		tree->isRepeatable = treeNode.attribute("isRepeatable").as_bool(false);
@@ -124,18 +125,36 @@ bool DialogManager::SetCurrentDialog(std::string characterId)
 		return false;
 	}
 
+	
+
 	DialogTree* dialog = nullptr;
-	int bestOrder = std::numeric_limits<int>::max();
-
-	for (DialogTree* t : dialogs)
-	{
-		if (t->characterId != characterId) continue;
-		if (t->done) continue;
-
-		if (t->order < bestOrder)
-		{
-			bestOrder = t->order;
+	
+	bool missionDialogReady = false;
+	for (DialogTree* t : dialogs) {
+		if (t->characterId == characterId &&
+			!t->done &&
+			t->missionId != "" &&
+			Engine::GetInstance().sceneManager->GetMissionManager()->IsMissionCompleted(t->missionId)) {
+			missionDialogReady = true;
 			dialog = t;
+		}
+	}
+
+	if (!missionDialogReady)
+	{
+		int bestOrder = std::numeric_limits<int>::max();
+
+		for (DialogTree* t : dialogs)
+		{
+			if (t->characterId != characterId) continue;
+			if (t->done) continue;
+			if (t->missionId != "" && !Engine::GetInstance().sceneManager->GetMissionManager()->IsMissionCompleted(t->missionId)) continue;
+
+			if (t->order < bestOrder)
+			{
+				bestOrder = t->order;
+				dialog = t;
+			}
 		}
 	}
 

@@ -44,4 +44,6 @@ public:
 	std::shared_ptr<Weapon> equippedWeapon = nullptr;
 
 	int gold = 0;
+
+	bool isPlayerInventory = false;
 };

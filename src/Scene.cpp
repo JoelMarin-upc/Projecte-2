@@ -137,6 +137,8 @@ bool Scene::Start(std::string spawnId)
 
 	if (gameStarted) {
 		LoadDialogState();
+		LoadMissionState();
+		CheckCompletedMissions<ReachMission>(id, "");
 	}
 
 	if (id == "SC-001") {
@@ -145,7 +147,6 @@ bool Scene::Start(std::string spawnId)
 			Engine::GetInstance().sceneManager->triggerFirstMonologue = false;
 		}
 	}
-
 
 	return true;
 }
@@ -185,6 +186,8 @@ bool Scene::Update(float dt)
 
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN || Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) TogglePause();
 	
+	missionManager->Update(dt);
+	
 	if (combat) {
 		combat->Update(dt);
 		if (combat->combatResult != CombatResult::NO_RESULT) EndCombat(combat->enemyParty, combat->combatResult);
@@ -197,10 +200,13 @@ bool Scene::Update(float dt)
 	////////////////////////////////////////////////
 
 	CheckTimers();
-	if (!isOnDialog && !paused) ToggleInventory();
+	if (!isOnDialog && !paused)
+	{
+		ToggleInventory();
+		ToggleJournal();
+	}
 	map->Update(dt);
 	entityManager->Update(dt);
-	missionManager->Update(dt);
 	dialogManager->Update(dt);
 
 	if (gameStarted && !paused && !isOnDialog) {
@@ -483,6 +489,8 @@ void Scene::SaveGame()
 
 	charDoc.save_file("Assets/Entities/characters.xml");
 	SaveDialogState();
+	SaveMissionState();
+	UpdateInventory();
 	LOG("GAME SAVED");
 }
 
@@ -493,6 +501,8 @@ void Scene::LoadGame()
 
 void Scene::SaveSessionState()
 {
+	UpdateInventory(nullptr);
+
 	std::ifstream src("Assets/Entities/characters.xml", std::ios::binary);
 	std::ofstream dst("Assets/Entities/characters_session.xml", std::ios::binary | std::ios::trunc);
 	dst << src.rdbuf();
@@ -506,6 +516,7 @@ void Scene::SaveSessionState()
 	if (player) {
 		playerNode.attribute("savedX").set_value(player->position.getX());
 		playerNode.attribute("savedY").set_value(player->position.getY());
+		//playerNode.child("inventory").attribute("gold").set_value(player->inventory->gold);
 		SaveCharacterStats(playerNode, player);
 	}
 
@@ -541,8 +552,8 @@ void Scene::SaveSessionState()
 	doc.save_file("Assets/Entities/characters_session.xml");
 
 	pugi::xml_document dialogDoc = XMLHandler::LoadFile("Assets/Dialogues/dialogues.xml");
-	pugi::xml_node root = dialogDoc.child("dialogs");
-	for (pugi::xml_node treeNode = root.child("tree"); treeNode; treeNode = treeNode.next_sibling("tree")) {
+	pugi::xml_node dialogRoot = dialogDoc.child("dialogs");
+	for (pugi::xml_node treeNode = dialogRoot.child("tree"); treeNode; treeNode = treeNode.next_sibling("tree")) {
 		std::string treeId = treeNode.attribute("id").as_string();
 		for (DialogTree* tree : dialogManager->dialogs) {
 			if (tree->id == treeId) {
@@ -552,6 +563,20 @@ void Scene::SaveSessionState()
 		}
 	}
 	dialogDoc.save_file("Assets/Dialogues/dialogues_session.xml");
+
+	pugi::xml_document missionDoc = XMLHandler::LoadFile("Assets/Missions/missions.xml");
+	pugi::xml_node missionRoot = missionDoc.child("missions");
+	for (pugi::xml_node missionNode = missionRoot.child("mission"); missionNode; missionNode = missionNode.next_sibling("mission")) {
+		std::string missionId = missionNode.attribute("id").as_string();
+		for (Mission* mission : missionManager->missions) {
+			if (mission->id == missionId) {
+				missionNode.attribute("active").set_value(mission->active);
+				missionNode.attribute("completed").set_value(mission->completed);
+				break;
+			}
+		}
+	}
+	missionDoc.save_file("Assets/Missions/missions_session.xml");
 }
 
 void Scene::SaveDialogState()
@@ -589,6 +614,44 @@ void Scene::LoadDialogState()
 	}
 }
 
+void Scene::SaveMissionState()
+{
+	pugi::xml_document missionDoc = XMLHandler::LoadFile("Assets/Missions/missions.xml");
+	pugi::xml_node root = missionDoc.child("missions");
+
+	for (pugi::xml_node missionNode = root.child("mission"); missionNode != NULL; missionNode = missionNode.next_sibling("mission")) {
+		std::string missionId = missionNode.attribute("id").as_string();
+		for (Mission* mission : missionManager->missions) {
+			if (mission->id == missionId) {
+				missionNode.attribute("active").set_value(mission->active);
+				missionNode.attribute("completed").set_value(mission->completed);
+				break;
+			}
+		}
+	}
+	missionDoc.save_file("Assets/Missions/missions.xml");
+}
+
+void Scene::LoadMissionState()
+{
+	pugi::xml_document missionDoc = XMLHandler::LoadFile("Assets/Missions/missions_session.xml");
+	//pugi::xml_document missionDoc = XMLHandler::LoadFile("Assets/Missions/missions.xml");
+	pugi::xml_node root = missionDoc.child("missions");
+
+	for (pugi::xml_node missionNode = root.child("mission"); missionNode != NULL; missionNode = missionNode.next_sibling("mission")) {
+		std::string missionId = missionNode.attribute("id").as_string();
+		bool active = missionNode.attribute("active").as_bool();
+		bool completed = missionNode.attribute("completed").as_bool();
+		for (Mission* mission : missionManager->missions) {
+			if (mission->id == missionId) {
+				mission->active = active;
+				mission->completed = completed;
+				break;
+			}
+		}
+	}
+}
+
 void Scene::SaveCharacterStats(pugi::xml_node charNode, std::shared_ptr<Character> character)
 {
 	pugi::xml_node statsNode = charNode.child("stats");
@@ -612,6 +675,8 @@ void Scene::LoadMap(std::string mapPath, std::string mapName)
 
 void Scene::LoadScene(std::string spawnId)
 {
+	LoadItemDefinitions();
+
 	pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
 	//pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
 	pugi::xml_node characters = charactersDoc.child("characters");
@@ -672,6 +737,7 @@ void Scene::LoadScene(std::string spawnId)
 	Engine::GetInstance().render->follow = player;
 	player->stats = LoadStats(pNode);
 	player->inventory = LoadInventory(pNode);
+	player->inventory->isPlayerInventory = true;
 
 	//Uncomment when I find a fix
 	/*float savedX = pNode.attribute("savedX").as_float();
@@ -706,9 +772,10 @@ void Scene::LoadScene(std::string spawnId)
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
 			std::string combatTexture = cNode.attribute("combatTexture").as_string();
+			std::string recuitMissionId = cNode.attribute("recuitMissionId").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
-			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType));
+			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId));
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
 			std::string animations = cNode.attribute("animations").as_string();
@@ -726,6 +793,7 @@ void Scene::LoadScene(std::string spawnId)
 			std::string name = cNode.attribute("name").as_string();
 			std::string texture = cNode.attribute("texture").as_string();
 			std::string combatTexture = cNode.attribute("combatTexture").as_string();
+			std::string recuitMissionId = cNode.attribute("recuitMissionId").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 
@@ -736,7 +804,7 @@ void Scene::LoadScene(std::string spawnId)
 			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
 			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 
-			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType));
+			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId));
 
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
@@ -753,15 +821,10 @@ void Scene::LoadScene(std::string spawnId)
 		for (pugi::xml_node iNode = items.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
 			if (iNode.attribute("id").as_string() != item.id) continue;
 			std::string name = iNode.attribute("name").as_string();
-			std::string description = iNode.attribute("description").as_string();
-			std::string texture = iNode.attribute("texture").as_string();
-			int type = iNode.attribute("type").as_int();
-			int interactionType = iNode.attribute("interactionType").as_int();
-			bool canStack = iNode.attribute("canStack").as_bool();
-			std::string itemClass = iNode.attribute("itemClass").as_string("item");
-			std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
-			std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(item.id, name, description, baseTexturePath + texture, item.position, itemClass, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath));
-			LoadItemDefinition(newItem);
+			ItemDef* def = GetItemDefinition(item.id, name);
+			std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+			newItem->price = def->gold;
+			newItem->stats = def->stats;
 		}
 	}
 }
@@ -788,16 +851,11 @@ Inventory* Scene::LoadInventory(pugi::xml_node characterNode)
 	for (pugi::xml_node iNode = inventoryNode.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
 		std::string id = iNode.attribute("id").as_string();
 		std::string name = iNode.attribute("name").as_string();
-		std::string description = iNode.attribute("description").as_string();
-		std::string texture = iNode.attribute("texture").as_string();
-		int type = iNode.attribute("type").as_int();
-		int interactionType = iNode.attribute("interactionType").as_int();
-		bool canStack = iNode.attribute("canStack").as_bool();
-		std::string itemClass = iNode.attribute("itemClass").as_string("item");
-		std::string toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
-		int slot = iNode.attribute("slot").as_int();
-		std::shared_ptr<InteractableItem> item = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(id, name, description, baseTexturePath + texture, { -999999, -999999 }, itemClass, (EntityType)type, (ItemInteractionType)interactionType, (bool)canStack, baseTexturePath + toggledTexturePath, (GearSlot)slot));
-		LoadItemDefinition(item);
+		ItemDef* def = GetItemDefinition(id, name);
+		
+		std::shared_ptr<InteractableItem> item = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, { -999999, -999999 }, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+		item->price = def->gold;
+		item->stats = def->stats;
 		inventory->AddItem(item);
 	}
 	std::string equippedWeapon = inventoryNode.attribute("equippedWeapon").as_string();
@@ -812,17 +870,46 @@ Inventory* Scene::LoadInventory(pugi::xml_node characterNode)
 	return inventory;
 }
 
-void Scene::LoadItemDefinition(std::shared_ptr<InteractableItem> item)
+void Scene::LoadItemDefinitions()
 {
+	itemDefs = std::unordered_map<std::string, ItemDef*>();
 	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/items_def.xml");
 	for (pugi::xml_node iNode = doc.child("items").child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
-		if (iNode.attribute("itemName").as_string() == item->name)
-		{
-			item->price = iNode.attribute("gold").as_int();
-			item->stats = LoadStats(iNode);
-			return;
-		}
+		ItemDef* def = new ItemDef();
+		def->id = iNode.attribute("id").as_string();
+		def->name = iNode.attribute("name").as_string();
+		def->description = iNode.attribute("description").as_string();
+		def->texturePath = iNode.attribute("texture").as_string();
+		def->type = (EntityType)iNode.attribute("type").as_int();
+		def->interactionType = (ItemInteractionType)iNode.attribute("interactionType").as_int();
+		def->canStack = iNode.attribute("canStack").as_bool();
+		def->itemClass = iNode.attribute("itemClass").as_string("item");
+		def->toggledTexturePath = iNode.attribute("toggledTexturePath").as_string();
+		def->slot = iNode.attribute("slot").as_int();
+		def->gold = iNode.attribute("gold").as_int();
+		def->stats = LoadStats(iNode);
+
+		std::string key = def->id;
+		if (key == "") key = def->name;
+		itemDefs.insert({ key, def });
 	}
+}
+
+ItemDef* Scene::GetItemDefinition(std::string id, std::string name)
+{
+	if (id != "")
+	{
+		auto it = itemDefs.find(id);
+		if (it != itemDefs.end()) return it->second;
+	}
+
+	if (name != "")
+	{
+		auto it = itemDefs.find(name);
+		if (it != itemDefs.end()) return it->second;
+	}
+
+	return nullptr;
 }
 
 void Scene::EndScene()
@@ -862,6 +949,15 @@ void Scene::ToggleInventoryForCombat()
 	showingInventoryForCombat = !showingInventoryForCombat;
 	if (showingInventoryForCombat) Engine::GetInstance().menuManager->ShowCombatInventory(player->inventory);
 	else Engine::GetInstance().menuManager->HideMenu();
+}
+
+void Scene::ToggleJournal()
+{
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_J) == KEY_DOWN)
+	{
+		if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) Engine::GetInstance().menuManager->HideMenu();
+		else Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);
+	}
 }
 
 void Scene::ToggleShop(NPC* shopOwner)
@@ -924,7 +1020,7 @@ void Scene::UpdateInventory(NPC* shopOwner) const
 			pugi::xml_node iNode = invNode.append_child("item");
 			iNode.append_attribute("id").set_value(item->id.c_str());
 			iNode.append_attribute("name").set_value(item->name.c_str());
-			iNode.append_attribute("description").set_value(item->description.c_str());
+			/*iNode.append_attribute("description").set_value(item->description.c_str());
 			iNode.append_attribute("texture").set_value(ExtractFilename(item->texturePath).c_str());
 			iNode.append_attribute("type").set_value((int)item->type);
 			const char* itemClass = "item";
@@ -939,7 +1035,7 @@ void Scene::UpdateInventory(NPC* shopOwner) const
 			iNode.append_attribute("itemClass").set_value(itemClass);
 			iNode.append_attribute("interactionType").set_value((int)item->itemInteractionType);
 			iNode.append_attribute("canStack").set_value(item->canStack);
-			if (slot != -1) iNode.append_attribute("slot").set_value(slot);
+			if (slot != -1) iNode.append_attribute("slot").set_value(slot);*/
 		}
 	}
 	if (inventory->equippedWeapon) invNode.append_attribute("equippedWeapon").set_value(inventory->equippedWeapon->name.c_str());
@@ -955,6 +1051,20 @@ void Scene::OnLeverToggled()
 	if (dungeonExit) {
 		dungeonExit->Unlock();
 	}
+
+void Scene::CompleteMission(std::string missionId)
+{
+	Mission* mission = missionManager->CompleteMission(missionId);
+	if (!mission) return;
+	Engine::GetInstance().menuManager ->AddMissionPopup(mission);
+	for (Mission* unlock : mission->unlocksMissionsValues) Engine::GetInstance().menuManager->AddMissionPopup(unlock);
+	player->inventory->AddGold(mission->reward.gold);
+	if (mission->reward.itemName == "") return;
+	ItemDef* def = GetItemDefinition("", mission->reward.itemName);
+	std::shared_ptr<InteractableItem> item = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, { -999999, -999999 }, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+	item->price = def->gold;
+	item->stats = def->stats;
+	player->inventory->AddItem(item);
 }
 
 //Checks if the player is at a transition rectagle
@@ -980,6 +1090,8 @@ void Scene::StartDialog(std::string characterId)
 {
 	if (!gameStarted) return;
 	if (isOnDialog) return;
+	CheckCompletedMissions<TalkMission>(characterId, "");
+	CheckCompletedMissions<BringMission>(characterId, "");
 	if (!dialogManager->SetCurrentDialog(characterId)) return;
 	isOnDialog = true;
 	activeDialogId = characterId;
@@ -995,6 +1107,10 @@ void Scene::EndDialog()
 	if (!activeDialogId.empty()) {
 		if (activeDialogId == "statue") {
 			SaveGame();
+		}
+		if (activeDialogId == "player") {
+			Mission* mission = missionManager->ActivateMission("MI-000");
+			if (mission) Engine::GetInstance().menuManager->AddMissionPopup(mission);
 		}
 		for (const auto& entity : entityManager->entities) {
 			if (entity->id == activeDialogId) {
@@ -1047,7 +1163,10 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	switch (combatResult)
 	{
 	case WIN:
-		for (const auto& enemy : enemyParty->members) entityManager->DestroyEntity(enemy);
+		for (const auto& enemy : enemyParty->members) {
+			CheckCompletedMissions<KillMission>(enemy->id, enemy->name);
+			entityManager->DestroyEntity(enemy);
+		}
 		for (const auto& npc : player->party->members) {
 			if (npc->isDead) {
 				Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
@@ -1118,6 +1237,21 @@ void Scene::CopyCleanGameData()
 	{
 		std::ifstream src("Assets/Dialogues/dialogues_clean.xml", std::ios::binary);
 		std::ofstream dst2("Assets/Dialogues/dialogues_session.xml", std::ios::binary | std::ios::trunc);
+		dst2 << src.rdbuf();
+		src.close();
+		dst2.close();
+	}
+
+	{
+		std::ifstream src("Assets/Missions/missions_clean.xml", std::ios::binary);
+		std::ofstream dst1("Assets/Missions/missions.xml", std::ios::binary | std::ios::trunc);
+		dst1 << src.rdbuf();
+		src.close();
+		dst1.close();
+	}
+	{
+		std::ifstream src("Assets/Missions/missions_clean.xml", std::ios::binary);
+		std::ofstream dst2("Assets/Missions/missions_session.xml", std::ios::binary | std::ios::trunc);
 		dst2 << src.rdbuf();
 		src.close();
 		dst2.close();
