@@ -7,7 +7,7 @@ public:
         : InteractableItem(id, name, description, texturePath, ItemInteractionType::DIALOGUE, false, unlockedTexturePath) {
         isLocked = true;
     }
-
+    bool Start() override;
     void Unlock();
 
 protected:

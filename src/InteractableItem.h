@@ -36,7 +36,7 @@ public:
 
 	virtual bool Awake() override;
 
-	virtual bool Start() override;
+	virtual bool Start();
 
 	virtual bool Update(float dt) override;
 

@@ -1051,6 +1051,7 @@ void Scene::OnLeverToggled()
 	if (dungeonExit) {
 		dungeonExit->Unlock();
 	}
+}
 
 void Scene::CompleteMission(std::string missionId)
 {
