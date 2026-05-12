@@ -8,6 +8,8 @@
 #include "Item.h"
 #include "NPC.h"
 #include "InteractableItem.h"
+#include "DungeonLever.h"
+#include "DungeonExit.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -107,6 +109,8 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 		if (itemClass == "weapon") entity = std::make_shared<Weapon>(id, name, description, texturePath, canStack);
 		else if (itemClass == "gear") entity = std::make_shared<Gear>(id, name, description, texturePath, slot, canStack);
 		else if (itemClass == "consumable") entity = std::make_shared<Consumable>(id, name, description, texturePath, canStack);
+		else if (itemClass == "lever") entity = std::make_shared<DungeonLever>(id, name, description, texturePath, toggledTexturePath);
+		else if (itemClass == "exit") entity = std::make_shared<DungeonExit>(id, name, description, texturePath);
 		else entity = std::make_shared<InteractableItem>(id, name, description, texturePath, interactionType, canStack, toggledTexturePath);
 		break;
 	default:

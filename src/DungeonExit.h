@@ -3,8 +3,8 @@
 
 class DungeonExit : public InteractableItem {
 public:
-    DungeonExit(std::string id, std::string name, std::string description, std::string texturePath, std::string unlockedTexturePath = "")
-        : InteractableItem(id, name, description, texturePath, ItemInteractionType::DIALOGUE, false, unlockedTexturePath) {
+    DungeonExit(std::string id, std::string name, std::string description, std::string texturePath)
+        : InteractableItem(id, name, description, texturePath, ItemInteractionType::DIALOGUE, false) {
         isLocked = true;
     }
     bool Start() override;

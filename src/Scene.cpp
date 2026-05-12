@@ -9,6 +9,8 @@
 #include "Weapon.h"
 #include "Gear.h"
 #include "Consumable.h"
+#include "DungeonLever.h"
+#include "DungeonExit.h"
 #include <memory>
 #include <vector>
 #include <unordered_set>
@@ -822,9 +824,17 @@ void Scene::LoadScene(std::string spawnId)
 			if (iNode.attribute("id").as_string() != item.id) continue;
 			std::string name = iNode.attribute("name").as_string();
 			ItemDef* def = GetItemDefinition(item.id, name);
-			std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
-			newItem->price = def->gold;
-			newItem->stats = def->stats;
+			if (name == "Exit") {
+				std::shared_ptr<DungeonExit> newExit = std::dynamic_pointer_cast<DungeonExit>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+			}
+			else if (name == "Lever") {
+				std::shared_ptr<DungeonLever> newLever = std::dynamic_pointer_cast<DungeonLever>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+			}
+			else {
+				std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+				newItem->price = def->gold;
+				newItem->stats = def->stats;
+			}
 		}
 	}
 }

@@ -31,6 +31,6 @@
 		</stats>
 	</item>
 	<item id="IT-001" name="statue" texture="transparent.png" type="4" itemClass="item" interactionType="3" canStack="false"/>
-	<item id="LEVER-001" name="Lever" texture="dungeonLeverClosed.png" type="4" itemClass="item" interactionType="2" canStack="false" toggledTexturePath="dungeonLeverOpened.png"/>
-	<item id="EXIT-001" name="Exit" texture="dungeonLeverClosed.png" type="4" itemClass="item" interactionType="3" canStack="false"/>
+	<item id="LEVER-001" name="Lever" texture="dungeonLeverClosed.png" type="4" itemClass="lever" interactionType="2" canStack="false" toggledTexturePath="dungeonLeverOpened.png"/>
+	<item id="EXIT-001" name="Exit" texture="dungeonGate.png" type="4" itemClass="exit" interactionType="3" canStack="false"/>
 </items>

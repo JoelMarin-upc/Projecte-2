@@ -14150,31 +14150,31 @@
   </object>
  </objectgroup>
  <objectgroup id="17" name="NPC">
-  <object id="95" x="769.471" y="321.942">
+  <object id="95" x="640.471" y="933.942">
    <properties>
     <property name="id" value="CH-005"/>
    </properties>
    <point/>
   </object>
-  <object id="97" x="627" y="660">
+  <object id="97" x="731" y="919">
    <properties>
     <property name="id" value="CH-007"/>
    </properties>
    <point/>
   </object>
-  <object id="98" x="752.868" y="334.866">
+  <object id="98" x="623.868" y="946.866">
    <properties>
     <property name="id" value="CH-008"/>
    </properties>
    <point/>
   </object>
-  <object id="99" x="753.058" y="379.701">
+  <object id="99" x="624.058" y="991.701">
    <properties>
     <property name="id" value="CH-010"/>
    </properties>
    <point/>
   </object>
-  <object id="100" x="767.273" y="361.07">
+  <object id="100" x="638.273" y="973.07">
    <properties>
     <property name="id" value="CH-009"/>
    </properties>
@@ -14188,7 +14188,7 @@
    </properties>
    <point/>
   </object>
-  <object id="101" x="760" y="112.333">
+  <object id="101" x="760.333" y="32.333">
    <properties>
     <property name="id" value="EXIT-001"/>
    </properties>
