@@ -248,6 +248,10 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	SDL_Rect b_amount = { centerX - 100, 180, 200, 40 };
 	SDL_Rect b_selectedItem = { centerX - 100, sh - 200, 200, 160 };
 	SDL_Rect b_exitShop = { sw - 200, 15, 100, 30 };
+	SDL_Rect b_hp = { sw / 2 + 150, sh / 2 - 110, 200, 40 };
+	SDL_Rect b_attack = { sw / 2 + 150, sh / 2 - 50, 200, 40 };
+	SDL_Rect b_defense = { sw / 2 + 150, sh / 2 + 10, 200, 40 };
+	SDL_Rect b_speed = { sw / 2 + 150, sh / 2 + 70, 200, 40 };
 	std::vector<SDL_Rect> inventorySlotBounds = std::vector<SDL_Rect>();
 	std::vector<SDL_Rect> shopSlotBounds = std::vector<SDL_Rect>();
 	const int margin = 10;
@@ -270,6 +274,10 @@ void MenuManager::LoadInventory(bool onlyPositions)
 			shopSlotBounds.push_back({ x - boxW * i - margin * i - boxW - margin, y + boxY * j + margin * j, boxW, boxY });
 
 	if (onlyPositions) {
+		hp->SetBounds(b_hp);
+		attack->SetBounds(b_attack);
+		defense->SetBounds(b_defense);
+		speed->SetBounds(b_speed);
 		inventoryLabel->SetBounds(b_inventoryLabel);
 		moneyLabel->SetBounds(b_moneyLabel);
 		shopLabel->SetBounds(b_shopLabel);
@@ -310,6 +318,15 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		SDL_Color yellow = { 255, 255, 0, 255 };
 		SDL_Color blue = { 0, 255, 255, 255 };
 		SDL_Color red = { 255, 0, 0, 0 };
+
+		hp = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)HP_STAT, b_hp, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("HP: ", 5)));
+		attack = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ATTACK_STAT, b_attack, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Attack: ", 5)));
+		defense = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)DEFEND_STAT, b_defense, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Defense: ", 5)));
+		speed = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)SPEED_STAT, b_speed, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Speed: ", 5)));
+		hp->state = UIElementState::DISABLED;
+		attack->state = UIElementState::DISABLED;
+		defense->state = UIElementState::DISABLED;
+		speed->state = UIElementState::DISABLED;
 
 		inventoryLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)INVENTORY_LABEL, b_inventoryLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Inventory")));
 		moneyLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)MONEY_LABEL, b_moneyLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Gold: ")));
@@ -381,6 +398,10 @@ void MenuManager::SetObserver(Module* observer)
 	weapon->observer = observer;
 	selectedItem->observer = observer;
 	exitShop->observer = observer;
+	hp->observer = observer;
+	attack->observer = observer;
+	defense->observer = observer;
+	speed->observer = observer;
 	for (std::shared_ptr<UISlot> slot : inventorySlots) slot->observer = observer;
 	for (std::shared_ptr<UISlot> slot : shopSlots) slot->observer = observer;
 	for (std::shared_ptr<UIButton> mission : missionJournal) mission->observer = observer;
@@ -465,7 +486,7 @@ void MenuManager::ShowCreditsMenu()
 	backMainMenu->active = true;
 }
 
-void MenuManager::ShowInventory(Inventory* inventory)
+void MenuManager::ShowInventory(Inventory* inventory, std::shared_ptr<Character> character)
 {
 	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 
@@ -473,7 +494,7 @@ void MenuManager::ShowInventory(Inventory* inventory)
 	HideMenu();
 	currentMenu = INVENTORY;
 
-	ShowInventory(inventory, false);
+	ShowInventory(inventory, false, character);
 }
 
 void MenuManager::ShowShop(Inventory* customer, Inventory* shop)
@@ -595,6 +616,10 @@ void MenuManager::HideMenu()
 	selectedItem->SetItem(nullptr);
 	selectedItem->active = false;
 	exitShop->active = false;
+	hp->active = false;
+	attack->active = false;
+	defense->active = false;
+	speed->active = false;
 	for (std::shared_ptr<UISlot> slot : inventorySlots)
 	{
 		slot->SetItem(nullptr);
@@ -634,12 +659,12 @@ void MenuManager::ShowPreviousMenu()
 
 void MenuManager::RedrawInventory()
 {
-	ShowInventory(currentInventory, false);
+	ShowInventory(currentInventory, false, currentCharacter);
 	if (currentMenu == SHOP) ShowInventory(currentShop, true);
 	selectedItem->SetItem(nullptr);
 }
 
-void MenuManager::ShowInventory(Inventory* inventory, bool isShop)
+void MenuManager::ShowInventory(Inventory* inventory, bool isShop, std::shared_ptr<Character> character)
 {
 	amount->active = true;
 	selectedItem->active = true;
@@ -649,6 +674,10 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop)
 		buy->active = true;
 		sell->active = true;
 		exitShop->active = true;
+		hp->active = false;
+		attack->active = false;
+		defense->active = false;
+		speed->active = false;
 		for (int i = 0; i < shopSlots.size(); i++) {
 			std::shared_ptr<UISlot> slot = shopSlots[i];
 			slot->active = true;
@@ -660,12 +689,31 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop)
 	}
 	else {
 		currentInventory = inventory;
+		currentCharacter = character;
 		inventoryLabel->active = true;
 		moneyLabel->text = "Gold: " + std::to_string(inventory->gold);
 		moneyLabel->active = true;
 		use->text = "Use";
 		use->active = true;
 		drop->active = true;
+
+		if (character) {
+			hp->active = true;
+			hp->text = "HP: " + std::to_string((int)character->HP()) + "/" + std::to_string((int)character->MaxHP());
+			attack->active = true;
+			attack->text = "Attack: " + std::to_string((int)character->Attack());
+			defense->active = true;
+			defense->text = "Defense: " + std::to_string((int)character->Defense());
+			speed->active = true;
+			speed->text = "Speed: " + std::to_string((int)character->Speed());
+		}
+		else {
+			hp->active = false;
+			attack->active = false;
+			defense->active = false;
+			speed->active = false;
+		}
+		
 		for (int i = 0; i < inventorySlots.size(); i++) {
 			std::shared_ptr<UISlot> slot = inventorySlots[i];
 			slot->active = true;

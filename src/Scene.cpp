@@ -938,7 +938,7 @@ void Scene::ToggleInventory()
 		}
 		showingInventory = !showingInventory;
 		entityManager->paused = showingInventory;
-		if (showingInventory) Engine::GetInstance().menuManager->ShowInventory(player->inventory);
+		if (showingInventory) Engine::GetInstance().menuManager->ShowInventory(player->inventory, player);
 		else Engine::GetInstance().menuManager->HideMenu();
 		if (!showingInventory) UpdateInventory();
 	}
