@@ -55,7 +55,6 @@ bool DialogManager::Update(float dt) {
 		if (answer2->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 460, 0.0f);
 		if (answer3->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 440, 0.0f);
 		if (answer4->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 420, 0.0f);
-		LOG("%d %d", Engine::GetInstance().render->camera.x, Engine::GetInstance().render->camera.y);
 	}
 	return true;
 }

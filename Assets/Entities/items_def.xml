@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <items>
-	<item itemName="sword" gold="10">
+	<item itemName="hoe" gold="10">
 		<stats>
 			<stat name="attack" value="30"/>
 		</stats>
