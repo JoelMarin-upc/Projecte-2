@@ -54,6 +54,35 @@ bool MenuManager::CleanUp() { return true; }
 void MenuManager::Load(bool onlyPositions)
 {
 	SDL_Texture* title = Engine::GetInstance().textures->Load("Assets/Textures/Game_Title.png");
+	SDL_Texture* backNormal = Engine::GetInstance().textures->Load("Assets/Textures/backButtonNormal.png");
+	SDL_Texture* backHov = Engine::GetInstance().textures->Load("Assets/Textures/backButtonHover.png");
+	SDL_Texture* backPres = Engine::GetInstance().textures->Load("Assets/Textures/backButtonPressed.png");
+	SDL_Texture* backDis = backNormal;
+	SDL_Texture* continueNormal = Engine::GetInstance().textures->Load("Assets/Textures/continueButtonNormal.png");
+	SDL_Texture* continueHov = Engine::GetInstance().textures->Load("Assets/Textures/continueButtonHover.png");
+	SDL_Texture* continuePres = Engine::GetInstance().textures->Load("Assets/Textures/continueButtonPressed.png");
+	SDL_Texture* continueDis = Engine::GetInstance().textures->Load("Assets/Textures/continueButtonDissabled.png");
+	SDL_Texture* creditsNormal = Engine::GetInstance().textures->Load("Assets/Textures/creditsButtonNormal.png");
+	SDL_Texture* creditsHov = Engine::GetInstance().textures->Load("Assets/Textures/creditsButtonHover.png");
+	SDL_Texture* creditsPres = Engine::GetInstance().textures->Load("Assets/Textures/creditsButtonPressed.png");
+	SDL_Texture* creditsDis = creditsNormal;
+	SDL_Texture* exitNormal = Engine::GetInstance().textures->Load("Assets/Textures/exitButtonNormal.png");
+	SDL_Texture* exitHov = Engine::GetInstance().textures->Load("Assets/Textures/exitButtonHover.png");
+	SDL_Texture* exitPres = Engine::GetInstance().textures->Load("Assets/Textures/exitButtonPressed.png");
+	SDL_Texture* exitDis = exitNormal;
+	SDL_Texture* resumeNormal = Engine::GetInstance().textures->Load("Assets/Textures/resumeButtonNormal.png");
+	SDL_Texture* resumeHov = Engine::GetInstance().textures->Load("Assets/Textures/resumeButtonHover.png");
+	SDL_Texture* resumePres = Engine::GetInstance().textures->Load("Assets/Textures/resumeButtonPressed.png");
+	SDL_Texture* resumeDis = resumeNormal;
+	SDL_Texture* settingsNormal = Engine::GetInstance().textures->Load("Assets/Textures/settingsButtonNormal.png");
+	SDL_Texture* settingsHov = Engine::GetInstance().textures->Load("Assets/Textures/settingsButtonHover.png");
+	SDL_Texture* settingsPres = Engine::GetInstance().textures->Load("Assets/Textures/settingsButtonPressed.png");
+	SDL_Texture* settingsDis = settingsNormal;
+	SDL_Texture* startNormal = Engine::GetInstance().textures->Load("Assets/Textures/startButtonNormal.png");
+	SDL_Texture* startHov = Engine::GetInstance().textures->Load("Assets/Textures/startButtonHover.png");
+	SDL_Texture* startPres = Engine::GetInstance().textures->Load("Assets/Textures/startButtonPressed.png");
+	SDL_Texture* startDis = startNormal;
+
 
 	SDL_Color mainColorDef = { 0, 0, 255, 255 };
 	SDL_Color mainColorDis = { 200, 200, 200, 255 };
@@ -79,16 +108,17 @@ void MenuManager::Load(bool onlyPositions)
 
 	//Main menu elements
 	SDL_Rect b_gameTitle = { centerX - title->w / 2, centerY - title->h/2 - 150, 0, 0 };
-	SDL_Rect b_startGame = { centerX - 140, centerY + 10, 280, 50 };
-	SDL_Rect b_continueGame = { centerX - 125, centerY + 80, 250, 35 };
-	SDL_Rect b_settings = { centerX - 125, centerY + 130, 250, 35 };
-	SDL_Rect b_credits_btn = { centerX - 125, centerY + 180, 250, 35 };
-	SDL_Rect b_exit = { centerX - 125, centerY + 230, 250, 35 };
 
 	SDL_Rect b_popUpTitle = { 20, 20, 350, 40 };
 	SDL_Rect b_popUp = { 20, 80, sw / 3 * 2, 100 };
 
 	SDL_Rect b_missionJournalTitle = { 20, 20, 200, 60 };
+	
+	SDL_Rect b_startGame = { centerX - 75, centerY, 144, 64 };
+	SDL_Rect b_continueGame = { centerX - 100, centerY + 70, 192, 64 };
+	SDL_Rect b_settings = { centerX - 100, centerY + 140, 192, 64 };
+	SDL_Rect b_credits_btn = { centerX - 90, centerY + 210, 176, 64 };
+	SDL_Rect b_exit = { centerX - 75, centerY + 280, 144, 64 };
 	
 	//Settings menu elements
 	SDL_Rect b_settings_lbl = { centerX - 100, centerY - 200, 200, 40 };
@@ -98,16 +128,18 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_fxVolume = { centerX + 100, centerY - 50, 200, 25 };
 	SDL_Rect b_fullscreen_lbl = { centerX - 300, centerY - 0, 200, 25 };
 	SDL_Rect b_fullscreen = { centerX + 100, centerY - 0, 25, 25 };
-	SDL_Rect b_backMenu = { centerX - 125, centerY + 50, 250, 35 };
+	SDL_Rect b_vsync_lbl = { centerX - 300, centerY + 50, 200, 25 };
+	SDL_Rect b_vsync = { centerX + 100, centerY + 50, 25, 25 };
+	SDL_Rect b_backMenu = { centerX - 100, centerY + 210, 144, 64 };
 
 	//Credits menu elements
 	SDL_Rect b_credits1 = { centerX - 500, centerY - 200, 1000, 25 };
 	SDL_Rect b_credits2 = { centerX - 500, centerY - 160, 1000, 25 };
-	SDL_Rect b_backMainMenu = { centerX - 125, centerY + 180, 250, 35 };
+	SDL_Rect b_backMainMenu = { centerX - 75, centerY + 210, 144, 64 };
 
 	//Pause menu elements
 	SDL_Rect b_paused_lbl = { centerX - 60, centerY - 10, 200, 40 };
-	SDL_Rect b_resume = { centerX - 125, centerY + 80, 250, 35 };
+	SDL_Rect b_resume = { centerX - 95, centerY + 70, 176, 64 };
 
 	//Other elements
 	SDL_Rect b_gameOver_lbl = { centerX - 90, centerY - 100, 300, 60 };
@@ -129,7 +161,10 @@ void MenuManager::Load(bool onlyPositions)
 		fxVolumeLabel->SetBounds(b_fxVolume_lbl);
 		fxVolumeSlider->SetBounds(b_fxVolume);
 		fullscreenLabel->SetBounds(b_fullscreen_lbl);
+		vsyncLabel->SetBounds(b_vsync_lbl);
+		vsyncCheckbox->SetBounds(b_vsync);
 		fullscreenCheckbox->SetBounds(b_fullscreen);
+
 		backMenu->SetBounds(b_backMenu);
 		backMainMenu->SetBounds(b_backMainMenu);
 		exit->SetBounds(b_exit);
@@ -147,15 +182,15 @@ void MenuManager::Load(bool onlyPositions)
 		int clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
 
 		// MENUS
-		gameTitle = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)GAME_TITLE, b_gameTitle, this, {  }, hoverFxId, clickFxId, UIParameters::Image(title, title, title, title)));;
-		startGame = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)START_GAME, b_startGame, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Start Game", 5)));
+		gameTitle = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)GAME_TITLE, b_gameTitle, this, {  }, hoverFxId, clickFxId, UIParameters::Image(title, title, title, title)));
+		startGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)START_GAME, b_startGame, this, {  }, hoverFxId, clickFxId, UIParameters::Image(startDis, startNormal, startHov, startPres)));
 		pausedLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)PAUSED_LABEL, b_paused_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("PAUSED")));
 		gameOverLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)GAME_OVER_LABEL , b_gameOver_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("GAME OVER")));
 		settingsLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SETTINGS_LABEL, b_settings_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("SETTINGS")));
-		continueGame = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)CONTINUE_GAME, b_continueGame, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Continue Game", 5)));
-		resumeGame = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)RESUME_GAME, b_resume, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Resume", 5)));
-		settingsButton = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)SETTINGS_BUTTON, b_settings, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Settings", 5)));
-		creditsButton = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)CREDITS_BUTTON, b_credits_btn, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Credits", 5)));
+		continueGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)CONTINUE_GAME, b_continueGame, this, { }, hoverFxId, clickFxId, UIParameters::Image(continueDis, continueNormal, continueHov, continuePres)));
+		resumeGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)RESUME_GAME, b_resume, this, { }, hoverFxId, clickFxId, UIParameters::Image(resumeDis, resumeNormal, resumeHov, resumePres)));
+		settingsButton = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)SETTINGS_BUTTON, b_settings, this, { }, hoverFxId, clickFxId, UIParameters::Image(settingsDis, settingsNormal, settingsHov, settingsPres)));
+		creditsButton = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)CREDITS_BUTTON, b_credits_btn, this, { }, hoverFxId, clickFxId, UIParameters::Image(creditsDis, creditsNormal, creditsHov, creditsPres)));
 		creditsLabel1 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)CREDITS_LABEL, b_credits1, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("This game was made by TEAMDAYO, a game studio created by")));
 		creditsLabel2 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)CREDITS_LABEL, b_credits2, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Clara Sanchez, Sofia Barja, Yin Ye, Kirsten Neubauer and Joel Marin.")));
 		musicVolumeLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)MUSIC_VOLUME_LABEL, b_musicVolume_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Music volume")));
@@ -164,9 +199,11 @@ void MenuManager::Load(bool onlyPositions)
 		fxVolumeSlider = std::dynamic_pointer_cast<UISlider>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLIDER, (int)FX_VOLUME, b_fxVolume, this, { white, mainColorDis, mainColorDef, mainColorHov, mainColorPre, mainColorDis, white }, hoverFxId, clickFxId, UIParameters::Slider(true, 0, 10, 1, 10)));
 		fullscreenLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)FULLSCREEN_LABEL, b_fullscreen_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Fullscreen")));
 		fullscreenCheckbox = std::dynamic_pointer_cast<UICheckbox>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::CHECKBOX, (int)FULLSCREEN, b_fullscreen, this, { mainColorDef, mainColorHov, mainColorDis, black, secondaryDef, secondaryDis }, hoverFxId, clickFxId, UIParameters::Checkbox(5, false)));
-		backMenu = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)BACK_MENU, b_backMenu, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Back", 20)));
-		backMainMenu = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)BACK_MAIN_MENU, b_backMainMenu, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Back to main menu", 5)));
-		exit = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)EXIT, b_exit, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Exit", 20)));
+		vsyncLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)VSYNC_LABEL, b_vsync_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("VSync")));
+		vsyncCheckbox = std::dynamic_pointer_cast<UICheckbox>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::CHECKBOX, (int)VSYNC, b_vsync, this, { mainColorDef, mainColorHov, mainColorDis, black, secondaryDef, secondaryDis }, hoverFxId, clickFxId, UIParameters::Checkbox(5, false)));
+		backMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MENU, b_backMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
+		backMainMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MAIN_MENU, b_backMainMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
+		exit = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)EXIT, b_exit, this, { }, hoverFxId, clickFxId, UIParameters::Image(exitDis, exitNormal, exitHov, exitPres)));
 		
 		missionPopUpTitle = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)POPUP_TITLE, b_popUpTitle, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, green }, hoverFxId, clickFxId, UIParameters::Button("", 20)));
 		missionPopUp = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)POPUP, b_popUp, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("", 20)));
@@ -322,6 +359,8 @@ void MenuManager::SetObserver(Module* observer)
 	fxVolumeSlider->observer = observer;
 	fullscreenLabel->observer = observer;
 	fullscreenCheckbox->observer = observer;
+	vsyncLabel->observer = observer;
+	vsyncCheckbox->observer = observer;
 	backMenu->observer = observer;
 	backMainMenu->observer = observer;
 	exit->observer = observer;
@@ -406,6 +445,10 @@ void MenuManager::ShowSettingsMenu()
 	fullscreenLabel->active = true;
 	fullscreenCheckbox->active = true;
 	fullscreenCheckbox->checked = Engine::GetInstance().window->fullscreen;
+	vsyncLabel->active = true;
+	vsyncCheckbox->active = true;
+	vsyncCheckbox->checked = Engine::GetInstance().vsyncEnabled;
+
 	backMenu->active = true;
 }
 
@@ -525,6 +568,8 @@ void MenuManager::HideMenu()
 	fxVolumeSlider->active = false;
 	fullscreenLabel->active = false;
 	fullscreenCheckbox->active = false;
+	vsyncLabel->active = false;
+	vsyncCheckbox->active = false;
 	backMenu->active = false;
 	backMainMenu->active = false;
 	exit->active = false;

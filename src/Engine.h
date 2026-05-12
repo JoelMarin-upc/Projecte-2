@@ -47,6 +47,8 @@ public:
 		return dt;
 	}
 
+	void SetVSync(bool enabled);
+
 private:
 
 	// Private constructor to prevent instantiation
@@ -111,6 +113,8 @@ public:
 	//L05 TODO 2: Declare a xml_document to load the config file
 	pugi::xml_document configFile;
 
+	bool vsyncEnabled = false;
+
 private: 
 
 	// Delta time
@@ -134,6 +138,7 @@ private:
 	//Maximun frame duration in miliseconds.
 	int targetFrameRate = 60;
 	int currentTargetFrameRate;
+
 
 	std::string gameTitle = "The Graveyard";
 
