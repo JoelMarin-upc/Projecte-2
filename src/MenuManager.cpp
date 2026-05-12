@@ -28,6 +28,14 @@ bool MenuManager::Awake()
 
 bool MenuManager::Start() 
 {
+	const char* hoverFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "hover");
+	const char* clickFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "click");
+	const char* missionNewFxPath = Engine::GetInstance().audio->GetAudioPath("missions", "new");
+	const char* missionCompletedFxPath = Engine::GetInstance().audio->GetAudioPath("missions", "completed");
+	hoverFxId = Engine::GetInstance().audio->LoadFx(hoverFxPath);
+	clickFxId = Engine::GetInstance().audio->LoadFx(clickFxPath);
+	missionNewFxId = Engine::GetInstance().audio->LoadFx(missionNewFxPath);
+	missionCompletedFxId = Engine::GetInstance().audio->LoadFx(missionCompletedFxPath);
 	Load(false);
 	return true;
 }
@@ -178,9 +186,6 @@ void MenuManager::Load(bool onlyPositions)
 		}
 	}
 	else {
-		int hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
-		int clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
-
 		// MENUS
 		gameTitle = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)GAME_TITLE, b_gameTitle, this, {  }, hoverFxId, clickFxId, UIParameters::Image(title, title, title, title)));
 		startGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)START_GAME, b_startGame, this, {  }, hoverFxId, clickFxId, UIParameters::Image(startDis, startNormal, startHov, startPres)));
@@ -296,9 +301,6 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		}
 	}
 	else {
-		int hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
-		int clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
-
 		SDL_Color mainColorDef = { 100, 100, 100, 255 };
 		SDL_Color mainColorDis = { 200, 200, 200, 255 };
 		SDL_Color mainColorHov = { 0, 0, 100, 255 };
@@ -515,6 +517,8 @@ void MenuManager::ShowMissionPopup(Mission* mission, float popUpSeconds)
 	missionPopUp->active = true;
 	missionPopUpTitle->text = mission->completed ? "MISSION COMPLETED" : "NEW MISSION";
 	missionPopUp->text = mission->ToString();
+	if (mission->completed) Engine::GetInstance().audio->PlayFx(missionCompletedFxId);
+	else Engine::GetInstance().audio->PlayFx(missionNewFxId);
 }
 
 void MenuManager::HideMissionPopup()

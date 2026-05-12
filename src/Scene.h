@@ -185,11 +185,18 @@ private:
 	SDL_Texture* logo;
 	SDL_Rect b_logo;
 	std::shared_ptr<UIImage> studioLogo;
-	int hoverFxId;
-	int clickFxId;
 	int logoFxId;
 	int elevatorFxId;
+	int doorFxId;
 
+	int dialogFxId;
+	int journalFxId;
+	int openInventoryFxId;
+	int useFxId;
+	int equipWeaponFxId;
+	int equipGearFxId;
+	int dropFxId;
+	int buySellFxId;
 
 	float introAnimDurationMs = 0.0f;
 	float introAnimElapsedMs = 0.0f;

@@ -44,6 +44,7 @@ public:
     bool MusicPlaying();
     bool EnsureStreams();
     void StopFx() { if (sfx_stream_) SDL_ClearAudioStream(sfx_stream_);}
+    const char* GetAudioPath(const char* node, const char* audioName);
 
     float pauseMultiplier = 1.0f; // 1.0 = normal, 0.3 = paused
 private:
@@ -80,5 +81,5 @@ private:
     bool LoadWavFile(const char* path, SoundData& out);
     void FreeSound(SoundData& s);
     bool EnsureDeviceOpen();
-  
+
 };

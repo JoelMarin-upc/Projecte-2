@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<audios>
+	<ui hover="Assets/Audio/Fx/hover.wav" click="Assets/Audio/Fx/click.wav" logo="Assets/Audio/Fx/logo.wav" />
+	<inventory open="" equipWeapon="" equipGear="" use="" drop="" buySell="" />
+	<scene elevator="Assets/Audio/Fx/elevator.wav" door="" />
+	<missions journal="" completed="" new="" />
+	<player walk="" attack="" />
+	<npc walk="" attack="" />
+	<enemy walk="" attack="" />
+	<dialog start="" />
+</audios>

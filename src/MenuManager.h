@@ -197,4 +197,9 @@ public:
 	Timer popUpTimer;
 	float popUpSeconds = 0.f;
 	bool showingPopUp = false;
+
+	int missionNewFxId;
+	int missionCompletedFxId;
+	int hoverFxId;
+	int clickFxId;
 };

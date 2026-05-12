@@ -77,11 +77,29 @@ bool Scene::Start(std::string spawnId)
 	sh = Engine::GetInstance().window->height;
 	/*logo = Engine::GetInstance().textures->Load("Assets/Textures/TeamDayo_Logo.png");
 	b_logo = { sw/2 - logo->w/2, sh/2 - logo->h/2, 0, 0 };*/
-	hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
-	clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
-	//logoFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("logo").as_string());
-	logoFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/logo.wav");
-	elevatorFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/elevator.wav");
+	
+	const char* logoFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "logo");
+	const char* elevatorFxPath = Engine::GetInstance().audio->GetAudioPath("scene", "elevator");
+	const char* doorFxPath = Engine::GetInstance().audio->GetAudioPath("scene", "door");
+	const char* dialogFxPath = Engine::GetInstance().audio->GetAudioPath("dialog", "start");
+	const char* journalFxPath = Engine::GetInstance().audio->GetAudioPath("missions", "journal");
+	const char* openInventoryFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "open");
+	const char* useFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "use");
+	const char* equipWeaponFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "equipWeapon");
+	const char* equipGearFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "equipGear");
+	const char* dropFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "drop");
+	const char* buySellFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "buySell");
+	logoFxId = Engine::GetInstance().audio->LoadFx(logoFxPath);
+	elevatorFxId = Engine::GetInstance().audio->LoadFx(elevatorFxPath);
+	doorFxId = Engine::GetInstance().audio->LoadFx(doorFxPath);
+	dialogFxId = Engine::GetInstance().audio->LoadFx(dialogFxPath);
+	journalFxId = Engine::GetInstance().audio->LoadFx(journalFxPath);
+	openInventoryFxId = Engine::GetInstance().audio->LoadFx(openInventoryFxPath);
+	useFxId = Engine::GetInstance().audio->LoadFx(useFxPath);
+	equipWeaponFxId = Engine::GetInstance().audio->LoadFx(equipWeaponFxPath);
+	equipGearFxId = Engine::GetInstance().audio->LoadFx(equipGearFxPath);
+	dropFxId = Engine::GetInstance().audio->LoadFx(dropFxPath);
+	buySellFxId = Engine::GetInstance().audio->LoadFx(buySellFxPath);
 	//studioLogoTexture = Engine::GetInstance().textures->Load("Assets/Textures/Team_Logo_SpriteSheet.png");
 	//gameTitleTexture = Engine::GetInstance().textures->Load("Assets/Textures/Title_Logo_SpriteSheet.png");
 
@@ -121,6 +139,7 @@ bool Scene::Start(std::string spawnId)
 		}
 		else if (id == "SC-002")
 		{
+			Engine::GetInstance().audio->PlayFx(doorFxId);
 			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav", 5000.0f);
 		}
 		else if (id == "SC-003")
@@ -938,7 +957,11 @@ void Scene::ToggleInventory()
 		}
 		showingInventory = !showingInventory;
 		entityManager->paused = showingInventory;
-		if (showingInventory) Engine::GetInstance().menuManager->ShowInventory(player->inventory);
+		if (showingInventory)
+		{
+			Engine::GetInstance().menuManager->ShowInventory(player->inventory);
+			Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+		}
 		else Engine::GetInstance().menuManager->HideMenu();
 		if (!showingInventory) UpdateInventory();
 	}
@@ -947,7 +970,10 @@ void Scene::ToggleInventory()
 void Scene::ToggleInventoryForCombat()
 {
 	showingInventoryForCombat = !showingInventoryForCombat;
-	if (showingInventoryForCombat) Engine::GetInstance().menuManager->ShowCombatInventory(player->inventory);
+	if (showingInventoryForCombat) {
+		Engine::GetInstance().menuManager->ShowCombatInventory(player->inventory);
+		Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+	}
 	else Engine::GetInstance().menuManager->HideMenu();
 }
 
@@ -957,6 +983,7 @@ void Scene::ToggleJournal()
 	{
 		if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) Engine::GetInstance().menuManager->HideMenu();
 		else Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);
+		Engine::GetInstance().audio->PlayFx(journalFxId);
 	}
 }
 
@@ -968,6 +995,7 @@ void Scene::ToggleShop(NPC* shopOwner)
 	{
 		Engine::GetInstance().menuManager->ShowShop(player->inventory, shopOwner->inventory);
 		showingShop = true;
+		Engine::GetInstance().audio->PlayFx(openInventoryFxId);
 	}
 	else
 	{
@@ -1087,6 +1115,7 @@ void Scene::StartDialog(std::string characterId)
 	isOnDialog = true;
 	activeDialogId = characterId;
 	entityManager->paused = true;
+	Engine::GetInstance().audio->PlayFx(dialogFxId);
 }
 
 void Scene::EndDialog()
@@ -1385,10 +1414,12 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		if (w = std::dynamic_pointer_cast<Weapon>(selectedItem)) {
 			player->inventory->UnequipWeapon();
 			if (!isUnequipping) player->inventory->EquipWeapon(w->name);
+			Engine::GetInstance().audio->PlayFx(equipWeaponFxId);
 		}
 		else if (g = std::dynamic_pointer_cast<Gear>(selectedItem)) {
 			player->inventory->UnequipGear(g->gearSlot);
 			if (!isUnequipping) player->inventory->EquipGear(g->name);
+			Engine::GetInstance().audio->PlayFx(equipGearFxId);
 		}
 		else if (c = std::dynamic_pointer_cast<Consumable>(selectedItem)) {
 			amount = Engine::GetInstance().menuManager->amount->GetValue();
@@ -1396,6 +1427,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 			{
 				player->TakeConsumable(player->UseConsumable(c->name));
 			}
+			Engine::GetInstance().audio->PlayFx(useFxId);
 		}
 		else {
 			// base InteractableItem class / Equipable class
@@ -1407,6 +1439,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		if (!selectedItem || selectedItemIsFromShop) return true;
 		amount = Engine::GetInstance().menuManager->amount->GetValue();
 		for (int i = 0; i < amount; i++) player->inventory->RemoveItem(selectedItem->name);
+		Engine::GetInstance().audio->PlayFx(dropFxId);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	case BUY:
@@ -1418,6 +1451,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		player->inventory->AddItem(copy);
 		for (int i = 0; i < amount; i++) shopOwner->inventory->RemoveItem(selectedItem->name);
 		player->inventory->AddGold(-selectedItem->price * amount);
+		Engine::GetInstance().audio->PlayFx(buySellFxId);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	case SELL:
@@ -1428,6 +1462,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		shopOwner->inventory->AddItem(copy);
 		for (int i = 0; i < amount; i++) player->inventory->RemoveItem(selectedItem->name);
 		player->inventory->AddGold((int)floor(selectedItem->price * SELLING_PRICE_RATIO) * amount);
+		Engine::GetInstance().audio->PlayFx(buySellFxId);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	case EXIT_SHOP:
