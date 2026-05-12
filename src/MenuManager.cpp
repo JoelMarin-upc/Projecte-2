@@ -529,6 +529,7 @@ void MenuManager::AddMissionPopup(Mission* mission)
 
 void MenuManager::ShowMissionPopup(Mission* mission, float popUpSeconds)
 {
+	if (!mission) return;
 	this->popUpSeconds = popUpSeconds;
 	popUpTimer = Timer();
 	showingPopUp = true;

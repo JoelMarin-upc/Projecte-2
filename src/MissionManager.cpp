@@ -82,6 +82,7 @@ Mission* MissionManager::ActivateMission(std::string missionId)
 			return mission;
 		}
 	}
+	return nullptr;
 }
 
 Mission* MissionManager::CompleteMission(std::string missionId)

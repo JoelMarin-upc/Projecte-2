@@ -439,6 +439,7 @@ void Scene::TogglePause()
 
 void Scene::SaveGame()
 {
+	SaveSessionState();
 	std::ifstream src("Assets/Entities/characters_session.xml", std::ios::binary);
 	std::ofstream dst("Assets/Entities/characters.xml", std::ios::binary | std::ios::trunc);
 	dst << src.rdbuf();
