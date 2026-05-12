@@ -308,7 +308,7 @@
     </ClCompile>
     <ClCompile Include="src\DungeonExit.cpp">
       <Filter>Source Files\Scene\Entities\Items</Filter>
-
+	</ClCompile>
     <ClCompile Include="src\BringMission.cpp">
       <Filter>Source Files\Scene\Missions</Filter>
 
@@ -534,7 +534,7 @@
     </ClInclude>
     <ClInclude Include="src\DungeonExit.h">
       <Filter>Source Files\Scene\Entities\Items</Filter>
-
+	</ClInclude>
     <ClInclude Include="src\BringMission.h">
       <Filter>Source Files\Scene\Missions</Filter>
 

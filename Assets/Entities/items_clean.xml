@@ -1,4 +1,5 @@
 <items>
 	<item id="IT-001" name="statue"/>
 	<item id="LEVER-001" name="Lever"/>
+	<item id="EXIT-001" name="Exit"/>
 </items>
