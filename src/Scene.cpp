@@ -837,6 +837,11 @@ void Scene::LoadScene(std::string spawnId)
 			}
 		}
 	}
+	for (const auto& entity : entityManager->entities) {
+		if (auto exit = std::dynamic_pointer_cast<DungeonExit>(entity)) {
+			dungeonExit = exit.get();
+		}
+	}
 }
 
 Stats* Scene::LoadStats(pugi::xml_node node)
