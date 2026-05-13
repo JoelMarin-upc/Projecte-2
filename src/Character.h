@@ -33,4 +33,11 @@ public:
 	SDL_Texture* combatTexture = nullptr;
 	bool isDead = false;
 	bool hasFled = false;
+
+	int walkFxId;
+	int attackFxId;
+	int dieFxId;
+
+	Timer walkTimer;
+	float walkMS = 400.0f;
 };

@@ -4,8 +4,8 @@
 	<inventory open="" equipWeapon="" equipGear="" use="" drop="" buySell="" />
 	<scene elevator="Assets/Audio/Fx/elevator.wav" door="" />
 	<missions journal="" completed="" new="" />
-	<player walk="" attack="" />
-	<npc walk="" attack="" />
-	<enemy walk="" attack="" />
+	<player walk="" attack="" die="" />
+	<npc walk="" attack="" die="" />
+	<enemy walk="" attack="" die="" />
 	<dialog start="" />
 </audios>
