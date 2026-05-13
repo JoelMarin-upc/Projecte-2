@@ -10,6 +10,8 @@
 #include "InteractableItem.h"
 #include "DungeonLever.h"
 #include "DungeonExit.h"
+#include "DungeonGate.h"
+#include "PressurePlate.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -111,6 +113,8 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 		else if (itemClass == "consumable") entity = std::make_shared<Consumable>(id, name, description, texturePath, canStack);
 		else if (itemClass == "lever") entity = std::make_shared<DungeonLever>(id, name, description, texturePath, toggledTexturePath);
 		else if (itemClass == "exit") entity = std::make_shared<DungeonExit>(id, name, description, texturePath);
+		else if (itemClass == "gate") entity = std::make_shared<DungeonGate>(id, name, description, texturePath);
+		else if (itemClass == "plate") entity = std::make_shared<PressurePlate>(id, name, description, texturePath);
 		else entity = std::make_shared<InteractableItem>(id, name, description, texturePath, interactionType, canStack, toggledTexturePath);
 		break;
 	default:

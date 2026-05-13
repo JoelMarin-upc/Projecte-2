@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="22" nextobjectid="102">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="22" nextobjectid="105">
  <tileset firstgid="1" name="metadata" tilewidth="16" tileheight="16" tilecount="7" columns="7">
   <image source="Tileset - What Remains of You/Metadata.png" width="112" height="16"/>
  </tileset>
@@ -14191,6 +14191,24 @@
   <object id="101" x="760.333" y="32.333">
    <properties>
     <property name="id" value="EXIT-001"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="102" x="248" y="340.333">
+   <properties>
+    <property name="id" value="BOX-001"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="103" x="199.667" y="340">
+   <properties>
+    <property name="id" value="PLATE-001"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="104" x="192.152" y="256.363">
+   <properties>
+    <property name="id" value="GATE-001"/>
    </properties>
    <point/>
   </object>

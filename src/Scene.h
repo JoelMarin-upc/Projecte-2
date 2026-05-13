@@ -15,6 +15,8 @@
 #include "Combat.h"
 #include "EnemyParty.h"
 #include "DungeonExit.h"
+#include "DungeonGate.h"
+#include "PressurePlate.h"
 #include <unordered_map>
 #include <type_traits>
 #include <typeinfo>
@@ -93,6 +95,7 @@ public:
 	void CompleteMission(std::string missionId);
 
 	void OnLeverToggled();
+	void OnPressurePlatePressed();
 
 	void CheckTransitions();
 
@@ -226,5 +229,8 @@ private:
 
 	NPC* shopOwner = nullptr;
 	DungeonExit* dungeonExit = nullptr;
+	DungeonGate* dungeonGate = nullptr;
+	PressurePlate* pressurePlate = nullptr;
+
 	std::unordered_map<std::string, ItemDef*> itemDefs;
 };

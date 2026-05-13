@@ -26,6 +26,8 @@ public:
 
 	bool Destroy();
 
+	void SetTexSize(int w, int h) { texW = w; texH = h; }
+
 public:
 
 	bool isPicked = false;

@@ -11,6 +11,7 @@
 #include "Consumable.h"
 #include "DungeonLever.h"
 #include "DungeonExit.h"
+#include "DungeonGate.h"
 #include <memory>
 #include <vector>
 #include <unordered_set>
@@ -830,6 +831,12 @@ void Scene::LoadScene(std::string spawnId)
 			else if (name == "Lever") {
 				std::shared_ptr<DungeonLever> newLever = std::dynamic_pointer_cast<DungeonLever>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
 			}
+			else if (name == "Gate") {
+				std::shared_ptr<DungeonGate> newExit = std::dynamic_pointer_cast<DungeonGate>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+			}
+			else if (name == "Plate") {
+				std::shared_ptr<PressurePlate> newPlate = std::dynamic_pointer_cast<PressurePlate>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+			}
 			else {
 				std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
 				newItem->price = def->gold;
@@ -841,7 +848,14 @@ void Scene::LoadScene(std::string spawnId)
 		if (auto exit = std::dynamic_pointer_cast<DungeonExit>(entity)) {
 			dungeonExit = exit.get();
 		}
+		if (auto gate = std::dynamic_pointer_cast<DungeonGate>(entity)) {
+			dungeonGate = gate.get();
+		}
+		if (auto plate = std::dynamic_pointer_cast<PressurePlate>(entity)) {
+			pressurePlate = plate.get();
+		}
 	}
+	if (pressurePlate && dungeonGate) pressurePlate->linkedGate = dungeonGate;
 }
 
 Stats* Scene::LoadStats(pugi::xml_node node)
@@ -1066,6 +1080,11 @@ void Scene::OnLeverToggled()
 	if (dungeonExit) {
 		dungeonExit->Unlock();
 	}
+}
+
+void Scene::OnPressurePlatePressed()
+{
+
 }
 
 void Scene::CompleteMission(std::string missionId)
