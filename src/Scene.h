@@ -17,6 +17,7 @@
 #include "DungeonExit.h"
 #include "DungeonGate.h"
 #include "PressurePlate.h"
+#include "PushBox.h"
 #include <unordered_map>
 #include <type_traits>
 #include <typeinfo>
@@ -231,6 +232,7 @@ private:
 	DungeonExit* dungeonExit = nullptr;
 	DungeonGate* dungeonGate = nullptr;
 	PressurePlate* pressurePlate = nullptr;
+	PushBox* pushBox = nullptr;
 
 	std::unordered_map<std::string, ItemDef*> itemDefs;
 };

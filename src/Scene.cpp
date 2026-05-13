@@ -837,6 +837,9 @@ void Scene::LoadScene(std::string spawnId)
 			else if (name == "Plate") {
 				std::shared_ptr<PressurePlate> newPlate = std::dynamic_pointer_cast<PressurePlate>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
 			}
+			else if (name == "Box") {
+				std::shared_ptr<PushBox> newBox = std::dynamic_pointer_cast<PushBox>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+			}
 			else {
 				std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
 				newItem->price = def->gold;
@@ -853,6 +856,9 @@ void Scene::LoadScene(std::string spawnId)
 		}
 		if (auto plate = std::dynamic_pointer_cast<PressurePlate>(entity)) {
 			pressurePlate = plate.get();
+		}
+		if (auto box = std::dynamic_pointer_cast<PushBox>(entity)) {
+			pushBox = box.get();
 		}
 	}
 	if (pressurePlate && dungeonGate) pressurePlate->linkedGate = dungeonGate;

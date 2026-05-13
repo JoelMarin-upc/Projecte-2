@@ -31,28 +31,19 @@ void PressurePlate::Draw(float dt)
 
 void PressurePlate::OnCollision(Collider* physA, Collider* physB)
 {
+    if (physB->etype != EntityType::PUSH_BOX) return;
     if (isPressed) return;
 
-    switch (physB->etype) {
-    case EntityType::INTERACTABLE_ITEM:
-        isPressed = true;
-        if (linkedGate) linkedGate->Unlock();
-        break;
-    case EntityType::PLAYER:
-        isPressed = true;
-        if (linkedGate) linkedGate->Unlock();
-        break;
-    case EntityType::NPC:
-        isPressed = true;
-        if (linkedGate) linkedGate->Unlock();
-        break;
-    case EntityType::ENEMY:
-        isPressed = true;
-        if (linkedGate) linkedGate->Unlock();
-        break;
-    default:
-        break;
-    }
-
+    isPressed = true;
+    if (linkedGate) linkedGate->Unlock();
     
+}
+
+void PressurePlate::OnCollisionEnd(Collider* physA, Collider* physB)
+{
+    if (physB->etype != EntityType::PUSH_BOX) return;
+
+    if (linkedGate && linkedGate->active) {
+        isPressed = false;
+    }
 }

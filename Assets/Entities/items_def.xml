@@ -35,4 +35,5 @@
 	<item id="EXIT-001" name="Exit" texture="dungeonGate.png" type="4" itemClass="exit" interactionType="3" canStack="false"/>
 	<item id="GATE-001" name="Gate" texture="dungeonGateThin.png" type="4" itemClass="gate" interactionType="3" canStack="false"/>
 	<item id="PLATE-001" name="Plate" texture="goldCoin.png" type="4" itemClass="plate" interactionType="3" canStack="false"/>
+	<item id="BOX-001" name="Plate" texture="Barbara.png" type="4" itemClass="box" interactionType="3" canStack="false"/>
 </items>

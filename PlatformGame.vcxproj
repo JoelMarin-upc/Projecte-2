@@ -203,6 +203,7 @@
     <ClCompile Include="src\PerfTimer.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\PressurePlate.cpp" />
+    <ClCompile Include="src\PushBox.cpp" />
     <ClCompile Include="src\ReachMission.cpp" />
     <ClCompile Include="src\RecuitCenter.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
@@ -281,6 +282,7 @@
     <ClInclude Include="src\PerfTimer.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\PressurePlate.h" />
+    <ClInclude Include="src\PushBox.h" />
     <ClInclude Include="src\ReachMission.h" />
     <ClInclude Include="src\RecuitCenter.h" />
     <ClInclude Include="src\SceneManager.h" />

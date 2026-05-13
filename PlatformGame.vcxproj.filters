@@ -317,6 +317,9 @@
     <ClCompile Include="src\PressurePlate.cpp">
       <Filter>Source Files\Scene\Entities\Items</Filter>
     </ClCompile>
+    <ClCompile Include="src\PushBox.cpp">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio.h">
@@ -545,6 +548,9 @@
       <Filter>Source Files\Scene\Entities\Items</Filter>
     </ClInclude>
     <ClInclude Include="src\PressurePlate.h">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PushBox.h">
       <Filter>Source Files\Scene\Entities\Items</Filter>
     </ClInclude>
   </ItemGroup>

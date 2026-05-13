@@ -13,6 +13,7 @@ public:
     void Draw(float dt) override;
 
     void OnCollision(Collider* physA, Collider* physB) override;
+    void OnCollisionEnd(Collider* physA, Collider* physB) override;
 
     DungeonGate* linkedGate = nullptr;
 
