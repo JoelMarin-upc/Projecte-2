@@ -40,4 +40,5 @@ public:
 
 	Timer walkTimer;
 	float walkMS = 400.0f;
+
 };

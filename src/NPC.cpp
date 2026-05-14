@@ -31,13 +31,17 @@ bool NPC::Start()
 
 	party = nullptr;
 
-	const char* walkFxPath = Engine::GetInstance().audio->GetAudioPath("npc", "walk");
-	const char* attackFxPath = Engine::GetInstance().audio->GetAudioPath("npc", "attack");
-	const char* dieFxPath = Engine::GetInstance().audio->GetAudioPath("npc", "die");
+	const char* audioNode;
+	if ("CH-006") audioNode = "dog";
+	else audioNode = isMale ? "human_male" : "human_female";
 
-	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath);
-	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath);
-	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath);
+	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "walk");
+	std::string attackFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "attack");
+	std::string dieFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "die");
+
+	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath.c_str());
+	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath.c_str());
+	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath.c_str());
 
     return true;
 }

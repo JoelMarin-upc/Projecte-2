@@ -99,5 +99,7 @@ public:
 	SDL_Texture* texture;
 	std::string texturePath;
 	std::string combatTexturePath;
+
+	bool isMale = false;
 	
 };

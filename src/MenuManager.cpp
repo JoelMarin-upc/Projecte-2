@@ -28,14 +28,14 @@ bool MenuManager::Awake()
 
 bool MenuManager::Start() 
 {
-	const char* hoverFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "hover");
-	const char* clickFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "click");
-	const char* missionNewFxPath = Engine::GetInstance().audio->GetAudioPath("missions", "new");
-	const char* missionCompletedFxPath = Engine::GetInstance().audio->GetAudioPath("missions", "completed");
-	hoverFxId = Engine::GetInstance().audio->LoadFx(hoverFxPath);
-	clickFxId = Engine::GetInstance().audio->LoadFx(clickFxPath);
-	missionNewFxId = Engine::GetInstance().audio->LoadFx(missionNewFxPath);
-	missionCompletedFxId = Engine::GetInstance().audio->LoadFx(missionCompletedFxPath);
+	std::string hoverFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "hover");
+	std::string clickFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "click");
+	std::string missionNewFxPath = Engine::GetInstance().audio->GetAudioPath("missions", "new");
+	std::string missionCompletedFxPath = Engine::GetInstance().audio->GetAudioPath("missions", "completed");
+	hoverFxId = Engine::GetInstance().audio->LoadFx(hoverFxPath.c_str());
+	clickFxId = Engine::GetInstance().audio->LoadFx(clickFxPath.c_str());
+	missionNewFxId = Engine::GetInstance().audio->LoadFx(missionNewFxPath.c_str());
+	missionCompletedFxId = Engine::GetInstance().audio->LoadFx(missionCompletedFxPath.c_str());
 	Load(false);
 	return true;
 }

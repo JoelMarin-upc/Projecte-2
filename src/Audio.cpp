@@ -98,7 +98,7 @@ bool Audio::EnsureStreams() {
     return true;
 }
 
-const char* Audio::GetAudioPath(const char* node, const char* audioName)
+std::string Audio::GetAudioPath(const char* node, const char* audioName)
 {
     pugi::xml_document audioDoc = XMLHandler::LoadFile("Assets/Audio/audios.xml");
     pugi::xml_node audios = audioDoc.child("audios");

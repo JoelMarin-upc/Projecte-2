@@ -50,13 +50,15 @@ bool Player::Start() {
 
 	party = new Party(std::static_pointer_cast<Player>(shared_from_this()));
 
-	const char* walkFxPath = Engine::GetInstance().audio->GetAudioPath("player", "walk");
-	const char* attackFxPath = Engine::GetInstance().audio->GetAudioPath("player", "attack");
-	const char* dieFxPath = Engine::GetInstance().audio->GetAudioPath("player", "die");
+	const char* audioNode = isMale ? "human_male" : "human_female";
 
-	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath);
-	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath);
-	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath);
+	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "walk");
+	std::string attackFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "attack");
+	std::string dieFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "die");
+
+	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath.c_str());
+	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath.c_str());
+	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath.c_str());
 
 	return true;
 }
