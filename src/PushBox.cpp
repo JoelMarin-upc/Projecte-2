@@ -45,6 +45,11 @@ bool PushBox::Start()
 bool PushBox::Update(float dt)
 {
     if (!active) return true;
+
+    int x, y;
+    colliders[0]->GetPosition(x, y);
+    b2Body_SetTransform(sensorCollider->body, { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, b2Body_GetRotation(sensorCollider->body));
+
     Draw(dt);
     return true;
 }
