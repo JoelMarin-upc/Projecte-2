@@ -13,6 +13,7 @@
 #include "DungeonGate.h"
 #include "PressurePlate.h"
 #include "PushBox.h"
+#include "ResetButton.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -117,6 +118,7 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 		else if (itemClass == "gate") entity = std::make_shared<DungeonGate>(id, name, description, texturePath);
 		else if (itemClass == "plate") entity = std::make_shared<PressurePlate>(id, name, description, texturePath);
 		else if (itemClass == "box") entity = std::make_shared<PushBox>(id, name, description, texturePath);
+		else if (itemClass == "button") entity = std::make_shared<ResetButton>(id, name, description, texturePath, toggledTexturePath);
 		else entity = std::make_shared<InteractableItem>(id, name, description, texturePath, interactionType, canStack, toggledTexturePath);
 		break;
 	default:

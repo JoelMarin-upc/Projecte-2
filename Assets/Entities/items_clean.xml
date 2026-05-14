@@ -5,4 +5,5 @@
 	<item id="GATE-001" name="Gate"/>
 	<item id="PLATE-001" name="Plate"/>
 	<item id="BOX-001" name="Box"/>
+	<item id="BUTTON-001" name="Button"/>
 </items>

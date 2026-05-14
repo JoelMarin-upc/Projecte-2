@@ -206,6 +206,7 @@
     <ClCompile Include="src\PushBox.cpp" />
     <ClCompile Include="src\ReachMission.cpp" />
     <ClCompile Include="src\RecuitCenter.cpp" />
+    <ClCompile Include="src\ResetButton.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\Shop.cpp" />
     <ClCompile Include="src\Soldier.cpp" />
@@ -285,6 +286,7 @@
     <ClInclude Include="src\PushBox.h" />
     <ClInclude Include="src\ReachMission.h" />
     <ClInclude Include="src\RecuitCenter.h" />
+    <ClInclude Include="src\ResetButton.h" />
     <ClInclude Include="src\SceneManager.h" />
     <ClInclude Include="src\Shop.h" />
     <ClInclude Include="src\Soldier.h" />

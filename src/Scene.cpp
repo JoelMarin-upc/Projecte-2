@@ -12,6 +12,7 @@
 #include "DungeonLever.h"
 #include "DungeonExit.h"
 #include "DungeonGate.h"
+#include "ResetButton.h"
 #include <memory>
 #include <vector>
 #include <unordered_set>
@@ -840,6 +841,9 @@ void Scene::LoadScene(std::string spawnId)
 			else if (name == "Box") {
 				std::shared_ptr<PushBox> newBox = std::dynamic_pointer_cast<PushBox>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
 			}
+			else if (name == "Button") {
+				std::shared_ptr<ResetButton> newButton = std::dynamic_pointer_cast<ResetButton>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+			}
 			else {
 				std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
 				newItem->price = def->gold;
@@ -860,8 +864,12 @@ void Scene::LoadScene(std::string spawnId)
 		if (auto box = std::dynamic_pointer_cast<PushBox>(entity)) {
 			pushBox = box.get();
 		}
+		if (auto button = std::dynamic_pointer_cast<ResetButton>(entity)) {
+			resetButton = button.get();
+		}
 	}
 	if (pressurePlate && dungeonGate) pressurePlate->linkedGate = dungeonGate;
+	if (resetButton && pushBox) resetButton->linkedBox = pushBox;
 
 	entityManager->entities.sort([](const std::shared_ptr<Entity>& a, const std::shared_ptr<Entity>& b) {
 		int pa = dynamic_cast<PressurePlate*>(a.get()) ? 0 : 1;

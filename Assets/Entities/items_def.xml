@@ -36,4 +36,5 @@
 	<item id="GATE-001" name="Gate" texture="dungeonGateThin.png" type="4" itemClass="gate" interactionType="3" canStack="false"/>
 	<item id="PLATE-001" name="Plate" texture="pressurePlate.png" type="4" itemClass="plate" interactionType="3" canStack="false"/>
 	<item id="BOX-001" name="Plate" texture="interactableBox.png" type="4" itemClass="box" interactionType="3" canStack="false"/>
+	<item id="BUTTON-001" name="Button" texture="puzzleButton.png" type="4" itemClass="button" interactionType="2" canStack="false" toggledTexturePath="puzzleButtonPressed.png"/>
 </items>

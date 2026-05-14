@@ -18,6 +18,7 @@
 #include "DungeonGate.h"
 #include "PressurePlate.h"
 #include "PushBox.h"
+#include "ResetButton.h"
 #include <unordered_map>
 #include <type_traits>
 #include <typeinfo>
@@ -233,6 +234,7 @@ private:
 	DungeonGate* dungeonGate = nullptr;
 	PressurePlate* pressurePlate = nullptr;
 	PushBox* pushBox = nullptr;
+	ResetButton* resetButton = nullptr;
 
 	std::unordered_map<std::string, ItemDef*> itemDefs;
 };
