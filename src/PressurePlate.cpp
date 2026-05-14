@@ -1,6 +1,7 @@
 #include "PressurePlate.h"
 #include "EntityManager.h"
 #include "DungeonGate.h"
+#include "Log.h"
 
 bool PressurePlate::Start()
 {
@@ -22,7 +23,6 @@ bool PressurePlate::Start()
 void PressurePlate::Draw(float dt)
 {
     if (!active) return;
-
     int x, y;
     sensorCollider->GetPosition(x, y);
 

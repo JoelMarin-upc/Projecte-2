@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <missions>
-	<mission id="MI-000" type="0" targetId="CH-001" targetName="Gravekeeper" rewardGold="50" rewardItemName="" active="false" completed="false">
+	<mission id="MI-000" type="0" targetId="CH-001" targetName="Gravekeeper" rewardGold="50" rewardItemName="" active="true" completed="false">
 		<unlocks>
 			<mission id="MI-001" />
 		</unlocks>

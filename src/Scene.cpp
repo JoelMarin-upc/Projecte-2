@@ -862,6 +862,12 @@ void Scene::LoadScene(std::string spawnId)
 		}
 	}
 	if (pressurePlate && dungeonGate) pressurePlate->linkedGate = dungeonGate;
+
+	entityManager->entities.sort([](const std::shared_ptr<Entity>& a, const std::shared_ptr<Entity>& b) {
+		int pa = dynamic_cast<PressurePlate*>(a.get()) ? 0 : 1;
+		int pb = dynamic_cast<PressurePlate*>(b.get()) ? 0 : 1;
+		return pa < pb;
+		});
 }
 
 Stats* Scene::LoadStats(pugi::xml_node node)

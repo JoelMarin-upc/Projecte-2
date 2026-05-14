@@ -2,4 +2,7 @@
 	<item id="IT-001" name="statue"/>
 	<item id="LEVER-001" name="Lever"/>
 	<item id="EXIT-001" name="Exit"/>
+	<item id="GATE-001" name="Gate"/>
+	<item id="PLATE-001" name="Plate"/>
+	<item id="BOX-001" name="Box"/>
 </items>

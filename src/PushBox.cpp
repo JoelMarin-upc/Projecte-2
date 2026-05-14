@@ -50,14 +50,13 @@ bool PushBox::Update(float dt)
     colliders[0]->GetPosition(x, y);
     b2Body_SetTransform(sensorCollider->body, { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, b2Body_GetRotation(sensorCollider->body));
 
-    Draw(dt);
+    //Draw(dt);
     return true;
 }
 
 void PushBox::Draw(float dt)
 {
     if (!active || !pbody) return;
-
     int x, y;
     pbody->GetPosition(x, y);
     Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2);
