@@ -222,35 +222,35 @@ bool Combat::Start() {
 	}
 
 	float highestSpeed = 0;
-	highestSpeed = player->stats->GetStat("speed").getValue();
+	highestSpeed = player->Speed();
 	if (npc1) {
-		float newSpeed = npc1->stats->GetStat("speed").getValue();
+		float newSpeed = npc1->Speed();
 		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
 	}
 	if (npc2) {
-		float newSpeed = npc2->stats->GetStat("speed").getValue();
+		float newSpeed = npc2->Speed();
 		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
 	}
 	if (npc3) {
-		float newSpeed = npc3->stats->GetStat("speed").getValue();
+		float newSpeed = npc3->Speed();
 		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
 	}
 
 	float highestEnemySpeed = 0;
 	if (enemy1) {
-		float newSpeed = enemy1->stats->GetStat("speed").getValue();
+		float newSpeed = enemy1->Speed();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 	if (enemy2) {
-		float newSpeed = enemy2->stats->GetStat("speed").getValue();
+		float newSpeed = enemy2->Speed();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 	if (enemy3) {
-		float newSpeed = enemy3->stats->GetStat("speed").getValue();
+		float newSpeed = enemy3->Speed();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 	if (enemy4) {
-		float newSpeed = enemy4->stats->GetStat("speed").getValue();
+		float newSpeed = enemy4->Speed();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 

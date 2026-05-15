@@ -458,6 +458,7 @@ void Scene::TogglePause()
 
 void Scene::SaveGame()
 {
+	SaveSessionState();
 	std::ifstream src("Assets/Entities/characters_session.xml", std::ios::binary);
 	std::ofstream dst("Assets/Entities/characters.xml", std::ios::binary | std::ios::trunc);
 	dst << src.rdbuf();
@@ -965,7 +966,7 @@ void Scene::ToggleInventory()
 		entityManager->paused = showingInventory;
 		if (showingInventory)
 		{
-			Engine::GetInstance().menuManager->ShowInventory(player->inventory);
+			Engine::GetInstance().menuManager->ShowInventory(player->inventory, player);
 			Engine::GetInstance().audio->PlayFx(openInventoryFxId);
 		}
 		else Engine::GetInstance().menuManager->HideMenu();

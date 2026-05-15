@@ -8,6 +8,38 @@ float Character::Attack()
     return attack.getValue(weaponModifier);
 }
 
+float Character::Defense()
+{
+    Stat& defense = stats->GetStat("defense");
+    float gearModifier = 0;
+    if (inventory->equippedHelmet) gearModifier += inventory->equippedHelmet->stats->GetStat("defense").value;
+    if (inventory->equippedBody) gearModifier += inventory->equippedBody->stats->GetStat("defense").value;
+    if (inventory->equippedBoots) gearModifier += inventory->equippedBoots->stats->GetStat("defense").value;
+    return defense.getValue(gearModifier);
+}
+
+float Character::Speed()
+{
+    Stat& speed = stats->GetStat("speed");
+    float gearModifier = 0;
+    if (inventory->equippedHelmet) gearModifier += inventory->equippedHelmet->stats->GetStat("speed").value;
+    if (inventory->equippedBody) gearModifier += inventory->equippedBody->stats->GetStat("speed").value;
+    if (inventory->equippedBoots) gearModifier += inventory->equippedBoots->stats->GetStat("speed").value;
+    return speed.getValue(gearModifier);
+}
+
+float Character::HP()
+{
+    Stat& health = stats->GetStat("health");
+    return health.getValue();
+}
+
+float Character::MaxHP()
+{
+    Stat& health = stats->GetStat("health");
+    return health.maxValue;
+}
+
 std::shared_ptr<Consumable> Character::UseConsumable(std::string type)
 {
     if (type == "") return nullptr;

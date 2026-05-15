@@ -28,7 +28,7 @@ void Stats::RemoveStat(std::string statname)
 Stat& Stats::GetStat(std::string statname)
 {
     for (auto& s : stats) if (s.name == statname) return s;
-	throw std::runtime_error("Stat not found: " + statname);
+	return *(new Stat(statname, 0, 0));
 }
 
 void Stats::SetStat(std::string statname, int value)
