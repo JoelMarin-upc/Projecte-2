@@ -8,7 +8,7 @@ bool PressurePlate::Start()
     texture = Engine::GetInstance().textures->Load(texturePath.c_str());
     icon = texture;
 
-    AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 0, 0, 1, 1);
+    AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, -20, -20, 1, 1);
     sensorCollider = colliders[0];
     sensorCollider->etype = EntityType::INTERACTABLE_ITEM;
     sensorCollider->listener = this;

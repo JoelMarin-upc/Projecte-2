@@ -15,8 +15,8 @@ bool PushBox::Start()
 
     // Single solid square collider — no sensor needed for movement.
     // We add a sensor only so OnCollision fires when overlapping the plate.
-    AddCollider(ColliderType::SQUARE, texture, 0, 0, 0, 0, 1, 1);
-    AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 0, 0, 1, 1);
+    AddCollider(ColliderType::SQUARE, texture, 0, 0, -10, -10, 1, 1);
+    AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, -20, -20, 1, 1);
 
     texW = 32;
     texH = 32;

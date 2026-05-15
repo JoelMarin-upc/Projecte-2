@@ -42,11 +42,13 @@ bool Player::Start() {
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
 	if (combatTexturePath != "") combatTexture = Engine::GetInstance().textures->Load(combatTexturePath.c_str());
 
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -110, 0, 1, 1);
+	//AddCollider(ColliderType::CIRCLE, texture, 0, 0, -110, 0, 1, 1);
+	AddCollider(ColliderType::SQUARE, texture, 0, 0, -110, -200, 1, 1);
 
 	colliders[0]->etype = EntityType::PLAYER;
 	pbody = colliders[0];
 	pbody->listener = this;
+	b2Body_SetFixedRotation(pbody->body, true);
 
 	party = new Party(std::static_pointer_cast<Player>(shared_from_this()));
 
