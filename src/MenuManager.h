@@ -4,6 +4,7 @@
 #include "Inventory.h"
 #include "UIManager.h"
 #include "MissionManager.h"
+#include "Character.h"
 #include "Timer.h"
 #include <list>
 #include <queue>
@@ -82,7 +83,11 @@ enum UIID {
 	BOOTS,
 	WEAPON,
 	SELECTED_ITEM,
-	EXIT_SHOP
+	EXIT_SHOP,
+	HP_STAT,
+	ATTACK_STAT,
+	DEFEND_STAT,
+	SPEED_STAT
 };
 
 const float POP_UP_SECONDS = 5.f;
@@ -119,7 +124,7 @@ public:
 	void ShowPauseMenu();
 	void ShowSettingsMenu();
 	void ShowCreditsMenu();
-	void ShowInventory(Inventory* inventory);
+	void ShowInventory(Inventory* inventory, std::shared_ptr<Character> character = nullptr);
 	void ShowShop(Inventory* customer, Inventory* shop);
 	void ShowDeathScreen();
 	void AddMissionPopup(Mission* mission);
@@ -132,7 +137,7 @@ public:
 	void ShowCombatInventory(Inventory* inventory);
 
 private:
-	void ShowInventory(Inventory* inventory, bool isShop);
+	void ShowInventory(Inventory* inventory, bool isShop, std::shared_ptr<Character> character = nullptr);
 
 public:
 	MenuType currentMenu;
@@ -189,7 +194,12 @@ public:
 	std::shared_ptr<UIImage> weapon;
 	std::shared_ptr<UISlot> selectedItem;
 	std::shared_ptr<UIButton> exitShop;
+	std::shared_ptr<UIButton> hp;
+	std::shared_ptr<UIButton> attack;
+	std::shared_ptr<UIButton> defense;
+	std::shared_ptr<UIButton> speed;
 
+	std::shared_ptr<Character> currentCharacter = nullptr;
 	Inventory* currentInventory = nullptr;
 	Inventory* currentShop = nullptr;
 
@@ -197,4 +207,9 @@ public:
 	Timer popUpTimer;
 	float popUpSeconds = 0.f;
 	bool showingPopUp = false;
+
+	int missionNewFxId;
+	int missionCompletedFxId;
+	int hoverFxId;
+	int clickFxId;
 };

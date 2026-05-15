@@ -139,7 +139,7 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 	return entity;
 }
 
-std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, Vector2D position, EntityType type, NPCInteractionType npcInteractionType, std::string recuitMissionId)
+std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, Vector2D position, EntityType type, NPCInteractionType npcInteractionType, std::string recuitMissionId, bool isMale)
 {
 	std::shared_ptr<Entity> entity = std::make_shared<Entity>();
 
@@ -162,7 +162,7 @@ std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::stri
 	entities.push_back(entity);
 
 	entity->position = position;
-
+	entity->isMale = isMale;
 	entity->Start();
 
 	return entity;

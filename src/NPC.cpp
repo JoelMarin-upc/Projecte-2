@@ -4,6 +4,7 @@
 #include "Log.h"
 #include "Party.h"
 #include "Animation.h"
+#include "Audio.h"
 //#include <cmath>
 
 NPC::~NPC() {}
@@ -29,6 +30,18 @@ bool NPC::Start()
 	texH = 30;
 
 	party = nullptr;
+
+	const char* audioNode;
+	if ("CH-006") audioNode = "dog";
+	else audioNode = isMale ? "human_male" : "human_female";
+
+	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "walk");
+	std::string attackFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "attack");
+	std::string dieFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "die");
+
+	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath.c_str());
+	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath.c_str());
+	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath.c_str());
 
     return true;
 }
@@ -171,6 +184,11 @@ void NPC::Move()
 	dir.y /= distance;
 
 	b2Vec2 velocity = speed * dir;
+
+	if ((velocity.x != 0 || velocity.y != 0) && walkTimer.ReadMSec() > walkMS) {
+		Engine::GetInstance().audio->PlayFx(walkFxId);
+		walkTimer = Timer();
+	}
 
 	Engine::GetInstance().physics->SetLinearVelocity(colliders[0], velocity);
 	HandleAnimations(velocity);

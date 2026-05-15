@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <missions>
-	<mission id="MI-000" type="0" targetId="CH-001" targetName="Gravekeeper" rewardGold="50" rewardItemName="" active="true" completed="false">
+	<mission id="MI-000" type="0" targetId="CH-001" targetName="Gravekeeper" rewardGold="50" rewardItemName="" active="false" completed="true">
 		<unlocks>
 			<mission id="MI-001" />
 		</unlocks>
 	</mission>
-	<mission id="MI-001" type="1" targetId="SC-002" targetName="Grocery Store" rewardGold="" rewardItemName="potion" active="false" completed="false">
+	<mission id="MI-001" type="1" targetId="SC-002" targetName="Grocery Store" rewardGold="" rewardItemName="potion" active="true" completed="false">
 		<unlocks>
 			<mission id="MI-002" />
 			<mission id="MI-003" />

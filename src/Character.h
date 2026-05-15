@@ -20,6 +20,10 @@ public:
 	Character(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, EntityType type) : DynamicEntity(id, name, texturePath, combatTexturePath, type) {}
 
 	float Attack();
+	float Defense();
+	float Speed();
+	float HP();
+	float MaxHP();
 	std::shared_ptr<Consumable> UseConsumable(std::string type);
 	void TakeConsumable(std::shared_ptr<Consumable> consumable);
 	void TakeStance(Stance stance, std::vector<std::shared_ptr<Character>> affectedCharacters = std::vector<std::shared_ptr<Character>>());
@@ -33,4 +37,12 @@ public:
 	SDL_Texture* combatTexture = nullptr;
 	bool isDead = false;
 	bool hasFled = false;
+
+	int walkFxId;
+	int attackFxId;
+	int dieFxId;
+
+	Timer walkTimer;
+	float walkMS = 400.0f;
+
 };

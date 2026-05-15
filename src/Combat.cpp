@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "SceneManager.h"
 #include "Window.h"
+#include "Audio.h"
 #include <random>
 #include <thread>
 #include <chrono>
@@ -221,35 +222,35 @@ bool Combat::Start() {
 	}
 
 	float highestSpeed = 0;
-	highestSpeed = player->stats->GetStat("speed").getValue();
+	highestSpeed = player->Speed();
 	if (npc1) {
-		float newSpeed = npc1->stats->GetStat("speed").getValue();
+		float newSpeed = npc1->Speed();
 		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
 	}
 	if (npc2) {
-		float newSpeed = npc2->stats->GetStat("speed").getValue();
+		float newSpeed = npc2->Speed();
 		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
 	}
 	if (npc3) {
-		float newSpeed = npc3->stats->GetStat("speed").getValue();
+		float newSpeed = npc3->Speed();
 		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
 	}
 
 	float highestEnemySpeed = 0;
 	if (enemy1) {
-		float newSpeed = enemy1->stats->GetStat("speed").getValue();
+		float newSpeed = enemy1->Speed();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 	if (enemy2) {
-		float newSpeed = enemy2->stats->GetStat("speed").getValue();
+		float newSpeed = enemy2->Speed();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 	if (enemy3) {
-		float newSpeed = enemy3->stats->GetStat("speed").getValue();
+		float newSpeed = enemy3->Speed();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 	if (enemy4) {
-		float newSpeed = enemy4->stats->GetStat("speed").getValue();
+		float newSpeed = enemy4->Speed();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 
@@ -284,6 +285,7 @@ bool Combat::Update(float dt) {
 			switch (action->action)
 			{
 			case ATTACK:
+				Engine::GetInstance().audio->PlayFx(action->selected->attackFxId);
 				if (action->target->TakeDamage(action->selected->Attack())) KillCombatant(action->target);
 				break;
 			case TAKE_STANCE:
@@ -537,14 +539,46 @@ void Combat::SelectConsumable(std::string consumableName)
 void Combat::KillCombatant(std::shared_ptr<Character> character)
 {
 	//character->isDead = true;
-	if (player && character->id == player->id) player->isDead = true;
-	if (npc1 && character->id == npc1->id) npc1->isDead = true;
-	if (npc2 && character->id == npc2->id) npc2->isDead = true;
-	if (npc3 && character->id == npc3->id) npc3->isDead = true;
-	if (enemy1 && character->id == enemy1->id) enemy1->isDead = true;
-	if (enemy2 && character->id == enemy2->id) enemy2->isDead = true;
-	if (enemy3 && character->id == enemy3->id) enemy3->isDead = true;
-	if (enemy4 && character->id == enemy4->id) enemy4->isDead = true;
+	if (player && character->id == player->id) 
+	{
+		player->isDead = true;
+		Engine::GetInstance().audio->PlayFx(player->dieFxId);
+	}
+	if (npc1 && character->id == npc1->id) 
+	{
+		npc1->isDead = true;
+		Engine::GetInstance().audio->PlayFx(npc1->dieFxId);
+	}
+	if (npc2 && character->id == npc2->id) 
+	{
+		npc2->isDead = true;
+		Engine::GetInstance().audio->PlayFx(npc2->dieFxId);
+	}
+	if (npc3 && character->id == npc3->id) 
+	{
+		npc3->isDead = true;
+		Engine::GetInstance().audio->PlayFx(npc3->dieFxId);
+	}
+	if (enemy1 && character->id == enemy1->id) 
+	{
+		enemy1->isDead = true;
+		Engine::GetInstance().audio->PlayFx(enemy1->dieFxId);
+	}
+	if (enemy2 && character->id == enemy2->id) 
+	{
+		enemy2->isDead = true;
+		Engine::GetInstance().audio->PlayFx(enemy2->dieFxId);
+	}
+	if (enemy3 && character->id == enemy3->id) 
+	{
+		enemy3->isDead = true;
+		Engine::GetInstance().audio->PlayFx(enemy3->dieFxId);
+	}
+	if (enemy4 && character->id == enemy4->id) 
+	{
+		enemy4->isDead = true;
+		Engine::GetInstance().audio->PlayFx(enemy4->dieFxId);
+	}
 	if (player->isDead) combatResult = LOSE;
 	bool alive1 = enemy1 && !enemy1->isDead;
 	bool alive2 = enemy2 && !enemy2->isDead;

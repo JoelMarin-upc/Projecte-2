@@ -117,7 +117,7 @@
       <AdditionalLibraryDirectories> .\vcpkg_installed\x64-windows\x64-windows\lib\manual-link</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /E /I /Y "$(ProjectDir)Assets" "$(OutDir)Assets"</Command>
+      <Command>if exist "$(ProjectDir)Assets" xcopy /E /I /Y "$(ProjectDir)Assets" "$(OutDir)Assets\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -319,6 +319,7 @@
     <ClInclude Include="src\Zombie.h" />
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="Assets\Audio\audios.xml" />
     <Xml Include="Assets\Dialogues\dialogues.xml" />
     <Xml Include="Assets\Dialogues\dialogues_clean.xml" />
     <Xml Include="Assets\Dialogues\dialogues_session.xml" />

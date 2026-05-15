@@ -81,11 +81,29 @@ bool Scene::Start(std::string spawnId)
 	sh = Engine::GetInstance().window->height;
 	/*logo = Engine::GetInstance().textures->Load("Assets/Textures/TeamDayo_Logo.png");
 	b_logo = { sw/2 - logo->w/2, sh/2 - logo->h/2, 0, 0 };*/
-	hoverFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("hover").as_string());
-	clickFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("click").as_string());
-	//logoFxId = Engine::GetInstance().audio->LoadFx(configParameters.child("audios").attribute("logo").as_string());
-	logoFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/logo.wav");
-	elevatorFxId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/elevator.wav");
+	
+	std::string logoFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "logo");
+	std::string elevatorFxPath = Engine::GetInstance().audio->GetAudioPath("scene", "elevator");
+	std::string doorFxPath = Engine::GetInstance().audio->GetAudioPath("scene", "door");
+	std::string dialogFxPath = Engine::GetInstance().audio->GetAudioPath("dialog", "start");
+	std::string journalFxPath = Engine::GetInstance().audio->GetAudioPath("missions", "journal");
+	std::string openInventoryFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "open");
+	std::string useFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "use");
+	std::string equipWeaponFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "equipWeapon");
+	std::string equipGearFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "equipGear");
+	std::string dropFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "drop");
+	std::string buySellFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "buySell");
+	logoFxId = Engine::GetInstance().audio->LoadFx(logoFxPath.c_str());
+	elevatorFxId = Engine::GetInstance().audio->LoadFx(elevatorFxPath.c_str());
+	doorFxId = Engine::GetInstance().audio->LoadFx(doorFxPath.c_str());
+	dialogFxId = Engine::GetInstance().audio->LoadFx(dialogFxPath.c_str());
+	journalFxId = Engine::GetInstance().audio->LoadFx(journalFxPath.c_str());
+	openInventoryFxId = Engine::GetInstance().audio->LoadFx(openInventoryFxPath.c_str());
+	useFxId = Engine::GetInstance().audio->LoadFx(useFxPath.c_str());
+	equipWeaponFxId = Engine::GetInstance().audio->LoadFx(equipWeaponFxPath.c_str());
+	equipGearFxId = Engine::GetInstance().audio->LoadFx(equipGearFxPath.c_str());
+	dropFxId = Engine::GetInstance().audio->LoadFx(dropFxPath.c_str());
+	buySellFxId = Engine::GetInstance().audio->LoadFx(buySellFxPath.c_str());
 	//studioLogoTexture = Engine::GetInstance().textures->Load("Assets/Textures/Team_Logo_SpriteSheet.png");
 	//gameTitleTexture = Engine::GetInstance().textures->Load("Assets/Textures/Title_Logo_SpriteSheet.png");
 
@@ -125,6 +143,7 @@ bool Scene::Start(std::string spawnId)
 		}
 		else if (id == "SC-002")
 		{
+			Engine::GetInstance().audio->PlayFx(doorFxId);
 			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav", 5000.0f);
 		}
 		else if (id == "SC-003")
@@ -448,6 +467,7 @@ void Scene::TogglePause()
 
 void Scene::SaveGame()
 {
+	SaveSessionState();
 	std::ifstream src("Assets/Entities/characters_session.xml", std::ios::binary);
 	std::ofstream dst("Assets/Entities/characters.xml", std::ios::binary | std::ios::trunc);
 	dst << src.rdbuf();
@@ -707,6 +727,7 @@ void Scene::LoadScene(std::string spawnId)
 	std::string name = pNode.attribute("name").as_string();
 	std::string texture = pNode.attribute("texture").as_string();
 	std::string combatTexture = pNode.attribute("combatTexture").as_string();
+	bool playerIsMale = pNode.attribute("isMale").as_bool(true);
 
 	//Loads the spawnpoint
 	Vector2D spawnPos(0, 0);
@@ -738,7 +759,8 @@ void Scene::LoadScene(std::string spawnId)
 		partyMembers.push_back(member);
 	}
 
-	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT));
+	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT, "", playerIsMale));
+
 	std::string animations = pNode.attribute("animations").as_string();
 	player->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
 	player->LoadAnimations();
@@ -784,7 +806,10 @@ void Scene::LoadScene(std::string spawnId)
 			std::string recuitMissionId = cNode.attribute("recuitMissionId").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
-			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId));
+			bool isMale = cNode.attribute("isMale").as_bool(true);
+			
+			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, isMale));
+			
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
 			std::string animations = cNode.attribute("animations").as_string();
@@ -805,6 +830,7 @@ void Scene::LoadScene(std::string spawnId)
 			std::string recuitMissionId = cNode.attribute("recuitMissionId").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
+			bool isMale = cNode.attribute("isMale").as_bool(true);
 
 			float savedX = cNode.attribute("savedX").as_float();
 			float savedY = cNode.attribute("savedY").as_float();
@@ -813,7 +839,7 @@ void Scene::LoadScene(std::string spawnId)
 			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
 			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 
-			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId));
+			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, isMale));
 
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
@@ -1023,7 +1049,11 @@ void Scene::ToggleInventory()
 		}
 		showingInventory = !showingInventory;
 		entityManager->paused = showingInventory;
-		if (showingInventory) Engine::GetInstance().menuManager->ShowInventory(player->inventory);
+		if (showingInventory)
+		{
+			Engine::GetInstance().menuManager->ShowInventory(player->inventory, player);
+			Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+		}
 		else Engine::GetInstance().menuManager->HideMenu();
 		if (!showingInventory) UpdateInventory();
 	}
@@ -1032,7 +1062,10 @@ void Scene::ToggleInventory()
 void Scene::ToggleInventoryForCombat()
 {
 	showingInventoryForCombat = !showingInventoryForCombat;
-	if (showingInventoryForCombat) Engine::GetInstance().menuManager->ShowCombatInventory(player->inventory);
+	if (showingInventoryForCombat) {
+		Engine::GetInstance().menuManager->ShowCombatInventory(player->inventory);
+		Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+	}
 	else Engine::GetInstance().menuManager->HideMenu();
 }
 
@@ -1042,6 +1075,7 @@ void Scene::ToggleJournal()
 	{
 		if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) Engine::GetInstance().menuManager->HideMenu();
 		else Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);
+		Engine::GetInstance().audio->PlayFx(journalFxId);
 	}
 }
 
@@ -1053,6 +1087,7 @@ void Scene::ToggleShop(NPC* shopOwner)
 	{
 		Engine::GetInstance().menuManager->ShowShop(player->inventory, shopOwner->inventory);
 		showingShop = true;
+		Engine::GetInstance().audio->PlayFx(openInventoryFxId);
 	}
 	else
 	{
@@ -1187,6 +1222,7 @@ void Scene::StartDialog(std::string characterId)
 	isOnDialog = true;
 	activeDialogId = characterId;
 	entityManager->paused = true;
+	Engine::GetInstance().audio->PlayFx(dialogFxId);
 }
 
 void Scene::EndDialog()
@@ -1485,10 +1521,12 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		if (w = std::dynamic_pointer_cast<Weapon>(selectedItem)) {
 			player->inventory->UnequipWeapon();
 			if (!isUnequipping) player->inventory->EquipWeapon(w->name);
+			Engine::GetInstance().audio->PlayFx(equipWeaponFxId);
 		}
 		else if (g = std::dynamic_pointer_cast<Gear>(selectedItem)) {
 			player->inventory->UnequipGear(g->gearSlot);
 			if (!isUnequipping) player->inventory->EquipGear(g->name);
+			Engine::GetInstance().audio->PlayFx(equipGearFxId);
 		}
 		else if (c = std::dynamic_pointer_cast<Consumable>(selectedItem)) {
 			amount = Engine::GetInstance().menuManager->amount->GetValue();
@@ -1496,6 +1534,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 			{
 				player->TakeConsumable(player->UseConsumable(c->name));
 			}
+			Engine::GetInstance().audio->PlayFx(useFxId);
 		}
 		else {
 			// base InteractableItem class / Equipable class
@@ -1507,6 +1546,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		if (!selectedItem || selectedItemIsFromShop) return true;
 		amount = Engine::GetInstance().menuManager->amount->GetValue();
 		for (int i = 0; i < amount; i++) player->inventory->RemoveItem(selectedItem->name);
+		Engine::GetInstance().audio->PlayFx(dropFxId);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	case BUY:
@@ -1518,6 +1558,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		player->inventory->AddItem(copy);
 		for (int i = 0; i < amount; i++) shopOwner->inventory->RemoveItem(selectedItem->name);
 		player->inventory->AddGold(-selectedItem->price * amount);
+		Engine::GetInstance().audio->PlayFx(buySellFxId);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	case SELL:
@@ -1528,6 +1569,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		shopOwner->inventory->AddItem(copy);
 		for (int i = 0; i < amount; i++) player->inventory->RemoveItem(selectedItem->name);
 		player->inventory->AddGold((int)floor(selectedItem->price * SELLING_PRICE_RATIO) * amount);
+		Engine::GetInstance().audio->PlayFx(buySellFxId);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
 	case EXIT_SHOP:

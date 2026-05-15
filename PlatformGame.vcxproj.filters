@@ -591,5 +591,8 @@
     <Xml Include="Assets\Missions\missions_session.xml" />
     <Xml Include="Assets\Dialogues\dialogues.xml" />
     <Xml Include="Assets\Dialogues\dialogues_session.xml" />
+    <Xml Include="Assets\Audio\audios.xml">
+      <Filter>Configuration FIles</Filter>
+    </Xml>
   </ItemGroup>
 </Project>
