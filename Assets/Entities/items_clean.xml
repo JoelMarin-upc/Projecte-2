@@ -6,4 +6,8 @@
 	<item id="PLATE-001" name="Plate"/>
 	<item id="BOX-001" name="Box"/>
 	<item id="BUTTON-001" name="Button"/>
+	<item id="SQBTN-001" name="SButton1"/>
+	<item id="SQBTN-002" name="SButton2"/>
+	<item id="SQBTN-003" name="SButton3"/>
+	<item id="REWARD-001" name="Iron Sword"/>
 </items>

@@ -320,6 +320,15 @@
     <ClCompile Include="src\PushBox.cpp">
       <Filter>Source Files\Scene\Entities\Items</Filter>
     </ClCompile>
+    <ClCompile Include="src\SequenceButton.cpp">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ResetButton.cpp">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SequencePuzzle.cpp">
+      <Filter>Source Files\Scene\Entities\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio.h">
@@ -552,6 +561,15 @@
     </ClInclude>
     <ClInclude Include="src\PushBox.h">
       <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SequenceButton.h">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ResetButton.h">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SequencePuzzle.h">
+      <Filter>Source Files\Scene\Entities\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

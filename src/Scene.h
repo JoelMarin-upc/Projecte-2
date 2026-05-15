@@ -19,6 +19,8 @@
 #include "PressurePlate.h"
 #include "PushBox.h"
 #include "ResetButton.h"
+#include "SequencePuzzle.h"
+#include "SequenceButton.h"
 #include <unordered_map>
 #include <type_traits>
 #include <typeinfo>
@@ -235,6 +237,7 @@ private:
 	PressurePlate* pressurePlate = nullptr;
 	PushBox* pushBox = nullptr;
 	ResetButton* resetButton = nullptr;
+	SequencePuzzle* sequencePuzzle = nullptr;
 
 	std::unordered_map<std::string, ItemDef*> itemDefs;
 };

@@ -1,11 +1,10 @@
-#include "ResetButton.h"
-#include "PushBox.h"
+#include "SequenceButton.h"
 #include "Engine.h"
-#include "Physics.h"
 #include "Textures.h"
+#include "Input.h"
 #include "Log.h"
 
-bool ResetButton::Start()
+bool SequenceButton::Start()
 {
     pickupIconPath = "Assets/Textures/item.png";
     texture = Engine::GetInstance().textures->Load(texturePath.c_str());
@@ -20,13 +19,12 @@ bool ResetButton::Start()
     pbody = colliders[0];
     pbody->etype = EntityType::INTERACTABLE_ITEM;
     pbody->listener = this;
-
     sensorCollider = colliders[0];
 
     return true;
 }
 
-bool ResetButton::Update(float dt)
+bool SequenceButton::Update(float dt)
 {
     if (!active) return true;
 
@@ -38,7 +36,7 @@ bool ResetButton::Update(float dt)
         }
     }
 
-    if (isPlayerInRange) {
+    if (isPlayerInRange && !isToggled) {
         if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
             Interact();
         }
@@ -47,12 +45,10 @@ bool ResetButton::Update(float dt)
     return true;
 }
 
-void ResetButton::Interact()
+void SequenceButton::Interact()
 {
-    isToggled = !isToggled;
-    if (!linkedBox) {
-        return;
-    }
+    isToggled = true;
+    pressedTimer = 0.0f;
 
-    linkedBox->ResetToSpawn();
+    if (onPressed) onPressed(buttonIndex);
 }

@@ -208,6 +208,8 @@
     <ClCompile Include="src\RecuitCenter.cpp" />
     <ClCompile Include="src\ResetButton.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
+    <ClCompile Include="src\SequenceButton.cpp" />
+    <ClCompile Include="src\SequencePuzzle.cpp" />
     <ClCompile Include="src\Shop.cpp" />
     <ClCompile Include="src\Soldier.cpp" />
     <ClCompile Include="src\Stat.cpp" />
@@ -288,6 +290,8 @@
     <ClInclude Include="src\RecuitCenter.h" />
     <ClInclude Include="src\ResetButton.h" />
     <ClInclude Include="src\SceneManager.h" />
+    <ClInclude Include="src\SequenceButton.h" />
+    <ClInclude Include="src\SequencePuzzle.h" />
     <ClInclude Include="src\Shop.h" />
     <ClInclude Include="src\Soldier.h" />
     <ClInclude Include="src\Stat.h" />

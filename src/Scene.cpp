@@ -254,6 +254,11 @@ bool Scene::CleanUp()
 		map = nullptr;
 	}
 
+	if (sequencePuzzle) {
+		delete sequencePuzzle;
+		sequencePuzzle = nullptr;
+	}
+
 	delete entityManager;
 	entityManager = nullptr;
 	delete missionManager;
@@ -844,6 +849,9 @@ void Scene::LoadScene(std::string spawnId)
 			else if (name == "Button") {
 				std::shared_ptr<ResetButton> newButton = std::dynamic_pointer_cast<ResetButton>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
 			}
+			else if (name == "SButton1" || name == "SButton2" || name == "SButton3") {
+				std::shared_ptr<SequenceButton> newButton = std::dynamic_pointer_cast<SequenceButton>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
+			}
 			else {
 				std::shared_ptr<InteractableItem> newItem = std::dynamic_pointer_cast<InteractableItem>(entityManager->CreateItem(def->id, def->name, def->description, baseTexturePath + def->texturePath, item.position, def->itemClass, def->type, def->interactionType, def->canStack, baseTexturePath + def->toggledTexturePath, (GearSlot)def->slot));
 				newItem->price = def->gold;
@@ -868,6 +876,34 @@ void Scene::LoadScene(std::string spawnId)
 			resetButton = button.get();
 		}
 	}
+
+	std::vector<SequenceButton*> seqButtons;
+	for (const auto& e : entityManager->entities) {
+		if (auto* btn = dynamic_cast<SequenceButton*>(e.get()))
+			seqButtons.push_back(btn);
+	}
+
+	if (!seqButtons.empty()) {
+		std::vector<int> correctOrder = { 2, 0, 1 };
+
+		sequencePuzzle = new SequencePuzzle(correctOrder);
+
+		for (const auto& e : entityManager->entities) {
+			if (auto item = std::dynamic_pointer_cast<InteractableItem>(e)) {
+				if (item->id == "REWARD-001") {
+					item->active = false;
+					sequencePuzzle->rewardItem = item;
+				}
+			}
+		}
+
+		std::sort(seqButtons.begin(), seqButtons.end(), [](SequenceButton* a, SequenceButton* b) { return a->buttonIndex < b->buttonIndex; });
+
+		for (SequenceButton* btn : seqButtons) {
+			sequencePuzzle->RegisterButton(btn);
+		}
+	}	
+
 	if (pressurePlate && dungeonGate) pressurePlate->linkedGate = dungeonGate;
 	if (resetButton && pushBox) resetButton->linkedBox = pushBox;
 

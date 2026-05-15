@@ -14,6 +14,8 @@
 #include "PressurePlate.h"
 #include "PushBox.h"
 #include "ResetButton.h"
+#include "SequenceButton.h"
+#include "SequencePuzzle.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -110,7 +112,7 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 	switch (type)
 	{
 	case EntityType::INTERACTABLE_ITEM:
-		if (itemClass == "weapon") entity = std::make_shared<Weapon>(id, name, description, texturePath, canStack);
+		if (itemClass == "weapon") entity = std::make_shared<Weapon>(id, name, description, texturePath, canStack);	
 		else if (itemClass == "gear") entity = std::make_shared<Gear>(id, name, description, texturePath, slot, canStack);
 		else if (itemClass == "consumable") entity = std::make_shared<Consumable>(id, name, description, texturePath, canStack);
 		else if (itemClass == "lever") entity = std::make_shared<DungeonLever>(id, name, description, texturePath, toggledTexturePath);
@@ -119,6 +121,9 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 		else if (itemClass == "plate") entity = std::make_shared<PressurePlate>(id, name, description, texturePath);
 		else if (itemClass == "box") entity = std::make_shared<PushBox>(id, name, description, texturePath);
 		else if (itemClass == "button") entity = std::make_shared<ResetButton>(id, name, description, texturePath, toggledTexturePath);
+		else if (itemClass == "seqbutton1") entity = std::make_shared<SequenceButton>(id, name, description, texturePath, toggledTexturePath, 0);
+		else if (itemClass == "seqbutton2") entity = std::make_shared<SequenceButton>(id, name, description, texturePath, toggledTexturePath, 1);
+		else if (itemClass == "seqbutton3") entity = std::make_shared<SequenceButton>(id, name, description, texturePath, toggledTexturePath, 2);
 		else entity = std::make_shared<InteractableItem>(id, name, description, texturePath, interactionType, canStack, toggledTexturePath);
 		break;
 	default:
