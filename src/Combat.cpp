@@ -523,7 +523,8 @@ void Combat::ToggleActions(bool show, bool toggleCancel)
 {
 	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 	action1->active = show;
-	action2->active = show;
+	action2->active = show && turnAction && turnAction->selected
+		&& turnAction->selected->HasAnyStance();
 	action3->active = show;
 	action4->active = show;
 	if (show)
@@ -547,11 +548,23 @@ void Combat::ToggleActions(bool show, bool toggleCancel)
 void Combat::ToggleStances(bool show)
 {
 	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
-	stance1->active = show;
-	stance2->active = show;
-	stance3->active = show;
-	stance4->active = show;
-	if (show) hint->text = "Select a stance";
+	stance1->active = false;
+	stance2->active = false;
+	stance3->active = false;
+	stance4->active = false;
+
+	if (show && turnAction && turnAction->selected) {
+		auto& c = turnAction->selected;
+		auto showStance = [&](Stance s) {
+			if (s == Stance::ASSIST)      stance1->active = true;
+			if (s == Stance::CONCENTRATE) stance2->active = true;
+			if (s == Stance::DEFEND)      stance3->active = true;
+			if (s == Stance::REST)        stance4->active = true;
+			};
+		if (c->unlockedStance1 != NO_STANCE) showStance(c->unlockedStance1);
+		if (c->unlockedStance2 != NO_STANCE) showStance(c->unlockedStance2);
+		hint->text = "Select a stance";
+	}
 }
 
 void Combat::SelectConsumable(std::string consumableName)

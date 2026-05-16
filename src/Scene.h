@@ -89,6 +89,8 @@ public:
 	void SaveMissionState();
 	void LoadMissionState();
 	void SaveCharacterStats(pugi::xml_node charNode, std::shared_ptr<Character> character);
+	void SaveUnlockedStances();
+	void UnlockStances(int level);
 	void SaveSettings();
 	void LoadSettings();
 	void LoadMap(std::string mapPath, std::string mapName);
