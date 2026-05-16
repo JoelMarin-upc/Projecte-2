@@ -42,6 +42,8 @@ public:
 
 	void DoTransition();
 
+	void EnterDungeon(std::string spawnId);
+
 	Scene* GetCurrentScene() const;
 
 	EntityManager* GetEntityManager() const;
@@ -62,4 +64,6 @@ public:
 
 	bool triggerFirstMonologue = true;
 	std::vector<std::string> deadNPCs;
+
+	int dungeonLevel = 1;
 };
