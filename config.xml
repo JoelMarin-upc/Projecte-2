@@ -21,9 +21,6 @@
 		<music_volume value="0.5" />
 		<fx_volume value="0.5" />
 	</audio>
-	<level>
-		<dungeon_level value="2" />
-	</level>
 	<scene>
 		<maps>
 			<map path="Assets/Maps/" name="MapTemplate.tmx" music="Assets/Audio/Music/map1.wav" />
