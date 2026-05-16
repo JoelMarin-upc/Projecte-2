@@ -521,6 +521,22 @@ void Scene::SaveGame()
 	}
 
 	charDoc.save_file("Assets/Entities/characters.xml");
+	pugi::xml_node savedPlayerNode = characters.child("player");
+	if (!savedPlayerNode.attribute("dungeonLevel"))
+		savedPlayerNode.append_attribute("dungeonLevel").set_value(Engine::GetInstance().sceneManager->dungeonLevel);
+	else
+		savedPlayerNode.attribute("dungeonLevel").set_value(Engine::GetInstance().sceneManager->dungeonLevel);
+	if (!savedPlayerNode.attribute("unlockedStance1"))
+		savedPlayerNode.append_attribute("unlockedStance1").set_value((int)player->unlockedStance1);
+	else
+		savedPlayerNode.attribute("unlockedStance1").set_value((int)player->unlockedStance1);
+	if (!savedPlayerNode.attribute("unlockedStance2"))
+		savedPlayerNode.append_attribute("unlockedStance2").set_value((int)player->unlockedStance2);
+	else
+		savedPlayerNode.attribute("unlockedStance2").set_value((int)player->unlockedStance2);
+
+	charDoc.save_file("Assets/Entities/characters.xml");
+
 	SaveDialogState();
 	SaveMissionState();
 	UpdateInventory();
@@ -610,6 +626,8 @@ void Scene::SaveSessionState()
 		}
 	}
 	missionDoc.save_file("Assets/Missions/missions_session.xml");
+
+	//SaveUnlockedStances();
 }
 
 void Scene::SaveDialogState()
@@ -699,6 +717,104 @@ void Scene::SaveCharacterStats(pugi::xml_node charNode, std::shared_ptr<Characte
 	}
 }
 
+void Scene::SaveUnlockedStances()
+{
+	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters_session.xml");
+	pugi::xml_node characters = doc.child("characters");
+	pugi::xml_node playerNode = characters.child("player");
+
+	if (player) {
+		//dungeonLevel
+		if (!playerNode.attribute("dungeonLevel"))
+			playerNode.append_attribute("dungeonLevel").set_value(Engine::GetInstance().sceneManager->dungeonLevel);
+		else
+			playerNode.attribute("dungeonLevel").set_value(Engine::GetInstance().sceneManager->dungeonLevel);
+
+		//stances
+		if (!playerNode.attribute("unlockedStance1"))
+			playerNode.append_attribute("unlockedStance1").set_value((int)player->unlockedStance1);
+		else
+			playerNode.attribute("unlockedStance1").set_value((int)player->unlockedStance1);
+
+		if (!playerNode.attribute("unlockedStance2"))
+			playerNode.append_attribute("unlockedStance2").set_value((int)player->unlockedStance2);
+		else
+			playerNode.attribute("unlockedStance2").set_value((int)player->unlockedStance2);
+	}
+
+	for (const auto& entity : entityManager->entities) {
+		auto npc = std::dynamic_pointer_cast<NPC>(entity);
+		if (!npc) continue;
+		for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
+			if (std::string(cNode.attribute("id").as_string()) != npc->id) continue;
+			if (!cNode.attribute("unlockedStance1"))
+				cNode.append_attribute("unlockedStance1").set_value((int)npc->unlockedStance1);
+			else
+				cNode.attribute("unlockedStance1").set_value((int)npc->unlockedStance1);
+			if (!cNode.attribute("unlockedStance2"))
+				cNode.append_attribute("unlockedStance2").set_value((int)npc->unlockedStance2);
+			else
+				cNode.attribute("unlockedStance2").set_value((int)npc->unlockedStance2);
+			break;
+		}
+	}
+
+	if (player && player->party) {
+		for (const auto& member : player->party->members) {
+			for (pugi::xml_node cNode = characters.child("character"); cNode != NULL; cNode = cNode.next_sibling("character")) {
+				if (std::string(cNode.attribute("id").as_string()) != member->id) continue;
+				if (!cNode.attribute("unlockedStance1"))
+					cNode.append_attribute("unlockedStance1").set_value((int)member->unlockedStance1);
+				else
+					cNode.attribute("unlockedStance1").set_value((int)member->unlockedStance1);
+				if (!cNode.attribute("unlockedStance2"))
+					cNode.append_attribute("unlockedStance2").set_value((int)member->unlockedStance2);
+				else
+					cNode.attribute("unlockedStance2").set_value((int)member->unlockedStance2);
+				break;
+			}
+		}
+	}
+
+	doc.save_file("Assets/Entities/characters_session.xml");
+}
+
+void Scene::UnlockStances(int level)
+{
+	struct UnlockEntry { std::string id; Stance stance; };
+	static const std::unordered_map<int, std::vector<UnlockEntry>> unlockTable = {
+		//Add the other recruitable NPCs here and their respective stances
+		{ 1, {
+			{ "player", Stance::DEFEND },
+			{ "CH-006", Stance::CONCENTRATE },
+		}},
+		{ 2, {
+			{ "player", Stance::REST },
+			{ "CH-006", Stance::ASSIST },
+		}},
+	};
+
+	auto it = unlockTable.find(level);
+	if (it == unlockTable.end()) return;
+
+	auto applyUnlock = [&](std::shared_ptr<Character> c, const std::string& id, Stance stance) {
+		if (c->id != id) return;
+		if (level == 1) c->unlockedStance1 = stance;
+		if (level == 2) c->unlockedStance2 = stance;
+		};
+
+	for (const UnlockEntry& entry : it->second) {
+		if (player) applyUnlock(player, entry.id, entry.stance);
+		for (const auto& entity : entityManager->entities)
+			if (auto npc = std::dynamic_pointer_cast<NPC>(entity))
+				applyUnlock(npc, entry.id, entry.stance);
+		if (player && player->party) {
+			for (const auto& member : player->party->members)
+				applyUnlock(member, entry.id, entry.stance);
+		}
+	}
+}
+
 void Scene::SaveSettings()
 {
 	pugi::xml_document doc = XMLHandler::LoadFile("config.xml");
@@ -709,7 +825,7 @@ void Scene::SaveSettings()
 	root.child("window").child("fullscreen").attribute("value").set_value(Engine::GetInstance().window->fullscreen);
 	root.child("audio").child("music_volume").attribute("value").set_value(Engine::GetInstance().audio->GetTargetMusicVolume());
 	root.child("audio").child("fx_volume").attribute("value").set_value(Engine::GetInstance().audio->GetFxVolume());
-	root.child("level").child("dungeon_level").attribute("value").set_value(Engine::GetInstance().sceneManager->dungeonLevel);
+	//root.child("level").child("dungeon_level").attribute("value").set_value(Engine::GetInstance().sceneManager->dungeonLevel);
 
 	doc.save_file("config.xml");
 }
@@ -732,8 +848,8 @@ void Scene::LoadSettings()
 	float fxVol = root.child("audio").child("fx_volume").attribute("value").as_float(1.0f);
 	Engine::GetInstance().audio->SetFxVolume(fxVol);
 
-	int level = root.child("level").child("dungeon_level").attribute("value").as_int(1);
-	Engine::GetInstance().sceneManager->dungeonLevel = level;
+	/*int level = root.child("level").child("dungeon_level").attribute("value").as_int(1);
+	Engine::GetInstance().sceneManager->dungeonLevel = level;*/
 }
 
 void Scene::LoadMap(std::string mapPath, std::string mapName)
@@ -810,6 +926,11 @@ void Scene::LoadScene(std::string spawnId)
 	player->stats = LoadStats(pNode);
 	player->inventory = LoadInventory(pNode);
 	player->inventory->isPlayerInventory = true;
+	int s1 = pNode.attribute("unlockedStance1").as_int(NO_STANCE);
+	int s2 = pNode.attribute("unlockedStance2").as_int(NO_STANCE);
+	player->unlockedStance1 = (s1 >= 0 && s1 <= NO_STANCE) ? (Stance)s1 : NO_STANCE;
+	player->unlockedStance2 = (s2 >= 0 && s2 <= NO_STANCE) ? (Stance)s2 : NO_STANCE;
+	Engine::GetInstance().sceneManager->dungeonLevel = pNode.attribute("dungeonLevel").as_int(1);
 
 	//Uncomment when I find a fix
 	/*float savedX = pNode.attribute("savedX").as_float();
@@ -853,6 +974,10 @@ void Scene::LoadScene(std::string spawnId)
 			
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
+			int s1 = cNode.attribute("unlockedStance1").as_int(NO_STANCE);
+			int s2 = cNode.attribute("unlockedStance2").as_int(NO_STANCE);
+			m->unlockedStance1 = (s1 >= 0 && s1 <= NO_STANCE) ? (Stance)s1 : NO_STANCE;
+			m->unlockedStance2 = (s2 >= 0 && s2 <= NO_STANCE) ? (Stance)s2 : NO_STANCE;
 			std::string animations = cNode.attribute("animations").as_string();
 			m->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
 			m->LoadAnimations();
@@ -878,13 +1003,17 @@ void Scene::LoadScene(std::string spawnId)
 			Vector2D spawnPos = (savedX >= 0 && savedY >= 0) ? Vector2D(savedX, savedY) : npc.position;
 			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType);
 			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
-			LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
+			//LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 
 			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, isMale));
 
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
 			if (auto npcPtr = std::dynamic_pointer_cast<NPC>(m)) {
+				int s1 = cNode.attribute("unlockedStance1").as_int(NO_STANCE);
+				int s2 = cNode.attribute("unlockedStance2").as_int(NO_STANCE);
+				npcPtr->unlockedStance1 = (s1 >= 0 && s1 <= NO_STANCE) ? (Stance)s1 : NO_STANCE;
+				npcPtr->unlockedStance2 = (s2 >= 0 && s2 <= NO_STANCE) ? (Stance)s2 : NO_STANCE;
 				std::string animations = cNode.attribute("animations").as_string();
 				npcPtr->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
 				npcPtr->LoadAnimations();
@@ -1245,12 +1374,21 @@ void Scene::CheckTransitions()
 		if (t.targetSpawnId == "refuge_from_dungeon" && dungeonExit && !dungeonExit->isToggled) {
 			continue;
 		}
-		if (playerPos.getX() >= t.position.getX() && playerPos.getX() <= t.position.getX() + t.width && playerPos.getY() >= t.position.getY() && playerPos.getY() <= t.position.getY() + t.height) {
-			SaveSessionState();
+		if (playerPos.getX() >= t.position.getX() && playerPos.getX() <= t.position.getX() + t.width &&
+			playerPos.getY() >= t.position.getY() && playerPos.getY() <= t.position.getY() + t.height) {
 			if (id == "SC-003" && t.targetSpawnId == "refuge_from_dungeon") {
 				auto sm = Engine::GetInstance().sceneManager;
-				if (sm->dungeonLevel < 2) sm->dungeonLevel = 2;
+				if (sm->dungeonLevel < 2) {
+					sm->dungeonLevel = 2;
+					UnlockStances(1);
+				}
+				else if (sm->dungeonLevel < 3) {
+					sm->dungeonLevel = 3;
+					UnlockStances(2);
+				}
 			}
+			SaveSessionState();
+			SaveUnlockedStances();
 			if (t.targetSceneId == "SC-003") {
 				Engine::GetInstance().sceneManager->EnterDungeon(t.targetSpawnId);
 			}
@@ -1260,7 +1398,6 @@ void Scene::CheckTransitions()
 			return;
 		}
 	}
-
 }
 
 void Scene::StartDialog(std::string characterId)

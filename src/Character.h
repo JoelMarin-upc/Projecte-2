@@ -38,6 +38,13 @@ public:
 	bool isDead = false;
 	bool hasFled = false;
 
+	Stance unlockedStance1 = NO_STANCE;
+	Stance unlockedStance2 = NO_STANCE;
+
+	bool HasAnyStance() const { 
+		return unlockedStance1 != NO_STANCE || unlockedStance2 != NO_STANCE; 
+	}
+
 	int walkFxId;
 	int attackFxId;
 	int dieFxId;
