@@ -65,6 +65,8 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start(std::string spawnId)
 {
+	LoadSettings();
+
 	gameStarted = id != "main menu" && id != "intro" && id != "game title";
 
 	if (gameStarted)
@@ -261,6 +263,8 @@ bool Scene::PostUpdate(float dt)
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
+
+	SaveSettings();
 	
 	Engine::GetInstance().render->follow = nullptr;
 
@@ -693,6 +697,39 @@ void Scene::SaveCharacterStats(pugi::xml_node charNode, std::shared_ptr<Characte
 			}
 		}
 	}
+}
+
+void Scene::SaveSettings()
+{
+	pugi::xml_document doc = XMLHandler::LoadFile("config.xml");
+	pugi::xml_node root = doc.child("config");
+	if (!root) return;
+
+	root.child("render").child("vsync").attribute("value").set_value(Engine::GetInstance().vsyncEnabled);
+	root.child("window").child("fullscreen").attribute("value").set_value(Engine::GetInstance().window->fullscreen);
+	root.child("audio").child("music_volume").attribute("value").set_value(Engine::GetInstance().audio->GetTargetMusicVolume());
+	root.child("audio").child("fx_volume").attribute("value").set_value(Engine::GetInstance().audio->GetFxVolume());
+
+	doc.save_file("config.xml");
+}
+
+void Scene::LoadSettings()
+{
+	pugi::xml_document doc = XMLHandler::LoadFile("config.xml");
+	pugi::xml_node root = doc.child("config");
+	if (!root) return;
+
+	bool vsync = root.child("render").child("vsync").attribute("value").as_bool(false);
+	Engine::GetInstance().vsyncEnabled = vsync;
+
+	bool fullscreen = root.child("window").child("fullscreen").attribute("value").as_bool(false);
+	Engine::GetInstance().window->fullscreen = fullscreen;
+
+	float musicVol = root.child("audio").child("music_volume").attribute("value").as_float(1.0f);
+	Engine::GetInstance().audio->SetMusicVolume(musicVol);
+
+	float fxVol = root.child("audio").child("fx_volume").attribute("value").as_float(1.0f);
+	Engine::GetInstance().audio->SetFxVolume(fxVol);
 }
 
 void Scene::LoadMap(std::string mapPath, std::string mapName)
@@ -1490,17 +1527,21 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	case MUSIC_VOLUME:
 		musicVol = ((UISlider*)uiElement)->GetValue() / 10;
 		Engine::GetInstance().audio->SetMusicVolume(musicVol);
+		SaveSettings();
 		break;
 	case FX_VOLUME:
 		fxVol = ((UISlider*)uiElement)->GetValue() / 10;
 		Engine::GetInstance().audio->SetFxVolume(fxVol);
+		SaveSettings();
 		break;
 	case FULLSCREEN:
 		Engine::GetInstance().window->SetFullscreen(((UICheckbox*)uiElement)->checked);
 		Engine::GetInstance().menuManager->Load(true);
+		SaveSettings();
 		break;
 	case VSYNC:
 		Engine::GetInstance().SetVSync(Engine::GetInstance().menuManager->vsyncCheckbox->checked);
+		SaveSettings();
 		break;
 	case BACK_MENU:
 		Engine::GetInstance().menuManager->ShowPreviousMenu();

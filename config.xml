@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config>
 	<engine>
-		<title>My platformer game</title>
+		<title>What Remains of You</title>
 		<targetFrameRate value="60" />
 	</engine>
 	<render>
@@ -15,8 +15,12 @@
 		<fullscreen value="false" />
 		<borderless value="false" />
 		<resizable value="false" />
-		<fullscreen_window value="true" />
+		<fullscreen_window value="false" />
 	</window>
+	<audio>
+		<music_volume value="0.5" />
+		<fx_volume value="0.5" />
+	</audio>
 	<scene>
 		<maps>
 			<map path="Assets/Maps/" name="MapTemplate.tmx" music="Assets/Audio/Music/map1.wav" />

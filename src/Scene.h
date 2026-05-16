@@ -82,6 +82,8 @@ public:
 	void SaveMissionState();
 	void LoadMissionState();
 	void SaveCharacterStats(pugi::xml_node charNode, std::shared_ptr<Character> character);
+	void SaveSettings();
+	void LoadSettings();
 	void LoadMap(std::string mapPath, std::string mapName);
 	void LoadScene(std::string spawnId = "default");
 	Stats* LoadStats(pugi::xml_node characterNode);
