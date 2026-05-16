@@ -7,6 +7,7 @@
 #include "UICheckbox.h"
 #include "UISlider.h"
 #include "UIImage.h"
+#include "UISlot.h"
 
 #include <list>
 #include <vector>
@@ -46,12 +47,25 @@ public:
 		return p;
 	}
 
-	static UIParameters Image(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex) {
+	static UIParameters Image(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, SDL_Color* background = nullptr, bool drawImageOnCenter = false) {
 		UIParameters p = UIParameters();
 		p.disabledTex = disabledTex;
 		p.normalTex = normalTex;
 		p.focusedTex = focusedTex;
 		p.pressedTex = pressedTex;
+		p.background = background;
+		p.drawImageOnCenter = drawImageOnCenter;
+		return p;
+	}
+
+	static UIParameters Slot(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, std::shared_ptr<InteractableItem> item, int amount) {
+		UIParameters p = UIParameters();
+		p.disabledTex = disabledTex;
+		p.normalTex = normalTex;
+		p.focusedTex = focusedTex;
+		p.pressedTex = pressedTex;
+		p.item = item;
+		p.amount = amount;
 		return p;
 	}
 
@@ -69,17 +83,23 @@ public:
 		p.normalTex = nullptr;
 		p.focusedTex = nullptr;
 		p.pressedTex = nullptr;
+		p.item = nullptr;
+		p.amount = 0;
+		p.background = nullptr;
+		p.drawImageOnCenter = false;
 		return p;
 	}
 
 	const char* text;
 	float showValue, min, max, step, value;
-	int spacing, horizotalSpacing, verticalSpacing;
-	bool checked;
+	int spacing, horizotalSpacing, verticalSpacing, amount;
+	bool checked, drawImageOnCenter;
+	std::shared_ptr<InteractableItem> item;
 	SDL_Texture* disabledTex;
 	SDL_Texture* normalTex;
 	SDL_Texture* focusedTex;
 	SDL_Texture* pressedTex;
+	SDL_Color* background;
 };
 
 class UIManager : public Module

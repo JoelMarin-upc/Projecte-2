@@ -46,9 +46,11 @@ void SceneManager::LoadScenes()
 	//Registers and stores the id and map file of all scenes�
 	sceneInfos.push_back({ "intro", "", "" });
 	sceneInfos.push_back({ "main menu", "", "" });
+	sceneInfos.push_back({ "game title", "", "" });
 	sceneInfos.push_back({ "SC-001", mapsPath, "RebelRefuge.tmx" });
 	sceneInfos.push_back({ "SC-002", mapsPath, "GroceriesShop.tmx" });
 	sceneInfos.push_back({ "SC-003", mapsPath, "TutorialDungeon.tmx", "TutorialDungeon_combat.tmx" });
+	sceneInfos.push_back({ "SC-004", mapsPath, "SecondDungeon.tmx", "TutorialDungeon_combat.tmx" });
 }
 
 void SceneManager::SetCurrentScene(std::string sceneID, std::string spawnId)
@@ -91,6 +93,16 @@ void SceneManager::DoTransition()
 	}
 }
 
+void SceneManager::EnterDungeon(std::string spawnId)
+{
+	if (dungeonLevel == 1) {
+		SetCurrentScene("SC-003", spawnId);
+	}
+	else if (dungeonLevel == 2) {
+		SetCurrentScene("SC-004", spawnId);
+	}	
+}
+
 Scene* SceneManager::GetCurrentScene() const { 
 	return currentScene; 
 }
@@ -129,6 +141,9 @@ bool SceneManager::Update(float dt)
 		}
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) {
 			SetCurrentScene("SC-003", "dungeon_from_refuge");
+		}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_4) == KEY_DOWN) {
+			SetCurrentScene("SC-004", "dungeon_from_refuge");
 		}
 	}
 

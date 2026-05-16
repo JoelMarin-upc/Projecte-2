@@ -1,7 +1,9 @@
 #include "Combat.h"
 #include "NPC.h"
 #include "Enemy.h"
+#include "SceneManager.h"
 #include "Window.h"
+#include "Audio.h"
 #include <random>
 #include <thread>
 #include <chrono>
@@ -67,10 +69,10 @@ bool Combat::Start() {
 	SDL_Rect b_action3 = { sw / 2 - 145, sh - 100, 150, 40 };
 	SDL_Rect b_action4 = { sw / 2 + 45, sh - 100, 150, 40 };
 	SDL_Rect b_endTurn = { sw - 165, sh - 100, 150, 40 };
-	SDL_Rect b_log1 = { sw / 2, 20, 300, 20 };
-	SDL_Rect b_log2 = { sw / 2, 60, 300, 20 };
-	SDL_Rect b_log3 = { sw / 2, 100, 300, 20 };
-	SDL_Rect b_log4 = { sw / 2, 140, 300, 20 };
+	SDL_Rect b_log1 = { sw / 2 - 100, 20, 300, 20 };
+	SDL_Rect b_log2 = { sw / 2 - 100, 60, 300, 20 };
+	SDL_Rect b_log3 = { sw / 2 - 100, 100, 300, 20 };
+	SDL_Rect b_log4 = { sw / 2 - 100, 140, 300, 20 };
 	SDL_Rect b_hint = { 20, 20, 300, 20 };
 	
 	action1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::ACTION1, b_action1, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Attack")));
@@ -107,7 +109,7 @@ bool Combat::Start() {
 
 	if (playerParty->player)
 	{
-		SDL_Texture* tex = playerParty->player->texture;
+		SDL_Texture* tex = playerParty->player->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 0) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -121,7 +123,7 @@ bool Combat::Start() {
 
 	if (playerParty->members.size() > 0)
 	{
-		SDL_Texture* tex = playerParty->members[0]->texture;
+		SDL_Texture* tex = playerParty->members[0]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 1) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -135,7 +137,7 @@ bool Combat::Start() {
 
 	if (playerParty->members.size() > 1)
 	{
-		SDL_Texture* tex = playerParty->members[1]->texture;
+		SDL_Texture* tex = playerParty->members[1]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 2) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -149,7 +151,7 @@ bool Combat::Start() {
 
 	if (playerParty->members.size() > 2)
 	{
-		SDL_Texture* tex = playerParty->members[2]->texture;
+		SDL_Texture* tex = playerParty->members[2]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 3) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -165,7 +167,7 @@ bool Combat::Start() {
 
 	if (enemyParty->members.size() > 0)
 	{
-		SDL_Texture* tex = enemyParty->members[0]->texture;
+		SDL_Texture* tex = enemyParty->members[0]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (cPos.isEnemy && cPos.order == 0) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -179,7 +181,7 @@ bool Combat::Start() {
 
 	if (enemyParty->members.size() > 1)
 	{
-		SDL_Texture* tex = enemyParty->members[1]->texture;
+		SDL_Texture* tex = enemyParty->members[1]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (cPos.isEnemy && cPos.order == 1) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -193,7 +195,7 @@ bool Combat::Start() {
 
 	if (enemyParty->members.size() > 2)
 	{
-		SDL_Texture* tex = enemyParty->members[2]->texture;
+		SDL_Texture* tex = enemyParty->members[2]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (cPos.isEnemy && cPos.order == 2) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -207,7 +209,7 @@ bool Combat::Start() {
 
 	if (enemyParty->members.size() > 3)
 	{
-		SDL_Texture* tex = enemyParty->members[3]->texture;
+		SDL_Texture* tex = enemyParty->members[3]->combatTexture;
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (cPos.isEnemy && cPos.order == 3) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -220,35 +222,35 @@ bool Combat::Start() {
 	}
 
 	float highestSpeed = 0;
-	highestSpeed = player->stats->GetStat("speed").getValue();
+	highestSpeed = player->Speed();
 	if (npc1) {
-		float newSpeed = npc1->stats->GetStat("speed").getValue();
+		float newSpeed = npc1->Speed();
 		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
 	}
 	if (npc2) {
-		float newSpeed = npc2->stats->GetStat("speed").getValue();
+		float newSpeed = npc2->Speed();
 		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
 	}
 	if (npc3) {
-		float newSpeed = npc3->stats->GetStat("speed").getValue();
+		float newSpeed = npc3->Speed();
 		if (highestSpeed < newSpeed) highestSpeed = newSpeed;
 	}
 
 	float highestEnemySpeed = 0;
 	if (enemy1) {
-		float newSpeed = enemy1->stats->GetStat("speed").getValue();
+		float newSpeed = enemy1->Speed();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 	if (enemy2) {
-		float newSpeed = enemy2->stats->GetStat("speed").getValue();
+		float newSpeed = enemy2->Speed();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 	if (enemy3) {
-		float newSpeed = enemy3->stats->GetStat("speed").getValue();
+		float newSpeed = enemy3->Speed();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 	if (enemy4) {
-		float newSpeed = enemy4->stats->GetStat("speed").getValue();
+		float newSpeed = enemy4->Speed();
 		if (highestEnemySpeed < newSpeed) highestEnemySpeed = newSpeed;
 	}
 
@@ -273,6 +275,7 @@ bool Combat::PreUpdate() {
 bool Combat::Update(float dt) {
 	map->Update(dt);
 	player->GodMode();
+	std::vector<std::shared_ptr<Character>> members;
 	switch (combatPhase)
 	{
 	case DECISION:
@@ -282,10 +285,24 @@ bool Combat::Update(float dt) {
 			switch (action->action)
 			{
 			case ATTACK:
+				Engine::GetInstance().audio->PlayFx(action->selected->attackFxId);
 				if (action->target->TakeDamage(action->selected->Attack())) KillCombatant(action->target);
 				break;
 			case TAKE_STANCE:
-				action->selected->TakeStance(action->stance);
+				if (isPlayerTurn) {
+					if (player->id != action->selected->id) members.push_back(player);
+					
+					for (auto& member : playerParty->members)
+						if (member->id != action->selected->id)
+							members.push_back(member);
+				}
+				else {
+					for (auto& member : enemyParty->members) 
+						if (member->id != action->selected->id) 
+							members.push_back(member);
+				}
+				if (action->stance == REST) chanceForSecondTurn += unitOfChanceForSecondTurn;
+				action->selected->TakeStance(action->stance, members);
 				break;
 			case TAKE_CONSUMABLE:
 				action->target->TakeConsumable(action->selected->UseConsumable(action->consumableType));
@@ -298,6 +315,8 @@ bool Combat::Update(float dt) {
 			}
 		}
 		isPlayerTurn = !isPlayerTurn;
+		if (random_int(1, 100) < chanceForSecondTurn) isPlayerTurn = !isPlayerTurn;
+		chanceForSecondTurn = 0;
 		combatPhase = isPlayerTurn ? DECISION : ENEMY_TURN;
 		endTurn->active = isPlayerTurn;
 		turnActions.clear();
@@ -356,6 +375,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 	{
 	case C_PLAYER:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || (turnAction->action == TAKE_CONSUMABLE && turnAction->consumableType == "")) return true;
 			turnAction->target = player;
 			AddTurnAction();
 		}
@@ -368,6 +388,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	case C_NPC1:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || (turnAction->action == TAKE_CONSUMABLE && turnAction->consumableType == "")) return true;
 			turnAction->target = npc1;
 			AddTurnAction();
 		}
@@ -380,6 +401,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	case C_NPC2:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || (turnAction->action == TAKE_CONSUMABLE && turnAction->consumableType == "")) return true;
 			turnAction->target = npc2;
 			AddTurnAction();
 		}
@@ -392,6 +414,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	case C_NPC3:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || (turnAction->action == TAKE_CONSUMABLE && turnAction->consumableType == "")) return true;
 			turnAction->target = npc3;
 			AddTurnAction();
 		}
@@ -404,24 +427,28 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	case C_ENEMY1:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || turnAction->action == TAKE_CONSUMABLE) return true;
 			turnAction->target = enemy1;
 			AddTurnAction();
 		}
 		break;
 	case C_ENEMY2:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || turnAction->action == TAKE_CONSUMABLE) return true;
 			turnAction->target = enemy2;
 			AddTurnAction();
 		}
 		break;
 	case C_ENEMY3:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || turnAction->action == TAKE_CONSUMABLE) return true;
 			turnAction->target = enemy3;
 			AddTurnAction();
 		}
 		break;
 	case C_ENEMY4:
 		if (turnAction && turnAction->action != NO_ACTION) {
+			if (turnAction->action == TAKE_STANCE || turnAction->action == TAKE_CONSUMABLE) return true;
 			turnAction->target = enemy4;
 			AddTurnAction();
 		}
@@ -441,6 +468,8 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		if (!turnAction || !turnAction->selected) return true;
 		turnAction->action = Action::TAKE_CONSUMABLE;
 		ToggleActions(false);
+		hint->text = "Select a consumable";
+		Engine::GetInstance().sceneManager->currentScene->ToggleInventoryForCombat();
 		break;
 	case ACTION4:
 		if (!turnAction || !turnAction->selected) return true;
@@ -499,17 +528,57 @@ void Combat::ToggleStances(bool show)
 	if (show) hint->text = "Select a stance";
 }
 
+void Combat::SelectConsumable(std::string consumableName)
+{
+	if (!turnAction || turnAction->action != TAKE_CONSUMABLE) return;
+	turnAction->consumableType = consumableName;
+	Engine::GetInstance().sceneManager->currentScene->ToggleInventoryForCombat();
+	ToggleActions(false);
+}
+
 void Combat::KillCombatant(std::shared_ptr<Character> character)
 {
 	//character->isDead = true;
-	if (player && character->id == player->id) player->isDead = true;
-	if (npc1 && character->id == npc1->id) npc1->isDead = true;
-	if (npc2 && character->id == npc2->id) npc2->isDead = true;
-	if (npc3 && character->id == npc3->id) npc3->isDead = true;
-	if (enemy1 && character->id == enemy1->id) enemy1->isDead = true;
-	if (enemy2 && character->id == enemy2->id) enemy2->isDead = true;
-	if (enemy3 && character->id == enemy3->id) enemy3->isDead = true;
-	if (enemy4 && character->id == enemy4->id) enemy4->isDead = true;
+	if (player && character->id == player->id) 
+	{
+		player->isDead = true;
+		Engine::GetInstance().audio->PlayFx(player->dieFxId);
+	}
+	if (npc1 && character->id == npc1->id) 
+	{
+		npc1->isDead = true;
+		Engine::GetInstance().audio->PlayFx(npc1->dieFxId);
+	}
+	if (npc2 && character->id == npc2->id) 
+	{
+		npc2->isDead = true;
+		Engine::GetInstance().audio->PlayFx(npc2->dieFxId);
+	}
+	if (npc3 && character->id == npc3->id) 
+	{
+		npc3->isDead = true;
+		Engine::GetInstance().audio->PlayFx(npc3->dieFxId);
+	}
+	if (enemy1 && character->id == enemy1->id) 
+	{
+		enemy1->isDead = true;
+		Engine::GetInstance().audio->PlayFx(enemy1->dieFxId);
+	}
+	if (enemy2 && character->id == enemy2->id) 
+	{
+		enemy2->isDead = true;
+		Engine::GetInstance().audio->PlayFx(enemy2->dieFxId);
+	}
+	if (enemy3 && character->id == enemy3->id) 
+	{
+		enemy3->isDead = true;
+		Engine::GetInstance().audio->PlayFx(enemy3->dieFxId);
+	}
+	if (enemy4 && character->id == enemy4->id) 
+	{
+		enemy4->isDead = true;
+		Engine::GetInstance().audio->PlayFx(enemy4->dieFxId);
+	}
 	if (player->isDead) combatResult = LOSE;
 	bool alive1 = enemy1 && !enemy1->isDead;
 	bool alive2 = enemy2 && !enemy2->isDead;
@@ -581,41 +650,55 @@ void Combat::CreateRandomAction(std::shared_ptr<Enemy> enemy)
 {
 	turnAction = new TurnAction();
 	turnAction->selected = enemy;
-	//int action = random_int(1, 3); <-- when consumables are implemeted, 4 if flee is possible
-	int action = random_int(1, 2);
+	
+	std::vector<std::string> consumables = std::vector<std::string>();
+	for (auto& item : enemy->inventory->items) {
+		if (std::shared_ptr<Consumable> c = std::dynamic_pointer_cast<Consumable>(item)) {
+			consumables.push_back(c->name);
+		}
+	}
+
+	int action = 0;
+	if (consumables.size() > 0) action = random_int(1, 3);
+	else action = random_int(1, 2);
+
 	if (action == 1) {
 		turnAction->action = Action::ATTACK;
-		int activeCharacters = 1;
-		for (std::shared_ptr<NPC> c : playerParty->members) if (!c->isDead && !c->hasFled) activeCharacters++;
-		int target = random_int(1, activeCharacters);
-		if (target == 1) turnAction->target = player;
-		else if (target == 2) turnAction->target = npc1;
-		else if (target == 3) turnAction->target = npc2;
-		else if (target == 4) turnAction->target = npc3;
+		int activeCharactersNum = 1;
+		std::vector<std::shared_ptr<Character>> activeCharacters = std::vector<std::shared_ptr<Character>>();
+		activeCharacters.push_back(player);
+		for (std::shared_ptr<NPC> c : playerParty->members)	{
+			if (!c->isDead && !c->hasFled) {
+				activeCharactersNum++;
+				activeCharacters.push_back(c);
+			}
+		}
+		int target = random_int(1, activeCharactersNum) - 1;
+		turnAction->target = activeCharacters[target];
 	}
 	else if (action == 2) {
 		turnAction->action = Action::TAKE_STANCE;
-		int stance = random_int(1, 4);
-		if (stance == 1) turnAction->stance = Stance::ASSIST;
-		else if (stance == 2) turnAction->stance = Stance::CONCENTRATE;
-		else if (stance == 3) turnAction->stance = Stance::DEFEND;
-		else if (stance == 4) turnAction->stance = Stance::REST;
+		int stance = random_int(1, 4) - 1;
+		turnAction->stance = (Stance)stance;
 	}
-	//else if (action == 3) {                       <-- when consumables are implemeted
-	// turnAction->action = Action::TAKE_CONSUMABLE;
-	//}
+	else if (action == 3) {
+		turnAction->action = Action::TAKE_CONSUMABLE;
+		int selectedConsumable = random_int(1, consumables.size()) - 1;
+		turnAction->consumableType = consumables[selectedConsumable];
+		turnAction->target = enemy;
+	}
 
 	AddTurnAction();
 }
 
 void Combat::DrawHealthBars() const
 {
-	if (player && !player->isDead) player->DrawHealthBar(player->texture);
-	if (npc1 && !npc1->isDead) npc1->DrawHealthBar(npc1->texture);
-	if (npc2 && !npc2->isDead) npc2->DrawHealthBar(npc2->texture);
-	if (npc3 && !npc3->isDead) npc3->DrawHealthBar(npc3->texture);
-	if (enemy1 && !enemy1->isDead) enemy1->DrawHealthBar(enemy1->texture);
-	if (enemy2 && !enemy2->isDead) enemy2->DrawHealthBar(enemy2->texture);
-	if (enemy3 && !enemy3->isDead) enemy3->DrawHealthBar(enemy3->texture);
-	if (enemy4 && !enemy4->isDead) enemy4->DrawHealthBar(enemy4->texture);
+	if (player && !player->isDead) player->DrawHealthBar(player->combatTexture);
+	if (npc1 && !npc1->isDead) npc1->DrawHealthBar(npc1->combatTexture);
+	if (npc2 && !npc2->isDead) npc2->DrawHealthBar(npc2->combatTexture);
+	if (npc3 && !npc3->isDead) npc3->DrawHealthBar(npc3->combatTexture);
+	if (enemy1 && !enemy1->isDead) enemy1->DrawHealthBar(enemy1->combatTexture);
+	if (enemy2 && !enemy2->isDead) enemy2->DrawHealthBar(enemy2->combatTexture);
+	if (enemy3 && !enemy3->isDead) enemy3->DrawHealthBar(enemy3->combatTexture);
+	if (enemy4 && !enemy4->isDead) enemy4->DrawHealthBar(enemy4->combatTexture);
 }

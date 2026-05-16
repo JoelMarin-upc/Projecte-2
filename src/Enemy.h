@@ -12,7 +12,7 @@ enum class EnemyState {
 
 class Enemy : public AICharacter {
 public:
-	Enemy(std::string id, std::string name, std::string texturePath) : AICharacter(id, name, texturePath, EntityType::ENEMY) {}
+	Enemy(std::string id, std::string name, std::string texturePath, std::string combatTexturePath) : AICharacter(id, name, texturePath, combatTexturePath, EntityType::ENEMY) {}
 	virtual ~Enemy();
 
 	Vector2D GetPosition();

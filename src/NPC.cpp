@@ -4,6 +4,7 @@
 #include "Log.h"
 #include "Party.h"
 #include "Animation.h"
+#include "Audio.h"
 //#include <cmath>
 
 NPC::~NPC() {}
@@ -16,36 +17,31 @@ bool NPC::Start()
 {
 	//texturePath = "Assets/Textures/heart.png";
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
+	if (combatTexturePath != "") combatTexture = Engine::GetInstance().textures->Load(combatTexturePath.c_str());
 
 	//if (!animationsPath.empty()) {
 	//	std::unordered_map<int, std::string> aliases = { {0,"idle"},{16,"move_down"},{20,"move_up"},{24,"move_left"} };
 	//	anims.LoadFromTSX(animationsPath.c_str(), aliases);
 	//	anims.SetCurrent("idle");
 	//	currentAnimation = "idle";
-	//}
-	
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -10, 0, 1, 1);
-	pbody = colliders[0];
-	pbody->listener = this;
-	pbody->etype = EntityType::NPC;
-
-	b2Body_SetFixedRotation(pbody->body, true);
-
-	b2MassData massData;
-	massData.mass = 1000.0f;
-	massData.center = { 0.0f, 0.0f };
-	massData.rotationalInertia = 0.0f;
-	b2Body_SetMassData(pbody->body, massData);
-
-	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 20, 20, 1, 1);
-	sensorCollider = colliders[1];
-	sensorCollider->listener = this;
-	sensorCollider->etype = EntityType::NPC;
+	//}	
 
 	texW = 30;
 	texH = 30;
 
 	party = nullptr;
+
+	const char* audioNode;
+	if ("CH-006") audioNode = "dog";
+	else audioNode = isMale ? "human_male" : "human_female";
+
+	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "walk");
+	std::string attackFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "attack");
+	std::string dieFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "die");
+
+	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath.c_str());
+	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath.c_str());
+	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath.c_str());
 
     return true;
 }
@@ -96,17 +92,62 @@ void NPC::Draw(float dt)
 		anims.Update(dt);
 		const SDL_Rect& animFrame = anims.GetCurrentFrame();
 		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2, 1, &animFrame, isFacingRight);
+		if (party) DrawHealthBar(animFrame);
 	}
 	else {
 		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2);
+		if (party) DrawHealthBar(texture);
 	}
 
-	if (party) DrawHealthBar(texture);
+	
 }
 
 bool NPC::CleanUp() {
 	for (const auto& collider : colliders) Engine::GetInstance().physics->DestroyBody(collider);
 	return true;
+}
+
+void NPC::CreateColliders()
+{
+	if (animationsPath.empty()) {
+		AddCollider(ColliderType::CIRCLE, texture, 0, 0, -10, 0, 1, 1);
+		pbody = colliders[0];
+		pbody->listener = this;
+		pbody->etype = EntityType::NPC;
+
+		b2Body_SetFixedRotation(pbody->body, true);
+
+		b2MassData massData;
+		massData.mass = 1000.0f;
+		massData.center = { 0.0f, 0.0f };
+		massData.rotationalInertia = 0.0f;
+		b2Body_SetMassData(pbody->body, massData);
+
+		AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 20, 20, 1, 1);
+		sensorCollider = colliders[1];
+		sensorCollider->listener = this;
+		sensorCollider->etype = EntityType::NPC;
+
+		return;
+	}
+
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -500, 0, 1, 1);
+	pbody = colliders[0];
+	pbody->listener = this;
+	pbody->etype = EntityType::NPC;
+
+	b2Body_SetFixedRotation(pbody->body, true);
+
+	b2MassData massData;
+	massData.mass = 1000.0f;
+	massData.center = { 0.0f, 0.0f };
+	massData.rotationalInertia = 0.0f;
+	b2Body_SetMassData(pbody->body, massData);
+
+	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, -470, 20, 1, 1);
+	sensorCollider = colliders[1];
+	sensorCollider->listener = this;
+	sensorCollider->etype = EntityType::NPC;
 }
 
 void NPC::Move()
@@ -144,6 +185,11 @@ void NPC::Move()
 
 	b2Vec2 velocity = speed * dir;
 
+	if ((velocity.x != 0 || velocity.y != 0) && walkTimer.ReadMSec() > walkMS) {
+		Engine::GetInstance().audio->PlayFx(walkFxId);
+		walkTimer = Timer();
+	}
+
 	Engine::GetInstance().physics->SetLinearVelocity(colliders[0], velocity);
 	HandleAnimations(velocity);
 	int xFinal, yFinal;
@@ -162,12 +208,12 @@ void NPC::HandleAnimations(b2Vec2 velocity)
 	if (isMoving) {
 		if (std::abs(velocity.x) > std::abs(velocity.y)) {
 			if (velocity.x > 0) {
-				facing = "left"; //Actually right, but in the spritesheet the default side facing direction is left
-				isFacingRight = false; //The sprite should be flipped here to display right instead of left
+				facing = "right";
+				isFacingRight = true;
 			}
 			else {
-				facing = "left";
-				isFacingRight = true;
+				facing = "right"; //Actually left, but in the spritesheet the default side facing direction is right
+				isFacingRight = false; //The sprite is flipped here to display left instead of right
 			}
 		}
 		else {
@@ -198,7 +244,7 @@ void NPC::LoadAnimations()
 {
 	if (animationsPath.empty()) return;
 	std::unordered_map<int, std::string> aliases = {
-		{0, "idle"}, {16, "move_down"}, {20, "move_up"}, {24, "move_left"}
+		{0, "idle"}, {16, "move_down"}, {32, "move_up"}, {48, "move_right"}
 	};
 	anims.LoadFromTSX(animationsPath.c_str(), aliases);
 	anims.SetCurrent("idle");
@@ -229,19 +275,20 @@ void NPC::OnDialogEnd()
 
 void NPC::Recruit()
 {
-	isRecruitConditionFulfilled = true; // for testing
+	isRecruitConditionFulfilled = recuitMissionId == "" || Engine::GetInstance().sceneManager->GetMissionManager()->IsMissionCompleted(recuitMissionId);
 	if (isRecruitConditionFulfilled && !party) {
 		LOG("%s joined the party!", name.c_str());
 		Engine::GetInstance().sceneManager->currentScene->player->AddPartyMember(std::dynamic_pointer_cast<NPC>(shared_from_this()), true);
 	}
-	else {
-
+	else if (recuitMissionId != "") {
+		Engine::GetInstance().sceneManager->GetMissionManager()->ActivateMission(recuitMissionId);
 	}
 }
 
 void NPC::OpenShop()
 {
 	LOG("Opening shop for '%s'", name.c_str());
+	Engine::GetInstance().sceneManager->currentScene->ToggleShop(this);
 }
 
 void NPC::OnCollision(Collider* physA, Collider* physB)

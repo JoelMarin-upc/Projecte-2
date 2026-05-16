@@ -117,7 +117,7 @@
       <AdditionalLibraryDirectories> .\vcpkg_installed\x64-windows\x64-windows\lib\manual-link</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /E /I /Y "$(ProjectDir)Assets" "$(OutDir)Assets"</Command>
+      <Command>if exist "$(ProjectDir)Assets" xcopy /E /I /Y "$(ProjectDir)Assets" "$(OutDir)Assets\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,6 +162,7 @@
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\BreakableObstacle.cpp" />
+    <ClCompile Include="src\BringMission.cpp" />
     <ClCompile Include="src\Building.cpp" />
     <ClCompile Include="src\Character.cpp" />
     <ClCompile Include="src\CollectMission.cpp" />
@@ -172,6 +173,9 @@
     <ClCompile Include="src\DialogManager.cpp" />
     <ClCompile Include="src\DialogNode.cpp" />
     <ClCompile Include="src\DialogTree.cpp" />
+    <ClCompile Include="src\DungeonExit.cpp" />
+    <ClCompile Include="src\DungeonGate.cpp" />
+    <ClCompile Include="src\DungeonLever.cpp" />
     <ClCompile Include="src\DynamicEntity.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\EnemyParty.cpp" />
@@ -198,9 +202,14 @@
     <ClCompile Include="src\Pathfinding.cpp" />
     <ClCompile Include="src\PerfTimer.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\PressurePlate.cpp" />
+    <ClCompile Include="src\PushBox.cpp" />
     <ClCompile Include="src\ReachMission.cpp" />
     <ClCompile Include="src\RecuitCenter.cpp" />
+    <ClCompile Include="src\ResetButton.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
+    <ClCompile Include="src\SequenceButton.cpp" />
+    <ClCompile Include="src\SequencePuzzle.cpp" />
     <ClCompile Include="src\Shop.cpp" />
     <ClCompile Include="src\Soldier.cpp" />
     <ClCompile Include="src\Stat.cpp" />
@@ -208,6 +217,7 @@
     <ClCompile Include="src\Stats.cpp" />
     <ClCompile Include="src\TalkMission.cpp" />
     <ClCompile Include="src\UIImage.cpp" />
+    <ClCompile Include="src\UISlot.cpp" />
     <ClCompile Include="src\UnbreakableObstacle.cpp" />
     <ClCompile Include="src\Weapon.cpp" />
     <ClCompile Include="src\XMLHandler.cpp" />
@@ -232,6 +242,7 @@
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Audio.h" />
     <ClInclude Include="src\BreakableObstacle.h" />
+    <ClInclude Include="src\BringMission.h" />
     <ClInclude Include="src\Building.h" />
     <ClInclude Include="src\Character.h" />
     <ClInclude Include="src\CollectMission.h" />
@@ -242,6 +253,9 @@
     <ClInclude Include="src\DialogManager.h" />
     <ClInclude Include="src\DialogNode.h" />
     <ClInclude Include="src\DialogTree.h" />
+    <ClInclude Include="src\DungeonExit.h" />
+    <ClInclude Include="src\DungeonGate.h" />
+    <ClInclude Include="src\DungeonLever.h" />
     <ClInclude Include="src\DynamicEntity.h" />
     <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\EnemyParty.h" />
@@ -270,9 +284,14 @@
     <ClInclude Include="src\Pathfinding.h" />
     <ClInclude Include="src\PerfTimer.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\PressurePlate.h" />
+    <ClInclude Include="src\PushBox.h" />
     <ClInclude Include="src\ReachMission.h" />
     <ClInclude Include="src\RecuitCenter.h" />
+    <ClInclude Include="src\ResetButton.h" />
     <ClInclude Include="src\SceneManager.h" />
+    <ClInclude Include="src\SequenceButton.h" />
+    <ClInclude Include="src\SequencePuzzle.h" />
     <ClInclude Include="src\Shop.h" />
     <ClInclude Include="src\Soldier.h" />
     <ClInclude Include="src\Stat.h" />
@@ -280,6 +299,7 @@
     <ClInclude Include="src\Stats.h" />
     <ClInclude Include="src\TalkMission.h" />
     <ClInclude Include="src\UIImage.h" />
+    <ClInclude Include="src\UISlot.h" />
     <ClInclude Include="src\UnbreakableObstacle.h" />
     <ClInclude Include="src\Weapon.h" />
     <ClInclude Include="src\XMLHandler.h" />
@@ -299,6 +319,10 @@
     <ClInclude Include="src\Zombie.h" />
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="Assets\Audio\audios.xml" />
+    <Xml Include="Assets\Dialogues\dialogues.xml" />
+    <Xml Include="Assets\Dialogues\dialogues_clean.xml" />
+    <Xml Include="Assets\Dialogues\dialogues_session.xml" />
     <Xml Include="Assets\Dialogues\test.xml" />
     <Xml Include="Assets\Entities\base_stats.xml" />
     <Xml Include="Assets\Entities\characters.xml" />
@@ -306,6 +330,10 @@
     <Xml Include="Assets\Entities\characters_session.xml" />
     <Xml Include="Assets\Entities\items.xml" />
     <Xml Include="Assets\Entities\items_clean.xml" />
+    <Xml Include="Assets\Entities\items_def.xml" />
+    <Xml Include="Assets\Missions\missions.xml" />
+    <Xml Include="Assets\Missions\missions_clean.xml" />
+    <Xml Include="Assets\Missions\missions_session.xml" />
     <Xml Include="config.xml" />
     <Xml Include="gamesave.xml" />
   </ItemGroup>

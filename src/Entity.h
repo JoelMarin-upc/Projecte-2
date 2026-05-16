@@ -12,6 +12,7 @@ enum class EntityType
 	NPC = 3,
 	INTERACTABLE_ITEM = 4,
 	ENEMY = 5,
+	PUSH_BOX = 6,
 	UNKNOWN
 };
 
@@ -22,7 +23,7 @@ class Entity : public std::enable_shared_from_this<Entity>
 public:
 
 	Entity() {}
-	Entity(std::string _id, std::string _name, std::string _texturePath, EntityType _type) : id(_id), name(_name), texturePath(_texturePath), type(_type), active(true) {}
+	Entity(std::string _id, std::string _name, std::string _texturePath, std::string _combatTexturePath, EntityType _type) : id(_id), name(_name), texturePath(_texturePath), combatTexturePath(_combatTexturePath), type(_type), active(true) {}
 
 	virtual bool Awake()
 	{
@@ -98,5 +99,8 @@ public:
 	std::vector<Collider*> colliders;
 	SDL_Texture* texture;
 	std::string texturePath;
+	std::string combatTexturePath;
+
+	bool isMale = false;
 	
 };

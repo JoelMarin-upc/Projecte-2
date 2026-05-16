@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<items>
+	<item id="" name="sword" gold="10" description="30 attack" texture="sword.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
+		<stats>
+			<stat name="attack" value="30"/>
+		</stats>
+	</item>
+	<item id="" name="potion" gold="5" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true">
+		<stats>
+			<stat name="health" value="20" />
+		</stats>
+	</item>
+	<item id="" name="helmet" gold="12" description="20 defense" texture="helmet.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="0">
+		<stats>
+			<stat name="defense" value="20" />
+		</stats>
+	</item>
+	<item id="" name="armor" gold="15" description="30 defense" texture="armor.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="1">
+		<stats>
+			<stat name="defense" value="30" />
+		</stats>
+	</item>
+	<item id="" name="leather boots" gold="5" description="5 defense" texture="boots1.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="2">
+		<stats>
+			<stat name="defense" value="5" />
+		</stats>
+	</item>
+	<item id="" name="steel boots" gold="8" description="10 defense" texture="boots2.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="2">
+		<stats>
+			<stat name="defense" value="10" />
+		</stats>
+	</item>
+	<item id="REWARD-001" name="Iron Sword" gold="10" description="30 attack" texture="sword.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
+		<stats>
+			<stat name="attack" value="30"/>
+		</stats>
+	</item>
+	<item id="IT-001" name="statue" texture="transparent.png" type="4" itemClass="item" interactionType="3" canStack="false"/>
+	<item id="LEVER-001" name="Lever" texture="dungeonLeverClosed.png" type="4" itemClass="lever" interactionType="2" canStack="false" toggledTexturePath="dungeonLeverOpened.png"/>
+	<item id="EXIT-001" name="Exit" texture="dungeonGate.png" type="4" itemClass="exit" interactionType="3" canStack="false"/>
+	<item id="GATE-001" name="Gate" texture="dungeonGateThin.png" type="4" itemClass="gate" interactionType="3" canStack="false"/>
+	<item id="PLATE-001" name="Plate" texture="pressurePlate.png" type="4" itemClass="plate" interactionType="3" canStack="false"/>
+	<item id="BOX-001" name="Plate" texture="interactableBox.png" type="4" itemClass="box" interactionType="3" canStack="false"/>
+	<item id="BUTTON-001" name="Button" texture="puzzleButton.png" type="4" itemClass="button" interactionType="2" canStack="false" toggledTexturePath="puzzleButtonPressed.png"/>
+	<item id="SQBTN-001" name="SButton1" texture="puzzleButton.png" type="4" itemClass="seqbutton1" interactionType="2" canStack="false" toggledTexturePath="puzzleButtonPressed.png"/>
+	<item id="SQBTN-002" name="SButton2" texture="puzzleButton.png" type="4" itemClass="seqbutton2" interactionType="2" canStack="false" toggledTexturePath="puzzleButtonPressed.png"/>
+	<item id="SQBTN-003" name="SButton3" texture="puzzleButton.png" type="4" itemClass="seqbutton3" interactionType="2" canStack="false" toggledTexturePath="puzzleButtonPressed.png"/>
+</items>

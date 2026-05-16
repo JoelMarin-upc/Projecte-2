@@ -12,7 +12,7 @@
 #include "SceneManager.h"
 #include <memory>
 
-Player::Player(std::string id, std::string name, std::string texturePath) : Character(id, name, texturePath, EntityType::PLAYER)
+Player::Player(std::string id, std::string name, std::string texturePath, std::string combatTexturePath) : Character(id, name, texturePath, combatTexturePath, EntityType::PLAYER)
 {
 }
 
@@ -36,17 +36,31 @@ bool Player::Start() {
 	//std::unordered_map<int, std::string> aliases = { {0,"idle"},{24,"move"},{40,"jump"},{32,"fall"},{48,"death"},{64,"throw"},{45,"falling"}};
 	//anims.LoadFromTSX(animationsPath, aliases);
 	//texturePath = "Assets/Textures/goldCoin.png";
+	texW = 32;
+	texH = 64;
+
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -10, 0, 1, 1);
+	if (combatTexturePath != "") combatTexture = Engine::GetInstance().textures->Load(combatTexturePath.c_str());
+
+	//AddCollider(ColliderType::CIRCLE, texture, 0, 0, -110, 0, 1, 1);
+	AddCollider(ColliderType::SQUARE, texture, 0, 0, -110, -200, 1, 1);
 
 	colliders[0]->etype = EntityType::PLAYER;
 	pbody = colliders[0];
 	pbody->listener = this;
-
-	texW = 30;
-	texH = 30;
+	b2Body_SetFixedRotation(pbody->body, true);
 
 	party = new Party(std::static_pointer_cast<Player>(shared_from_this()));
+
+	const char* audioNode = isMale ? "human_male" : "human_female";
+
+	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "walk");
+	std::string attackFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "attack");
+	std::string dieFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "die");
+
+	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath.c_str());
+	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath.c_str());
+	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath.c_str());
 
 	return true;
 }
@@ -98,7 +112,7 @@ void Player::Move() {
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		velocity.y = -speed;
 		currentFacingDirection = UP;
-		if (!isJumping && walkTimer.ReadMSec() > walkMS) {
+		if (walkTimer.ReadMSec() > walkMS) {
 			Engine::GetInstance().audio->PlayFx(walkFxId);
 			walkTimer = Timer();
 		}
@@ -106,7 +120,7 @@ void Player::Move() {
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -speed;
 		currentFacingDirection = LEFT;
-		if (!isJumping && walkTimer.ReadMSec() > walkMS) {
+		if (walkTimer.ReadMSec() > walkMS) {
 			Engine::GetInstance().audio->PlayFx(walkFxId);
 			walkTimer = Timer();
 		}
@@ -114,7 +128,7 @@ void Player::Move() {
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 		velocity.y = speed;
 		currentFacingDirection = DOWN;
-		if (!isJumping && walkTimer.ReadMSec() > walkMS) {
+		if (walkTimer.ReadMSec() > walkMS) {
 			Engine::GetInstance().audio->PlayFx(walkFxId);
 			walkTimer = Timer();
 		}
@@ -122,7 +136,7 @@ void Player::Move() {
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = speed;
 		currentFacingDirection = RIGHT;
-		if (!isJumping && walkTimer.ReadMSec() > walkMS) {
+		if (walkTimer.ReadMSec() > walkMS) {
 			Engine::GetInstance().audio->PlayFx(walkFxId);
 			walkTimer = Timer();
 		}
@@ -142,37 +156,36 @@ void Player::Move() {
 }
 
 void Player::ApplyPhysics() {
-	// Preserve vertical speed while jumping
-	if (isJumping == true || isDashing == true) {
-		velocity.y = Engine::GetInstance().physics->GetYVelocity(colliders[0]);
-	}
-
-	if (isDashing == true) {
-		velocity.x = Engine::GetInstance().physics->GetXVelocity(colliders[0]);
-	}
-
 	// Apply velocity via helper
 	Engine::GetInstance().physics->SetLinearVelocity(colliders[0], velocity);
 }
 
 void Player::HandleAnimations()
 {
-	if (isThrow1 && isThrow2) return;
+	if (animationsPath.empty()) return;
 
-	if (!isJumping) {
-		if (abs(velocity.x) > 0.2) {
-			if (currentAnimation != "move") anims.SetCurrent("move");
-			currentAnimation = "move";
+	bool isMoving = (std::abs(velocity.x) > 0.1f || std::abs(velocity.y) > 0.1f);
+
+	if (isMoving) {
+		if (std::abs(velocity.x) > std::abs(velocity.y)) {
+			facing = "left";                     
+			isFacingRight = (velocity.x > 0);
 		}
 		else {
-			if (currentAnimation != "idle") anims.SetCurrent("idle");
-			currentAnimation = "idle";
+			facing = (velocity.y > 0) ? "down" : "up";
 		}
 
+		std::string animName = "move_" + facing;
+		if (currentAnimation != animName) {
+			anims.SetCurrent(animName);
+			currentAnimation = animName;
+		}
 	}
-	else if (velocity.y > 0.2) {
-		anims.SetCurrent("falling");
-		currentAnimation = "falling";
+	else {
+		if (currentAnimation != "idle") {
+			anims.SetCurrent("idle");
+			currentAnimation = "idle";
+		}
 	}
 }
 
@@ -192,19 +205,24 @@ void Player::Draw(float dt) {
 	colliders[0]->GetPosition(x, y);
 	position.setX((float)x);
 	position.setY((float)y);
-	SDL_Texture* tex = damaged ? textureDamaged : texture;
-	Engine::GetInstance().render->DrawTexture(tex, x - texW / 2, y - texH / 2/*, &animFrame, facingRight*/);
 
-	/*if (!isActive) return;
-	tex = itemChargeTexture0;
-	if (hasItem2) {
-		if (canThrow1 && canThrow2) tex = itemChargeTexture2;
-		else if (canThrow1 || canThrow2) tex = itemChargeTexture1;
+	if (!animationsPath.empty()) {
+		anims.Update(dt);
+		const SDL_Rect& animFrame = anims.GetCurrentFrame();
+		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2, 1, &animFrame, isFacingRight);
+		DrawHealthBar(animFrame);
 	}
-	else if (hasItem1 && canThrow1) tex = itemChargeTexture1;
-	Engine::GetInstance().render->DrawTexture(tex, x - 8, y -8);*/
+}
 
-	DrawHealthBar(tex);
+void Player::LoadAnimations()
+{
+	if (animationsPath.empty()) return;
+	std::unordered_map<int, std::string> aliases = {
+		{0, "idle"}, {4, "move_down"}, {8, "move_up"}, {12, "move_left"}
+	};
+	anims.LoadFromTSX(animationsPath.c_str(), aliases);
+	anims.SetCurrent("idle");
+	currentAnimation = "idle";
 }
 
 bool Player::CleanUp()

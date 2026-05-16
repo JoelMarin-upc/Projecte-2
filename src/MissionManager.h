@@ -1,9 +1,21 @@
 #pragma once
 
 #include "Mission.h"
-#include "Entity.h"
+#include "TalkMission.h"
+#include "ReachMission.h"
+#include "KillMission.h"
+#include "CollectMission.h"
+#include "BringMission.h"
 #include <list>
-#include <memory>
+#include <vector>
+
+enum MissionType {
+	TALK,
+	REACH,
+	KILL,
+	COLLECT,
+	BRING
+};
 
 class MissionManager
 {
@@ -27,11 +39,29 @@ public:
 	bool CleanUp();
 
 	// Additional methods
-	std::shared_ptr<Entity> CreateMission(Mission* mission);
+	void LoadMissions();
+	Mission* AddMission(MissionType type, std::string missionId, std::string targetId, std::string targetName, std::string itemName, MissionReward reward = MissionReward(), std::vector<std::string> unlocksMissions = std::vector<std::string>(), bool active = false, bool completed = false);
+	Mission* ActivateMission(std::string missionId);
+	Mission* CompleteMission(std::string missionId);
+	std::vector<Mission*> GetActiveMissions();
+	bool IsMissionCompleted(std::string missionId);
+
+	template<typename T>
+	inline std::vector<T*> GetMissions(bool onlyActive)
+	{
+		std::vector<T*> result;
+
+		for (const auto& m : missions) {
+			if (onlyActive && !m->active) continue;
+			if (T* casted = dynamic_cast<T*>(m)) result.push_back(casted);
+		}
+
+		return result;
+	}
 
 public:
 
-	std::list<std::shared_ptr<Mission>> missions;
+	std::list<Mission*> missions;
 	bool paused = false;
 
 };

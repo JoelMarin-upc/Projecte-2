@@ -17,8 +17,9 @@ enum class NPCInteractionType {
 class NPC : public AICharacter {
 public:
 	NPC(){}
-	NPC(std::string id, std::string name, std::string texturePath, NPCInteractionType type = NPCInteractionType::DEFAULT) : AICharacter(id, name, texturePath, EntityType::NPC) {
+	NPC(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, NPCInteractionType type = NPCInteractionType::DEFAULT, std::string recuitMissionId = "") : AICharacter(id, name, texturePath, combatTexturePath, EntityType::NPC) {
 		npcInteractionType = type;
+		this->recuitMissionId = recuitMissionId;
 	}
 	virtual ~NPC();
 
@@ -28,6 +29,7 @@ public:
 	bool Update(float dt);
 	void Draw(float dt);
 	bool CleanUp();
+	void CreateColliders();
 	void Move();
 	void HandleAnimations(b2Vec2 velocity);
 	void LoadAnimations();
@@ -51,4 +53,5 @@ private:
 	NPCInteractionType npcInteractionType;
 	Collider* pbody = nullptr;
 	Collider* sensorCollider = nullptr;
+	std::string recuitMissionId;
 };
