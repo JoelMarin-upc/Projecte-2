@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <characters savedGame="false">
-	<player id="player" name="main character" texture="SpriteSheet_Garnik.png" combatTexture="garnikCombat.png" animations="Garnik_SpriteSheet.tsx" savedX="-1" savedY="-1">
+	<player id="player" name="Garnik" texture="SpriteSheet_Garnik.png" combatTexture="garnikCombat.png" animations="Garnik_SpriteSheet.tsx" savedX="-1" savedY="-1">
 		<stats>
 			<stat name="health" value="100" max="100" />
 			<stat name="speed" value="5"/>

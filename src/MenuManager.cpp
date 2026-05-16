@@ -7,6 +7,7 @@
 #include "Audio.h"
 #include "Window.h"
 #include "SceneManager.h"
+#include <string>
 
 MenuManager::MenuManager() : Module()
 {
@@ -187,28 +188,28 @@ void MenuManager::Load(bool onlyPositions)
 	}
 	else {
 		// MENUS
-		gameTitle = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)GAME_TITLE, b_gameTitle, this, {  }, hoverFxId, clickFxId, UIParameters::Image(title, title, title, title)));
-		startGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)START_GAME, b_startGame, this, {  }, hoverFxId, clickFxId, UIParameters::Image(startDis, startNormal, startHov, startPres)));
-		pausedLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)PAUSED_LABEL, b_paused_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("PAUSED")));
-		gameOverLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)GAME_OVER_LABEL , b_gameOver_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("GAME OVER")));
-		settingsLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SETTINGS_LABEL, b_settings_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("SETTINGS")));
-		continueGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)CONTINUE_GAME, b_continueGame, this, { }, hoverFxId, clickFxId, UIParameters::Image(continueDis, continueNormal, continueHov, continuePres)));
-		resumeGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)RESUME_GAME, b_resume, this, { }, hoverFxId, clickFxId, UIParameters::Image(resumeDis, resumeNormal, resumeHov, resumePres)));
-		settingsButton = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)SETTINGS_BUTTON, b_settings, this, { }, hoverFxId, clickFxId, UIParameters::Image(settingsDis, settingsNormal, settingsHov, settingsPres)));
-		creditsButton = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)CREDITS_BUTTON, b_credits_btn, this, { }, hoverFxId, clickFxId, UIParameters::Image(creditsDis, creditsNormal, creditsHov, creditsPres)));
-		creditsLabel1 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)CREDITS_LABEL, b_credits1, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("This game was made by TEAMDAYO, a game studio created by")));
-		creditsLabel2 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)CREDITS_LABEL, b_credits2, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Clara Sanchez, Sofia Barja, Yin Ye, Kirsten Neubauer and Joel Marin.")));
-		musicVolumeLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)MUSIC_VOLUME_LABEL, b_musicVolume_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Music volume")));
-		musicVolumeSlider = std::dynamic_pointer_cast<UISlider>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLIDER, (int)MUSIC_VOLUME, b_musicVolume, this, { white, mainColorDis, mainColorDef, mainColorHov, mainColorPre, mainColorDis, white }, hoverFxId, clickFxId, UIParameters::Slider(true, 0, 10, 1, 10)));
-		fxVolumeLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)FX_VOLUME_LABEL, b_fxVolume_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("FX volume")));
-		fxVolumeSlider = std::dynamic_pointer_cast<UISlider>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLIDER, (int)FX_VOLUME, b_fxVolume, this, { white, mainColorDis, mainColorDef, mainColorHov, mainColorPre, mainColorDis, white }, hoverFxId, clickFxId, UIParameters::Slider(true, 0, 10, 1, 10)));
-		fullscreenLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)FULLSCREEN_LABEL, b_fullscreen_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Fullscreen")));
-		fullscreenCheckbox = std::dynamic_pointer_cast<UICheckbox>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::CHECKBOX, (int)FULLSCREEN, b_fullscreen, this, { mainColorDef, mainColorHov, mainColorDis, black, secondaryDef, secondaryDis }, hoverFxId, clickFxId, UIParameters::Checkbox(5, false)));
-		vsyncLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)VSYNC_LABEL, b_vsync_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("VSync")));
-		vsyncCheckbox = std::dynamic_pointer_cast<UICheckbox>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::CHECKBOX, (int)VSYNC, b_vsync, this, { mainColorDef, mainColorHov, mainColorDis, black, secondaryDef, secondaryDis }, hoverFxId, clickFxId, UIParameters::Checkbox(5, false)));
-		backMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MENU, b_backMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
-		backMainMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MAIN_MENU, b_backMainMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
-		exit = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)EXIT, b_exit, this, { }, hoverFxId, clickFxId, UIParameters::Image(exitDis, exitNormal, exitHov, exitPres)));
+		gameTitle = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)GAME_TITLE, b_gameTitle, this, {  }, hoverFxId, clickFxId, UIParameters::Image(title, title, title, title), false, true));
+		startGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)START_GAME, b_startGame, this, {  }, hoverFxId, clickFxId, UIParameters::Image(startDis, startNormal, startHov, startPres), false, true));
+		pausedLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)PAUSED_LABEL, b_paused_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("PAUSED"), false, true));
+		gameOverLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)GAME_OVER_LABEL , b_gameOver_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("GAME OVER"), false, true));
+		settingsLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SETTINGS_LABEL, b_settings_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("SETTINGS"), false, true));
+		continueGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)CONTINUE_GAME, b_continueGame, this, { }, hoverFxId, clickFxId, UIParameters::Image(continueDis, continueNormal, continueHov, continuePres), false, true));
+		resumeGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)RESUME_GAME, b_resume, this, { }, hoverFxId, clickFxId, UIParameters::Image(resumeDis, resumeNormal, resumeHov, resumePres), false, true));
+		settingsButton = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)SETTINGS_BUTTON, b_settings, this, { }, hoverFxId, clickFxId, UIParameters::Image(settingsDis, settingsNormal, settingsHov, settingsPres), false, true));
+		creditsButton = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)CREDITS_BUTTON, b_credits_btn, this, { }, hoverFxId, clickFxId, UIParameters::Image(creditsDis, creditsNormal, creditsHov, creditsPres), false, true));
+		creditsLabel1 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)CREDITS_LABEL, b_credits1, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("This game was made by TEAMDAYO, a game studio created by"), false, true));
+		creditsLabel2 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)CREDITS_LABEL, b_credits2, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Clara Sanchez, Sofia Barja, Yin Ye, Kirsten Neubauer and Joel Marin."), false, true));
+		musicVolumeLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)MUSIC_VOLUME_LABEL, b_musicVolume_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Music volume"), false, true));
+		musicVolumeSlider = std::dynamic_pointer_cast<UISlider>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLIDER, (int)MUSIC_VOLUME, b_musicVolume, this, { white, mainColorDis, mainColorDef, mainColorHov, mainColorPre, mainColorDis, white }, hoverFxId, clickFxId, UIParameters::Slider(true, 0, 10, 1, 10), false, true));
+		fxVolumeLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)FX_VOLUME_LABEL, b_fxVolume_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("FX volume"), false, true));
+		fxVolumeSlider = std::dynamic_pointer_cast<UISlider>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLIDER, (int)FX_VOLUME, b_fxVolume, this, { white, mainColorDis, mainColorDef, mainColorHov, mainColorPre, mainColorDis, white }, hoverFxId, clickFxId, UIParameters::Slider(true, 0, 10, 1, 10), false, true));
+		fullscreenLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)FULLSCREEN_LABEL, b_fullscreen_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Fullscreen"), false, true));
+		fullscreenCheckbox = std::dynamic_pointer_cast<UICheckbox>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::CHECKBOX, (int)FULLSCREEN, b_fullscreen, this, { mainColorDef, mainColorHov, mainColorDis, black, secondaryDef, secondaryDis }, hoverFxId, clickFxId, UIParameters::Checkbox(5, false), false, true));
+		vsyncLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)VSYNC_LABEL, b_vsync_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("VSync"), false, true));
+		vsyncCheckbox = std::dynamic_pointer_cast<UICheckbox>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::CHECKBOX, (int)VSYNC, b_vsync, this, { mainColorDef, mainColorHov, mainColorDis, black, secondaryDef, secondaryDis }, hoverFxId, clickFxId, UIParameters::Checkbox(5, false), false, true));
+		backMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MENU, b_backMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres), false, true));
+		backMainMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MAIN_MENU, b_backMainMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres), false, true));
+		exit = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)EXIT, b_exit, this, { }, hoverFxId, clickFxId, UIParameters::Image(exitDis, exitNormal, exitHov, exitPres), false, true));
 		
 		missionPopUpTitle = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)POPUP_TITLE, b_popUpTitle, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, green }, hoverFxId, clickFxId, UIParameters::Button("", 20)));
 		missionPopUp = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)POPUP, b_popUp, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("", 20)));
@@ -257,8 +258,15 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	SDL_Rect b_attack = { sw / 2 + 150, sh / 2 - 50, 200, 40 };
 	SDL_Rect b_defense = { sw / 2 + 150, sh / 2 + 10, 200, 40 };
 	SDL_Rect b_speed = { sw / 2 + 150, sh / 2 + 70, 200, 40 };
+	SDL_Rect b_nameLabel = { sw - 220, 20, 200, 40 };
+	SDL_Rect b_previousInventory = { sw - 440, 80, 200, 40 };
+	SDL_Rect b_nextInventory = { sw - 220, 80, 200, 40 };
 	std::vector<SDL_Rect> inventorySlotBounds = std::vector<SDL_Rect>();
 	std::vector<SDL_Rect> shopSlotBounds = std::vector<SDL_Rect>();
+	std::vector<SDL_Rect> giveToBounds = std::vector<SDL_Rect>();
+	for (int i = 0; i < 4; i++) {
+		giveToBounds.push_back({ sw - 220, 160 + 60 * i, 200, 40 });
+	}
 	const int margin = 10;
 	const int columns = 4;
 	const int rows = MAX_SLOTS / columns;
@@ -297,6 +305,10 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		weapon->SetBounds(b_weapon);
 		selectedItem->SetBounds(b_selectedItem);
 		exitShop->SetBounds(b_exitShop);
+		nameLabel->SetBounds(b_nameLabel);
+		previousInventory->SetBounds(b_previousInventory);
+		nextInventory->SetBounds(b_nextInventory);
+		for (int i = 0; i < giveToButtons.size(); i++) if (giveToButtons[i]) giveToButtons[i]->SetBounds(giveToBounds[i]);
 		for (int i = 0; i < inventorySlotBounds.size(); i++) {
 			if (inventorySlots.size() <= i) continue;
 			std::shared_ptr<UISlot> slot = inventorySlots[i];
@@ -349,6 +361,11 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		selectedItem = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)SELECTED_ITEM, b_selectedItem, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Default()));
 		selectedItem->state = UIElementState::DISABLED;
 		exitShop = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)EXIT_SHOP, b_exitShop, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Exit", 5, 5)));
+		nameLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)NAME_LABEL, b_nameLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("")));
+		previousInventory = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)PREV_INVENTORY, b_previousInventory, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Previous", 5, 5)));
+		nextInventory = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)NEXT_INVENTORY, b_nextInventory, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Next", 5, 5)));
+		for (int i = 0; i < giveToBounds.size(); i++)
+			giveToButtons.push_back(std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, baseGiveToId + i, giveToBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Button("Give to ", 5, 5))));
 		for (int i = 0; i < inventorySlotBounds.size(); i++) {
 			std::shared_ptr<UISlot> slot = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)baseSlotsId + i, inventorySlotBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Default()));
 			inventorySlots.push_back(slot);
@@ -404,6 +421,10 @@ void MenuManager::SetObserver(Module* observer)
 	attack->observer = observer;
 	defense->observer = observer;
 	speed->observer = observer;
+	nameLabel->observer = observer;
+	previousInventory->observer = observer;
+	nextInventory->observer = observer;
+	for (std::shared_ptr<UIButton> button : giveToButtons) button->observer = observer;
 	for (std::shared_ptr<UISlot> slot : inventorySlots) slot->observer = observer;
 	for (std::shared_ptr<UISlot> slot : shopSlots) slot->observer = observer;
 	for (std::shared_ptr<UIButton> mission : missionJournal) mission->observer = observer;
@@ -488,7 +509,7 @@ void MenuManager::ShowCreditsMenu()
 	backMainMenu->active = true;
 }
 
-void MenuManager::ShowInventory(Inventory* inventory, std::shared_ptr<Character> character)
+void MenuManager::ShowInventory(Inventory* inventory, std::shared_ptr<Character> character, Party* party)
 {
 	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 
@@ -496,7 +517,7 @@ void MenuManager::ShowInventory(Inventory* inventory, std::shared_ptr<Character>
 	HideMenu();
 	currentMenu = INVENTORY;
 
-	ShowInventory(inventory, false, character);
+	ShowInventory(inventory, false, character, party);
 }
 
 void MenuManager::ShowShop(Inventory* customer, Inventory* shop)
@@ -625,6 +646,10 @@ void MenuManager::HideMenu()
 	attack->active = false;
 	defense->active = false;
 	speed->active = false;
+	nameLabel->active = false;
+	previousInventory->active = false;
+	nextInventory->active = false;
+	for (std::shared_ptr<UIButton> button : giveToButtons) button->active = false;
 	for (std::shared_ptr<UISlot> slot : inventorySlots)
 	{
 		slot->SetItem(nullptr);
@@ -664,12 +689,12 @@ void MenuManager::ShowPreviousMenu()
 
 void MenuManager::RedrawInventory()
 {
-	ShowInventory(currentInventory, false, currentCharacter);
+	ShowInventory(currentInventory, false, currentCharacter, currentParty);
 	if (currentMenu == SHOP) ShowInventory(currentShop, true);
 	selectedItem->SetItem(nullptr);
 }
 
-void MenuManager::ShowInventory(Inventory* inventory, bool isShop, std::shared_ptr<Character> character)
+void MenuManager::ShowInventory(Inventory* inventory, bool isShop, std::shared_ptr<Character> character, Party* party)
 {
 	amount->active = true;
 	selectedItem->active = true;
@@ -695,14 +720,19 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop, std::shared_p
 	else {
 		currentInventory = inventory;
 		currentCharacter = character;
+		currentParty = party;
 		inventoryLabel->active = true;
-		moneyLabel->text = "Gold: " + std::to_string(inventory->gold);
+		int gold = inventory->gold;
+		if (party) gold = party->player->inventory->gold;
+		moneyLabel->text = "Gold: " + std::to_string(gold);
 		moneyLabel->active = true;
 		use->text = "Use";
 		use->active = true;
 		drop->active = true;
 
 		if (character) {
+			nameLabel->active = true;
+			nameLabel->text = character->name;
 			hp->active = true;
 			hp->text = "HP: " + std::to_string((int)character->HP()) + "/" + std::to_string((int)character->MaxHP());
 			attack->active = true;
@@ -711,12 +741,29 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop, std::shared_p
 			defense->text = "Defense: " + std::to_string((int)character->Defense());
 			speed->active = true;
 			speed->text = "Speed: " + std::to_string((int)character->Speed());
+			if (party)
+			{
+				if (party->allMembers.size() > 1) {
+					previousInventory->active = true;
+					nextInventory->active = true;
+				}
+				for (int i = 0; i < party->allMembers.size(); i++) {
+					if (party->allMembers[i]->id == character->id) continue;
+					giveToButtons[i]->active = true;
+					giveToButtons[i]->text = "Give to " + party->allMembers[i]->name;
+					giveToButtons[i]->info = std::to_string(i);
+				}
+			}
 		}
 		else {
 			hp->active = false;
 			attack->active = false;
 			defense->active = false;
 			speed->active = false;
+			nameLabel->active = false;
+			previousInventory->active = false;
+			nextInventory->active = false;
+			for (std::shared_ptr<UIButton> button : giveToButtons) button->active = false;
 		}
 		
 		for (int i = 0; i < inventorySlots.size(); i++) {

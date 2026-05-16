@@ -87,7 +87,11 @@ enum UIID {
 	HP_STAT,
 	ATTACK_STAT,
 	DEFEND_STAT,
-	SPEED_STAT
+	SPEED_STAT,
+	NAME_LABEL,
+	PREV_INVENTORY,
+	NEXT_INVENTORY,
+	CANCEL_ACTION
 };
 
 const float POP_UP_SECONDS = 5.f;
@@ -124,7 +128,7 @@ public:
 	void ShowPauseMenu();
 	void ShowSettingsMenu();
 	void ShowCreditsMenu();
-	void ShowInventory(Inventory* inventory, std::shared_ptr<Character> character = nullptr);
+	void ShowInventory(Inventory* inventory, std::shared_ptr<Character> character = nullptr, Party* party = nullptr);
 	void ShowShop(Inventory* customer, Inventory* shop);
 	void ShowDeathScreen();
 	void AddMissionPopup(Mission* mission);
@@ -137,7 +141,7 @@ public:
 	void ShowCombatInventory(Inventory* inventory);
 
 private:
-	void ShowInventory(Inventory* inventory, bool isShop, std::shared_ptr<Character> character = nullptr);
+	void ShowInventory(Inventory* inventory, bool isShop, std::shared_ptr<Character> character = nullptr, Party* party = nullptr);
 
 public:
 	MenuType currentMenu;
@@ -180,6 +184,7 @@ public:
 	const int baseShopSlotsId = 950;
 	std::vector<std::shared_ptr<UISlot>> inventorySlots;
 	std::vector<std::shared_ptr<UISlot>> shopSlots;
+	std::shared_ptr<UILabel> nameLabel;
 	std::shared_ptr<UILabel> inventoryLabel;
 	std::shared_ptr<UILabel> moneyLabel;
 	std::shared_ptr<UILabel> shopLabel;
@@ -198,8 +203,13 @@ public:
 	std::shared_ptr<UIButton> attack;
 	std::shared_ptr<UIButton> defense;
 	std::shared_ptr<UIButton> speed;
+	const int baseGiveToId = 1000;
+	std::vector<std::shared_ptr<UIButton>> giveToButtons;
+	std::shared_ptr<UIButton> previousInventory;
+	std::shared_ptr<UIButton> nextInventory;
 
 	std::shared_ptr<Character> currentCharacter = nullptr;
+	Party* currentParty = nullptr;
 	Inventory* currentInventory = nullptr;
 	Inventory* currentShop = nullptr;
 

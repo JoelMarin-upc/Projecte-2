@@ -436,7 +436,7 @@
 	</tree>
 	<tree id="DT-098" characterId="Lever" characterName="" order="1" done="false">
 		<node id="DN-001" first="true">
-			The lever has been pulled
+			The lever has been pulled, you hear a gate opening.
 			<answer leadsToNodeId="">
 				Continue
 			</answer>
@@ -445,6 +445,14 @@
 	<tree id="DT-097" characterId="CH-011" characterName="Shopkeeper" order="1" done="false" isRepeatable="true">
 		<node id="DN-001" first="true">
 			Hello, welcome to my shop.
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-096" characterId="exit_locked" characterName="Garnik" order="1" done="false" isRepeatable="true">
+		<node id="DN-001" first="true">
+			L-locked? There has to be a way to open it...
 			<answer leadsToNodeId="">
 				Continue
 			</answer>

@@ -103,6 +103,7 @@ public:
 
 	bool active;
 	int id;
+	
 	UIElementType type;
 	UIElementState state;
 
@@ -119,4 +120,6 @@ public:
 	int clickFxId;
 
 	bool useCamera;
+	std::string info;
+	bool drawOnTop = false;
 };

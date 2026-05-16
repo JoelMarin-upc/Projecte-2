@@ -5,6 +5,7 @@
 
 class Player;
 class NPC;
+class Character;
 
 class Party {
 public:
@@ -15,6 +16,7 @@ public:
 
 	std::shared_ptr<Player> player;
 	std::vector<std::shared_ptr<NPC>> members;
+	std::vector<std::shared_ptr<Character>> allMembers;
 	
 	const int maxMembers = 3;
 };
