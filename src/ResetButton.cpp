@@ -4,6 +4,7 @@
 #include "Physics.h"
 #include "Textures.h"
 #include "Log.h"
+#include "Audio.h"
 
 bool ResetButton::Start()
 {
@@ -22,6 +23,9 @@ bool ResetButton::Start()
     pbody->listener = this;
 
     sensorCollider = colliders[0];
+
+    std::string buttonFxPath = Engine::GetInstance().audio->GetAudioPath("puzzle", "button");
+    buttonFxId = Engine::GetInstance().audio->LoadFx(buttonFxPath.c_str());
 
     return true;
 }
@@ -54,5 +58,6 @@ void ResetButton::Interact()
         return;
     }
 
+    if (buttonFxId != -1) Engine::GetInstance().audio->PlayFx(buttonFxId);
     linkedBox->ResetToSpawn();
 }

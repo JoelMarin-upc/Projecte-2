@@ -3,6 +3,7 @@
 #include "Textures.h"
 #include "Input.h"
 #include "Log.h"
+#include "Audio.h"
 
 bool SequenceButton::Start()
 {
@@ -20,6 +21,9 @@ bool SequenceButton::Start()
     pbody->etype = EntityType::INTERACTABLE_ITEM;
     pbody->listener = this;
     sensorCollider = colliders[0];
+
+    std::string buttonFxPath = Engine::GetInstance().audio->GetAudioPath("puzzle", "button");
+    buttonFxId = Engine::GetInstance().audio->LoadFx(buttonFxPath.c_str());
 
     return true;
 }
@@ -50,5 +54,6 @@ void SequenceButton::Interact()
     isToggled = true;
     pressedTimer = 0.0f;
 
+    if (buttonFxId != -1) Engine::GetInstance().audio->PlayFx(buttonFxId);
     if (onPressed) onPressed(buttonIndex);
 }

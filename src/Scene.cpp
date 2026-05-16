@@ -919,6 +919,7 @@ void Scene::LoadScene(std::string spawnId)
 				if (item->id == "REWARD-001") {
 					item->active = false;
 					sequencePuzzle->rewardItem = item;
+					sequencePuzzle->LoadSounds();
 				}
 			}
 		}

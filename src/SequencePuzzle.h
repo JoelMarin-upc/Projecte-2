@@ -15,11 +15,11 @@ public:
 
     void OnButtonPressed(int index);
 
-    bool isSolved = false;
-
+    void LoadSounds();
 
 public:
     std::shared_ptr<InteractableItem> rewardItem = nullptr;
+    bool isSolved = false;
 private:
     void OnSuccess();
     void OnFailure();
@@ -28,6 +28,7 @@ private:
     std::vector<int> currentSequence;
     std::vector<SequenceButton*> buttons;
 
-    
     Vector2D rewardPosition;
+
+    int dingFxId = -1;
 };

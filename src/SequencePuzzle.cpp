@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "SceneManager.h"
 #include "Log.h"
+#include "Audio.h"
 
 SequencePuzzle::SequencePuzzle(std::vector<int> correctOrder) : correctOrder(correctOrder)
 {
@@ -36,14 +37,22 @@ void SequencePuzzle::OnButtonPressed(int index)
     }
 }
 
+void SequencePuzzle::LoadSounds()
+{
+    std::string dingFxPath = Engine::GetInstance().audio->GetAudioPath("puzzle", "ding");
+    dingFxId = Engine::GetInstance().audio->LoadFx(dingFxPath.c_str());
+}
+
 void SequencePuzzle::OnSuccess()
 {
     isSolved = true;
     if (rewardItem) rewardItem->active = true;
+    if (dingFxId != -1) Engine::GetInstance().audio->PlayFx(dingFxId);
     //for (SequenceButton* btn : buttons) btn->active = false;
 }
 
 void SequencePuzzle::OnFailure()
 {
     currentSequence.clear();
+    //if (dingFxId != -1) Engine::GetInstance().audio->PlayFx(dingFxId);
 }

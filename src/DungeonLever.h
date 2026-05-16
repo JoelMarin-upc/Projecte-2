@@ -9,6 +9,9 @@ public:
         : InteractableItem(id, name, description, texturePath, ItemInteractionType::TOGGLE, false, toggledTexturePath) {
     }
 
+    bool Start() override;
+
 protected:
     void Toggle() override;
+    int leverFxId = -1;
 };

@@ -4,6 +4,7 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "Log.h"
+#include "Audio.h"
 
 bool DungeonExit::Start()
 {
@@ -35,6 +36,9 @@ bool DungeonExit::Start()
 	massData.rotationalInertia = 0.0f;
 	b2Body_SetMassData(pbody->body, massData);
 
+	std::string gateFxPath = Engine::GetInstance().audio->GetAudioPath("puzzle", "gate");
+	gateFxId = Engine::GetInstance().audio->LoadFx(gateFxPath.c_str());
+
 	return true;
 }
 
@@ -42,6 +46,8 @@ void DungeonExit::Unlock()
 {
 	isToggled = true;
 	active = false;
+
+	if (gateFxId != -1) Engine::GetInstance().audio->PlayFx(gateFxId);
 
 	if (pbody) {
 		Engine::GetInstance().physics->DeletePhysBody(pbody);

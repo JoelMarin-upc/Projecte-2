@@ -15,4 +15,5 @@ protected:
 
 public:
     bool isLocked = true;
+    int gateFxId = -1;
 };

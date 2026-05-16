@@ -21,4 +21,5 @@ private:
 
     float pressedTimer = 0.0f;
     const float pressDuration = 50.0f;
+    int buttonFxId = -1;
 };
