@@ -93,6 +93,12 @@
     <None Include="Assets\Textures\Barbara_SpriteSheet.tsx">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="Assets\Textures\LongEnemy_SpriteSheet.tsx">
+      <Filter>Configuration FIles</Filter>
+    </None>
+    <None Include="Assets\Textures\Slime_SpriteSheet.tsx">
+      <Filter>Configuration FIles</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio.cpp">

@@ -152,7 +152,9 @@
     <None Include="Assets\Textures\bat.tsx" />
     <None Include="Assets\Textures\bat32.tsx" />
     <None Include="Assets\Textures\Boss.tsx" />
+    <None Include="Assets\Textures\LongEnemy_SpriteSheet.tsx" />
     <None Include="Assets\Textures\Multi_Slime_Spritesheet.tsx" />
+    <None Include="Assets\Textures\Slime_SpriteSheet.tsx" />
     <None Include="vcpkg-configuration.json" />
     <None Include="vcpkg.json" />
   </ItemGroup>
