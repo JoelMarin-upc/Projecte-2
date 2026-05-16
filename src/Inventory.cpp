@@ -1,6 +1,7 @@
 #include "Inventory.h"
 #include "Log.h"
 #include "Equipable.h"
+#include "SceneManager.h"
 
 Inventory::Inventory() {
 	
@@ -33,6 +34,9 @@ bool Inventory::AddItem(std::shared_ptr<InteractableItem> item)
 		LOG("The inventory is full, the item could not be added");
 		return false;
 	}
+
+	if (isPlayerInventory) 
+		Engine::GetInstance().sceneManager->currentScene->CheckCompletedMissions<CollectMission>(item->id, item->name);
 
 	if (item->canStack) {
 		int existingStack = FindItem(item->name);

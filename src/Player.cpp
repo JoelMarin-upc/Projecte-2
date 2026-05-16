@@ -42,13 +42,25 @@ bool Player::Start() {
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
 	if (combatTexturePath != "") combatTexture = Engine::GetInstance().textures->Load(combatTexturePath.c_str());
 
-	AddCollider(ColliderType::CIRCLE, texture, 0, 0, -110, 0, 1, 1);
+	//AddCollider(ColliderType::CIRCLE, texture, 0, 0, -110, 0, 1, 1);
+	AddCollider(ColliderType::SQUARE, texture, 0, 0, -110, -200, 1, 1);
 
 	colliders[0]->etype = EntityType::PLAYER;
 	pbody = colliders[0];
 	pbody->listener = this;
+	b2Body_SetFixedRotation(pbody->body, true);
 
 	party = new Party(std::static_pointer_cast<Player>(shared_from_this()));
+
+	const char* audioNode = isMale ? "human_male" : "human_female";
+
+	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "walk");
+	std::string attackFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "attack");
+	std::string dieFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "die");
+
+	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath.c_str());
+	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath.c_str());
+	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath.c_str());
 
 	return true;
 }
@@ -100,7 +112,7 @@ void Player::Move() {
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		velocity.y = -speed;
 		currentFacingDirection = UP;
-		if (!isJumping && walkTimer.ReadMSec() > walkMS) {
+		if (walkTimer.ReadMSec() > walkMS) {
 			Engine::GetInstance().audio->PlayFx(walkFxId);
 			walkTimer = Timer();
 		}
@@ -108,7 +120,7 @@ void Player::Move() {
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -speed;
 		currentFacingDirection = LEFT;
-		if (!isJumping && walkTimer.ReadMSec() > walkMS) {
+		if (walkTimer.ReadMSec() > walkMS) {
 			Engine::GetInstance().audio->PlayFx(walkFxId);
 			walkTimer = Timer();
 		}
@@ -116,7 +128,7 @@ void Player::Move() {
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 		velocity.y = speed;
 		currentFacingDirection = DOWN;
-		if (!isJumping && walkTimer.ReadMSec() > walkMS) {
+		if (walkTimer.ReadMSec() > walkMS) {
 			Engine::GetInstance().audio->PlayFx(walkFxId);
 			walkTimer = Timer();
 		}
@@ -124,7 +136,7 @@ void Player::Move() {
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = speed;
 		currentFacingDirection = RIGHT;
-		if (!isJumping && walkTimer.ReadMSec() > walkMS) {
+		if (walkTimer.ReadMSec() > walkMS) {
 			Engine::GetInstance().audio->PlayFx(walkFxId);
 			walkTimer = Timer();
 		}
@@ -144,15 +156,6 @@ void Player::Move() {
 }
 
 void Player::ApplyPhysics() {
-	// Preserve vertical speed while jumping
-	if (isJumping == true || isDashing == true) {
-		velocity.y = Engine::GetInstance().physics->GetYVelocity(colliders[0]);
-	}
-
-	if (isDashing == true) {
-		velocity.x = Engine::GetInstance().physics->GetXVelocity(colliders[0]);
-	}
-
 	// Apply velocity via helper
 	Engine::GetInstance().physics->SetLinearVelocity(colliders[0], velocity);
 }
@@ -202,7 +205,6 @@ void Player::Draw(float dt) {
 	colliders[0]->GetPosition(x, y);
 	position.setX((float)x);
 	position.setY((float)y);
-	SDL_Texture* tex = damaged ? textureDamaged : texture;
 
 	if (!animationsPath.empty()) {
 		anims.Update(dt);
@@ -210,15 +212,6 @@ void Player::Draw(float dt) {
 		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2, 1, &animFrame, isFacingRight);
 		DrawHealthBar(animFrame);
 	}
-
-	/*if (!isActive) return;
-	tex = itemChargeTexture0;
-	if (hasItem2) {
-		if (canThrow1 && canThrow2) tex = itemChargeTexture2;
-		else if (canThrow1 || canThrow2) tex = itemChargeTexture1;
-	}
-	else if (hasItem1 && canThrow1) tex = itemChargeTexture1;
-	Engine::GetInstance().render->DrawTexture(tex, x - 8, y -8);*/
 }
 
 void Player::LoadAnimations()

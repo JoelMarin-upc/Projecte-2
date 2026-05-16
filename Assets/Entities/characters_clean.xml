@@ -11,8 +11,8 @@
 			
 		</party>
 		<inventory gold="50">
-			<item id="" name="hoe" description="30 attack" texture="hoe.png" type="4" itemClass="weapon" interactionType="1" canStack="true" />
-			<item id="" name="hoe" description="30 attack" texture="hoe.png" type="4" itemClass="weapon" interactionType="1" canStack="true" />
+			<item id="" name="sword"/>
+			<item id="" name="sword"/>
 		</inventory>
 	</player>
 	<character id="CH-001" name="Gravekeeper" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
@@ -21,7 +21,7 @@
 	<character id="CH-002" name="Medic" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
 		<inventory />
 	</character>
-	<character id="CH-003" name="Thief" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-003" name="Thief" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false" isMale="false">
 		<inventory />
 	</character>
 	<character id="CH-004" name="Executioner" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
@@ -36,7 +36,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-006" name="follower" texture="SpriteSheet_Barbara.png" combatTexture="barbaraCombat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-006" name="Barbara" texture="SpriteSheet_Barbara.png" combatTexture="barbaraCombat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-000">
 		<stats>
 			<stat name="health" value="100" max="100" />
 			<stat name="speed" value="5"/>
@@ -44,7 +44,7 @@
 			<stat name="defense" value="10"/>
 		</stats>
 		<inventory>
-			<item id="" name="potion" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true" />
+			<item id="" name="potion"/>
 		</inventory>
 	</character>
 	<character id="CH-007" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
@@ -55,7 +55,7 @@
 			<stat name="defense" value="20"/>
 		</stats>
 		<inventory>
-			<item id="" name="potion" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true" />
+			<item id="" name="potion"/>
 		</inventory>
 	</character>
 	<character id="CH-008" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
@@ -75,8 +75,8 @@
 			<stat name="defense" value="5"/>
 		</stats>
 		<inventory>
-			<item id="" name="potion" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true" />
-			<item id="" name="potion" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true" />
+			<item id="" name="potion"/>
+			<item id="" name="potion"/>
 		</inventory>
 	</character>
 	<character id="CH-010" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
@@ -90,13 +90,13 @@
 	</character>
 	<character id="CH-011" name="Shopkeeper" texture="heart.png" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
 		<inventory>
-			<item id="" name="potion" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true" />
-			<item id="" name="potion" description="20 HP" texture="potion.png" type="4" itemClass="consumable" interactionType="1" canStack="true" />
-			<item id="" name="hoe" description="30 attack" texture="hoe.png" type="4" itemClass="weapon" interactionType="1" canStack="true" />
-			<item id="" name="helmet" description="20 defense" texture="helmet.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="0" />
-			<item id="" name="armor" description="30 defense" texture="armor.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="1" />
-			<item id="" name="leather boots" description="5 defense" texture="boots1.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="2" />
-			<item id="" name="steel boots" description="10 defense" texture="boots2.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="2" />
+			<item id="" name="potion"/>
+			<item id="" name="potion"/>
+			<item id="" name="sword"/>
+			<item id="" name="helmet"/>
+			<item id="" name="armor"/>
+			<item id="" name="leather boots"/>
+			<item id="" name="steel boots"/>
 		</inventory>
 	</character>
 </characters>

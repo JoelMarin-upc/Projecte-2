@@ -52,12 +52,17 @@ bool InteractableItem::Update(float dt) {
 	if (!active) {
 		return true;
 	}
+
+	int x, y;
+	colliders[0]->GetPosition(x, y);
+	b2Body_SetTransform(sensorCollider->body, { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, b2Body_GetRotation(sensorCollider->body));
+
 	if (isPlayerInRange && !isToggled) {
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
 			Interact();
 		}
 	}
-	Draw(dt);
+	//Draw(dt);
 	return true;
 }
 
@@ -136,14 +141,24 @@ void InteractableItem::Interact()
 
 void InteractableItem::Pickup()
 {
-	for (const auto& e : Engine::GetInstance().sceneManager->currentScene->entityManager->entities) {
+	auto& entities = Engine::GetInstance().sceneManager->currentScene->entityManager->entities;
+
+	std::shared_ptr<InteractableItem> self = nullptr;
+	for (const auto& e : entities) {
+		if (e.get() == this) {
+			self = std::dynamic_pointer_cast<InteractableItem>(e);
+			break;
+		}
+	}
+	if (!self) return;
+
+	for (const auto& e : entities) {
 		Player* player = dynamic_cast<Player*>(e.get());
 		if (player) {
-			if (player->inventory->AddItem(std::make_shared<InteractableItem>(*this))) {
+			if (player->inventory->AddItem(self)) {
 				isPicked = true;
 				isPlayerInRange = false;
 				active = false;
-
 				if (pbody) {
 					Engine::GetInstance().physics->DeletePhysBody(pbody);
 					pbody = nullptr;
@@ -156,13 +171,12 @@ void InteractableItem::Pickup()
 				LOG("'%s' picked up", name.c_str());
 				return;
 			}
-				
 			else {
 				LOG("Failed to pick up item");
 			}
 			return;
 		}
-	}	
+	}
 }
 
 void InteractableItem::Toggle()

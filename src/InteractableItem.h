@@ -5,11 +5,26 @@
 
 const float SELLING_PRICE_RATIO = 0.7f;
 
-enum class ItemInteractionType {
+enum ItemInteractionType {
 	DEFAULT,
 	PICKUP,
 	TOGGLE,
 	DIALOGUE
+};
+
+struct ItemDef {
+	std::string id = "";
+	std::string name = "";
+	std::string description = "";
+	std::string texturePath = "";
+	EntityType type = EntityType::UNKNOWN;
+	ItemInteractionType interactionType = ItemInteractionType::DEFAULT;
+	bool canStack = false;
+	std::string toggledTexturePath = "";
+	std::string itemClass = "";
+	int slot = 0;
+	int gold = 0;
+	Stats* stats = nullptr;
 };
 
 class InteractableItem : public Item {
@@ -21,7 +36,7 @@ public:
 
 	virtual bool Awake() override;
 
-	virtual bool Start() override;
+	virtual bool Start();
 
 	virtual bool Update(float dt) override;
 

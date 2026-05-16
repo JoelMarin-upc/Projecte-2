@@ -38,6 +38,14 @@ bool Enemy::Start()
 	map = Engine::GetInstance().sceneManager->GetCurrentScene()->GetMap();
 	pathfinding = std::make_shared<Pathfinding>();
 
+	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath("enemy", "walk");
+	std::string attackFxPath = Engine::GetInstance().audio->GetAudioPath("enemy", "attack");
+	std::string dieFxPath = Engine::GetInstance().audio->GetAudioPath("enemy", "die");
+
+	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath.c_str());
+	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath.c_str());
+	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath.c_str());
+
 	return true;
 }
 
@@ -217,6 +225,11 @@ void Enemy::Move(const Vector2D& target) {
 	else {
 		pathfinding->pathTiles.pop_front();
 		velocity = { 0, 0 };
+	}
+
+	if ((velocity.x != 0 || velocity.y != 0) && walkTimer.ReadMSec() > walkMS) {
+		Engine::GetInstance().audio->PlayFx(walkFxId);
+		walkTimer = Timer();
 	}
 }
 

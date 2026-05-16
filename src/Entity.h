@@ -12,6 +12,7 @@ enum class EntityType
 	NPC = 3,
 	INTERACTABLE_ITEM = 4,
 	ENEMY = 5,
+	PUSH_BOX = 6,
 	UNKNOWN
 };
 
@@ -99,5 +100,7 @@ public:
 	SDL_Texture* texture;
 	std::string texturePath;
 	std::string combatTexturePath;
+
+	bool isMale = false;
 	
 };

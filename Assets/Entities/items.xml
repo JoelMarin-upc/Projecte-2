@@ -1,4 +1,13 @@
 <items>
-	<item id="IT-001" name="statue" texture="transparent.png" type="4" itemClass="item" interactionType="3" canStack="false" />
-	<item id="LEVER-001" name="Lever" texture="dungeonLeverClosed.png" type="4" itemClass="item" interactionType="2" canStack="false" toggledTexturePath="dungeonLeverOpened.png"/>
+	<item id="IT-001" name="statue"/>
+	<item id="LEVER-001" name="Lever"/>
+	<item id="EXIT-001" name="Exit"/>
+	<item id="GATE-001" name="Gate"/>
+	<item id="PLATE-001" name="Plate"/>
+	<item id="BOX-001" name="Box"/>
+	<item id="BUTTON-001" name="Button"/>
+	<item id="SQBTN-001" name="SButton1"/>
+	<item id="SQBTN-002" name="SButton2"/>
+	<item id="SQBTN-003" name="SButton3"/>
+	<item id="REWARD-001" name="Iron Sword"/>
 </items>

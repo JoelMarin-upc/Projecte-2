@@ -14,6 +14,16 @@
 #include "MenuManager.h"
 #include "Combat.h"
 #include "EnemyParty.h"
+#include "DungeonExit.h"
+#include "DungeonGate.h"
+#include "PressurePlate.h"
+#include "PushBox.h"
+#include "ResetButton.h"
+#include "SequencePuzzle.h"
+#include "SequenceButton.h"
+#include <unordered_map>
+#include <type_traits>
+#include <typeinfo>
 
 struct SDL_Texture;
 
@@ -69,19 +79,29 @@ public:
 	void SaveSessionState();
 	void SaveDialogState();
 	void LoadDialogState();
+	void SaveMissionState();
+	void LoadMissionState();
 	void SaveCharacterStats(pugi::xml_node charNode, std::shared_ptr<Character> character);
+	void SaveSettings();
+	void LoadSettings();
 	void LoadMap(std::string mapPath, std::string mapName);
 	void LoadScene(std::string spawnId = "default");
 	Stats* LoadStats(pugi::xml_node characterNode);
 	Inventory* LoadInventory(pugi::xml_node characterNode);
-	void LoadItemDefinition(std::shared_ptr<InteractableItem> item);
+	void LoadItemDefinitions();
+	ItemDef* GetItemDefinition(std::string id, std::string name);
 	void EndScene();
 	void EndGame();
 	void CheckTimers();
 	void ToggleInventory();
 	void ToggleInventoryForCombat();
+	void ToggleJournal();
 	void ToggleShop(NPC* shopOwner);
 	void UpdateInventory(NPC* shopOwner = nullptr) const;
+	void CompleteMission(std::string missionId);
+
+	void OnLeverToggled();
+	void OnPressurePlatePressed();
 
 	void CheckTransitions();
 
@@ -105,6 +125,31 @@ public:
 
 	bool GetGameStarted() {
 		return gameStarted;
+	}
+
+	template<typename T>
+	bool HandleMissionItem(T* mission)
+	{
+		return true;
+	}
+
+	template<>
+	bool HandleMissionItem<BringMission>(BringMission* mission)
+	{
+		if (player->inventory->HasItem(mission->itemName)) return player->inventory->RemoveItem(mission->itemName);
+		else return false;
+	}
+
+	template<typename T>
+	inline void CheckCompletedMissions(std::string targetId, std::string targetName) {
+		std::vector<T*> missions = missionManager->GetMissions<T>(true);
+		for (T* mission : missions) {
+			if ((targetId != "" && mission->targetId == targetId) || 
+				(targetName != "" && mission->targetName == targetName)) {
+				if (!HandleMissionItem<T>(mission)) continue;
+				CompleteMission(mission->id);
+			}
+		}
 	}
 
 	bool hasEnded;
@@ -152,11 +197,18 @@ private:
 	SDL_Texture* logo;
 	SDL_Rect b_logo;
 	std::shared_ptr<UIImage> studioLogo;
-	int hoverFxId;
-	int clickFxId;
 	int logoFxId;
 	int elevatorFxId;
+	int doorFxId;
 
+	int dialogFxId;
+	int journalFxId;
+	int openInventoryFxId;
+	int useFxId;
+	int equipWeaponFxId;
+	int equipGearFxId;
+	int dropFxId;
+	int buySellFxId;
 
 	float introAnimDurationMs = 0.0f;
 	float introAnimElapsedMs = 0.0f;
@@ -189,4 +241,12 @@ private:
 	bool isUnequipping = false;
 
 	NPC* shopOwner = nullptr;
+	DungeonExit* dungeonExit = nullptr;
+	DungeonGate* dungeonGate = nullptr;
+	PressurePlate* pressurePlate = nullptr;
+	PushBox* pushBox = nullptr;
+	ResetButton* resetButton = nullptr;
+	SequencePuzzle* sequencePuzzle = nullptr;
+
+	std::unordered_map<std::string, ItemDef*> itemDefs;
 };

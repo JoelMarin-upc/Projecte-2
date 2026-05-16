@@ -8,6 +8,14 @@
 #include "Item.h"
 #include "NPC.h"
 #include "InteractableItem.h"
+#include "DungeonLever.h"
+#include "DungeonExit.h"
+#include "DungeonGate.h"
+#include "PressurePlate.h"
+#include "PushBox.h"
+#include "ResetButton.h"
+#include "SequenceButton.h"
+#include "SequencePuzzle.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -104,9 +112,18 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 	switch (type)
 	{
 	case EntityType::INTERACTABLE_ITEM:
-		if (itemClass == "weapon") entity = std::make_shared<Weapon>(id, name, description, texturePath, canStack);
+		if (itemClass == "weapon") entity = std::make_shared<Weapon>(id, name, description, texturePath, canStack);	
 		else if (itemClass == "gear") entity = std::make_shared<Gear>(id, name, description, texturePath, slot, canStack);
 		else if (itemClass == "consumable") entity = std::make_shared<Consumable>(id, name, description, texturePath, canStack);
+		else if (itemClass == "lever") entity = std::make_shared<DungeonLever>(id, name, description, texturePath, toggledTexturePath);
+		else if (itemClass == "exit") entity = std::make_shared<DungeonExit>(id, name, description, texturePath);
+		else if (itemClass == "gate") entity = std::make_shared<DungeonGate>(id, name, description, texturePath);
+		else if (itemClass == "plate") entity = std::make_shared<PressurePlate>(id, name, description, texturePath);
+		else if (itemClass == "box") entity = std::make_shared<PushBox>(id, name, description, texturePath);
+		else if (itemClass == "button") entity = std::make_shared<ResetButton>(id, name, description, texturePath, toggledTexturePath);
+		else if (itemClass == "seqbutton1") entity = std::make_shared<SequenceButton>(id, name, description, texturePath, toggledTexturePath, 0);
+		else if (itemClass == "seqbutton2") entity = std::make_shared<SequenceButton>(id, name, description, texturePath, toggledTexturePath, 1);
+		else if (itemClass == "seqbutton3") entity = std::make_shared<SequenceButton>(id, name, description, texturePath, toggledTexturePath, 2);
 		else entity = std::make_shared<InteractableItem>(id, name, description, texturePath, interactionType, canStack, toggledTexturePath);
 		break;
 	default:
@@ -122,7 +139,7 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 	return entity;
 }
 
-std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, Vector2D position, EntityType type, NPCInteractionType npcInteractionType)
+std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, Vector2D position, EntityType type, NPCInteractionType npcInteractionType, std::string recuitMissionId, bool isMale)
 {
 	std::shared_ptr<Entity> entity = std::make_shared<Entity>();
 
@@ -133,7 +150,7 @@ std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::stri
 		entity = std::make_shared<Player>(id, name, texturePath, combatTexturePath);
 		break;
 	case EntityType::NPC:
-		entity = std::make_shared<NPC>(id, name, texturePath, combatTexturePath, npcInteractionType);
+		entity = std::make_shared<NPC>(id, name, texturePath, combatTexturePath, npcInteractionType, recuitMissionId);
 		break;
 	case EntityType::ENEMY:
 		entity = std::make_shared<Enemy>(id, name, texturePath, combatTexturePath);
@@ -145,7 +162,7 @@ std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::stri
 	entities.push_back(entity);
 
 	entity->position = position;
-
+	entity->isMale = isMale;
 	entity->Start();
 
 	return entity;
