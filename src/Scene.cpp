@@ -148,7 +148,7 @@ bool Scene::Start(std::string spawnId)
 			Engine::GetInstance().audio->PlayFx(doorFxId);
 			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav", 5000.0f);
 		}
-		else if (id == "SC-003")
+		else if (id == "SC-003" || id == "SC-004")
 		{
 			Engine::GetInstance().audio->PlayFx(elevatorFxId);
 			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
@@ -709,6 +709,7 @@ void Scene::SaveSettings()
 	root.child("window").child("fullscreen").attribute("value").set_value(Engine::GetInstance().window->fullscreen);
 	root.child("audio").child("music_volume").attribute("value").set_value(Engine::GetInstance().audio->GetTargetMusicVolume());
 	root.child("audio").child("fx_volume").attribute("value").set_value(Engine::GetInstance().audio->GetFxVolume());
+	root.child("level").child("dungeon_level").attribute("value").set_value(Engine::GetInstance().sceneManager->dungeonLevel);
 
 	doc.save_file("config.xml");
 }
@@ -730,6 +731,9 @@ void Scene::LoadSettings()
 
 	float fxVol = root.child("audio").child("fx_volume").attribute("value").as_float(1.0f);
 	Engine::GetInstance().audio->SetFxVolume(fxVol);
+
+	int level = root.child("level").child("dungeon_level").attribute("value").as_int(1);
+	Engine::GetInstance().sceneManager->dungeonLevel = level;
 }
 
 void Scene::LoadMap(std::string mapPath, std::string mapName)
@@ -1243,7 +1247,16 @@ void Scene::CheckTransitions()
 		}
 		if (playerPos.getX() >= t.position.getX() && playerPos.getX() <= t.position.getX() + t.width && playerPos.getY() >= t.position.getY() && playerPos.getY() <= t.position.getY() + t.height) {
 			SaveSessionState();
-			Engine::GetInstance().sceneManager->SetCurrentScene(t.targetSceneId, t.targetSpawnId);
+			if (id == "SC-003" && t.targetSpawnId == "refuge_from_dungeon") {
+				auto sm = Engine::GetInstance().sceneManager;
+				if (sm->dungeonLevel < 2) sm->dungeonLevel = 2;
+			}
+			if (t.targetSceneId == "SC-003") {
+				Engine::GetInstance().sceneManager->EnterDungeon(t.targetSpawnId);
+			}
+			else {
+				Engine::GetInstance().sceneManager->SetCurrentScene(t.targetSceneId, t.targetSpawnId);
+			}
 			return;
 		}
 	}
