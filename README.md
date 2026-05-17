@@ -73,7 +73,6 @@ In this release, the following features have been implemented:
 ---
 ## Known Issues
 
-- Character textures get drawn on top of the inventory in combat scene
 - If the party members can collide with the player, they will push the player out of scenes
 - Animations go faster when there's no UI
 
