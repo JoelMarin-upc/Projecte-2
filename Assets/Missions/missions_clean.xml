@@ -13,4 +13,7 @@
 	</mission>
 	<mission id="MI-002" type="4" targetId="CH-002" targetName="Medic" itemName="potion" rewardGold="30" rewardItemName="armor" active="false" completed="false" />
 	<mission id="MI-003" type="2" targetId="" targetName="enemy" rewardGold="100" rewardItemName="" active="false" completed="false" />
+	<mission id="MI-004" type="0" targetId="CH-012" targetName="Nia" rewardGold="500" rewardItemName="" active="false" completed="false">
+		<unlocks />
+	</mission>
 </missions>

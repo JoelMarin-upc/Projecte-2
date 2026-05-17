@@ -1453,6 +1453,8 @@ void Scene::EndDialog()
 			SaveGame();
 		}
 		if (activeDialogId == "player") {
+			Mission* niaMission = missionManager->ActivateMission("MI-004");
+			if (niaMission) Engine::GetInstance().menuManager->AddMissionPopup(niaMission);
 			Mission* mission = missionManager->ActivateMission("MI-000");
 			if (mission) Engine::GetInstance().menuManager->AddMissionPopup(mission);
 		}
