@@ -364,6 +364,13 @@ bool Physics::IsPendingToDelete(Collider* physBody) {
     return pendingToDelete;
 }
 
+bool Physics::SetBodyEnabled(Collider* physBody, bool enabled)
+{
+    if (enabled) b2Body_Enable(physBody->body);
+    else b2Body_Disable(physBody->body);
+    return true;
+}
+
 // --- Velocity helpers
 b2Vec2 Physics::GetLinearVelocity(const Collider* p) const
 {
