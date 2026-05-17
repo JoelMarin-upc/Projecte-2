@@ -874,10 +874,10 @@ void Combat::DrawHealthBars() const
 	if (npc1 && !npc1->isDead)   npc1->DrawCombatHealthBar(npc1->position.getX(), npc1->position.getY() + npc1->combatTexture->h / 2, npc1->combatTexture->w);
 	if (npc2 && !npc2->isDead)   npc2->DrawCombatHealthBar(npc2->position.getX(), npc2->position.getY() + npc2->combatTexture->h / 2, npc2->combatTexture->w);
 	if (npc3 && !npc3->isDead)   npc3->DrawCombatHealthBar(npc3->position.getX(), npc3->position.getY() + npc3->combatTexture->h / 2, npc3->combatTexture->w);
-	if (enemy1 && !enemy1->isDead) enemy1->DrawCombatHealthBar(enemy1->position.getX(), enemy1->position.getY() + enemy1->combatTexture->h / 2, enemy1->combatTexture->w);
-	if (enemy2 && !enemy2->isDead) enemy2->DrawCombatHealthBar(enemy2->position.getX(), enemy2->position.getY() + enemy2->combatTexture->h / 2, enemy2->combatTexture->w);
-	if (enemy3 && !enemy3->isDead) enemy3->DrawCombatHealthBar(enemy3->position.getX(), enemy3->position.getY() + enemy3->combatTexture->h / 2, enemy3->combatTexture->w);
-	if (enemy4 && !enemy4->isDead) enemy4->DrawCombatHealthBar(enemy4->position.getX(), enemy4->position.getY() + enemy4->combatTexture->h / 2, enemy4->combatTexture->w);
+	if (enemy1 && !enemy1->isDead) enemy1->DrawCombatHealthBar(enemy1->position.getX(), enemy1->position.getY() + enemy1->combatTexture->h / 2, enemy1->combatTexture->w * 0.75f);
+	if (enemy2 && !enemy2->isDead) enemy2->DrawCombatHealthBar(enemy2->position.getX(), enemy2->position.getY() + enemy2->combatTexture->h / 2, enemy2->combatTexture->w * 0.75f);
+	if (enemy3 && !enemy3->isDead) enemy3->DrawCombatHealthBar(enemy3->position.getX(), enemy3->position.getY() + enemy3->combatTexture->h / 2, enemy3->combatTexture->w * 0.75f);
+	if (enemy4 && !enemy4->isDead) enemy4->DrawCombatHealthBar(enemy4->position.getX(), enemy4->position.getY() + enemy4->combatTexture->h / 2, enemy4->combatTexture->w * 0.75f);
 }
 
 void Combat::DisableCombatElements()
