@@ -460,12 +460,14 @@ void Scene::TogglePause()
 		Engine::GetInstance().menuManager->ShowPauseMenu();
 		showingInventory = false;
 		showingShop = false;
+		dialogManager->SetEnabled(false);
 	} 
 	else
 	{
 		Engine::GetInstance().audio->pauseMultiplier = 1.0f;
 		Engine::GetInstance().audio->UpdateMusicVolume();
 		Engine::GetInstance().menuManager->HideMenu();
+		dialogManager->SetEnabled(true);
 	}
 }
 
@@ -1222,7 +1224,8 @@ void Scene::ToggleInventory()
 		entityManager->paused = showingInventory;
 		if (showingInventory)
 		{
-			Engine::GetInstance().menuManager->ShowInventory(player->inventory, player);
+			Engine::GetInstance().menuManager->ShowInventory(player->inventory, player, player->party);
+			currentInventoryIndex = 0;
 			Engine::GetInstance().audio->PlayFx(openInventoryFxId);
 		}
 		else Engine::GetInstance().menuManager->HideMenu();
@@ -1230,11 +1233,11 @@ void Scene::ToggleInventory()
 	}
 }
 
-void Scene::ToggleInventoryForCombat()
+void Scene::ToggleInventoryForCombat(bool show, std::shared_ptr<Character> character)
 {
-	showingInventoryForCombat = !showingInventoryForCombat;
-	if (showingInventoryForCombat) {
-		Engine::GetInstance().menuManager->ShowCombatInventory(player->inventory);
+	showingInventoryForCombat = show;
+	if (showingInventoryForCombat && character) {
+		Engine::GetInstance().menuManager->ShowCombatInventory(character->inventory);
 		Engine::GetInstance().audio->PlayFx(openInventoryFxId);
 	}
 	else Engine::GetInstance().menuManager->HideMenu();
@@ -1279,60 +1282,80 @@ static std::string ExtractFilename(const std::string& full_path) {
 void Scene::UpdateInventory(NPC* shopOwner) const
 {
 	pugi::xml_document doc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
-	pugi::xml_node cNode;
-	std::vector< std::shared_ptr<InteractableItem>> items;
-	Inventory* inventory;
-	int gold = 0;
+	std::vector<InventoryData> inventoryDatas = std::vector<InventoryData>();
 	if (shopOwner) {
+		InventoryData inventoryData = InventoryData();
 		for (pugi::xml_node c = doc.child("characters").child("character"); c != NULL; c = c.next_sibling("character")) {
 			if (c.attribute("id").as_string() == shopOwner->id)
 			{
-				cNode = c;
+				inventoryData.cNode = c;
 				break;
 			}
 		}
-		
-		items = shopOwner->inventory->items;
-		inventory = shopOwner->inventory;
+		inventoryData.gold = -1;
+		inventoryData.items = shopOwner->inventory->items;
+		inventoryData.inventory = shopOwner->inventory;
+		inventoryDatas.push_back(inventoryData);
 	}
 	else {
-		cNode = doc.child("characters").child("player");
-		items = player->inventory->items;
-		gold = player->inventory->gold;
-		inventory = player->inventory;
-	}
-	cNode.remove_child("inventory");
-	pugi::xml_node invNode = cNode.append_child("inventory");
-	invNode.append_attribute("gold").set_value(gold);
-	for (std::shared_ptr<InteractableItem> item : items) {
-		if (!item) continue;
-		int count = item->canStack ? item->count : 1;
-		for (int i = 0; i < count; i++) {
-			pugi::xml_node iNode = invNode.append_child("item");
-			iNode.append_attribute("id").set_value(item->id.c_str());
-			iNode.append_attribute("name").set_value(item->name.c_str());
-			/*iNode.append_attribute("description").set_value(item->description.c_str());
-			iNode.append_attribute("texture").set_value(ExtractFilename(item->texturePath).c_str());
-			iNode.append_attribute("type").set_value((int)item->type);
-			const char* itemClass = "item";
-			int slot = -1;
-			if (std::dynamic_pointer_cast<Weapon>(item)) itemClass = "weapon";
-			else if (auto g = std::dynamic_pointer_cast<Gear>(item))
-			{
-				itemClass = "gear";
-				slot = (int)g->gearSlot;
+		for (std::shared_ptr<Character> character : player->party->allMembers) {
+			InventoryData inventoryData = InventoryData();
+
+			if (character->id == player->id) {
+				inventoryData.gold = character->inventory->gold;
+				inventoryData.cNode = doc.child("characters").child("player");
 			}
-			else if (std::dynamic_pointer_cast<Consumable>(item)) itemClass = "consumable";
-			iNode.append_attribute("itemClass").set_value(itemClass);
-			iNode.append_attribute("interactionType").set_value((int)item->itemInteractionType);
-			iNode.append_attribute("canStack").set_value(item->canStack);
-			if (slot != -1) iNode.append_attribute("slot").set_value(slot);*/
+			else {
+				inventoryData.gold = -1;
+				for (pugi::xml_node c = doc.child("characters").child("character"); c != NULL; c = c.next_sibling("character")) {
+					if (c.attribute("id").as_string() == character->id)
+					{
+						inventoryData.cNode = c;
+						break;
+					}
+				}
+			}
+
+			inventoryData.items = character->inventory->items;
+			inventoryData.inventory = character->inventory;
+			inventoryDatas.push_back(inventoryData);
 		}
 	}
-	if (inventory->equippedWeapon) invNode.append_attribute("equippedWeapon").set_value(inventory->equippedWeapon->name.c_str());
-	if (inventory->equippedHelmet) invNode.append_attribute("equippedHelmet").set_value(inventory->equippedHelmet->name.c_str());
-	if (inventory->equippedBody) invNode.append_attribute("equippedBody").set_value(inventory->equippedBody->name.c_str());
-	if (inventory->equippedBoots) invNode.append_attribute("equippedBoots").set_value(inventory->equippedBoots->name.c_str());
+
+	for (InventoryData inv : inventoryDatas) {
+		inv.cNode.remove_child("inventory");
+		pugi::xml_node invNode = inv.cNode.append_child("inventory");
+		invNode.append_attribute("gold").set_value(inv.gold);
+		for (std::shared_ptr<InteractableItem> item : inv.items) {
+			if (!item) continue;
+			int count = item->canStack ? item->count : 1;
+			for (int i = 0; i < count; i++) {
+				pugi::xml_node iNode = invNode.append_child("item");
+				iNode.append_attribute("id").set_value(item->id.c_str());
+				iNode.append_attribute("name").set_value(item->name.c_str());
+				/*iNode.append_attribute("description").set_value(item->description.c_str());
+				iNode.append_attribute("texture").set_value(ExtractFilename(item->texturePath).c_str());
+				iNode.append_attribute("type").set_value((int)item->type);
+				const char* itemClass = "item";
+				int slot = -1;
+				if (std::dynamic_pointer_cast<Weapon>(item)) itemClass = "weapon";
+				else if (auto g = std::dynamic_pointer_cast<Gear>(item))
+				{
+					itemClass = "gear";
+					slot = (int)g->gearSlot;
+				}
+				else if (std::dynamic_pointer_cast<Consumable>(item)) itemClass = "consumable";
+				iNode.append_attribute("itemClass").set_value(itemClass);
+				iNode.append_attribute("interactionType").set_value((int)item->itemInteractionType);
+				iNode.append_attribute("canStack").set_value(item->canStack);
+				if (slot != -1) iNode.append_attribute("slot").set_value(slot);*/
+			}
+		}
+		if (inv.inventory->equippedWeapon) invNode.append_attribute("equippedWeapon").set_value(inv.inventory->equippedWeapon->name.c_str());
+		if (inv.inventory->equippedHelmet) invNode.append_attribute("equippedHelmet").set_value(inv.inventory->equippedHelmet->name.c_str());
+		if (inv.inventory->equippedBody) invNode.append_attribute("equippedBody").set_value(inv.inventory->equippedBody->name.c_str());
+		if (inv.inventory->equippedBoots) invNode.append_attribute("equippedBoots").set_value(inv.inventory->equippedBoots->name.c_str());
+	}
 
 	doc.save_file("Assets/Entities/characters.xml");
 }
@@ -1606,6 +1629,20 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	std::shared_ptr<Gear> g;
 	std::shared_ptr<Weapon> w;
 	std::shared_ptr<Consumable> c;
+	if (Engine::GetInstance().menuManager->currentMenu == INVENTORY && uiElement->id >= Engine::GetInstance().menuManager->baseGiveToId) {
+		if (!selectedItem || selectedItemIsFromShop) return true;
+		int targetMemberIndex = std::stoi(uiElement->info);
+		if (targetMemberIndex < 0 || targetMemberIndex >= player->party->allMembers.size()) return true;
+		std::shared_ptr<Character> targetMember = player->party->allMembers[targetMemberIndex];
+		std::shared_ptr<Character> originMember = GetSelectedCharacter();
+		amount = Engine::GetInstance().menuManager->amount->GetValue();
+		copy = CopyItem(selectedItem);
+		copy->count = amount;
+		targetMember->inventory->AddItem(copy);
+		for (int i = 0; i < amount; i++) originMember->inventory->RemoveItem(selectedItem->name);
+		Engine::GetInstance().menuManager->RedrawInventory();
+		return true;
+	}
 	if ((Engine::GetInstance().menuManager->currentMenu == SHOP || 
 		 Engine::GetInstance().menuManager->currentMenu == INVENTORY ||
 		 Engine::GetInstance().menuManager->currentMenu == COMBAT_INVENTORY) &&
@@ -1625,7 +1662,8 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		isUnequipping = false;
 		if (w = std::dynamic_pointer_cast<Weapon>(selectedItem)) {
 			text = "Equip";
-			if (player->inventory->equippedWeapon && player->inventory->equippedWeapon->name == w->name)
+			if (GetSelectedCharacter()->inventory->equippedWeapon && 
+				GetSelectedCharacter()->inventory->equippedWeapon->name == w->name)
 			{
 				text = "Unequip";
 				isUnequipping = true;
@@ -1633,7 +1671,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		}
 		else if (g = std::dynamic_pointer_cast<Gear>(selectedItem)) {
 			text = "Equip";
-			std::shared_ptr<Gear> equipped = player->inventory->GetGearSlot(g->gearSlot);
+			std::shared_ptr<Gear> equipped = GetSelectedCharacter()->inventory->GetGearSlot(g->gearSlot);
 			if (equipped && equipped->name == g->name)
 			{
 				text = "Unequip";
@@ -1648,6 +1686,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	{
 	case START_GAME:
 		CopyCleanGameData();
+		Engine::GetInstance().sceneManager->triggerFirstMonologue = true;
 		Engine::GetInstance().menuManager->HideMenu();
 		Engine::GetInstance().sceneManager->SetCurrentScene("game title");
 		break;
@@ -1728,20 +1767,20 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	case USE:
 		if (!selectedItem || selectedItemIsFromShop) return true;
 		if (w = std::dynamic_pointer_cast<Weapon>(selectedItem)) {
-			player->inventory->UnequipWeapon();
-			if (!isUnequipping) player->inventory->EquipWeapon(w->name);
+			GetSelectedCharacter()->inventory->UnequipWeapon();
+			if (!isUnequipping) GetSelectedCharacter()->inventory->EquipWeapon(w->name);
 			Engine::GetInstance().audio->PlayFx(equipWeaponFxId);
 		}
 		else if (g = std::dynamic_pointer_cast<Gear>(selectedItem)) {
-			player->inventory->UnequipGear(g->gearSlot);
-			if (!isUnequipping) player->inventory->EquipGear(g->name);
+			GetSelectedCharacter()->inventory->UnequipGear(g->gearSlot);
+			if (!isUnequipping) GetSelectedCharacter()->inventory->EquipGear(g->name);
 			Engine::GetInstance().audio->PlayFx(equipGearFxId);
 		}
 		else if (c = std::dynamic_pointer_cast<Consumable>(selectedItem)) {
 			amount = Engine::GetInstance().menuManager->amount->GetValue();
 			for (int i = 0; i < amount; i++)
 			{
-				player->TakeConsumable(player->UseConsumable(c->name));
+				GetSelectedCharacter()->TakeConsumable(GetSelectedCharacter()->UseConsumable(c->name));
 			}
 			Engine::GetInstance().audio->PlayFx(useFxId);
 		}
@@ -1754,7 +1793,7 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	case DROP:
 		if (!selectedItem || selectedItemIsFromShop) return true;
 		amount = Engine::GetInstance().menuManager->amount->GetValue();
-		for (int i = 0; i < amount; i++) player->inventory->RemoveItem(selectedItem->name);
+		for (int i = 0; i < amount; i++) GetSelectedCharacter()->inventory->RemoveItem(selectedItem->name);
 		Engine::GetInstance().audio->PlayFx(dropFxId);
 		Engine::GetInstance().menuManager->RedrawInventory();
 		break;
@@ -1780,6 +1819,24 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		player->inventory->AddGold((int)floor(selectedItem->price * SELLING_PRICE_RATIO) * amount);
 		Engine::GetInstance().audio->PlayFx(buySellFxId);
 		Engine::GetInstance().menuManager->RedrawInventory();
+		break;
+	case PREV_INVENTORY:
+		currentInventoryIndex--;
+		if (currentInventoryIndex < 0) currentInventoryIndex = player->party->allMembers.size() - 1;
+		Engine::GetInstance().menuManager->ShowInventory(GetSelectedCharacter()->inventory, GetSelectedCharacter(), player->party);
+		Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+		selectedItem = nullptr;
+		selectedItemIsFromShop = false;
+		Engine::GetInstance().menuManager->selectedItem->SetItem(nullptr);
+		break;
+	case NEXT_INVENTORY:
+		currentInventoryIndex++;
+		if (currentInventoryIndex >= player->party->allMembers.size()) currentInventoryIndex = 0;
+		Engine::GetInstance().menuManager->ShowInventory(GetSelectedCharacter()->inventory, GetSelectedCharacter(), player->party);
+		Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+		selectedItem = nullptr;
+		selectedItemIsFromShop = false;
+		Engine::GetInstance().menuManager->selectedItem->SetItem(nullptr);
 		break;
 	case EXIT_SHOP:
 		if (showingShop) ToggleShop(nullptr);

@@ -1,17 +1,21 @@
 #include "Party.h"
 #include "NPC.h"
+#include "Player.h"
 #include "XMLHandler.h"
 
 Party::Party(std::shared_ptr<Player> leader)
 {
 	player = leader;
 	members = std::vector<std::shared_ptr<NPC>>();
+	allMembers = std::vector<std::shared_ptr<Character>>();
+	allMembers.push_back(leader);
 }
 
 void Party::AddMember(std::shared_ptr<NPC> member, bool write)
 {
 	if (!CanAddMember()) return;
 	members.push_back(member);
+	allMembers.push_back(member);
 	member->party = this;
 
 	if (write)
@@ -32,6 +36,13 @@ void Party::RemoveMember(std::string id, bool write)
 				return npc->id == id;
 			}),
 		members.end()
+	);
+	allMembers.erase(
+		std::remove_if(allMembers.begin(), allMembers.end(),
+			[id](const std::shared_ptr<Character> character) {
+				return character->id == id;
+			}),
+		allMembers.end()
 	);
 	if (write)
 	{

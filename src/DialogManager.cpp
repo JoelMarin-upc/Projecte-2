@@ -291,3 +291,13 @@ void DialogManager::ResizeDialogBox()
 	answer3->bounds = { sw / 2 + 60, sh - 270, 500, 40 };
 	answer4->bounds = { sw / 2 + 60, sh - 290, 500, 40 };
 }
+
+void DialogManager::SetEnabled(bool enabled)
+{
+	speakerName->state = enabled ? UIElementState::NORMAL : UIElementState::DISABLED;
+	dialogText->state = enabled ? UIElementState::NORMAL : UIElementState::DISABLED;
+	answer1->state = enabled ? UIElementState::NORMAL : UIElementState::DISABLED;
+	answer2->state = enabled ? UIElementState::NORMAL : UIElementState::DISABLED;
+	answer3->state = enabled ? UIElementState::NORMAL : UIElementState::DISABLED;
+	answer4->state = enabled ? UIElementState::NORMAL : UIElementState::DISABLED;
+}

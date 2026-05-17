@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
 <dialogs>
-	<tree id="DT-001" characterId="player" characterName="Garnik" order="1" done="true">
+	<tree id="DT-001" characterId="player" characterName="Garnik" order="1" done="false">
 		<node id="DN-001" first="true">
 			I always end up wandering to this place…      
 			<answer leadsToNodeId="DN-002">
@@ -64,7 +63,7 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-003" characterId="CH-001" characterName="Gravekeeper" order="3" done="true">
+	<tree id="DT-003" characterId="CH-001" characterName="Gravekeeper" order="3" done="false">
 		<node id="DN-001" first="true">
 			You have been pacing around|the cemetery for quite a while.
 			<answer leadsToNodeId="DN-002">
@@ -427,7 +426,7 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-099" characterId="CH-006" missionId="MI-000" characterName="follower" order="2" done="true">
+	<tree id="DT-099" characterId="CH-006" missionId="MI-000" characterName="follower" order="2" done="false">
 		<node id="DN-001" first="true">
 			Hello, i'll help you!
 			<answer leadsToNodeId="">
@@ -437,7 +436,7 @@
 	</tree>
 	<tree id="DT-098" characterId="Lever" characterName="" order="1" done="false">
 		<node id="DN-001" first="true">
-			The lever has been pulled
+			The lever has been pulled, you hear a gate opening.
 			<answer leadsToNodeId="">
 				Continue
 			</answer>
@@ -446,6 +445,14 @@
 	<tree id="DT-097" characterId="CH-011" characterName="Shopkeeper" order="1" done="false" isRepeatable="true">
 		<node id="DN-001" first="true">
 			Hello, welcome to my shop.
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-096" characterId="exit_locked" characterName="Garnik" order="1" done="false" isRepeatable="true">
+		<node id="DN-001" first="true">
+			L-locked? There has to be a way to open it...
 			<answer leadsToNodeId="">
 				Continue
 			</answer>

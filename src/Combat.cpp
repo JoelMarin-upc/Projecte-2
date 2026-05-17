@@ -72,6 +72,7 @@ bool Combat::Start() {
 	SDL_Rect b_action3 = { sw / 2 - 145, sh - 100, 150, 40 };
 	SDL_Rect b_action4 = { sw / 2 + 45, sh - 100, 150, 40 };
 	SDL_Rect b_endTurn = { sw - 165, sh - 100, 150, 40 };
+	SDL_Rect b_cancelAction = { sw - 165, sh - 100, 150, 40 };
 	SDL_Rect b_log1 = { sw / 2 - 100, 20, 300, 20 };
 	SDL_Rect b_log2 = { sw / 2 - 100, 60, 300, 20 };
 	SDL_Rect b_log3 = { sw / 2 - 100, 100, 300, 20 };
@@ -96,6 +97,8 @@ bool Combat::Start() {
 	log4 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG4, b_log4, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
 
 	hint = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::HINT, b_hint, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
+
+	cancelAction = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::CANCEL_ACTION, b_cancelAction, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Cancel action")));
 
 	action1->active = false;
 	action2->active = false;
@@ -265,6 +268,7 @@ bool Combat::Start() {
 	endTurn->active = isPlayerTurn;
 	enemyTurnTimerActive = false;
 	if (isPlayerTurn) hint->text = "Select a character";
+	cancelAction->active = false;
 
 	return true;
 }
@@ -472,13 +476,14 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		turnAction->action = Action::TAKE_CONSUMABLE;
 		ToggleActions(false);
 		hint->text = "Select a consumable";
-		Engine::GetInstance().sceneManager->currentScene->ToggleInventoryForCombat();
+		Engine::GetInstance().sceneManager->currentScene->ToggleInventoryForCombat(true, turnAction->selected);
 		break;
 	case ACTION4:
 		if (!turnAction || !turnAction->selected) return true;
 		turnAction->action = Action::FLEE;
 		AddTurnAction();
-		ToggleActions(false);
+		ToggleActions(false, false);
+		hint->text = "Select a character";
 		break;
 	case STANCE1:
 		if (!turnAction || !turnAction->selected) return true;
@@ -504,13 +509,20 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		AddTurnAction();
 		ToggleStances(false);
 		break;
+	case CANCEL_ACTION:
+		if (!turnAction || !turnAction->selected || turnAction->action == NO_ACTION) return true;
+		if (turnAction->action == TAKE_CONSUMABLE) Engine::GetInstance().sceneManager->currentScene->ToggleInventoryForCombat(false);
+		if (turnAction->action == TAKE_STANCE) ToggleStances(false);
+		turnAction->action = Action::NO_ACTION;
+		ToggleActions(true);
+		break;
 	default:
 		break;
 	}
 	return true;
 }
 
-void Combat::ToggleActions(bool show)
+void Combat::ToggleActions(bool show, bool toggleCancel)
 {
 	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 	action1->active = show;
@@ -518,8 +530,22 @@ void Combat::ToggleActions(bool show)
 		&& turnAction->selected->HasAnyStance();
 	action3->active = show;
 	action4->active = show;
-	if (show) hint->text = "Select an action";
-	else hint->text = "Select a target";
+	if (show)
+	{
+		if (toggleCancel) {
+			endTurn->active = true;
+			cancelAction->active = false;
+		}
+		hint->text = "Select an action";
+	}
+	else
+	{
+		if (toggleCancel) {
+			endTurn->active = false;
+			cancelAction->active = true;
+		}
+		hint->text = "Select a target";
+	}
 }
 
 void Combat::ToggleStances(bool show)
@@ -548,7 +574,7 @@ void Combat::SelectConsumable(std::string consumableName)
 {
 	if (!turnAction || turnAction->action != TAKE_CONSUMABLE) return;
 	turnAction->consumableType = consumableName;
-	Engine::GetInstance().sceneManager->currentScene->ToggleInventoryForCombat();
+	Engine::GetInstance().sceneManager->currentScene->ToggleInventoryForCombat(false);
 	ToggleActions(false);
 }
 
@@ -651,6 +677,7 @@ void Combat::EndTurn()
 	enemyTurnTimerActive = false;
 	combatPhase = ACTION;
 	endTurn->active = false;
+	cancelAction->active = false;
 	actionTaken1 = false;
 	actionTaken2 = false;
 	actionTaken3 = false;

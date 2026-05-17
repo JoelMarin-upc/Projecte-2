@@ -40,6 +40,8 @@ public:
 
 	void ResizeDialogBox();
 
+	void SetEnabled(bool enabled);
+
 	std::list<DialogTree*> dialogs;
 	bool paused = false;
 

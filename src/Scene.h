@@ -27,6 +27,13 @@
 
 struct SDL_Texture;
 
+struct InventoryData {
+	int gold = -1;
+	pugi::xml_node cNode;
+	Inventory* inventory = nullptr;
+	std::vector<std::shared_ptr<InteractableItem>> items;
+};
+
 struct SceneData {
 	std::string mapPath;
 	std::string mapName;
@@ -96,7 +103,7 @@ public:
 	void EndGame();
 	void CheckTimers();
 	void ToggleInventory();
-	void ToggleInventoryForCombat();
+	void ToggleInventoryForCombat(bool show, std::shared_ptr<Character> character = nullptr);
 	void ToggleJournal();
 	void ToggleShop(NPC* shopOwner);
 	void UpdateInventory(NPC* shopOwner = nullptr) const;
@@ -120,6 +127,10 @@ public:
 	Map* GetMap() const { return map; }
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
+
+	inline std::shared_ptr<Character> GetSelectedCharacter() const {
+		return player->party->allMembers[currentInventoryIndex];
+	}
 
 	bool GetIsOnDialog() {
 		return isOnDialog;
@@ -251,4 +262,6 @@ private:
 	SequencePuzzle* sequencePuzzle = nullptr;
 
 	std::unordered_map<std::string, ItemDef*> itemDefs;
+
+	int currentInventoryIndex = 0;
 };

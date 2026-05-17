@@ -7,6 +7,7 @@
 #include "Audio.h"
 #include "Window.h"
 #include "SceneManager.h"
+#include <string>
 
 MenuManager::MenuManager() : Module()
 {
@@ -196,6 +197,7 @@ void MenuManager::Load(bool onlyPositions)
 	}
 	else {
 		// MENUS
+
 		gameTitle = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)GAME_TITLE, b_gameTitle, this, {  }, hoverFxId, clickFxId, UIParameters::Image(title, title, title, title)));
 		startGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)START_GAME, b_startGame, this, {  }, hoverFxId, clickFxId, UIParameters::Image(startDis, startNormal, startHov, startPres)));
 		pausedLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)PAUSED_LABEL, b_paused_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("PAUSED")));
@@ -219,7 +221,6 @@ void MenuManager::Load(bool onlyPositions)
 		backMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MENU, b_backMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
 		backMainMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MAIN_MENU, b_backMainMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
 		exit = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)EXIT, b_exit, this, { }, hoverFxId, clickFxId, UIParameters::Image(exitDis, exitNormal, exitHov, exitPres)));		
-		
 
 		winBackground = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)WIN_BG, b_winBackground, this, { }, hoverFxId, clickFxId, UIParameters::Image(winBg, winBg, winBg, winBg)));
 		winBackMainMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)WIN_BACK_MAIN_MENU, b_winBackMainMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
@@ -272,8 +273,15 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	SDL_Rect b_attack = { sw / 2 + 150, sh / 2 - 50, 200, 40 };
 	SDL_Rect b_defense = { sw / 2 + 150, sh / 2 + 10, 200, 40 };
 	SDL_Rect b_speed = { sw / 2 + 150, sh / 2 + 70, 200, 40 };
+	SDL_Rect b_nameLabel = { sw - 220, 20, 200, 40 };
+	SDL_Rect b_previousInventory = { sw - 440, 80, 200, 40 };
+	SDL_Rect b_nextInventory = { sw - 220, 80, 200, 40 };
 	std::vector<SDL_Rect> inventorySlotBounds = std::vector<SDL_Rect>();
 	std::vector<SDL_Rect> shopSlotBounds = std::vector<SDL_Rect>();
+	std::vector<SDL_Rect> giveToBounds = std::vector<SDL_Rect>();
+	for (int i = 0; i < 4; i++) {
+		giveToBounds.push_back({ sw - 220, 160 + 60 * i, 200, 40 });
+	}
 	const int margin = 10;
 	const int columns = 4;
 	const int rows = MAX_SLOTS / columns;
@@ -312,6 +320,10 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		weapon->SetBounds(b_weapon);
 		selectedItem->SetBounds(b_selectedItem);
 		exitShop->SetBounds(b_exitShop);
+		nameLabel->SetBounds(b_nameLabel);
+		previousInventory->SetBounds(b_previousInventory);
+		nextInventory->SetBounds(b_nextInventory);
+		for (int i = 0; i < giveToButtons.size(); i++) if (giveToButtons[i]) giveToButtons[i]->SetBounds(giveToBounds[i]);
 		for (int i = 0; i < inventorySlotBounds.size(); i++) {
 			if (inventorySlots.size() <= i) continue;
 			std::shared_ptr<UISlot> slot = inventorySlots[i];
@@ -364,6 +376,11 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		selectedItem = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)SELECTED_ITEM, b_selectedItem, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Default()));
 		selectedItem->state = UIElementState::DISABLED;
 		exitShop = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)EXIT_SHOP, b_exitShop, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Exit", 5, 5)));
+		nameLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)NAME_LABEL, b_nameLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("")));
+		previousInventory = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)PREV_INVENTORY, b_previousInventory, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Previous", 5, 5)));
+		nextInventory = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)NEXT_INVENTORY, b_nextInventory, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Next", 5, 5)));
+		for (int i = 0; i < giveToBounds.size(); i++)
+			giveToButtons.push_back(std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, baseGiveToId + i, giveToBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Button("Give to ", 5, 5))));
 		for (int i = 0; i < inventorySlotBounds.size(); i++) {
 			std::shared_ptr<UISlot> slot = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)baseSlotsId + i, inventorySlotBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Default()));
 			inventorySlots.push_back(slot);
@@ -422,6 +439,10 @@ void MenuManager::SetObserver(Module* observer)
 	attack->observer = observer;
 	defense->observer = observer;
 	speed->observer = observer;
+	nameLabel->observer = observer;
+	previousInventory->observer = observer;
+	nextInventory->observer = observer;
+	for (std::shared_ptr<UIButton> button : giveToButtons) button->observer = observer;
 	for (std::shared_ptr<UISlot> slot : inventorySlots) slot->observer = observer;
 	for (std::shared_ptr<UISlot> slot : shopSlots) slot->observer = observer;
 	for (std::shared_ptr<UIButton> mission : missionJournal) mission->observer = observer;
@@ -506,7 +527,7 @@ void MenuManager::ShowCreditsMenu()
 	backMainMenu->active = true;
 }
 
-void MenuManager::ShowInventory(Inventory* inventory, std::shared_ptr<Character> character)
+void MenuManager::ShowInventory(Inventory* inventory, std::shared_ptr<Character> character, Party* party)
 {
 	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
 
@@ -514,7 +535,7 @@ void MenuManager::ShowInventory(Inventory* inventory, std::shared_ptr<Character>
 	HideMenu();
 	currentMenu = INVENTORY;
 
-	ShowInventory(inventory, false, character);
+	ShowInventory(inventory, false, character, party);
 }
 
 void MenuManager::ShowShop(Inventory* customer, Inventory* shop)
@@ -664,6 +685,10 @@ void MenuManager::HideMenu()
 	attack->active = false;
 	defense->active = false;
 	speed->active = false;
+	nameLabel->active = false;
+	previousInventory->active = false;
+	nextInventory->active = false;
+	for (std::shared_ptr<UIButton> button : giveToButtons) button->active = false;
 	for (std::shared_ptr<UISlot> slot : inventorySlots)
 	{
 		slot->SetItem(nullptr);
@@ -706,12 +731,12 @@ void MenuManager::ShowPreviousMenu()
 
 void MenuManager::RedrawInventory()
 {
-	ShowInventory(currentInventory, false, currentCharacter);
+	ShowInventory(currentInventory, false, currentCharacter, currentParty);
 	if (currentMenu == SHOP) ShowInventory(currentShop, true);
 	selectedItem->SetItem(nullptr);
 }
 
-void MenuManager::ShowInventory(Inventory* inventory, bool isShop, std::shared_ptr<Character> character)
+void MenuManager::ShowInventory(Inventory* inventory, bool isShop, std::shared_ptr<Character> character, Party* party)
 {
 	amount->active = true;
 	selectedItem->active = true;
@@ -737,14 +762,19 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop, std::shared_p
 	else {
 		currentInventory = inventory;
 		currentCharacter = character;
+		currentParty = party;
 		inventoryLabel->active = true;
-		moneyLabel->text = "Gold: " + std::to_string(inventory->gold);
+		int gold = inventory->gold;
+		if (party) gold = party->player->inventory->gold;
+		moneyLabel->text = "Gold: " + std::to_string(gold);
 		moneyLabel->active = true;
 		use->text = "Use";
 		use->active = true;
 		drop->active = true;
 
 		if (character) {
+			nameLabel->active = true;
+			nameLabel->text = character->name;
 			hp->active = true;
 			hp->text = "HP: " + std::to_string((int)character->HP()) + "/" + std::to_string((int)character->MaxHP());
 			attack->active = true;
@@ -753,12 +783,29 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop, std::shared_p
 			defense->text = "Defense: " + std::to_string((int)character->Defense());
 			speed->active = true;
 			speed->text = "Speed: " + std::to_string((int)character->Speed());
+			if (party)
+			{
+				if (party->allMembers.size() > 1) {
+					previousInventory->active = true;
+					nextInventory->active = true;
+				}
+				for (int i = 0; i < party->allMembers.size(); i++) {
+					if (party->allMembers[i]->id == character->id) continue;
+					giveToButtons[i]->active = true;
+					giveToButtons[i]->text = "Give to " + party->allMembers[i]->name;
+					giveToButtons[i]->info = std::to_string(i);
+				}
+			}
 		}
 		else {
 			hp->active = false;
 			attack->active = false;
 			defense->active = false;
 			speed->active = false;
+			nameLabel->active = false;
+			previousInventory->active = false;
+			nextInventory->active = false;
+			for (std::shared_ptr<UIButton> button : giveToButtons) button->active = false;
 		}
 		
 		for (int i = 0; i < inventorySlots.size(); i++) {

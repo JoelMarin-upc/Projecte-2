@@ -130,7 +130,7 @@ public:
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
 
-	void ToggleActions(bool show);
+	void ToggleActions(bool show, bool toggleCancel = true);
 	void ToggleStances(bool show);
 	void SelectConsumable(std::string consumableName);
 
@@ -186,6 +186,8 @@ public:
 	std::shared_ptr<UILabel> log4 = nullptr;
 
 	std::shared_ptr<UILabel> hint = nullptr;
+
+	std::shared_ptr<UIButton> cancelAction = nullptr;
 
 	CombatPhase combatPhase = DECISION;
 	CombatResult combatResult = NO_RESULT;
