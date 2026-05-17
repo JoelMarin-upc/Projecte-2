@@ -11,18 +11,20 @@
 			
 		</party>
 		<inventory gold="50">
-			<item id="" name="hoe"/>
-			<item id="" name="hoe"/>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
 		</inventory>
 	</player>
-	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="garnikCombat.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" recuitMissionId="MI-000" isDead="false">
+	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="GravekeeperCombat.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" recuitMissionId="MI-000" isDead="false">
 		<stats>
 			<stat name="health" value="110" max="110" />
 			<stat name="speed" value="4"/>
 			<stat name="attack" value="50"/>
 			<stat name="defense" value="10"/>
 		</stats>
-		<inventory />
+		<inventory gold="0">
+			<item id="" name="shovel"/>
+		</inventory>
 	</character>
 	<character id="CH-002" name="Medic" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
 		<inventory />

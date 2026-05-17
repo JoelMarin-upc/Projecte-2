@@ -68,4 +68,7 @@ private:
 	float chaseDistance = 300.0f;
 
 	Collider* sensorCollider = nullptr;
+
+	float pathTimer = 0.0f;
+	float pathInterval = 0.3f;
 };

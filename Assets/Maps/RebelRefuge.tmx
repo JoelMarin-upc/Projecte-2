@@ -192179,12 +192179,6 @@
    </properties>
    <point/>
   </object>
-  <object id="655" x="1250" y="1473">
-   <properties>
-    <property name="id" value="HOE-001"/>
-   </properties>
-   <point/>
-  </object>
  </objectgroup>
  <objectgroup id="15" name="Boundaries">
   <object id="2" x="2112" y="0" width="464" height="976"/>
