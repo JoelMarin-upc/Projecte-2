@@ -239,7 +239,7 @@ bool Scene::Update(float dt)
 	}
 		
 	//////////////////// JUST TO SEE ACCESSES, DELETE LATER ////////////////////
-	for (AccessData& t : mapData.accesses) {
+	/*for (AccessData& t : mapData.accesses) {
 		SDL_Rect rect = {
 			(int)t.position.getX(),
 			(int)t.position.getY(),
@@ -247,7 +247,7 @@ bool Scene::Update(float dt)
 			(int)t.height
 		};
 		Engine::GetInstance().render->DrawRectangle(rect, 0, 255, 0, 128, true, true);
-	}
+	}*/
 	/////////////////////
 
 	return true;
