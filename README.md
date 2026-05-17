@@ -76,6 +76,8 @@ In this release, the following features have been implemented:
 - If the party members can collide with the player, they will push the player out of scenes
 - Animations go faster when there's no UI
 - Sometimes enemy combat textures get replaced by ones from other enemies
+- Mission journal can't be opened from inside the dungeon
+- Sometimes can enter combat with dead enemies
 ---
 
 ## How to Play / Controls
