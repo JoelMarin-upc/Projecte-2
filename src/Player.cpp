@@ -43,7 +43,7 @@ bool Player::Start() {
 	if (combatTexturePath != "") combatTexture = Engine::GetInstance().textures->Load(combatTexturePath.c_str());
 
 	//AddCollider(ColliderType::CIRCLE, texture, 0, 0, -110, 0, 1, 1);
-	AddCollider(ColliderType::SQUARE, texture, 0, 0, -110, -200, 1, 1);
+	AddCollider(ColliderType::SQUARE, texture, 0, 0, -110, -225, 1, 1);
 
 	colliders[0]->etype = EntityType::PLAYER;
 	pbody = colliders[0];
@@ -209,7 +209,7 @@ void Player::Draw(float dt) {
 	if (!animationsPath.empty()) {
 		anims.Update(dt);
 		const SDL_Rect& animFrame = anims.GetCurrentFrame();
-		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2, 1, &animFrame, isFacingRight);
+		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2 - 15, 1, &animFrame, isFacingRight);
 		DrawHealthBar(animFrame);
 	}
 }

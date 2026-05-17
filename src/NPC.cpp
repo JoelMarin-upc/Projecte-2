@@ -253,6 +253,7 @@ void NPC::LoadAnimations()
 
 void NPC::Interact()
 {
+	if (party) return;
 	Engine::GetInstance().sceneManager->currentScene->StartDialog(id);
 }
 

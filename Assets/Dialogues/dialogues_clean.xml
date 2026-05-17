@@ -418,7 +418,7 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-100" characterId="CH-006" characterName="follower" order="1" done="false">
+	<tree id="DT-100" characterId="CH-006" characterName="Barbara" order="1" done="false">
 		<node id="DN-001" first="true">
 			You need to talk to the Gravekeeper.
 			<answer leadsToNodeId="">
