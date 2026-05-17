@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="320" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="652">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="320" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="654">
  <properties>
   <property name="Draw" type="bool" value="true"/>
  </properties>
@@ -192528,13 +192528,13 @@
   </object>
  </objectgroup>
  <objectgroup id="16" name="Accesses">
-  <object id="567" x="1328.18" y="1124.75" width="32" height="59.9924">
+  <object id="567" x="1328.18" y="1124.75" width="32" height="50.356">
    <properties>
     <property name="targetSceneId" value="SC-002"/>
     <property name="targetSpawnId" value="shop_from_refuge"/>
    </properties>
   </object>
-  <object id="568" x="4128" y="464" width="32" height="52.6364">
+  <object id="568" x="4128" y="464" width="32" height="41.3864">
    <properties>
     <property name="targetSceneId" value="SC-003"/>
     <property name="targetSpawnId" value="dungeon_from_refuge"/>
