@@ -1566,7 +1566,7 @@
    </properties>
    <point/>
   </object>
-  <object id="103" x="340" y="115">
+  <object id="103" x="280" y="115">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
     <property name="order" type="int" value="1"/>
