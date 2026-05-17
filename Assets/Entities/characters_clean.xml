@@ -27,7 +27,7 @@
 	<character id="CH-004" name="Executioner" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
 		<inventory />
 	</character>
-	<character id="CH-005" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-005" name="enemy" texture="enemy.png" combatTexture="HandsEnemy_Combat.png" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="80" max="80" />
 			<stat name="speed" value="5"/>
@@ -36,7 +36,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-006" name="Barbara" texture="SpriteSheet_Barbara.png" combatTexture="barbaraCombat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-000" unlockedStance1="4" unlockedStance2="4">
+	<character id="CH-006" name="Barbara" texture="SpriteSheet_Barbara.png" combatTexture="barbara1Combat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-000" unlockedStance1="4" unlockedStance2="4">
 		<stats>
 			<stat name="health" value="100" max="100" />
 			<stat name="speed" value="5"/>
@@ -47,7 +47,7 @@
 			<item id="" name="potion"/>
 		</inventory>
 	</character>
-	<character id="CH-007" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-007" name="enemy" texture="enemy.png" combatTexture="LongEnemy_Combat.png" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="150" max="150" />
 			<stat name="speed" value="5"/>
@@ -58,7 +58,7 @@
 			<item id="" name="potion"/>
 		</inventory>
 	</character>
-	<character id="CH-008" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-008" name="enemy" texture="enemy.png" combatTexture="InsectEnemy_Combat.png" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="150" max="150" />
 			<stat name="speed" value="5"/>
@@ -67,7 +67,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-009" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-009" name="enemy" texture="enemy.png" combatTexture="HandsEnemy_Combat.png" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="80" max="80" />
 			<stat name="speed" value="5"/>
@@ -79,7 +79,7 @@
 			<item id="" name="potion"/>
 		</inventory>
 	</character>
-	<character id="CH-010" name="enemy" texture="enemy.png" combatTexture="enemy.png" type="5" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-010" name="enemy" texture="enemy.png" combatTexture="HandsEnemy_Combat.png" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="80" max="80" />
 			<stat name="speed" value="5"/>

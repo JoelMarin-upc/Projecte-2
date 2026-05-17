@@ -30,6 +30,7 @@ public:
 	bool TakeDamage(float damage);
 	void CheckModifiers();
 	void DrawHealthBar(const SDL_Rect& rect);
+	void DrawCombatHealthBar(float worldX, float worldY, int width);
 	void DrawHealthBar(SDL_Texture* texture);
 
 	Stats* stats = nullptr;
