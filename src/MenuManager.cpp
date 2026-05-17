@@ -90,6 +90,8 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Texture* startHov = Engine::GetInstance().textures->Load("Assets/Textures/startButtonHover.png");
 	SDL_Texture* startPres = Engine::GetInstance().textures->Load("Assets/Textures/startButtonPressed.png");
 	SDL_Texture* startDis = startNormal;
+	SDL_Texture* winBg = Engine::GetInstance().textures->Load("Assets/Textures/ThanksForPLaying.png");
+	SDL_Texture* deathBg = Engine::GetInstance().textures->Load("Assets/Textures/GameOver.png");
 
 
 	SDL_Color mainColorDef = { 0, 0, 255, 255 };
@@ -150,13 +152,20 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_resume = { centerX - 95, centerY + 70, 176, 64 };
 
 	//Other elements
-	SDL_Rect b_gameOver_lbl = { centerX - 90, centerY - 100, 300, 60 };
+	//SDL_Rect b_gameOver_lbl = { centerX - 90, centerY - 100, 300, 60 };
+	SDL_Rect b_deathBackground = { 0, 0, sw, sh };
+
+	//Win screen elements
+	SDL_Rect b_winBackground = { 0, 0, sw, sh };
+	SDL_Rect b_winLabel = { centerX - 200, centerY - 150, 400, 60 };
+	SDL_Rect b_winBackMainMenu = { centerX - 75, centerY + 50,  192, 64 };
+	SDL_Rect b_winExit = { centerX - 75,  centerY + 130, 144, 64 };
 	
 	if (onlyPositions) {
 		gameTitle->SetBounds(b_gameTitle);
 		startGame->SetBounds(b_startGame);
 		pausedLabel->SetBounds(b_paused_lbl);
-		gameOverLabel->SetBounds(b_gameOver_lbl);
+		//gameOverLabel->SetBounds(b_gameOver_lbl);
 		settingsLabel->SetBounds(b_settings_lbl);
 		continueGame->SetBounds(b_continueGame);
 		resumeGame->SetBounds(b_resume);
@@ -190,7 +199,8 @@ void MenuManager::Load(bool onlyPositions)
 		gameTitle = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)GAME_TITLE, b_gameTitle, this, {  }, hoverFxId, clickFxId, UIParameters::Image(title, title, title, title)));
 		startGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)START_GAME, b_startGame, this, {  }, hoverFxId, clickFxId, UIParameters::Image(startDis, startNormal, startHov, startPres)));
 		pausedLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)PAUSED_LABEL, b_paused_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("PAUSED")));
-		gameOverLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)GAME_OVER_LABEL , b_gameOver_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("GAME OVER")));
+		//gameOverLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)GAME_OVER_LABEL , b_gameOver_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("GAME OVER")));
+		deathBackground = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)WIN_BG, b_deathBackground, this, { }, hoverFxId, clickFxId, UIParameters::Image(deathBg, deathBg, deathBg, deathBg)));
 		settingsLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SETTINGS_LABEL, b_settings_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("SETTINGS")));
 		continueGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)CONTINUE_GAME, b_continueGame, this, { }, hoverFxId, clickFxId, UIParameters::Image(continueDis, continueNormal, continueHov, continuePres)));
 		resumeGame = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)RESUME_GAME, b_resume, this, { }, hoverFxId, clickFxId, UIParameters::Image(resumeDis, resumeNormal, resumeHov, resumePres)));
@@ -208,8 +218,13 @@ void MenuManager::Load(bool onlyPositions)
 		vsyncCheckbox = std::dynamic_pointer_cast<UICheckbox>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::CHECKBOX, (int)VSYNC, b_vsync, this, { mainColorDef, mainColorHov, mainColorDis, black, secondaryDef, secondaryDis }, hoverFxId, clickFxId, UIParameters::Checkbox(5, false)));
 		backMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MENU, b_backMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
 		backMainMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)BACK_MAIN_MENU, b_backMainMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
-		exit = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)EXIT, b_exit, this, { }, hoverFxId, clickFxId, UIParameters::Image(exitDis, exitNormal, exitHov, exitPres)));
+		exit = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)EXIT, b_exit, this, { }, hoverFxId, clickFxId, UIParameters::Image(exitDis, exitNormal, exitHov, exitPres)));		
 		
+
+		winBackground = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)WIN_BG, b_winBackground, this, { }, hoverFxId, clickFxId, UIParameters::Image(winBg, winBg, winBg, winBg)));
+		winBackMainMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)WIN_BACK_MAIN_MENU, b_winBackMainMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
+		winExit = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)WIN_EXIT, b_winExit, this, { }, hoverFxId, clickFxId, UIParameters::Image(exitDis, exitNormal, exitHov, exitPres)));
+
 		missionPopUpTitle = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)POPUP_TITLE, b_popUpTitle, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, green }, hoverFxId, clickFxId, UIParameters::Button("", 20)));
 		missionPopUp = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)POPUP, b_popUp, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("", 20)));
 		missionPopUpTitle->state = UIElementState::DISABLED;
@@ -383,6 +398,9 @@ void MenuManager::SetObserver(Module* observer)
 	backMenu->observer = observer;
 	backMainMenu->observer = observer;
 	exit->observer = observer;
+	winBackground->observer = observer;
+	winBackMainMenu->observer = observer;
+	winExit->observer = observer;
 	missionPopUpTitle->observer = observer;
 	missionPopUp->observer = observer;
 	missionJournalTitle->observer = observer;
@@ -519,9 +537,26 @@ void MenuManager::ShowDeathScreen()
 	HideMenu();
 	currentMenu = DEATHSCREEN;
 
-	gameOverLabel->active = true;
+	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Lose.wav", 5000.0f);
+
+	deathBackground->active = true;
+	//gameOverLabel->active = true;
 	backMainMenu->active = true;
 	exit->active = true;
+}
+
+void MenuManager::ShowWinScreen()
+{
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
+	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Win.wav", 5000.0f);
+
+	previousMenu = currentMenu;
+	HideMenu();
+	currentMenu = WINSCREEN;
+
+	winBackground->active = true;
+	winBackMainMenu->active = true;
+	winExit->active = true;
 }
 
 void MenuManager::AddMissionPopup(Mission* mission)
@@ -580,7 +615,7 @@ void MenuManager::HideMenu()
 	gameTitle->active = false;
 	startGame->active = false;
 	pausedLabel->active = false;
-	gameOverLabel->active = false;
+	//gameOverLabel->active = false;
 	settingsLabel->active = false;
 	continueGame->active = false;
 	resumeGame->active = false;
@@ -599,6 +634,10 @@ void MenuManager::HideMenu()
 	backMenu->active = false;
 	backMainMenu->active = false;
 	exit->active = false;
+	deathBackground->active = false;
+	winBackground->active = false;
+	winBackMainMenu->active = false;
+	winExit->active = false;
 	missionPopUpTitle->active = false;
 	missionPopUp->active = false;
 	showingPopUp = false;
@@ -655,6 +694,9 @@ void MenuManager::ShowPreviousMenu()
 		break;
 	case DEATHSCREEN:
 		ShowDeathScreen();
+		break;
+	case WINSCREEN:
+		ShowWinScreen();
 		break;
 	case NONE:
 		HideMenu();

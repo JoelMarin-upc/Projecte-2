@@ -134,7 +134,7 @@ bool Scene::Start(std::string spawnId)
 		titleEaseOutDone = false;*/
 
 		Engine::GetInstance().menuManager->ShowMainMenu();
-		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/RebelRefuge.wav", 5000.0f);
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/MainMenu.wav", 5000.0f);
 	}
 
 	if (gameStarted) {
@@ -1427,6 +1427,11 @@ void Scene::EndDialog()
 			Mission* mission = missionManager->ActivateMission("MI-000");
 			if (mission) Engine::GetInstance().menuManager->AddMissionPopup(mission);
 		}
+		if (activeDialogId == "CH-012" && id == "SC-004") {
+			gameStarted = false;
+			entityManager->paused = true;
+			Engine::GetInstance().menuManager->ShowWinScreen();
+		}
 		for (const auto& entity : entityManager->entities) {
 			if (entity->id == activeDialogId) {
 				if (auto npc = std::dynamic_pointer_cast<NPC>(entity)) {
@@ -1515,6 +1520,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	combat = nullptr;
 	UpdateInventory();
 	Engine::GetInstance().render->follow = player;
+	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
 }
 
 void Scene::CopyCleanGameData()
@@ -1706,6 +1712,17 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
 		break;
 	case EXIT:
+		exit(0);
+		break;
+	case WIN_BACK_MAIN_MENU:
+		dialogManager->SetCurrentDialog();
+		if (combat) {
+			delete combat;
+			combat = nullptr;
+		}
+		Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		break;
+	case WIN_EXIT:
 		exit(0);
 		break;
 	case USE:

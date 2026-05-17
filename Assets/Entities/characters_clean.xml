@@ -99,4 +99,7 @@
 			<item id="" name="steel boots"/>
 		</inventory>
 	</character>
+	<character id="CH-012" name="Nia" texture="Nia.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
+		<inventory />
+	</character>
 </characters>

@@ -56,6 +56,9 @@ bool Combat::Awake() {
 
 // Called before the first frame
 bool Combat::Start() {
+
+	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Combat.wav", 5000.0f);
+
 	Engine::GetInstance().render->camera.x = -combatData.cameraPosition.getX() + Engine::GetInstance().render->camera.w / 2;
 	Engine::GetInstance().render->camera.y = -combatData.cameraPosition.getY() + Engine::GetInstance().render->camera.h / 2;
 

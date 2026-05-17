@@ -19,6 +19,7 @@ enum MenuType {
 	COMBAT_INVENTORY,
 	MISSION_JOURNAL,
 	DEATHSCREEN,
+	WINSCREEN,
 	NONE
 };
 
@@ -87,7 +88,11 @@ enum UIID {
 	HP_STAT,
 	ATTACK_STAT,
 	DEFEND_STAT,
-	SPEED_STAT
+	SPEED_STAT,
+	WIN_BG,
+	WIN_BACK_MAIN_MENU,
+	WIN_EXIT,
+	DEATH_BG
 };
 
 const float POP_UP_SECONDS = 5.f;
@@ -127,6 +132,7 @@ public:
 	void ShowInventory(Inventory* inventory, std::shared_ptr<Character> character = nullptr);
 	void ShowShop(Inventory* customer, Inventory* shop);
 	void ShowDeathScreen();
+	void ShowWinScreen();
 	void AddMissionPopup(Mission* mission);
 	void ShowMissionPopup(Mission* mission, float popUpSeconds = POP_UP_SECONDS);
 	void HideMissionPopup();
@@ -166,6 +172,10 @@ public:
 	std::shared_ptr<UIImage> backMenu;
 	std::shared_ptr<UIImage> backMainMenu;
 	std::shared_ptr<UIImage> exit;
+	std::shared_ptr<UIImage> winBackground;
+	std::shared_ptr<UIImage> winBackMainMenu;
+	std::shared_ptr<UIImage> winExit;
+	std::shared_ptr<UIImage> deathBackground;
 
 	std::shared_ptr<UIButton> missionPopUpTitle;
 	std::shared_ptr<UIButton> missionPopUp;

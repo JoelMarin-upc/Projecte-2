@@ -458,4 +458,30 @@
 			</answer>
 		</node>
 	</tree>
+	<tree id="DT-095" characterId="CH-012" characterName="Nia" order="1" done="false" isRepeatable="false">
+		<node id="DN-001" first="true">
+			Garnik...!?
+			<answer leadsToNodeId="DN-002">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			H-how did you get here? Why...
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			Well... unlucky for you, there's no more content for this game at the moment
+			<answer leadsToNodeId="DN-004">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			I'll see you again... at Assignment 4: Gold!
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
 </dialogs>
