@@ -455,6 +455,7 @@ void Scene::TogglePause()
 	//Engine::GetInstance().physics->paused = paused;
 	
 	if (paused) {
+		if (combat) combat->DisableCombatElements();
 		Engine::GetInstance().audio->pauseMultiplier = 0.3f;
 		Engine::GetInstance().audio->UpdateMusicVolume();
 		Engine::GetInstance().menuManager->ShowPauseMenu();
@@ -464,6 +465,7 @@ void Scene::TogglePause()
 	} 
 	else
 	{
+		if (combat) combat->EnableCombatElements();
 		Engine::GetInstance().audio->pauseMultiplier = 1.0f;
 		Engine::GetInstance().audio->UpdateMusicVolume();
 		Engine::GetInstance().menuManager->HideMenu();
