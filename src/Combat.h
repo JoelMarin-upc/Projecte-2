@@ -170,15 +170,15 @@ public:
 	std::shared_ptr<Enemy> enemy3;
 	std::shared_ptr<Enemy> enemy4;
 
-	std::shared_ptr<UIButton> action1 = nullptr;
-	std::shared_ptr<UIButton> action2 = nullptr;
-	std::shared_ptr<UIButton> action3 = nullptr;
-	std::shared_ptr<UIButton> action4 = nullptr;
-	std::shared_ptr<UIButton> stance1 = nullptr;
-	std::shared_ptr<UIButton> stance2 = nullptr;
-	std::shared_ptr<UIButton> stance3 = nullptr;
-	std::shared_ptr<UIButton> stance4 = nullptr;
-	std::shared_ptr<UIButton> endTurn = nullptr;
+	std::shared_ptr<UIImage> action1 = nullptr;
+	std::shared_ptr<UIImage> action2 = nullptr;
+	std::shared_ptr<UIImage> action3 = nullptr;
+	std::shared_ptr<UIImage> action4 = nullptr;
+	std::shared_ptr<UIImage> stance1 = nullptr;
+	std::shared_ptr<UIImage> stance2 = nullptr;
+	std::shared_ptr<UIImage> stance3 = nullptr;
+	std::shared_ptr<UIImage> stance4 = nullptr;
+	std::shared_ptr<UIImage> endTurn = nullptr;
 
 	std::shared_ptr<UILabel> log1 = nullptr;
 	std::shared_ptr<UILabel> log2 = nullptr;
@@ -187,7 +187,7 @@ public:
 
 	std::shared_ptr<UILabel> hint = nullptr;
 
-	std::shared_ptr<UIButton> cancelAction = nullptr;
+	std::shared_ptr<UIImage> cancelAction = nullptr;
 
 	CombatPhase combatPhase = DECISION;
 	CombatResult combatResult = NO_RESULT;

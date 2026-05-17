@@ -34,6 +34,11 @@ Combat::~Combat() {
 	Engine::GetInstance().uiManager->DestroyUIElement(action3);
 	Engine::GetInstance().uiManager->DestroyUIElement(action4);
 	Engine::GetInstance().uiManager->DestroyUIElement(endTurn);
+	Engine::GetInstance().uiManager->DestroyUIElement(cancelAction);
+	Engine::GetInstance().uiManager->DestroyUIElement(stance1);
+	Engine::GetInstance().uiManager->DestroyUIElement(stance2);
+	Engine::GetInstance().uiManager->DestroyUIElement(stance3);
+	Engine::GetInstance().uiManager->DestroyUIElement(stance4);
 	Engine::GetInstance().uiManager->DestroyUIElement(i_player);
 	Engine::GetInstance().uiManager->DestroyUIElement(i_npc1);
 	Engine::GetInstance().uiManager->DestroyUIElement(i_npc2);
@@ -67,109 +72,141 @@ bool Combat::Start() {
 	int cx = Engine::GetInstance().render->camera.x;
 	int cy = Engine::GetInstance().render->camera.y;
 
-	SDL_Rect b_action1 = { sw / 2 - 145, sh - 200, 150, 40 };
-	SDL_Rect b_action2 = { sw / 2 + 45, sh - 200, 150, 40 };
-	SDL_Rect b_action3 = { sw / 2 - 145, sh - 100, 150, 40 };
-	SDL_Rect b_action4 = { sw / 2 + 45, sh - 100, 150, 40 };
-	SDL_Rect b_endTurn = { sw - 165, sh - 100, 150, 40 };
-	SDL_Rect b_cancelAction = { sw - 165, sh - 100, 150, 40 };
-	SDL_Rect b_log1 = { sw / 2 - 100, 20, 300, 20 };
-	SDL_Rect b_log2 = { sw / 2 - 100, 60, 300, 20 };
-	SDL_Rect b_log3 = { sw / 2 - 100, 100, 300, 20 };
-	SDL_Rect b_log4 = { sw / 2 - 100, 140, 300, 20 };
-	SDL_Rect b_hint = { 20, 20, 300, 20 };
-	
-	action1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::ACTION1, b_action1, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Attack")));
-	action2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::ACTION2, b_action2, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Stance")));
-	action3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::ACTION3, b_action3, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Consume")));
-	action4 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::ACTION4, b_action4, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Flee")));
-	
-	stance1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::STANCE1, b_action1, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Assist")));
-	stance2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::STANCE2, b_action2, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Concentrate")));
-	stance3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::STANCE3, b_action3, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Defend")));
-	stance4 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::STANCE4, b_action4, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Rest")));
+	// -------------------------------------------------------------------------
+	// TOP BAR  (three side-by-side panels, fixed to screen-space)
+	//
+	//  [ Panel 1: hint + log lines ]  [ Panel 2: 2x2 action grid ]  [ Panel 3: End Turn / Undo ]
+	// -------------------------------------------------------------------------
+	const int panelY = 10;   // distance from screen top
+	const int btnW = 150;
+	const int btnH = 40;
+	const int gap = 5;
+	const int logLineH = 20;
 
-	endTurn = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::END_TURN, b_endTurn, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("End turn")));
+	// --- Panel 1: hint text + 4 combat-log lines ---
+	const int logPanelX = 10;
+	const int logPanelW = 280;
 
+	// Hint sits at the very top of Panel 1
+	SDL_Rect b_hint = { logPanelX + gap, panelY + gap, logPanelW - gap * 2, logLineH };
+
+	// Log lines fill the rest of Panel 1 beneath the hint
+	const int logStartY = panelY + gap + logLineH + gap;
+	SDL_Rect b_log1 = { logPanelX + gap, logStartY,                        logPanelW - gap * 2, logLineH };
+	SDL_Rect b_log2 = { logPanelX + gap, logStartY + (logLineH + gap),     logPanelW - gap * 2, logLineH };
+	SDL_Rect b_log3 = { logPanelX + gap, logStartY + (logLineH + gap) * 2, logPanelW - gap * 2, logLineH };
+	SDL_Rect b_log4 = { logPanelX + gap, logStartY + (logLineH + gap) * 3, logPanelW - gap * 2, logLineH };
+
+	// --- Panel 2: 2x2 action / stance button grid ---
+	const int actionPanelX = logPanelX + logPanelW + 10;
+	const int actionPanelW = btnW * 2 + gap * 3;
+	// Row 1
+	SDL_Rect b_action1 = { actionPanelX + gap,              panelY + gap,              btnW, btnH };
+	SDL_Rect b_action2 = { actionPanelX + gap + btnW + gap, panelY + gap,              btnW, btnH };
+	// Row 2
+	SDL_Rect b_action3 = { actionPanelX + gap,              panelY + gap + btnH + gap, btnW, btnH };
+	SDL_Rect b_action4 = { actionPanelX + gap + btnW + gap, panelY + gap + btnH + gap, btnW, btnH };
+	// Stance buttons share the same screen slots as the action buttons
+	SDL_Rect b_stance1 = b_action1;
+	SDL_Rect b_stance2 = b_action2;
+	SDL_Rect b_stance3 = b_action3;
+	SDL_Rect b_stance4 = b_action4;
+
+	// --- Panel 3: End Turn / Undo Action ---
+	const int ctrlPanelX = actionPanelX + actionPanelW + 10;
+	SDL_Rect b_endTurn = { ctrlPanelX + gap, panelY + gap,              btnW, btnH };
+	SDL_Rect b_cancelAction = { ctrlPanelX + gap, panelY + gap + btnH + gap, btnW, btnH };
+
+
+	// Attack (action1)
+	SDL_Texture* action1Normal = Engine::GetInstance().textures->Load("Assets/Textures/attackButtonNormal.png");
+	SDL_Texture* action1Hov = Engine::GetInstance().textures->Load("Assets/Textures/attackButtonHover.png");
+	SDL_Texture* action1Pres = Engine::GetInstance().textures->Load("Assets/Textures/attackButtonPressed.png");
+	SDL_Texture* action1Dis = action1Normal;
+	// Stance (action2)
+	SDL_Texture* action2Normal = Engine::GetInstance().textures->Load("Assets/Textures/stanceButtonNormal.png");
+	SDL_Texture* action2Hov = Engine::GetInstance().textures->Load("Assets/Textures/stanceButtonHover.png");
+	SDL_Texture* action2Pres = Engine::GetInstance().textures->Load("Assets/Textures/stanceButtonPressed.png");
+	SDL_Texture* action2Dis = action2Normal;
+	// Consume (action3)
+	SDL_Texture* action3Normal = Engine::GetInstance().textures->Load("Assets/Textures/consumeButtonNormal.png");
+	SDL_Texture* action3Hov = Engine::GetInstance().textures->Load("Assets/Textures/consumeButtonHover.png");
+	SDL_Texture* action3Pres = Engine::GetInstance().textures->Load("Assets/Textures/consumeButtonPressed.png");
+	SDL_Texture* action3Dis = action3Normal;
+	// Flee (action4)
+	SDL_Texture* action4Normal = Engine::GetInstance().textures->Load("Assets/Textures/fleeButtonNormal.png");
+	SDL_Texture* action4Hov = Engine::GetInstance().textures->Load("Assets/Textures/fleeButtonHover.png");
+	SDL_Texture* action4Pres = Engine::GetInstance().textures->Load("Assets/Textures/fleeButtonPressed.png");
+	SDL_Texture* action4Dis = action4Normal;
+	// Assist (stance1)
+	SDL_Texture* stance1Normal = Engine::GetInstance().textures->Load("Assets/Textures/stance1Normal.png");
+	SDL_Texture* stance1Hov = Engine::GetInstance().textures->Load("Assets/Textures/stance1Hov.png");
+	SDL_Texture* stance1Pres = Engine::GetInstance().textures->Load("Assets/Textures/stance1Pres.png");
+	SDL_Texture* stance1Dis = Engine::GetInstance().textures->Load("Assets/Textures/stance1Dis.png");
+	// Concentrate (stance2)
+	SDL_Texture* stance2Normal = Engine::GetInstance().textures->Load("Assets/Textures/stance2Normal.png");
+	SDL_Texture* stance2Hov = Engine::GetInstance().textures->Load("Assets/Textures/stance2Hov.png");
+	SDL_Texture* stance2Pres = Engine::GetInstance().textures->Load("Assets/Textures/stance2Pres.png");
+	SDL_Texture* stance2Dis = Engine::GetInstance().textures->Load("Assets/Textures/stance2Dis.png");
+	// Defend (stance3)
+	SDL_Texture* stance3Normal = Engine::GetInstance().textures->Load("Assets/Textures/stance3Normal.png");
+	SDL_Texture* stance3Hov = Engine::GetInstance().textures->Load("Assets/Textures/stance3Hov.png");
+	SDL_Texture* stance3Pres = Engine::GetInstance().textures->Load("Assets/Textures/stance3Pres.png");
+	SDL_Texture* stance3Dis = Engine::GetInstance().textures->Load("Assets/Textures/stance3Dis.png");
+	// Rest (stance4)
+	SDL_Texture* stance4Normal = Engine::GetInstance().textures->Load("Assets/Textures/stance4Normal.png");
+	SDL_Texture* stance4Hov = Engine::GetInstance().textures->Load("Assets/Textures/stance4Hov.png");
+	SDL_Texture* stance4Pres = Engine::GetInstance().textures->Load("Assets/Textures/stance4Pres.png");
+	SDL_Texture* stance4Dis = Engine::GetInstance().textures->Load("Assets/Textures/stance4Dis.png");
+	// End Turn
+	SDL_Texture* endTurnNormal = Engine::GetInstance().textures->Load("Assets/Textures/endTurnButtonNormal.png");
+	SDL_Texture* endTurnHov = Engine::GetInstance().textures->Load("Assets/Textures/endTurnButtonHover.png");
+	SDL_Texture* endTurnPres = Engine::GetInstance().textures->Load("Assets/Textures/endTurnButtonHovePressed.png");
+	SDL_Texture* endTurnDis = endTurnNormal;
+	// Undo Action
+	SDL_Texture* undoNormal = Engine::GetInstance().textures->Load("Assets/Textures/undoActionButtonNormal.png");
+	SDL_Texture* undoHov = Engine::GetInstance().textures->Load("Assets/Textures/undoActionButtonHover.png");
+	SDL_Texture* undoPres = Engine::GetInstance().textures->Load("Assets/Textures/undoActionButtonPressed.png");
+	SDL_Texture* undoDis = undoNormal;
+
+	// Action buttons
+	action1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION1, b_action1, this, {  }, -1, -1, UIParameters::Image(action1Dis, action1Normal, action1Hov, action1Pres)));
+	action2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION2, b_action2, this, {  }, -1, -1, UIParameters::Image(action2Dis, action2Normal, action2Hov, action2Pres)));
+	action3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION3, b_action3, this, {  }, -1, -1, UIParameters::Image(action3Dis, action3Normal, action3Hov, action3Pres)));
+	action4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION4, b_action4, this, {  }, -1, -1, UIParameters::Image(action4Dis, action4Normal, action4Hov, action4Pres)));
+
+	// Stance buttons
+	stance1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE1, b_stance1, this, {  }, -1, -1, UIParameters::Image(stance1Dis, stance1Normal, stance1Hov, stance1Pres)));
+	stance2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE2, b_stance2, this, {  }, -1, -1, UIParameters::Image(stance2Dis, stance2Normal, stance2Hov, stance2Pres)));
+	stance3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE3, b_stance3, this, {  }, -1, -1, UIParameters::Image(stance3Dis, stance3Normal, stance3Hov, stance3Pres)));
+	stance4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE4, b_stance4, this, {  }, -1, -1, UIParameters::Image(stance4Dis, stance4Normal, stance4Hov, stance4Pres)));
+
+	// End-turn and undo/cancel buttons
+	endTurn = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::END_TURN, b_endTurn, this, {  }, -1, -1, UIParameters::Image(endTurnDis, endTurnNormal, endTurnHov, endTurnPres)));
+	cancelAction = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::CANCEL_ACTION, b_cancelAction, this, {  }, -1, -1, UIParameters::Image(undoDis, undoNormal, undoHov, undoPres)));
+
+	// Hint label  (overlaid inside the hint panel)
+	hint = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::HINT, b_hint, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
+
+	// Hidden combat-log labels
 	log1 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG1, b_log1, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
 	log2 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG2, b_log2, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
 	log3 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG3, b_log3, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
 	log4 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG4, b_log4, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
-
-	hint = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::HINT, b_hint, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
-
-	cancelAction = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)UIID::CANCEL_ACTION, b_cancelAction, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("Cancel action")));
 
 	action1->active = false;
 	action2->active = false;
 	action3->active = false;
 	action4->active = false;
 
+	endTurn->active = false;
+	cancelAction->active = false;
+
 	log1->active = true;
 	log2->active = true;
 	log3->active = true;
 	log4->active = true;
 	ToggleStances(false);
-
-	// PLAYER TEAM
-
-	if (playerParty->player)
-	{
-		SDL_Texture* tex = playerParty->player->combatTexture;
-		Vector2D pos;
-		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 0) pos = cPos.position;
-		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
-		i_player = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_PLAYER, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
-		player = playerParty->player;
-		i_player->active = true;
-		player->hasFled = false;
-		player->isDead = false;
-		player->position = pos;
-	}
-
-	if (playerParty->members.size() > 0)
-	{
-		SDL_Texture* tex = playerParty->members[0]->combatTexture;
-		Vector2D pos;
-		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 1) pos = cPos.position;
-		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
-		i_npc1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC1, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
-		npc1 = playerParty->members[0];
-		i_npc1->active = true;
-		npc1->hasFled = false;
-		npc1->isDead = false;
-		npc1->position = pos;
-	}
-
-	if (playerParty->members.size() > 1)
-	{
-		SDL_Texture* tex = playerParty->members[1]->combatTexture;
-		Vector2D pos;
-		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 2) pos = cPos.position;
-		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
-		i_npc2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC2, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
-		npc2 = playerParty->members[1];
-		i_npc2->active = true;
-		npc2->hasFled = false;
-		npc2->isDead = false;
-		npc2->position = pos;
-	}
-
-	if (playerParty->members.size() > 2)
-	{
-		SDL_Texture* tex = playerParty->members[2]->combatTexture;
-		Vector2D pos;
-		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 3) pos = cPos.position;
-		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
-		i_npc3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC3, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
-		npc3 = playerParty->members[2];
-		i_npc3->active = true;
-		npc3->hasFled = false;
-		npc3->isDead = false;
-		npc3->position = pos;
-	}
-
-	// ENEMY TEAM
 
 	if (enemyParty->members.size() > 0)
 	{
@@ -225,6 +262,62 @@ bool Combat::Start() {
 		enemy4->hasFled = false;
 		enemy4->isDead = false;
 		enemy4->position = pos;
+	}
+
+	if (playerParty->player)
+	{
+		SDL_Texture* tex = playerParty->player->combatTexture;
+		Vector2D pos;
+		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 0) pos = cPos.position;
+		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
+		i_player = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_PLAYER, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
+		player = playerParty->player;
+		i_player->active = true;
+		player->hasFled = false;
+		player->isDead = false;
+		player->position = pos;
+	}
+
+	if (playerParty->members.size() > 0)
+	{
+		SDL_Texture* tex = playerParty->members[0]->combatTexture;
+		Vector2D pos;
+		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 1) pos = cPos.position;
+		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
+		i_npc1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC1, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
+		npc1 = playerParty->members[0];
+		i_npc1->active = true;
+		npc1->hasFled = false;
+		npc1->isDead = false;
+		npc1->position = pos;
+	}
+
+	if (playerParty->members.size() > 1)
+	{
+		SDL_Texture* tex = playerParty->members[1]->combatTexture;
+		Vector2D pos;
+		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 2) pos = cPos.position;
+		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
+		i_npc2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC2, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
+		npc2 = playerParty->members[1];
+		i_npc2->active = true;
+		npc2->hasFled = false;
+		npc2->isDead = false;
+		npc2->position = pos;
+	}
+
+	if (playerParty->members.size() > 2)
+	{
+		SDL_Texture* tex = playerParty->members[2]->combatTexture;
+		Vector2D pos;
+		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 3) pos = cPos.position;
+		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
+		i_npc3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC3, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
+		npc3 = playerParty->members[2];
+		i_npc3->active = true;
+		npc3->hasFled = false;
+		npc3->isDead = false;
+		npc3->position = pos;
 	}
 
 	float highestSpeed = 0;
@@ -298,14 +391,14 @@ bool Combat::Update(float dt) {
 			case TAKE_STANCE:
 				if (isPlayerTurn) {
 					if (player->id != action->selected->id) members.push_back(player);
-					
+
 					for (auto& member : playerParty->members)
 						if (member->id != action->selected->id)
 							members.push_back(member);
 				}
 				else {
-					for (auto& member : enemyParty->members) 
-						if (member->id != action->selected->id) 
+					for (auto& member : enemyParty->members)
+						if (member->id != action->selected->id)
 							members.push_back(member);
 				}
 				if (action->stance == REST) chanceForSecondTurn += unitOfChanceForSecondTurn;
@@ -581,42 +674,42 @@ void Combat::SelectConsumable(std::string consumableName)
 void Combat::KillCombatant(std::shared_ptr<Character> character)
 {
 	//character->isDead = true;
-	if (player && character->id == player->id) 
+	if (player && character->id == player->id)
 	{
 		player->isDead = true;
 		Engine::GetInstance().audio->PlayFx(player->dieFxId);
 	}
-	if (npc1 && character->id == npc1->id) 
+	if (npc1 && character->id == npc1->id)
 	{
 		npc1->isDead = true;
 		Engine::GetInstance().audio->PlayFx(npc1->dieFxId);
 	}
-	if (npc2 && character->id == npc2->id) 
+	if (npc2 && character->id == npc2->id)
 	{
 		npc2->isDead = true;
 		Engine::GetInstance().audio->PlayFx(npc2->dieFxId);
 	}
-	if (npc3 && character->id == npc3->id) 
+	if (npc3 && character->id == npc3->id)
 	{
 		npc3->isDead = true;
 		Engine::GetInstance().audio->PlayFx(npc3->dieFxId);
 	}
-	if (enemy1 && character->id == enemy1->id) 
+	if (enemy1 && character->id == enemy1->id)
 	{
 		enemy1->isDead = true;
 		Engine::GetInstance().audio->PlayFx(enemy1->dieFxId);
 	}
-	if (enemy2 && character->id == enemy2->id) 
+	if (enemy2 && character->id == enemy2->id)
 	{
 		enemy2->isDead = true;
 		Engine::GetInstance().audio->PlayFx(enemy2->dieFxId);
 	}
-	if (enemy3 && character->id == enemy3->id) 
+	if (enemy3 && character->id == enemy3->id)
 	{
 		enemy3->isDead = true;
 		Engine::GetInstance().audio->PlayFx(enemy3->dieFxId);
 	}
-	if (enemy4 && character->id == enemy4->id) 
+	if (enemy4 && character->id == enemy4->id)
 	{
 		enemy4->isDead = true;
 		Engine::GetInstance().audio->PlayFx(enemy4->dieFxId);
@@ -693,7 +786,7 @@ void Combat::CreateRandomAction(std::shared_ptr<Enemy> enemy)
 {
 	turnAction = new TurnAction();
 	turnAction->selected = enemy;
-	
+
 	std::vector<std::string> consumables = std::vector<std::string>();
 	for (auto& item : enemy->inventory->items) {
 		if (std::shared_ptr<Consumable> c = std::dynamic_pointer_cast<Consumable>(item)) {
@@ -710,7 +803,7 @@ void Combat::CreateRandomAction(std::shared_ptr<Enemy> enemy)
 		int activeCharactersNum = 1;
 		std::vector<std::shared_ptr<Character>> activeCharacters = std::vector<std::shared_ptr<Character>>();
 		activeCharacters.push_back(player);
-		for (std::shared_ptr<NPC> c : playerParty->members)	{
+		for (std::shared_ptr<NPC> c : playerParty->members) {
 			if (!c->isDead && !c->hasFled) {
 				activeCharactersNum++;
 				activeCharacters.push_back(c);
