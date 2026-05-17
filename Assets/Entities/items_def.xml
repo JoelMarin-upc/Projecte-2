@@ -45,4 +45,5 @@
 	<item id="SQBTN-001" name="SButton1" texture="puzzleButton.png" type="4" itemClass="seqbutton1" interactionType="2" canStack="false" toggledTexturePath="puzzleButtonPressed.png"/>
 	<item id="SQBTN-002" name="SButton2" texture="puzzleButton.png" type="4" itemClass="seqbutton2" interactionType="2" canStack="false" toggledTexturePath="puzzleButtonPressed.png"/>
 	<item id="SQBTN-003" name="SButton3" texture="puzzleButton.png" type="4" itemClass="seqbutton3" interactionType="2" canStack="false" toggledTexturePath="puzzleButtonPressed.png"/>
+	<item id="BALL-001" name="Ball" texture="Ball.png" type="4" itemClass="item" interactionType="1" canStack="false"/>
 </items>
