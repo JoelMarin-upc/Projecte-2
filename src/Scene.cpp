@@ -455,6 +455,7 @@ void Scene::TogglePause()
 	//Engine::GetInstance().physics->paused = paused;
 	
 	if (paused) {
+		if (combat) combat->DisableCombatElements();
 		Engine::GetInstance().audio->pauseMultiplier = 0.3f;
 		Engine::GetInstance().audio->UpdateMusicVolume();
 		Engine::GetInstance().menuManager->ShowPauseMenu();
@@ -464,6 +465,7 @@ void Scene::TogglePause()
 	} 
 	else
 	{
+		if (combat) combat->EnableCombatElements();
 		Engine::GetInstance().audio->pauseMultiplier = 1.0f;
 		Engine::GetInstance().audio->UpdateMusicVolume();
 		Engine::GetInstance().menuManager->HideMenu();
@@ -1497,7 +1499,7 @@ std::vector<std::shared_ptr<Enemy>> Scene::GetNearEnemies(Vector2D position, flo
 
 void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
 {
-	if (hasCombatCooldown || isOnDialog || showingInventory || paused) return;
+	if (hasCombatCooldown || isOnDialog || showingInventory || paused || combat) return;
 	Engine::GetInstance().render->follow = nullptr;
 
 	auto nearEnemies = GetNearEnemies(player->position, 300, enemy->id);
@@ -1549,6 +1551,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	default:
 		break;
 	}
+	combat->CleanUp();
 	delete combat;
 	combat = nullptr;
 	UpdateInventory();

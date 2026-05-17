@@ -193,7 +193,7 @@ void Player::AddPartyMember(std::shared_ptr<NPC> member, bool write)
 {
 	if (!party) party = new Party(std::static_pointer_cast<Player>(shared_from_this()));
 	party->AddMember(member, write);
-	Engine::GetInstance().physics->SetCollisionFilter(member->colliders[0], 0, 0);
+	for (Collider* c : member->colliders) Engine::GetInstance().physics->SetCollisionFilter(c, 0, 0);
 }
 
 void Player::Draw(float dt) {
