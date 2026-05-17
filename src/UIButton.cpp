@@ -31,30 +31,36 @@ bool UIButton::Update(float dt)
 {
 	if (state != UIElementState::DISABLED)
 	{
-		// L16: TODO 3: Update the state of the GUiButton according to the mouse position
 		float mouseX, mouseY;
 		SDL_GetMouseState(&mouseX, &mouseY);
 
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mouseX, mouseY, &logicalX, &logicalY);
+		int gameX = 0;
+		int gameY = 0;
+		Engine::GetInstance().render->WindowToGameCoords((int)mouseX, (int)mouseY, gameX, gameY);
 
-		//If the position of the mouse if inside the bounds of the button 
-		if (logicalX > bounds.x && logicalX < bounds.x + bounds.w && logicalY > bounds.y && logicalY < bounds.y + bounds.h) {
-			
-			if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED && hoverFxId != -1) Engine::GetInstance().audio->PlayFx(hoverFxId);
+		if (gameX > bounds.x && gameX < bounds.x + bounds.w &&
+			gameY > bounds.y && gameY < bounds.y + bounds.h)
+		{
+			if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED && hoverFxId != -1)
+				Engine::GetInstance().audio->PlayFx(hoverFxId);
 
 			state = UIElementState::FOCUSED;
 
-			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
+			{
 				state = UIElementState::PRESSED;
 			}
 
-			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
-				if (clickFxId != -1) Engine::GetInstance().audio->PlayFx(clickFxId);
+			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
+			{
+				if (clickFxId != -1)
+					Engine::GetInstance().audio->PlayFx(clickFxId);
+
 				NotifyObserver();
 			}
 		}
-		else {
+		else
+		{
 			state = UIElementState::NORMAL;
 		}
 	}
@@ -76,7 +82,8 @@ bool UIButton::Update(float dt)
 	}
 
 	TTF_Font* font = Engine::GetInstance().render->font;
-	if (font && !text.empty()) {
+	if (font && !text.empty())
+	{
 		int textW = 0, textH = 0;
 		TTF_GetStringSize(font, text.c_str(), 0, &textW, &textH);
 		int centeredX = bounds.x + (bounds.w - textW) / 2;
@@ -85,4 +92,5 @@ bool UIButton::Update(float dt)
 	}
 
 	return false;
+
 }

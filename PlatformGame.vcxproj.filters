@@ -90,6 +90,15 @@
     </None>
     <None Include="Assets\Maps\RebelRefuge.tmx" />
     <None Include="Assets\Maps\TutorialDungeon.tmx" />
+    <None Include="Assets\Textures\Barbara_SpriteSheet.tsx">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="Assets\Textures\LongEnemy_SpriteSheet.tsx">
+      <Filter>Configuration FIles</Filter>
+    </None>
+    <None Include="Assets\Textures\Slime_SpriteSheet.tsx">
+      <Filter>Configuration FIles</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio.cpp">
@@ -296,8 +305,35 @@
     <ClCompile Include="src\UIImage.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
-    <ClCompile Include="src\Lever.cpp">
+    <ClCompile Include="src\UISlot.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DungeonLever.cpp">
       <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DungeonExit.cpp">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BringMission.cpp">
+      <Filter>Source Files\Scene\Missions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DungeonGate.cpp">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PressurePlate.cpp">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PushBox.cpp">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SequenceButton.cpp">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ResetButton.cpp">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SequencePuzzle.cpp">
+      <Filter>Source Files\Scene\Entities\Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -511,8 +547,35 @@
     <ClInclude Include="src\UIImage.h">
       <Filter>Source Files\UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\Lever.h">
+    <ClInclude Include="src\UISlot.h">
+      <Filter>Source Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DungeonLever.h">
       <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DungeonExit.h">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BringMission.h">
+      <Filter>Source Files\Scene\Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DungeonGate.h">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PressurePlate.h">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PushBox.h">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SequenceButton.h">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ResetButton.h">
+      <Filter>Source Files\Scene\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SequencePuzzle.h">
+      <Filter>Source Files\Scene\Entities\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -524,5 +587,18 @@
     <Xml Include="Assets\Entities\items.xml" />
     <Xml Include="Assets\Dialogues\test.xml" />
     <Xml Include="Assets\Entities\base_stats.xml" />
+    <Xml Include="Assets\Entities\characters_clean.xml" />
+    <Xml Include="Assets\Entities\items_clean.xml" />
+    <Xml Include="Assets\Dialogues\dialogues_clean.xml" />
+    <Xml Include="Assets\Entities\items_def.xml" />
+    <Xml Include="Assets\Entities\characters_session.xml" />
+    <Xml Include="Assets\Missions\missions_clean.xml" />
+    <Xml Include="Assets\Missions\missions.xml" />
+    <Xml Include="Assets\Missions\missions_session.xml" />
+    <Xml Include="Assets\Dialogues\dialogues.xml" />
+    <Xml Include="Assets\Dialogues\dialogues_session.xml" />
+    <Xml Include="Assets\Audio\audios.xml">
+      <Filter>Configuration FIles</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

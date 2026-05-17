@@ -1,4 +1,4 @@
-#include "Enemy.h"
+﻿#include "Enemy.h"
 #include "Engine.h"
 #include "Textures.h"
 #include "Audio.h"
@@ -9,6 +9,7 @@
 #include "Physics.h"
 #include "EntityManager.h"
 #include "SceneManager.h"
+#include "Animation.h"
 
 Enemy::~Enemy()
 {
@@ -22,20 +23,29 @@ bool Enemy::Awake()
 bool Enemy::Start()
 {
     texture = Engine::GetInstance().textures->Load(texturePath.c_str());
+	if (combatTexturePath != "") combatTexture = Engine::GetInstance().textures->Load(combatTexturePath.c_str());
 
-    AddCollider(ColliderType::CIRCLE, texture, 0, 0, -10, 0, 1, 1);
+   /* AddCollider(ColliderType::CIRCLE, texture, 0, 0, -10, 0, 1, 1);
 	colliders[0]->etype = EntityType::ENEMY;
 	colliders[0]->listener = this;
 	enemyBody = colliders[0];
-	enemyBody->listener = this;
+	enemyBody->listener = this;*/
 
     party = new EnemyParty(std::static_pointer_cast<Enemy>(shared_from_this()));
 
-    texW = 30;
-    texH = 30;
+    texW = 64;
+    texH = 64;
 
 	map = Engine::GetInstance().sceneManager->GetCurrentScene()->GetMap();
 	pathfinding = std::make_shared<Pathfinding>();
+
+	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath("enemy", "walk");
+	std::string attackFxPath = Engine::GetInstance().audio->GetAudioPath("enemy", "attack");
+	std::string dieFxPath = Engine::GetInstance().audio->GetAudioPath("enemy", "die");
+
+	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath.c_str());
+	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath.c_str());
+	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath.c_str());
 
 	return true;
 }
@@ -44,6 +54,11 @@ bool Enemy::Update(float dt)
 {
     if (!active) return true;
 	if (active) {
+		//To make sure that the Sensor follows the pbody
+		int x, y;
+		colliders[0]->GetPosition(x, y);
+		b2Body_SetTransform(sensorCollider->body, { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, b2Body_GetRotation(sensorCollider->body));
+
 		UpdateState(dt);
 		GetPhysicsValues();
 		ApplyPhysics();
@@ -55,16 +70,21 @@ bool Enemy::Update(float dt)
 void Enemy::Draw(float dt)
 {
 	if (pathfinding)
-	{
 		pathfinding->DrawPath();
-	}
-    int x, y;
-    colliders[0]->GetPosition(x, y);
-    position.setX((float)x);
-    position.setY((float)y);
-    Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2/*, &animFrame, facingRight*/);
 
-    //DrawHealthBar(texture);
+	int x, y;
+	colliders[0]->GetPosition(x, y);
+	position.setX((float)x);
+	position.setY((float)y);
+
+	if (!animationsPath.empty()) {
+		anims.Update(dt);
+		const SDL_Rect& animFrame = anims.GetCurrentFrame();
+		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2, 1, &animFrame, isFacingRight);
+	}
+	else {
+		Engine::GetInstance().render->DrawTexture(texture, x - texW / 2, y - texH / 2);
+	}
 }
 
 bool Enemy::CleanUp() {
@@ -72,6 +92,93 @@ bool Enemy::CleanUp() {
     return true;
 }
 
+void Enemy::HandleAnimations(b2Vec2 velocity)
+{
+	if (animationsPath.empty()) return;
+
+	const float MOVE_THRESHOLD = 0.1f;
+	bool isMoving = (std::abs(velocity.x) > MOVE_THRESHOLD || std::abs(velocity.y) > MOVE_THRESHOLD);
+
+	if (isMoving) {
+		if (std::abs(velocity.x) > std::abs(velocity.y)) {
+			facing = "right";
+			isFacingRight = (velocity.x > 0);
+		}
+		else {
+			facing = (velocity.y > 0) ? "down" : "up";
+		}
+
+		std::string animName = "move_" + facing;
+		if (currentAnimation != animName) {
+			anims.SetCurrent(animName);
+			currentAnimation = animName;
+		}
+	}
+	else {
+		if (currentAnimation != "idle") {
+			anims.SetCurrent("idle");
+			currentAnimation = "idle";
+		}
+	}
+}
+
+void Enemy::LoadAnimations()
+{
+	if (animationsPath.empty()) return;
+	std::unordered_map<int, std::string> aliases = {
+		{0, "idle"}, {12, "move_down"}, {16, "move_up"}, {20, "move_right"}
+	};
+
+	anims.LoadFromTSX(animationsPath.c_str(), aliases);
+	anims.SetCurrent("idle");
+	currentAnimation = "idle";
+}
+
+void Enemy::CreateColliders()
+{
+	if (animationsPath.empty()) {
+		AddCollider(ColliderType::CIRCLE, texture, 0, 0, -10, 0, 1, 1);
+		enemyBody = colliders[0];
+		enemyBody->listener = this;
+		enemyBody->etype = EntityType::ENEMY;
+
+		b2Body_SetFixedRotation(enemyBody->body, true);
+
+		b2MassData massData;
+		massData.mass = 1000.0f;
+		massData.center = { 0.0f, 0.0f };
+		massData.rotationalInertia = 0.0f;
+		b2Body_SetMassData(enemyBody->body, massData);
+
+		AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 20, 20, 1, 1);
+		sensorCollider = colliders[1];
+		sensorCollider->listener = this;
+		sensorCollider->etype = EntityType::ENEMY;
+
+		return;
+	}
+
+	int sheetW = texture->w;
+	float wOffset = -sheetW + texW; 
+
+	AddCollider(ColliderType::CIRCLE, texture, 0, 0, wOffset - 50, 0, 1, 1);
+	enemyBody = colliders[0];
+	enemyBody->listener = this;
+	enemyBody->etype = EntityType::ENEMY;
+
+	b2Body_SetFixedRotation(enemyBody->body, true);
+
+	b2MassData massData;
+	massData.mass = 1000.0f;
+	massData.center = { 0.0f, 0.0f };
+	massData.rotationalInertia = 0.0f;
+	b2Body_SetMassData(enemyBody->body, massData);
+
+	AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, wOffset - 30, 20, 1, 1);
+	sensorCollider = colliders[1];
+	sensorCollider->listener = this;
+	sensorCollider->etype = EntityType::ENEMY;
+}
 
 void Enemy::PerformPathfinding()
 {
@@ -144,11 +251,13 @@ void Enemy::UpdateState(float dt)
 		float pathTimer = 0.0f;
 		float pathInterval = 0.3f;
 
-		if (playerTile != lastPlayerTile && (pathTimer += dt) >= pathInterval) {
-			lastPlayerTile = playerTile;
-			PerformPathfinding();
-			pathTimer = 0.0f;
-
+		if (playerTile != lastPlayerTile) {
+			pathTimer += dt;
+			if (pathTimer >= pathInterval) {
+				lastPlayerTile = playerTile;
+				PerformPathfinding();
+				pathTimer = 0.0f;
+			}
 		}
 
 		Move(currentTarget);
@@ -217,12 +326,18 @@ void Enemy::Move(const Vector2D& target) {
 		pathfinding->pathTiles.pop_front();
 		velocity = { 0, 0 };
 	}
+
+	if ((velocity.x != 0 || velocity.y != 0) && walkTimer.ReadMSec() > walkMS) {
+		Engine::GetInstance().audio->PlayFx(walkFxId);
+		walkTimer = Timer();
+	}
 }
 
 void Enemy::ApplyPhysics() {
 
 	// Apply velocity via helper
 	Engine::GetInstance().physics->SetLinearVelocity(colliders[0], velocity);
+	HandleAnimations(velocity);
 }
 
 Vector2D Enemy::GetPosition() {

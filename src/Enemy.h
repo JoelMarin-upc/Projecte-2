@@ -12,8 +12,20 @@ enum class EnemyState {
 
 class Enemy : public AICharacter {
 public:
-	Enemy(std::string id, std::string name, std::string texturePath) : AICharacter(id, name, texturePath, EntityType::ENEMY) {}
+	Enemy(std::string id, std::string name, std::string texturePath, std::string combatTexturePath) : AICharacter(id, name, texturePath, combatTexturePath, EntityType::ENEMY) {}
 	virtual ~Enemy();
+
+	bool Awake() override;
+	bool Start() override;
+
+	bool Update(float dt);
+	void Draw(float dt);
+
+	bool CleanUp();
+
+	void LoadAnimations();
+	void HandleAnimations(b2Vec2 velocity);
+	void CreateColliders();
 
 	Vector2D GetPosition();
 	//void SetMap(Map* m) {map = m;}
@@ -44,17 +56,19 @@ public:
 
 	EnemyParty* party = nullptr;
 
+	std::string animationsPath = "";
+	AnimationSet anims;
+	std::string currentAnimation = "";
+	bool isFacingRight = true;
+	std::string facing = "down";
+
 private: 
 	b2Vec2 velocity;
 	EnemyState state = EnemyState::IDLE;
 	float chaseDistance = 300.0f;
 
-	bool Awake() override;
-	bool Start() override;
+	Collider* sensorCollider = nullptr;
 
-	bool Update(float dt);
-	void Draw(float dt);
-
-	bool CleanUp();
-
+	float pathTimer = 0.0f;
+	float pathInterval = 0.3f;
 };

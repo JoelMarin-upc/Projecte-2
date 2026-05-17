@@ -16,7 +16,7 @@ bool UIManager::Start()
 	return true;
 }
 
-std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id, SDL_Rect bounds, Module* observer, std::vector<SDL_Color> colors, int hoverFxId, int clickFxId, UIParameters params, bool useCamera)
+std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id, SDL_Rect bounds, Module* observer, std::vector<SDL_Color> colors, int hoverFxId, int clickFxId, UIParameters params, bool useCamera, bool drawOnTop)
 {
 	std::shared_ptr<UIElement> uiElement = std::make_shared<UIElement>();
 
@@ -93,13 +93,28 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 		break;
 
 	case UIElementType::IMAGE:
-		uiElement = std::make_shared<UIImage>(id, bounds, params.disabledTex, params.normalTex, params.focusedTex, params.pressedTex, hoverFxId, clickFxId);
+		uiElement = std::make_shared<UIImage>(id, bounds, params.disabledTex, params.normalTex, params.focusedTex, params.pressedTex, hoverFxId, clickFxId, params.background, params.drawImageOnCenter);
+		break;
+	case UIElementType::SLOT:
+		c1 = { 0, 0, 0, 0 };
+		c2 = { 0, 0, 0, 0 };
+		c3 = { 0, 0, 0, 0 };
+		c4 = { 0, 0, 0, 0 };
+		c5 = { 0, 0, 0, 0 };
+		if (colors.size() > 0) c1 = colors[0];
+		if (colors.size() > 1) c2 = colors[1];
+		if (colors.size() > 2) c3 = colors[2];
+		if (colors.size() > 3) c4 = colors[3];
+		if (colors.size() > 4) c5 = colors[4];
+
+		uiElement = std::make_shared<UISlot>(id, bounds, params.text, params.horizotalSpacing, params.verticalSpacing, c1, c2, c3, c4, c5, hoverFxId, clickFxId, params.item, params.amount);
 		break;
 	}
 
 	//Set the observer
 	uiElement->observer = observer;
 	uiElement->useCamera = useCamera;
+	uiElement->drawOnTop = drawOnTop;
 
 	// Created GuiControls are add it to the list of controls
 	UIElementsList.push_back(uiElement);
@@ -114,6 +129,23 @@ void UIManager::DestroyUIElement(std::shared_ptr<UIElement> element)
 	element->CleanUp();
 }
 
+bool UIManager::Update(float dt)
+{
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+		debug = !debug;
+
+	for (const auto& control : UIElementsList)
+	{
+		if (control->drawOnTop) continue;
+		if (control->active) {
+			control->Update(dt);
+			if (debug) DrawControlDebug(control);
+		}
+	}
+
+	return true;
+}
+
 bool UIManager::PostUpdate(float dt)
 {
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
@@ -121,6 +153,7 @@ bool UIManager::PostUpdate(float dt)
 
 	for (const auto& control : UIElementsList)
 	{
+		if (!control->drawOnTop) continue;
 		if (control->active) {
 			control->Update(dt);
 			if (debug) DrawControlDebug(control);

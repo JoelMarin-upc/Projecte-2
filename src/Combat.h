@@ -48,39 +48,56 @@ struct TurnAction {
 		switch (this->action) {
 		case ATTACK:
 			action = "Attack";
-			action += " (" + std::to_string((int)selected->stats->GetStat("attack").getValue()) + ")";
+			action += " (" + std::to_string((int)selected->Attack()) + ")";
 			break;
 		case TAKE_STANCE:
-			action = "Take Stance";
+			switch (stance) {
+			case ASSIST:
+				action = "Assist";
+				break;
+			case CONCENTRATE:
+				action = "Concentrate";
+				break;
+			case DEFEND:
+				action = "Defend";
+				break;
+			case REST:
+				action = "Rest";
+				break;
+			default:
+				action = "Take Stance";
+				break;
+			}
+
+			switch (stance)
+			{
+			case REST:
+				action += " (15 percent chance of extra turn)";
+				break;
+			case DEFEND:
+				action += " (defense x2)";
+				break;
+			case CONCENTRATE:
+				action += " (attack x1.8)";
+				break;
+			case ASSIST:
+				action += " (attack x1.2 rest of the party)";
+				break;
+			case NO_STANCE:
+				break;
+			default:
+				break;
+			}
 			break;
 		case TAKE_CONSUMABLE:
 			action = "Take Consumable";
+			if (consumableType != "") action += " (" + consumableType + ")";
 			break;
 		case FLEE:
 			action = "Flee";
 			break;
 		}
 		std::string s = selected->name + " -> " + action;
-		if (stance != NO_STANCE)
-		{
-			std::string stance;
-			switch (this->stance) {
-			case ASSIST:
-				stance = "Assist";
-				break;
-			case CONCENTRATE:
-				stance = "Concentrate";
-				break;
-			case DEFEND:
-				stance = "Defend";
-				break;
-			case REST:
-				stance = "Rest";
-				break;
-			}
-			s += "(" + stance + ")";
-		}
-		if (consumableType != "") s += "(" + consumableType + ")";
 		if (target) s += " -> " + target->name;
 		return s;
 	}
@@ -113,8 +130,9 @@ public:
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
 
-	void ToggleActions(bool show);
+	void ToggleActions(bool show, bool toggleCancel = true);
 	void ToggleStances(bool show);
+	void SelectConsumable(std::string consumableName);
 
 	void KillCombatant(std::shared_ptr<Character> character);
 	void CombatantFlees(std::shared_ptr<Character> character);
@@ -127,7 +145,7 @@ public:
 
 	void CreateRandomAction(std::shared_ptr<Enemy> enemy);
 
-	void DrawHealthBars();
+	void DrawHealthBars() const;
 
 	Party* playerParty;
 	EnemyParty* enemyParty;
@@ -152,15 +170,15 @@ public:
 	std::shared_ptr<Enemy> enemy3;
 	std::shared_ptr<Enemy> enemy4;
 
-	std::shared_ptr<UIButton> action1 = nullptr;
-	std::shared_ptr<UIButton> action2 = nullptr;
-	std::shared_ptr<UIButton> action3 = nullptr;
-	std::shared_ptr<UIButton> action4 = nullptr;
-	std::shared_ptr<UIButton> stance1 = nullptr;
-	std::shared_ptr<UIButton> stance2 = nullptr;
-	std::shared_ptr<UIButton> stance3 = nullptr;
-	std::shared_ptr<UIButton> stance4 = nullptr;
-	std::shared_ptr<UIButton> endTurn = nullptr;
+	std::shared_ptr<UIImage> action1 = nullptr;
+	std::shared_ptr<UIImage> action2 = nullptr;
+	std::shared_ptr<UIImage> action3 = nullptr;
+	std::shared_ptr<UIImage> action4 = nullptr;
+	std::shared_ptr<UIImage> stance1 = nullptr;
+	std::shared_ptr<UIImage> stance2 = nullptr;
+	std::shared_ptr<UIImage> stance3 = nullptr;
+	std::shared_ptr<UIImage> stance4 = nullptr;
+	std::shared_ptr<UIImage> endTurn = nullptr;
 
 	std::shared_ptr<UILabel> log1 = nullptr;
 	std::shared_ptr<UILabel> log2 = nullptr;
@@ -168,6 +186,14 @@ public:
 	std::shared_ptr<UILabel> log4 = nullptr;
 
 	std::shared_ptr<UILabel> hint = nullptr;
+
+	std::shared_ptr<UIImage> cancelAction = nullptr;
+
+	SDL_Texture* combatBg = nullptr;
+
+	SDL_Rect panelRect1 = {};
+	SDL_Rect panelRect2 = {};
+	SDL_Rect panelRect3 = {};
 
 	CombatPhase combatPhase = DECISION;
 	CombatResult combatResult = NO_RESULT;
@@ -177,7 +203,7 @@ public:
 	bool actionTaken3 = false;
 	bool actionTaken4 = false;
 
-	bool isPlayerTurn;
+	bool isPlayerTurn = false;
 	
 	const int enemyTurnMS = 4000;
 	bool enemyTurnTimerActive = false;
@@ -186,5 +212,8 @@ public:
 	TurnAction* turnAction = nullptr;
 
 	std::vector<TurnAction*> turnActions;
+
+	int chanceForSecondTurn = 0;
+	int unitOfChanceForSecondTurn = 15;
 	
 };

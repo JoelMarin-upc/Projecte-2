@@ -1,5 +1,6 @@
 #include "Audio.h"
 #include "Log.h"
+#include "XMLHandler.h"
 
 Audio::Audio() {
     name = "audio";
@@ -95,6 +96,17 @@ bool Audio::EnsureStreams() {
     }
 
     return true;
+}
+
+std::string Audio::GetAudioPath(const char* node, const char* audioName)
+{
+    pugi::xml_document audioDoc = XMLHandler::LoadFile("Assets/Audio/audios.xml");
+    pugi::xml_node audios = audioDoc.child("audios");
+    pugi::xml_node nodeN = audios.child(node);
+    if (!node) return nullptr;
+    pugi::xml_attribute audio = nodeN.attribute(audioName);
+    if (!audio) return nullptr;
+    return audio.as_string();
 }
 
 

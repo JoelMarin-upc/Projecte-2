@@ -8,6 +8,7 @@ public:
 	std::string id;
 	std::string characterId;
 	std::string characterName;
+	std::string missionId;
 	std::vector<DialogNode*> nodes;
 	bool done;
 	int order;

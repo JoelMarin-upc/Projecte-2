@@ -31,41 +31,51 @@ UICheckbox::~UICheckbox()
 
 bool UICheckbox::Update(float dt)
 {
+	int gameX = 0;
+	int gameY = 0;
+
 	Vector2D mousePos = Engine::GetInstance().input->GetMousePosition();
-	float logicalX, logicalY;
-	SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mousePos.getX(), mousePos.getY(), &logicalX, &logicalY);
-	bool mouseOver = 
-		logicalX > bounds.x &&
-		logicalX < bounds.x + bounds.w &&
-		logicalY > bounds.y &&
-		logicalY < bounds.y + bounds.h;
+	Engine::GetInstance().render->WindowToGameCoords(
+		(int)mousePos.getX(),
+		(int)mousePos.getY(),
+		gameX,
+		gameY
+	);
+
+	bool mouseOver =
+		gameX > bounds.x &&
+		gameX < bounds.x + bounds.w &&
+		gameY > bounds.y &&
+		gameY < bounds.y + bounds.h;
 
 	if (state != UIElementState::DISABLED)
 	{
-		// L16: TODO 3: Update the state of the GUiButton according to the mouse position
-		
+		if (mouseOver)
+		{
+			if (state != UIElementState::FOCUSED &&
+				state != UIElementState::PRESSED &&
+				hoverFxId != -1)
+			{
+				Engine::GetInstance().audio->PlayFx(hoverFxId);
+			}
 
-		//If the position of the mouse if inside the bounds of the button 
-		float mouseX, mouseY;
-		SDL_GetMouseState(&mouseX, &mouseY);
+			state = checked ? UIElementState::PRESSED : UIElementState::FOCUSED;
 
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(Engine::GetInstance().render->renderer, mouseX, mouseY, &logicalX, &logicalY);
-
-		//If the position of the mouse if inside the bounds of the button 
-		if (logicalX > bounds.x && logicalX < bounds.x + bounds.w && logicalY > bounds.y && logicalY < bounds.y + bounds.h) {
-
-			if (state != UIElementState::FOCUSED && state != UIElementState::PRESSED && hoverFxId != -1) Engine::GetInstance().audio->PlayFx(hoverFxId);
-			state = UIElementState::FOCUSED;
-
-			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
+			{
 				checked = !checked;
 				state = checked ? UIElementState::PRESSED : UIElementState::FOCUSED;
-				if (clickFxId != -1) Engine::GetInstance().audio->PlayFx(clickFxId);
+
+				if (clickFxId != -1)
+				{
+					Engine::GetInstance().audio->PlayFx(clickFxId);
+				}
+
 				NotifyObserver();
 			}
 		}
-		else {
+		else
+		{
 			state = checked ? UIElementState::PRESSED : UIElementState::NORMAL;
 		}
 	}
@@ -76,20 +86,27 @@ bool UICheckbox::Update(float dt)
 		Engine::GetInstance().render->DrawRectangle(bounds, colorOutDis.r, colorOutDis.g, colorOutDis.b, colorOutDis.a, true, useCamera);
 		Engine::GetInstance().render->DrawRectangle(innerBounds, colorInDis.r, colorInDis.g, colorInDis.b, colorInDis.a, true, useCamera);
 		break;
+
 	case UIElementState::NORMAL:
 		Engine::GetInstance().render->DrawRectangle(bounds, colorOutDef.r, colorOutDef.g, colorOutDef.b, colorOutDef.a, true, useCamera);
 		Engine::GetInstance().render->DrawRectangle(innerBounds, colorInDef.r, colorInDef.g, colorInDef.b, colorInDef.a, true, useCamera);
 		break;
+
 	case UIElementState::FOCUSED:
+	{
 		SDL_Color in = checked ? colorInChk : colorInDef;
 		Engine::GetInstance().render->DrawRectangle(bounds, colorOutHov.r, colorOutHov.g, colorOutHov.b, colorOutHov.a, true, useCamera);
 		Engine::GetInstance().render->DrawRectangle(innerBounds, in.r, in.g, in.b, in.a, true, useCamera);
 		break;
+	}
+
 	case UIElementState::PRESSED:
+	{
 		SDL_Color out = mouseOver ? colorOutHov : colorOutDef;
 		Engine::GetInstance().render->DrawRectangle(bounds, out.r, out.g, out.b, out.a, true, useCamera);
 		Engine::GetInstance().render->DrawRectangle(innerBounds, colorInChk.r, colorInChk.g, colorInChk.b, colorInChk.a, true, useCamera);
 		break;
+	}
 	}
 
 	return false;

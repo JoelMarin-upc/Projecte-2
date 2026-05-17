@@ -63,7 +63,7 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-003" characterId="CH-001" characterName="Gravekeeper" order="3" done="false">
+	<tree id="DT-003" characterId="CH-001" characterName="Gravekeeper" order="1" done="false">
 		<node id="DN-001" first="true">
 			You have been pacing around|the cemetery for quite a while.
 			<answer leadsToNodeId="DN-002">
@@ -364,30 +364,115 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-005" characterId="CH-003" characterName="Thief" order="5" done="false">
+	<tree id="DT-005" characterId="CH-003" characterName="Thief" order="1" done="false" isRepeatable="true">
 		<node id="DN-001" first="true">
 			... What?
 			<answer leadsToNodeId="DN-002">
-				Where are your parents?
-			</answer>
-			<answer leadsToNodeId="DN-003">
-				Is there anything I can do for you?
+				Are you okay?
 			</answer>
 		</node>
 		<node id="DN-002" first="false">
-			That's none of your business.
-			<answer leadsToNodeId="">
-				End conversation
+			I... lost my dog.
+			<answer leadsToNodeId="DN-003">
+				Continue
 			</answer>
 		</node>
 		<node id="DN-003" first="false">
-			I don't need your pity.
+			Her name is Barbara... she's my only friend and I can't find her anywhere...
+			<answer leadsToNodeId="">
+				I'll tell you if I find her.
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-006" characterId="CH-003" characterName="Thief" missionId="MI-008" order="2" done="false">
+		<node id="DN-001" first="true">
+			Wait! You found her??
+			<answer leadsToNodeId="DN-002">
+				Would you also like to come?
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			I trust her... and if she trusts you too, I guess I can come along.
 			<answer leadsToNodeId="">
 				End conversation
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-006" characterId="CH-004" characterName="Executioner" order="6" done="false">
+	<tree id="DT-007" characterId="statue" characterName="Statue" order="1" done="false" isRepeatable="true">
+		<node id="DN-001" first="true">
+			The gods are watching you. |You feel a fleeting sensation of peace.
+			<answer leadsToNodeId="">
+				Pray and save
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-100" characterId="CH-006" characterName="Barbara" missionId="MI-006" order="1" done="false">
+		<node id="DN-001" first="true">
+			Woof, woof! (she seems to want something to play with)
+			<answer leadsToNodeId="">
+				I'll go look for something.
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-099" characterId="CH-006" characterName="Barbara" order="2" done="false">
+		<node id="DN-001" first="true">
+			Woof! Arf arf!! (she seems happy!)
+			<answer leadsToNodeId="">
+				Come with me!
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-098" characterId="Lever" characterName="" order="1" done="false">
+		<node id="DN-001" first="true">
+			The lever has been pulled, you hear a gate opening.
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-097" characterId="CH-011" characterName="Shopkeeper" order="1" done="false" isRepeatable="true">
+		<node id="DN-001" first="true">
+			Hello, welcome to my shop.
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-096" characterId="exit_locked" characterName="Garnik" order="1" done="false" isRepeatable="true">
+		<node id="DN-001" first="true">
+			L-locked? There has to be a way to open it...
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-095" characterId="CH-012" characterName="Nia" order="1" done="false" isRepeatable="false">
+		<node id="DN-001" first="true">
+			Garnik...!?
+			<answer leadsToNodeId="DN-002">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			H-how did you get here? Why...
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			Well... unlucky for you, there's no more content for this game at the moment
+			<answer leadsToNodeId="DN-004">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			I'll see you again... at Assignment 4: Gold!
+			<answer leadsToNodeId="">
+				Continue
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-0094" characterId="CH-004" characterName="Executioner" order="6" done="false">
 		<node id="DN-001" first="true">
 			...
 			<answer leadsToNodeId="DN-002">
@@ -407,30 +492,6 @@
 			......
 			<answer leadsToNodeId="">
 				End conversation
-			</answer>
-		</node>
-	</tree>
-	<tree id="DT-007" characterId="statue" characterName="Statue" order="1" done="false" isRepeatable="true">
-		<node id="DN-001" first="true">
-			The gods are watching you. |You feel a fleeting sensation of peace.
-			<answer leadsToNodeId="">
-				Pray and save
-			</answer>
-		</node>
-	</tree>
-	<tree id="DT-099" characterId="CH-006" characterName="follower" order="1" done="false">
-		<node id="DN-001" first="true">
-			Hello, i'll help you!
-			<answer leadsToNodeId="">
-				Okay
-			</answer>
-		</node>
-	</tree>
-	<tree id="DT-098" characterId="Lever" characterName="" order="1" done="false">
-		<node id="DN-001" first="true">
-			The lever has been pulled
-			<answer leadsToNodeId="">
-				Continue
 			</answer>
 		</node>
 	</tree>
