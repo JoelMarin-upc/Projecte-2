@@ -856,3 +856,67 @@ void Combat::DrawHealthBars() const
 	if (enemy3 && !enemy3->isDead) enemy3->DrawCombatHealthBar(enemy3->position.getX(), enemy3->position.getY() + enemy3->combatTexture->h / 2, enemy3->combatTexture->w);
 	if (enemy4 && !enemy4->isDead) enemy4->DrawCombatHealthBar(enemy4->position.getX(), enemy4->position.getY() + enemy4->combatTexture->h / 2, enemy4->combatTexture->w);
 }
+
+void Combat::DisableCombatElements()
+{
+	wasAction1Active = action1->active;
+	wasAction2Active = action2->active;
+	wasAction3Active = action3->active;
+	wasAction4Active = action4->active;
+	wasStance1Active = stance1->active;
+	wasStance2Active = stance2->active;
+	wasStance3Active = stance3->active;
+	wasStance4Active = stance4->active;
+	wasCancelActive = cancelAction->active;
+
+	action1->Disable();
+	action2->Disable();
+	action3->Disable();
+	action4->Disable();
+	stance1->Disable();
+	stance2->Disable();
+	stance3->Disable();
+	stance4->Disable();
+	endTurn->Disable();
+	cancelAction->Disable();
+	if (i_player) i_player->Disable();
+	if (i_npc1) i_npc1->Disable();
+	if (i_npc2) i_npc2->Disable();
+	if (i_npc3) i_npc3->Disable();
+	if (i_enemy1) i_enemy1->Disable();
+	if (i_enemy2) i_enemy2->Disable();
+	if (i_enemy3) i_enemy3->Disable();
+	if (i_enemy4) i_enemy4->Disable();
+}
+
+void Combat::EnableCombatElements()
+{
+	action1->active = wasAction1Active;
+	action2->active = wasAction2Active;
+	action3->active = wasAction3Active;
+	action4->active = wasAction4Active;
+	stance1->active = wasStance1Active;
+	stance2->active = wasStance2Active;
+	stance3->active = wasStance3Active;
+	stance4->active = wasStance4Active;
+	cancelAction->active = wasCancelActive;
+	if (wasAction1Active) action1->Enable();
+	if (wasAction2Active) action2->Enable();
+	if (wasAction3Active) action3->Enable();
+	if (wasAction4Active) action4->Enable();
+	if (wasStance1Active) stance1->Enable();
+	if (wasStance2Active) stance2->Enable();
+	if (wasStance3Active) stance3->Enable();
+	if (wasStance4Active) stance4->Enable();
+	if (wasCancelActive)  cancelAction->Enable();
+
+	endTurn->Enable();
+	if (i_player) i_player->Enable();
+	if (i_npc1) i_npc1->Enable();
+	if (i_npc2) i_npc2->Enable();
+	if (i_npc3) i_npc3->Enable();
+	if (i_enemy1 && !enemy1->isDead) i_enemy1->Enable();
+	if (i_enemy2 && !enemy2->isDead) i_enemy2->Enable();
+	if (i_enemy3 && !enemy3->isDead) i_enemy3->Enable();
+	if (i_enemy4 && !enemy4->isDead) i_enemy4->Enable();
+}

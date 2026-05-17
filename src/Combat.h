@@ -147,6 +147,9 @@ public:
 
 	void DrawHealthBars() const;
 
+	void DisableCombatElements();
+	void EnableCombatElements();
+
 	Party* playerParty;
 	EnemyParty* enemyParty;
 	Map* map;
@@ -215,5 +218,14 @@ public:
 
 	int chanceForSecondTurn = 0;
 	int unitOfChanceForSecondTurn = 15;
-	
+
+	bool wasAction1Active = false;
+	bool wasAction2Active = false;
+	bool wasAction3Active = false;
+	bool wasAction4Active = false;
+	bool wasStance1Active = false;
+	bool wasStance2Active = false;
+	bool wasStance3Active = false;
+	bool wasStance4Active = false;
+	bool wasCancelActive = false;
 };
