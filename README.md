@@ -39,12 +39,12 @@ In this release, the following features have been implemented:
 **SCREEN: TITLE**
 - ✅Title animation with easings
 - ✅Music track
-- ✅Gear equipment
 
 **GAMEPLAY**
 - ✅Ability system
 - ✅2 Dungeon maps with puzzles
 - ✅Collectable items
+- ✅Gear equipment
 - ✅Quests
 - ✅Journal to check quests
 - ✅Inventory system
