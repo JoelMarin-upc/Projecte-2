@@ -15,13 +15,25 @@
 			<item id="" name="sword"/>
 		</inventory>
 	</player>
-	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="garnikCombat.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="garnikCombat.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" recuitMissionId="MI-000" isDead="false">
+		<stats>
+			<stat name="health" value="110" max="110" />
+			<stat name="speed" value="4"/>
+			<stat name="attack" value="50"/>
+			<stat name="defense" value="10"/>
+		</stats>
 		<inventory />
 	</character>
 	<character id="CH-002" name="Medic" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
 		<inventory />
 	</character>
-	<character id="CH-003" name="Thief" texture="SpriteSheet_Thief.png" combatTexture="ThiefCombat.png" animations="Thief_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false" isMale="false">
+	<character id="CH-003" name="Thief" texture="SpriteSheet_Thief.png" combatTexture="ThiefCombat.png" animations="Thief_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" isMale="false">
+		<stats>
+			<stat name="health" value="70" max="70" />
+			<stat name="speed" value="8"/>
+			<stat name="attack" value="25"/>
+			<stat name="defense" value="8"/>
+		</stats>
 		<inventory />
 	</character>
 	<character id="CH-004" name="Executioner" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
@@ -36,7 +48,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-006" name="Barbara" texture="SpriteSheet_Barbara.png" combatTexture="barbara1Combat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-000" unlockedStance1="4" unlockedStance2="4">
+	<character id="CH-006" name="Barbara" texture="SpriteSheet_Barbara.png" combatTexture="barbara1Combat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" unlockedStance1="4" unlockedStance2="4">
 		<stats>
 			<stat name="health" value="100" max="100" />
 			<stat name="speed" value="5"/>

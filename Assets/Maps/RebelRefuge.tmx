@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="320" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="655">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="320" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="656">
  <properties>
   <property name="Draw" type="bool" value="true"/>
  </properties>
@@ -192176,6 +192176,12 @@
   <object id="654" x="4375" y="1012">
    <properties>
     <property name="id" value="BALL-001"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="655" x="1250" y="1473">
+   <properties>
+    <property name="id" value="HOE-001"/>
    </properties>
    <point/>
   </object>
