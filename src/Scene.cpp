@@ -1506,6 +1506,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	switch (combatResult)
 	{
 	case WIN:
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
 		for (const auto& enemy : enemyParty->members) {
 			CheckCompletedMissions<KillMission>(enemy->id, enemy->name);
 			entityManager->DestroyEntity(enemy);
@@ -1523,6 +1524,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 		EndGame();
 		break;
 	case FLED:
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
 		for (const auto& npc : player->party->members) {
 			if (npc->isDead) {
 				Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
@@ -1543,7 +1545,6 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	combat = nullptr;
 	UpdateInventory();
 	Engine::GetInstance().render->follow = player;
-	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
 }
 
 void Scene::CopyCleanGameData()
