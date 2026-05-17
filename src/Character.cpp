@@ -124,4 +124,13 @@ void Character::DrawHealthBar(const SDL_Rect& rect)
     Engine::GetInstance().render->DrawRectangle({ x, y - 15, healthW, 10 }, 0, 255, 0);
 }
 
+void Character::DrawCombatHealthBar(float worldX, float worldY, int width)
+{
+    int healthW = width * stats->GetStat("health").getValue() / stats->GetStat("health").maxValue;
+    int x = (int)worldX;
+    int y = (int)worldY + 100;
+    Engine::GetInstance().render->DrawRectangle({ x, y, width, 10 }, 255, 0, 0);
+    Engine::GetInstance().render->DrawRectangle({ x, y, healthW, 10 }, 0, 255, 0);
+}
+
 void Character::DrawHealthBar(SDL_Texture* texture) { DrawHealthBar({0, 0, texture->w, texture->h }); }

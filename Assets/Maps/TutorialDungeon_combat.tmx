@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="22" nextobjectid="113">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="22" nextobjectid="113">
  <tileset firstgid="1" name="metadata" tilewidth="16" tileheight="16" tilecount="7" columns="7">
   <image source="Tileset - What Remains of You/Metadata.png" width="112" height="16"/>
  </tileset>
@@ -9,7 +9,7 @@
  <tileset firstgid="264" name="mainlevbuild" tilewidth="16" tileheight="16" tilecount="2560" columns="64">
   <image source="mainlevbuild.png" width="1024" height="640"/>
  </tileset>
- <layer id="1" name="Background" width="30" height="30">
+ <layer id="1" name="Background" width="50" height="30">
   <properties>
    <property name="Draw" type="bool" value="true"/>
   </properties>
@@ -44,6 +44,26 @@
    <tile gid="1466"/>
    <tile gid="1846"/>
    <tile gid="1847"/>
+   <tile gid="1594"/>
+   <tile gid="1654"/>
+   <tile gid="1850"/>
+   <tile gid="1654"/>
+   <tile gid="1782"/>
+   <tile gid="1654"/>
+   <tile gid="1658"/>
+   <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1782"/>
+   <tile gid="1782"/>
+   <tile gid="1654"/>
+   <tile gid="1850"/>
+   <tile gid="1654"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1783"/>
+   <tile gid="1783"/>
+   <tile gid="1783"/>
+   <tile gid="1786"/>
    <tile gid="1850"/>
    <tile gid="1591"/>
    <tile gid="1590"/>
@@ -74,6 +94,26 @@
    <tile gid="1466"/>
    <tile gid="1846"/>
    <tile gid="1847"/>
+   <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1402"/>
+   <tile gid="1785"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1402"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1786"/>
+   <tile gid="1786"/>
+   <tile gid="1786"/>
+   <tile gid="1654"/>
    <tile gid="1850"/>
    <tile gid="1655"/>
    <tile gid="1785"/>
@@ -104,6 +144,26 @@
    <tile gid="1466"/>
    <tile gid="1846"/>
    <tile gid="1847"/>
+   <tile gid="1850"/>
+   <tile gid="1655"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1594"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1463"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1850"/>
+   <tile gid="1655"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1594"/>
+   <tile gid="1654"/>
+   <tile gid="1654"/>
+   <tile gid="1654"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
    <tile gid="1783"/>
    <tile gid="1591"/>
    <tile gid="1655"/>
@@ -134,6 +194,26 @@
    <tile gid="1590"/>
    <tile gid="1466"/>
    <tile gid="1846"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1655"/>
+   <tile gid="1850"/>
+   <tile gid="1782"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1655"/>
+   <tile gid="1850"/>
+   <tile gid="1782"/>
+   <tile gid="1655"/>
+   <tile gid="1655"/>
+   <tile gid="1655"/>
+   <tile gid="1655"/>
+   <tile gid="1591"/>
    <tile gid="1847"/>
    <tile gid="1783"/>
    <tile gid="1591"/>
@@ -165,6 +245,26 @@
    <tile gid="1466"/>
    <tile gid="1846"/>
    <tile gid="1847"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1594"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1846"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1594"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
    <tile gid="1654"/>
    <tile gid="1591"/>
    <tile gid="1846"/>
@@ -194,6 +294,26 @@
    <tile gid="1590"/>
    <tile gid="1466"/>
    <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1591"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1782"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1591"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1782"/>
+   <tile gid="1846"/>
+   <tile gid="1846"/>
+   <tile gid="1846"/>
+   <tile gid="1846"/>
+   <tile gid="1783"/>
    <tile gid="1591"/>
    <tile gid="1591"/>
    <tile gid="1782"/>
@@ -224,6 +344,26 @@
    <tile gid="1590"/>
    <tile gid="1466"/>
    <tile gid="1846"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1594"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1594"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1783"/>
+   <tile gid="1783"/>
+   <tile gid="1783"/>
+   <tile gid="1850"/>
    <tile gid="1850"/>
    <tile gid="1657"/>
    <tile gid="1591"/>
@@ -254,6 +394,26 @@
    <tile gid="1590"/>
    <tile gid="1466"/>
    <tile gid="1846"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1846"/>
+   <tile gid="1782"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
    <tile gid="1850"/>
    <tile gid="1657"/>
    <tile gid="1591"/>
@@ -290,6 +450,26 @@
    <tile gid="1590"/>
    <tile gid="1591"/>
    <tile gid="1654"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1465"/>
+   <tile gid="1654"/>
+   <tile gid="1782"/>
+   <tile gid="1846"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
    <tile gid="1850"/>
    <tile gid="1785"/>
    <tile gid="1786"/>
@@ -320,6 +500,26 @@
    <tile gid="1590"/>
    <tile gid="1591"/>
    <tile gid="1654"/>
+   <tile gid="1850"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1783"/>
+   <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1465"/>
+   <tile gid="1785"/>
+   <tile gid="1850"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1783"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
    <tile gid="1654"/>
    <tile gid="1846"/>
    <tile gid="1847"/>
@@ -343,6 +543,26 @@
    <tile gid="1590"/>
    <tile gid="1466"/>
    <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1654"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1590"/>
+   <tile gid="1594"/>
+   <tile gid="1654"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
    <tile gid="1847"/>
    <tile gid="1850"/>
    <tile gid="1657"/>
@@ -380,6 +600,26 @@
    <tile gid="1590"/>
    <tile gid="1591"/>
    <tile gid="1654"/>
+   <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1782"/>
+   <tile gid="1594"/>
+   <tile gid="1654"/>
+   <tile gid="1850"/>
+   <tile gid="1654"/>
+   <tile gid="1782"/>
+   <tile gid="1654"/>
+   <tile gid="1658"/>
+   <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1782"/>
+   <tile gid="1782"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
    <tile gid="1655"/>
    <tile gid="1591"/>
    <tile gid="1591"/>
@@ -404,6 +644,26 @@
    <tile gid="1466"/>
    <tile gid="1846"/>
    <tile gid="1847"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1402"/>
+   <tile gid="1785"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1850"/>
    <tile gid="1850"/>
    <tile gid="1657"/>
    <tile gid="1591"/>
@@ -440,6 +700,26 @@
    <tile gid="1590"/>
    <tile gid="1591"/>
    <tile gid="1654"/>
+   <tile gid="1463"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1850"/>
+   <tile gid="1655"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1594"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1463"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1850"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
    <tile gid="1782"/>
    <tile gid="1783"/>
    <tile gid="1782"/>
@@ -464,6 +744,26 @@
    <tile gid="1466"/>
    <tile gid="1846"/>
    <tile gid="1847"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1655"/>
+   <tile gid="1850"/>
+   <tile gid="1782"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
    <tile gid="1850"/>
    <tile gid="1657"/>
    <tile gid="1591"/>
@@ -500,6 +800,26 @@
    <tile gid="1590"/>
    <tile gid="1591"/>
    <tile gid="1654"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1594"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1846"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
    <tile gid="1847"/>
    <tile gid="1782"/>
    <tile gid="1846"/>
@@ -524,6 +844,26 @@
    <tile gid="1590"/>
    <tile gid="1466"/>
    <tile gid="1846"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1847"/>
+   <tile gid="1782"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1591"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1782"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
    <tile gid="1657"/>
    <tile gid="1591"/>
    <tile gid="1590"/>
@@ -554,6 +894,26 @@
    <tile gid="1590"/>
    <tile gid="1466"/>
    <tile gid="1846"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1654"/>
+   <tile gid="1594"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1594"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
    <tile gid="1657"/>
    <tile gid="1591"/>
    <tile gid="1590"/>
@@ -589,6 +949,26 @@
    <tile gid="1590"/>
    <tile gid="1591"/>
    <tile gid="1654"/>
+   <tile gid="1783"/>
+   <tile gid="1466"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1655"/>
+   <tile gid="1590"/>
+   <tile gid="1466"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
    <tile gid="1847"/>
    <tile gid="1654"/>
    <tile gid="1655"/>
@@ -614,6 +994,26 @@
    <tile gid="1466"/>
    <tile gid="1846"/>
    <tile gid="1847"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1846"/>
+   <tile gid="1782"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
    <tile gid="1850"/>
    <tile gid="1657"/>
    <tile gid="1591"/>
@@ -650,6 +1050,26 @@
    <tile gid="1590"/>
    <tile gid="1591"/>
    <tile gid="1654"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1465"/>
+   <tile gid="1654"/>
+   <tile gid="1782"/>
+   <tile gid="1846"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
    <tile gid="1850"/>
    <tile gid="1785"/>
    <tile gid="1786"/>
@@ -680,6 +1100,26 @@
    <tile gid="1590"/>
    <tile gid="1591"/>
    <tile gid="1654"/>
+   <tile gid="1850"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1783"/>
+   <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1465"/>
+   <tile gid="1785"/>
+   <tile gid="1850"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1783"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
    <tile gid="1654"/>
    <tile gid="1846"/>
    <tile gid="1847"/>
@@ -704,6 +1144,26 @@
    <tile gid="1850"/>
    <tile gid="1785"/>
    <tile gid="1786"/>
+   <tile gid="1850"/>
+   <tile gid="1657"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1654"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1590"/>
+   <tile gid="1594"/>
+   <tile gid="1654"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1847"/>
    <tile gid="1783"/>
    <tile gid="1654"/>
    <tile gid="1655"/>
@@ -734,6 +1194,26 @@
    <tile gid="1654"/>
    <tile gid="1846"/>
    <tile gid="1847"/>
+   <tile gid="1783"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1846"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1782"/>
+   <tile gid="1594"/>
+   <tile gid="1654"/>
+   <tile gid="1850"/>
+   <tile gid="1654"/>
+   <tile gid="1782"/>
+   <tile gid="1654"/>
+   <tile gid="1658"/>
+   <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1782"/>
+   <tile gid="1782"/>
    <tile gid="1847"/>
    <tile gid="1399"/>
    <tile gid="1654"/>
@@ -764,6 +1244,26 @@
    <tile gid="1850"/>
    <tile gid="1591"/>
    <tile gid="1782"/>
+   <tile gid="1847"/>
+   <tile gid="1399"/>
+   <tile gid="1654"/>
+   <tile gid="1782"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1655"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1402"/>
+   <tile gid="1785"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1850"/>
    <tile gid="1783"/>
    <tile gid="1850"/>
    <tile gid="1591"/>
@@ -794,6 +1294,26 @@
    <tile gid="1655"/>
    <tile gid="1591"/>
    <tile gid="1591"/>
+   <tile gid="1783"/>
+   <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1463"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1850"/>
+   <tile gid="1655"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1594"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1463"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1850"/>
    <tile gid="1847"/>
    <tile gid="1654"/>
    <tile gid="1655"/>
@@ -824,6 +1344,26 @@
    <tile gid="1463"/>
    <tile gid="1785"/>
    <tile gid="1786"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1655"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1593"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1655"/>
+   <tile gid="1850"/>
+   <tile gid="1782"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
    <tile gid="1782"/>
    <tile gid="1654"/>
    <tile gid="1850"/>
@@ -854,6 +1394,26 @@
    <tile gid="1782"/>
    <tile gid="1783"/>
    <tile gid="1782"/>
+   <tile gid="1782"/>
+   <tile gid="1654"/>
+   <tile gid="1850"/>
+   <tile gid="1654"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1594"/>
+   <tile gid="1591"/>
+   <tile gid="1654"/>
+   <tile gid="1846"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
    <tile gid="1850"/>
    <tile gid="1591"/>
    <tile gid="1590"/>
@@ -885,6 +1445,26 @@
    <tile gid="1847"/>
    <tile gid="1846"/>
    <tile gid="1850"/>
+   <tile gid="1591"/>
+   <tile gid="1590"/>
+   <tile gid="1402"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1847"/>
+   <tile gid="1782"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1591"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1782"/>
+   <tile gid="1846"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1847"/>
+   <tile gid="1654"/>
+   <tile gid="1850"/>
    <tile gid="1655"/>
    <tile gid="1785"/>
    <tile gid="1786"/>
@@ -914,59 +1494,79 @@
    <tile gid="1847"/>
    <tile gid="1782"/>
    <tile gid="1846"/>
+   <tile gid="1850"/>
+   <tile gid="1655"/>
+   <tile gid="1785"/>
+   <tile gid="1786"/>
+   <tile gid="1594"/>
+   <tile gid="1654"/>
+   <tile gid="1594"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1594"/>
+   <tile gid="1782"/>
+   <tile gid="1783"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
+   <tile gid="1591"/>
   </data>
  </layer>
  <objectgroup id="17" name="Positions">
-  <object id="94" x="400" y="288">
+  <object id="94" x="544" y="304">
    <properties>
     <property name="isEnemy" type="bool" value="false"/>
     <property name="order" type="int" value="2"/>
    </properties>
    <point/>
   </object>
-  <object id="97" x="80" y="288">
+  <object id="97" x="160" y="304">
    <properties>
     <property name="isEnemy" type="bool" value="false"/>
     <property name="order" type="int" value="0"/>
    </properties>
    <point/>
   </object>
-  <object id="98" x="288" y="288">
+  <object id="98" x="416" y="304">
    <properties>
     <property name="isEnemy" type="bool" value="false"/>
     <property name="order" type="int" value="3"/>
    </properties>
    <point/>
   </object>
-  <object id="99" x="192" y="288">
+  <object id="99" x="288" y="304">
    <properties>
     <property name="isEnemy" type="bool" value="false"/>
     <property name="order" type="int" value="1"/>
    </properties>
    <point/>
   </object>
-  <object id="100" x="80" y="192">
+  <object id="100" x="160" y="160">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
     <property name="order" type="int" value="0"/>
    </properties>
    <point/>
   </object>
-  <object id="101" x="400" y="192">
+  <object id="101" x="544" y="160">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
     <property name="order" type="int" value="2"/>
    </properties>
    <point/>
   </object>
-  <object id="102" x="288" y="192">
+  <object id="102" x="416" y="160">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
     <property name="order" type="int" value="3"/>
    </properties>
    <point/>
   </object>
-  <object id="103" x="192" y="192">
+  <object id="103" x="288" y="160">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
     <property name="order" type="int" value="1"/>
@@ -974,8 +1574,8 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="21" name="Camera">
-  <object id="112" x="240" y="240">
+ <objectgroup id="21" name="Camera" locked="1">
+  <object id="112" x="400" y="240">
    <point/>
   </object>
  </objectgroup>

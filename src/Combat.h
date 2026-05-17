@@ -189,6 +189,12 @@ public:
 
 	std::shared_ptr<UIImage> cancelAction = nullptr;
 
+	SDL_Texture* combatBg = nullptr;
+
+	SDL_Rect panelRect1 = {};
+	SDL_Rect panelRect2 = {};
+	SDL_Rect panelRect3 = {};
+
 	CombatPhase combatPhase = DECISION;
 	CombatResult combatResult = NO_RESULT;
 

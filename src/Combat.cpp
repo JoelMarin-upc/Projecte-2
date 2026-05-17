@@ -67,56 +67,58 @@ bool Combat::Start() {
 	Engine::GetInstance().render->camera.x = -combatData.cameraPosition.getX() + Engine::GetInstance().render->camera.w / 2;
 	Engine::GetInstance().render->camera.y = -combatData.cameraPosition.getY() + Engine::GetInstance().render->camera.h / 2;
 
+	combatBg = Engine::GetInstance().textures->Load("Assets/Textures/CombatBackground.png");
+
 	int sw = Engine::GetInstance().window->width;
 	int sh = Engine::GetInstance().window->height;
 	int cx = Engine::GetInstance().render->camera.x;
 	int cy = Engine::GetInstance().render->camera.y;
 
-	// -------------------------------------------------------------------------
-	// TOP BAR  (three side-by-side panels, fixed to screen-space)
-	//
-	//  [ Panel 1: hint + log lines ]  [ Panel 2: 2x2 action grid ]  [ Panel 3: End Turn / Undo ]
-	// -------------------------------------------------------------------------
-	const int panelY = 10;   // distance from screen top
-	const int btnW = 150;
-	const int btnH = 40;
+	const int panelY = 10;
+	const int btnW = 192;
+	const int btnH = 64;
 	const int gap = 5;
+	const int btnGap = 50;
 	const int logLineH = 20;
 
-	// --- Panel 1: hint text + 4 combat-log lines ---
+	const int panelH = gap + btnH + gap + btnH + gap;
+
+	// Panel 1: hint + logs
 	const int logPanelX = 10;
 	const int logPanelW = 280;
 
-	// Hint sits at the very top of Panel 1
 	SDL_Rect b_hint = { logPanelX + gap, panelY + gap, logPanelW - gap * 2, logLineH };
 
-	// Log lines fill the rest of Panel 1 beneath the hint
 	const int logStartY = panelY + gap + logLineH + gap;
-	SDL_Rect b_log1 = { logPanelX + gap, logStartY,                        logPanelW - gap * 2, logLineH };
+	SDL_Rect b_log1 = { logPanelX + gap, logStartY, logPanelW - gap * 2, logLineH };
 	SDL_Rect b_log2 = { logPanelX + gap, logStartY + (logLineH + gap),     logPanelW - gap * 2, logLineH };
 	SDL_Rect b_log3 = { logPanelX + gap, logStartY + (logLineH + gap) * 2, logPanelW - gap * 2, logLineH };
 	SDL_Rect b_log4 = { logPanelX + gap, logStartY + (logLineH + gap) * 3, logPanelW - gap * 2, logLineH };
 
-	// --- Panel 2: 2x2 action / stance button grid ---
-	const int actionPanelX = logPanelX + logPanelW + 10;
-	const int actionPanelW = btnW * 2 + gap * 3;
+	// Panel 2: Actions
+	const int actionPanelW = btnW * 2 + btnGap; 
+	const int actionPanelX = (sw - actionPanelW) / 2;
 	// Row 1
-	SDL_Rect b_action1 = { actionPanelX + gap,              panelY + gap,              btnW, btnH };
-	SDL_Rect b_action2 = { actionPanelX + gap + btnW + gap, panelY + gap,              btnW, btnH };
+	SDL_Rect b_action1 = { actionPanelX, panelY + gap, btnW, btnH };
+	SDL_Rect b_action2 = { actionPanelX + btnW + btnGap, panelY + gap, btnW, btnH };
 	// Row 2
-	SDL_Rect b_action3 = { actionPanelX + gap,              panelY + gap + btnH + gap, btnW, btnH };
-	SDL_Rect b_action4 = { actionPanelX + gap + btnW + gap, panelY + gap + btnH + gap, btnW, btnH };
-	// Stance buttons share the same screen slots as the action buttons
+	SDL_Rect b_action3 = { actionPanelX, panelY + gap + btnH + gap, btnW, btnH };
+	SDL_Rect b_action4 = { actionPanelX + btnW + btnGap, panelY + gap + btnH + gap, btnW, btnH };
+	// Stances
 	SDL_Rect b_stance1 = b_action1;
 	SDL_Rect b_stance2 = b_action2;
 	SDL_Rect b_stance3 = b_action3;
 	SDL_Rect b_stance4 = b_action4;
 
-	// --- Panel 3: End Turn / Undo Action ---
-	const int ctrlPanelX = actionPanelX + actionPanelW + 10;
-	SDL_Rect b_endTurn = { ctrlPanelX + gap, panelY + gap,              btnW, btnH };
-	SDL_Rect b_cancelAction = { ctrlPanelX + gap, panelY + gap + btnH + gap, btnW, btnH };
+	// Panel 3: End Turn / Undo Action
+	const int ctrlPanelX = sw - btnW - 40;
+	SDL_Rect b_endTurn = { ctrlPanelX, panelY + gap, btnW, btnH };
+	SDL_Rect b_cancelAction = { ctrlPanelX, panelY + gap + btnH + gap, btnW, btnH };
 
+	/*const int logPanelH = gap + logLineH + gap + logLineH + gap + logLineH + gap + logLineH + gap + logLineH + gap;
+	panelRect1 = { logPanelX, panelY, logPanelW, logPanelH };
+	panelRect2 = { actionPanelX, panelY, actionPanelW, panelH };
+	panelRect3 = { ctrlPanelX, panelY, btnW, panelH };*/
 
 	// Attack (action1)
 	SDL_Texture* action1Normal = Engine::GetInstance().textures->Load("Assets/Textures/attackButtonNormal.png");
@@ -139,25 +141,25 @@ bool Combat::Start() {
 	SDL_Texture* action4Pres = Engine::GetInstance().textures->Load("Assets/Textures/fleeButtonPressed.png");
 	SDL_Texture* action4Dis = action4Normal;
 	// Assist (stance1)
-	SDL_Texture* stance1Normal = Engine::GetInstance().textures->Load("Assets/Textures/stance1Normal.png");
-	SDL_Texture* stance1Hov = Engine::GetInstance().textures->Load("Assets/Textures/stance1Hov.png");
-	SDL_Texture* stance1Pres = Engine::GetInstance().textures->Load("Assets/Textures/stance1Pres.png");
-	SDL_Texture* stance1Dis = Engine::GetInstance().textures->Load("Assets/Textures/stance1Dis.png");
+	SDL_Texture* stance1Normal = Engine::GetInstance().textures->Load("Assets/Textures/assistButtonNormal.png");
+	SDL_Texture* stance1Hov = Engine::GetInstance().textures->Load("Assets/Textures/assistButtonHover.png");
+	SDL_Texture* stance1Pres = Engine::GetInstance().textures->Load("Assets/Textures/assistButtonPressed.png");
+	SDL_Texture* stance1Dis = stance1Normal;
 	// Concentrate (stance2)
-	SDL_Texture* stance2Normal = Engine::GetInstance().textures->Load("Assets/Textures/stance2Normal.png");
-	SDL_Texture* stance2Hov = Engine::GetInstance().textures->Load("Assets/Textures/stance2Hov.png");
-	SDL_Texture* stance2Pres = Engine::GetInstance().textures->Load("Assets/Textures/stance2Pres.png");
-	SDL_Texture* stance2Dis = Engine::GetInstance().textures->Load("Assets/Textures/stance2Dis.png");
+	SDL_Texture* stance2Normal = Engine::GetInstance().textures->Load("Assets/Textures/concentrateButtonNormal.png");
+	SDL_Texture* stance2Hov = Engine::GetInstance().textures->Load("Assets/Textures/concentrateButtonHover.png");
+	SDL_Texture* stance2Pres = Engine::GetInstance().textures->Load("Assets/Textures/concentrateButtonPressed.png");
+	SDL_Texture* stance2Dis = stance2Normal;
 	// Defend (stance3)
-	SDL_Texture* stance3Normal = Engine::GetInstance().textures->Load("Assets/Textures/stance3Normal.png");
-	SDL_Texture* stance3Hov = Engine::GetInstance().textures->Load("Assets/Textures/stance3Hov.png");
-	SDL_Texture* stance3Pres = Engine::GetInstance().textures->Load("Assets/Textures/stance3Pres.png");
-	SDL_Texture* stance3Dis = Engine::GetInstance().textures->Load("Assets/Textures/stance3Dis.png");
+	SDL_Texture* stance3Normal = Engine::GetInstance().textures->Load("Assets/Textures/defendButtonNormal.png");
+	SDL_Texture* stance3Hov = Engine::GetInstance().textures->Load("Assets/Textures/defendButtonHover.png");
+	SDL_Texture* stance3Pres = Engine::GetInstance().textures->Load("Assets/Textures/defendButtonPressed.png");
+	SDL_Texture* stance3Dis = stance3Normal;
 	// Rest (stance4)
-	SDL_Texture* stance4Normal = Engine::GetInstance().textures->Load("Assets/Textures/stance4Normal.png");
-	SDL_Texture* stance4Hov = Engine::GetInstance().textures->Load("Assets/Textures/stance4Hov.png");
-	SDL_Texture* stance4Pres = Engine::GetInstance().textures->Load("Assets/Textures/stance4Pres.png");
-	SDL_Texture* stance4Dis = Engine::GetInstance().textures->Load("Assets/Textures/stance4Dis.png");
+	SDL_Texture* stance4Normal = Engine::GetInstance().textures->Load("Assets/Textures/restButtonNormal.png");
+	SDL_Texture* stance4Hov = Engine::GetInstance().textures->Load("Assets/Textures/restButtonHover.png");
+	SDL_Texture* stance4Pres = Engine::GetInstance().textures->Load("Assets/Textures/restButtonPressed.png");
+	SDL_Texture* stance4Dis = stance4Normal;
 	// End Turn
 	SDL_Texture* endTurnNormal = Engine::GetInstance().textures->Load("Assets/Textures/endTurnButtonNormal.png");
 	SDL_Texture* endTurnHov = Engine::GetInstance().textures->Load("Assets/Textures/endTurnButtonHover.png");
@@ -185,10 +187,10 @@ bool Combat::Start() {
 	endTurn = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::END_TURN, b_endTurn, this, {  }, -1, -1, UIParameters::Image(endTurnDis, endTurnNormal, endTurnHov, endTurnPres)));
 	cancelAction = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::CANCEL_ACTION, b_cancelAction, this, {  }, -1, -1, UIParameters::Image(undoDis, undoNormal, undoHov, undoPres)));
 
-	// Hint label  (overlaid inside the hint panel)
+	// Hint label
 	hint = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::HINT, b_hint, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
 
-	// Hidden combat-log labels
+	// Combat-log labels
 	log1 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG1, b_log1, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
 	log2 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG2, b_log2, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
 	log3 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::LOG3, b_log3, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
@@ -374,6 +376,18 @@ bool Combat::PreUpdate() {
 // Called each loop iteration
 bool Combat::Update(float dt) {
 	map->Update(dt);
+	if (combatBg) {
+		Engine::GetInstance().render->DrawTexture(combatBg, 0, 0, 0);
+	}
+
+	/*auto& r = *Engine::GetInstance().render;
+	r.DrawRectangle(panelRect1, 0, 0, 0, 180, true, false);
+	r.DrawRectangle(panelRect1, 255, 255, 255, 255, false, false);
+	r.DrawRectangle(panelRect2, 0, 0, 0, 180, true, false);
+	r.DrawRectangle(panelRect2, 255, 255, 255, 255, false, false);
+	r.DrawRectangle(panelRect3, 0, 0, 0, 180, true, false);
+	r.DrawRectangle(panelRect3, 255, 255, 255, 255, false, false);*/
+
 	player->GodMode();
 	std::vector<std::shared_ptr<Character>> members;
 	switch (combatPhase)
@@ -829,12 +843,12 @@ void Combat::CreateRandomAction(std::shared_ptr<Enemy> enemy)
 
 void Combat::DrawHealthBars() const
 {
-	if (player && !player->isDead) player->DrawHealthBar(player->combatTexture);
-	if (npc1 && !npc1->isDead) npc1->DrawHealthBar(npc1->combatTexture);
-	if (npc2 && !npc2->isDead) npc2->DrawHealthBar(npc2->combatTexture);
-	if (npc3 && !npc3->isDead) npc3->DrawHealthBar(npc3->combatTexture);
-	if (enemy1 && !enemy1->isDead) enemy1->DrawHealthBar(enemy1->combatTexture);
-	if (enemy2 && !enemy2->isDead) enemy2->DrawHealthBar(enemy2->combatTexture);
-	if (enemy3 && !enemy3->isDead) enemy3->DrawHealthBar(enemy3->combatTexture);
-	if (enemy4 && !enemy4->isDead) enemy4->DrawHealthBar(enemy4->combatTexture);
+	if (player && !player->isDead) player->DrawCombatHealthBar(player->position.getX(), player->position.getY() + player->combatTexture->h / 2, player->combatTexture->w);
+	if (npc1 && !npc1->isDead)   npc1->DrawCombatHealthBar(npc1->position.getX(), npc1->position.getY() + npc1->combatTexture->h / 2, npc1->combatTexture->w);
+	if (npc2 && !npc2->isDead)   npc2->DrawCombatHealthBar(npc2->position.getX(), npc2->position.getY() + npc2->combatTexture->h / 2, npc2->combatTexture->w);
+	if (npc3 && !npc3->isDead)   npc3->DrawCombatHealthBar(npc3->position.getX(), npc3->position.getY() + npc3->combatTexture->h / 2, npc3->combatTexture->w);
+	if (enemy1 && !enemy1->isDead) enemy1->DrawCombatHealthBar(enemy1->position.getX(), enemy1->position.getY() + enemy1->combatTexture->h / 2, enemy1->combatTexture->w);
+	if (enemy2 && !enemy2->isDead) enemy2->DrawCombatHealthBar(enemy2->position.getX(), enemy2->position.getY() + enemy2->combatTexture->h / 2, enemy2->combatTexture->w);
+	if (enemy3 && !enemy3->isDead) enemy3->DrawCombatHealthBar(enemy3->position.getX(), enemy3->position.getY() + enemy3->combatTexture->h / 2, enemy3->combatTexture->w);
+	if (enemy4 && !enemy4->isDead) enemy4->DrawCombatHealthBar(enemy4->position.getX(), enemy4->position.getY() + enemy4->combatTexture->h / 2, enemy4->combatTexture->w);
 }
