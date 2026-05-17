@@ -73,13 +73,8 @@ In this release, the following features have been implemented:
 ---
 ## Known Issues
 
-- The combat scene doesn't clean up properly after fleeing
-- Pathfinding still causes a lot of fps drops
-- Dialogue elements are drawn on top of the Pause Menu
-- Some textures fail to load sometimes in the battle scene
+- Character textures get drawn on top of the inventory in combat scene
 - If the party members can collide with the player, they will push the player out of scenes
-- After dying to an enemy the combat scene doesn't seem to clean up
-- The initial dialogue always repeats even after saving and pressing continue
 - Animations go faster when there's no UI
 
 ---
