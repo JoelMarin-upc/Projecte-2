@@ -474,6 +474,29 @@ bool Combat::PostUpdate(float dt) {
 
 // Called before quitting
 bool Combat::CleanUp() {
+	Engine::GetInstance().uiManager->DestroyUIElement(i_player);
+	Engine::GetInstance().uiManager->DestroyUIElement(i_npc1);
+	Engine::GetInstance().uiManager->DestroyUIElement(i_npc2);
+	Engine::GetInstance().uiManager->DestroyUIElement(i_npc3);
+	Engine::GetInstance().uiManager->DestroyUIElement(i_enemy1);
+	Engine::GetInstance().uiManager->DestroyUIElement(i_enemy2);
+	Engine::GetInstance().uiManager->DestroyUIElement(i_enemy3);
+	Engine::GetInstance().uiManager->DestroyUIElement(i_enemy4);
+	Engine::GetInstance().uiManager->DestroyUIElement(action1);
+	Engine::GetInstance().uiManager->DestroyUIElement(action2);
+	Engine::GetInstance().uiManager->DestroyUIElement(action3);
+	Engine::GetInstance().uiManager->DestroyUIElement(action4);
+	Engine::GetInstance().uiManager->DestroyUIElement(stance1);
+	Engine::GetInstance().uiManager->DestroyUIElement(stance2);
+	Engine::GetInstance().uiManager->DestroyUIElement(stance3);
+	Engine::GetInstance().uiManager->DestroyUIElement(stance4);
+	Engine::GetInstance().uiManager->DestroyUIElement(endTurn);
+	Engine::GetInstance().uiManager->DestroyUIElement(log1);
+	Engine::GetInstance().uiManager->DestroyUIElement(log2);
+	Engine::GetInstance().uiManager->DestroyUIElement(log3);
+	Engine::GetInstance().uiManager->DestroyUIElement(log4);
+	Engine::GetInstance().uiManager->DestroyUIElement(hint);
+	Engine::GetInstance().uiManager->DestroyUIElement(cancelAction);
 	return true;
 }
 

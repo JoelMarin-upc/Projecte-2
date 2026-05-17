@@ -1497,7 +1497,7 @@ std::vector<std::shared_ptr<Enemy>> Scene::GetNearEnemies(Vector2D position, flo
 
 void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
 {
-	if (hasCombatCooldown || isOnDialog || showingInventory || paused) return;
+	if (hasCombatCooldown || isOnDialog || showingInventory || paused || combat) return;
 	Engine::GetInstance().render->follow = nullptr;
 
 	auto nearEnemies = GetNearEnemies(player->position, 300, enemy->id);
@@ -1549,6 +1549,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	default:
 		break;
 	}
+	combat->CleanUp();
 	delete combat;
 	combat = nullptr;
 	UpdateInventory();
