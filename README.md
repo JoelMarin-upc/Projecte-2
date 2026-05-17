@@ -46,6 +46,7 @@ In this release, the following features have been implemented:
 - ✅2 Dungeon maps with puzzles
 - ✅Collectable items
 - ✅Quests
+- ✅Journal to check quests
 - ✅Inventory system
 - ✅Shop
 - ✅Basic economic system
@@ -53,11 +54,13 @@ In this release, the following features have been implemented:
 **SCREEN: BATTLE**
 - ✅Sound FX
 - ✅Turn-based combat system, players and enemies can alternate attacks
-- ✅Ninimal menu to choose next player actions
+- ✅Minimal menu to choose next player actions
 - ✅Music track
-- ✅Illustrations for the charcters and for the enemies
+- ✅New layout
+- ✅Charcters and enemies illustrations
 
 **ABILITIES**
+- ✅Unlock new abilities (stances) through progression
 - ✅Minimal menu system (characters stats, inventory items) 
 
 **MORE IMPLEMENTED FEATURES**
@@ -92,6 +95,10 @@ In this release, the following features have been implemented:
 | Move Right | D/RIGHT |
 | Interact | E |
 | Pick dialogue option | Mouse LEFT BT |
+| Open inventory | TAB |
+| Open mission journal | J |
+| Pause game | P/ESC |
+| Cap FPS | F11 |
 
 ### Debug Controls
 | Action | Key |
@@ -100,6 +107,8 @@ In this release, the following features have been implemented:
 | Rebel refuge scene | 1 |
 | Shop scene | 2 |
 | Tutorial dungeon scene | 3 |
+| Second dungeon scene | 4 |
+| Kill party NPC member | K |
 
 ---
 
@@ -129,5 +138,11 @@ In this release, the following features have been implemented:
 - Waltz in C (Classical, Piano, Soundtrack) by Ashot_Danielyan: https://pixabay.com/music/modern-classical-waltz-in-c-classical-piano-soundtrack-368728/
 - Follows ( Dark Ambient ) by AmbientAUDIOVISION: https://pixabay.com/music/ambient-follows-dark-ambient-194926/
 - Opening Old Elevator Door by ryanharding95 (Freesound): https://pixabay.com/sound-effects/film-special-effects-opening-old-elevator-door-84624/
+- Dark Ambient (Free Music) - "THE LONG DARK" by Scott Buckley 🇦🇺 : https://www.youtube.com/watch?v=zwyCdIF9flw
+- Dark Cinematic Background Music | Suspense Instrumental Music | Music by Argsound : https://www.youtube.com/watch?v=n0EHNKM-whk
+- Sad Piano (Free Music) - "Stillstand" by @Myuu 🇺🇸 : https://www.youtube.com/watch?v=qg9xayHvhcE
+- [Non Copyrighted Music] Josh Lippi & The Overtimers - St. Francis [Sad] : https://www.youtube.com/watch?v=pLEZgGeTnY8
+- FilmCow Royalty Free Sound Effects Library by FilmCow : https://filmcow.itch.io/filmcow-sfx
+- Footstep Leaves 2 by AardsReal : https://freesound.org/people/AardsReal/sounds/842187/
 
 All original assets in this project are licensed under CC BY 4.0.
