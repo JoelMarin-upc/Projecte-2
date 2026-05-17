@@ -769,6 +769,10 @@ void Combat::AddTurnAction()
 	if (npc2 && turnAction->selected->id == npc2->id) actionTaken3 = true;
 	if (npc3 && turnAction->selected->id == npc3->id) actionTaken4 = true;
 	turnAction = nullptr;
+
+	endTurn->active = true;
+	cancelAction->active = false;
+
 	int activeCharacters = 1;
 	for (std::shared_ptr<NPC> c : playerParty->members) if (!c->isDead && !c->hasFled) activeCharacters++;
 	if (isPlayerTurn && turnActions.size() == activeCharacters) {
