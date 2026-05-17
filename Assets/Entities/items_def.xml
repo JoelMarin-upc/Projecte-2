@@ -5,6 +5,11 @@
 			<stat name="attack" value="30"/>
 		</stats>
 	</item>
+	<item id="" name="shovel" gold="10" description="30 attack" texture="shovel.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
+		<stats>
+			<stat name="attack" value="30"/>
+		</stats>
+	</item>
 	<item id="" name="bandages" gold="5" description="20 HP" texture="bandages.png" type="4" itemClass="consumable" interactionType="1" canStack="true">
 		<stats>
 			<stat name="health" value="20" />
@@ -32,7 +37,7 @@
 	</item>
 	<item id="REWARD-001" name="Iron Sword" gold="10" description="30 attack" texture="sword.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
 		<stats>
-			<stat name="attack" value="30"/>
+			<stat name="attack" value="50"/>
 		</stats>
 	</item>
 	<item id="HOE-001" name="Rusty Hoe" gold="2" description="20 attack" texture="hoe.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
