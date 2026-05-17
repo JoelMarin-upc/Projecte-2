@@ -1021,6 +1021,12 @@ void Scene::LoadScene(std::string spawnId)
 				npcPtr->LoadAnimations();
 				npcPtr->CreateColliders();
 			}
+			else if (auto enemyPtr = std::dynamic_pointer_cast<Enemy>(m)) {
+				std::string animations = cNode.attribute("animations").as_string();
+				enemyPtr->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
+				enemyPtr->LoadAnimations();
+				enemyPtr->CreateColliders();
+			}
 		}
 	}
 
