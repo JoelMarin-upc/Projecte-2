@@ -791,10 +791,14 @@ void Scene::UnlockStances(int level)
 		{ 1, {
 			{ "player", Stance::DEFEND },
 			{ "CH-006", Stance::CONCENTRATE },
+			{ "CH-001", Stance::ASSIST },
+			{ "CH-003", Stance::REST },
 		}},
 		{ 2, {
 			{ "player", Stance::REST },
 			{ "CH-006", Stance::ASSIST },
+			{ "CH-001", Stance::DEFEND },
+			{ "CH-003", Stance::CONCENTRATE },
 		}},
 	};
 

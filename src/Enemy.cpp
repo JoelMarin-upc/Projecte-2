@@ -69,7 +69,7 @@ bool Enemy::Update(float dt)
 
 void Enemy::Draw(float dt)
 {
-	if (pathfinding)
+	if (pathfinding && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 		pathfinding->DrawPath();
 
 	int x, y;
