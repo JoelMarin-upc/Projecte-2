@@ -251,11 +251,13 @@ void Enemy::UpdateState(float dt)
 		float pathTimer = 0.0f;
 		float pathInterval = 0.3f;
 
-		if (playerTile != lastPlayerTile && (pathTimer += dt) >= pathInterval) {
-			lastPlayerTile = playerTile;
-			PerformPathfinding();
-			pathTimer = 0.0f;
-
+		if (playerTile != lastPlayerTile) {
+			pathTimer += dt;
+			if (pathTimer >= pathInterval) {
+				lastPlayerTile = playerTile;
+				PerformPathfinding();
+				pathTimer = 0.0f;
+			}
 		}
 
 		Move(currentTarget);
