@@ -1517,7 +1517,7 @@
   </data>
  </layer>
  <objectgroup id="17" name="Positions">
-  <object id="94" x="650" y="304">
+  <object id="94" x="520" y="304">
    <properties>
     <property name="isEnemy" type="bool" value="false"/>
     <property name="order" type="int" value="2"/>
@@ -1531,42 +1531,42 @@
    </properties>
    <point/>
   </object>
-  <object id="98" x="486" y="304">
+  <object id="98" x="400" y="304">
    <properties>
     <property name="isEnemy" type="bool" value="false"/>
     <property name="order" type="int" value="3"/>
    </properties>
    <point/>
   </object>
-  <object id="99" x="323" y="304">
+  <object id="99" x="280" y="304">
    <properties>
     <property name="isEnemy" type="bool" value="false"/>
     <property name="order" type="int" value="1"/>
    </properties>
    <point/>
   </object>
-  <object id="100" x="160" y="115">
+  <object id="100" x="150" y="115">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
     <property name="order" type="int" value="0"/>
    </properties>
    <point/>
   </object>
-  <object id="101" x="650" y="115">
+  <object id="101" x="520" y="115">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
     <property name="order" type="int" value="2"/>
    </properties>
    <point/>
   </object>
-  <object id="102" x="486" y="115">
+  <object id="102" x="400" y="115">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
     <property name="order" type="int" value="3"/>
    </properties>
    <point/>
   </object>
-  <object id="103" x="323" y="115">
+  <object id="103" x="340" y="115">
    <properties>
     <property name="isEnemy" type="bool" value="true"/>
     <property name="order" type="int" value="1"/>
