@@ -63,10 +63,10 @@
 	</character>
 	<character id="CH-007" name="Long Enemy" texture="SpriteSheet_LongEnemy.png" combatTexture="LongEnemy_Combat.png" animations="LongEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
-			<stat name="health" value="150" max="150" />
+			<stat name="health" value="90" max="90" />
 			<stat name="speed" value="5"/>
 			<stat name="attack" value="45"/>
-			<stat name="defense" value="20"/>
+			<stat name="defense" value="10"/>
 		</stats>
 		<inventory>
 			<item id="" name="bandages"/>
@@ -74,10 +74,10 @@
 	</character>
 	<character id="CH-008" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
-			<stat name="health" value="150" max="150" />
+			<stat name="health" value="100" max="100" />
 			<stat name="speed" value="5"/>
 			<stat name="attack" value="50"/>
-			<stat name="defense" value="20"/>
+			<stat name="defense" value="8"/>
 		</stats>
 		<inventory />
 	</character>
