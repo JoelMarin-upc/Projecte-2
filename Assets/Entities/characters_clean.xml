@@ -11,8 +11,8 @@
 			
 		</party>
 		<inventory gold="50">
-			<item id="" name="sword"/>
-			<item id="" name="sword"/>
+			<item id="" name="hoe"/>
+			<item id="" name="hoe"/>
 		</inventory>
 	</player>
 	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="garnikCombat.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
@@ -44,7 +44,7 @@
 			<stat name="defense" value="10"/>
 		</stats>
 		<inventory>
-			<item id="" name="potion"/>
+			<item id="" name="bandages"/>
 		</inventory>
 	</character>
 	<character id="CH-007" name="Long Enemy" texture="SpriteSheet_LongEnemy.png" combatTexture="LongEnemy_Combat.png" animations="LongEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
@@ -55,7 +55,7 @@
 			<stat name="defense" value="20"/>
 		</stats>
 		<inventory>
-			<item id="" name="potion"/>
+			<item id="" name="bandages"/>
 		</inventory>
 	</character>
 	<character id="CH-008" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
@@ -75,8 +75,8 @@
 			<stat name="defense" value="5"/>
 		</stats>
 		<inventory>
-			<item id="" name="potion"/>
-			<item id="" name="potion"/>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
 		</inventory>
 	</character>
 	<character id="CH-010" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
@@ -90,13 +90,13 @@
 	</character>
 	<character id="CH-011" name="Shopkeeper" texture="heart.png" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
 		<inventory>
-			<item id="" name="potion"/>
-			<item id="" name="potion"/>
-			<item id="" name="sword"/>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+			<item id="" name="hoe"/>
 			<item id="" name="helmet"/>
-			<item id="" name="armor"/>
+			<item id="" name="leather armor"/>
 			<item id="" name="leather boots"/>
-			<item id="" name="steel boots"/>
+			<item id="" name="padded boots"/>
 		</inventory>
 	</character>
 	<character id="CH-012" name="Nia" texture="Nia.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">

@@ -8,8 +8,8 @@ public:
 	std::string itemName;
 	inline std::string ToString() override
 	{
-		if (completed) return "Brought a " + itemName + " to " + targetName + ". " + ToStringReward();
-		else return "Bring a " + itemName + " to " + targetName + ". " + ToStringReward();
+		if (completed) return "Brought " + itemName + " to " + targetName + ". " + ToStringReward();
+		else return "Bring " + itemName + " to " + targetName + ". " + ToStringReward();
 	};
 private:
 
