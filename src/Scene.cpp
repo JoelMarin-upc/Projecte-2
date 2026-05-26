@@ -209,7 +209,12 @@ bool Scene::Update(float dt)
 
 	if (!gameStarted) return true;
 
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN || Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) TogglePause();
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN ||
+		Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN ||
+		Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_START) == KEY_DOWN)
+	{
+		TogglePause();
+	}
 	
 	missionManager->Update(dt);
 	
