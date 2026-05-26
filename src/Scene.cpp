@@ -1226,7 +1226,8 @@ void Scene::CheckTimers() {
 
 void Scene::ToggleInventory()
 {
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN)
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN ||
+		Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_WEST) == KEY_DOWN)
 	{
 		if (showingShop) {
 			ToggleShop(nullptr);
@@ -1257,7 +1258,8 @@ void Scene::ToggleInventoryForCombat(bool show, std::shared_ptr<Character> chara
 
 void Scene::ToggleJournal()
 {
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_J) == KEY_DOWN)
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_J) == KEY_DOWN ||
+		Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_NORTH) == KEY_DOWN)
 	{
 		if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) Engine::GetInstance().menuManager->HideMenu();
 		else Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);

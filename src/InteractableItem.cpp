@@ -58,7 +58,8 @@ bool InteractableItem::Update(float dt) {
 	b2Body_SetTransform(sensorCollider->body, { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, b2Body_GetRotation(sensorCollider->body));
 
 	if (isPlayerInRange && !isToggled) {
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN ||
+			Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_SOUTH) == KEY_DOWN) {
 			Interact();
 		}
 	}

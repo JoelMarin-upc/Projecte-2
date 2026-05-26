@@ -41,7 +41,8 @@ bool SequenceButton::Update(float dt)
     }
 
     if (isPlayerInRange && !isToggled) {
-        if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
+        if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN ||
+            Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_SOUTH) == KEY_DOWN) {
             Interact();
         }
     }
