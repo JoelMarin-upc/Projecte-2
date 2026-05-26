@@ -45,6 +45,9 @@ bool InteractableItem::Start() {
 	sensorCollider->listener = this;
 	//sensorCollider->listener->type = EntityType::INTERACTABLE_ITEM;
 
+	std::string pickupFxPath = Engine::GetInstance().audio->GetAudioPath("missions", "pickup");
+	pickupFxId = Engine::GetInstance().audio->LoadFx(pickupFxPath.c_str());
+
 	return true;
 }
 
@@ -169,6 +172,7 @@ void InteractableItem::Pickup()
 				}
 				player->inventory->PrintContents();
 				LOG("'%s' picked up", name.c_str());
+				Engine::GetInstance().audio->PlayFx(pickupFxId);
 				return;
 			}
 			else {

@@ -106,7 +106,7 @@ struct TurnAction {
 class Combat : public Module {
 public:
 
-	Combat(Party* _playerParty, EnemyParty* _enemyParty, std::string mapPath, std::string mapName);
+	Combat(Party* _playerParty, EnemyParty* _enemyParty, std::string mapPath, std::string mapName, int clickFxId);
 
 	virtual ~Combat();
 
@@ -228,4 +228,6 @@ public:
 	bool wasStance3Active = false;
 	bool wasStance4Active = false;
 	bool wasCancelActive = false;
+
+	int uiClickFxId = -1;
 };

@@ -176,6 +176,7 @@ public:
 	DialogManager* dialogManager;
 
 	std::shared_ptr<Player> player;
+	int uiClickFxId;
 
 private:
 	const std::string baseTexturePath = "Assets/Textures/";
@@ -222,6 +223,7 @@ private:
 	int equipGearFxId;
 	int dropFxId;
 	int buySellFxId;
+	int saveFxId;
 
 	float introAnimDurationMs = 0.0f;
 	float introAnimElapsedMs = 0.0f;

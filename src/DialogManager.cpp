@@ -28,17 +28,19 @@ bool DialogManager::Start() {
 
 	int sw = BASE_W;
 	int sh = BASE_H;
+	int clickFx = Engine::GetInstance().sceneManager->currentScene->uiClickFxId;
 
 	//IF ANY OF THE BOUNDS ARE MODIFIED, COPY AND PASTE THE SAME VALUES AT ResizeDialogBox()
 	dialogBox = Engine::GetInstance().textures->Load("Assets/Dialogues/TextBox.png");
 	speakerName = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SPEAKER_NAME, { 100, sh - 150, 100, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
 	dialogText = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)LABEL, { 100, sh - 120, 420, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
+
 	
 	answerBox = Engine::GetInstance().textures->Load("Assets/Dialogues/answerBoxDialog.png");
-	answer1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER1, { sw / 2 + 60, sh - 210, 500, 40 }, this, { }, -1, -1, UIParameters::Button("")));
-	answer2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER2, { sw / 2 + 60, sh - 260, 500, 40 }, this, { }, -1, -1, UIParameters::Button("")));
-	answer3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER3, { sw / 2 + 60, sh - 280, 500, 40 }, this, { }, -1, -1, UIParameters::Button("")));
-	answer4 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER4, { sw / 2 + 60, sh - 300, 500, 40 }, this, { }, -1, -1, UIParameters::Button("")));
+	answer1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER1, { sw / 2 + 60, sh - 210, 500, 40 }, this, { }, -1, clickFx, UIParameters::Button("")));
+	answer2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER2, { sw / 2 + 60, sh - 260, 500, 40 }, this, { }, -1, clickFx, UIParameters::Button("")));
+	answer3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER3, { sw / 2 + 60, sh - 280, 500, 40 }, this, { }, -1, clickFx, UIParameters::Button("")));
+	answer4 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER4, { sw / 2 + 60, sh - 300, 500, 40 }, this, { }, -1, clickFx, UIParameters::Button("")));
 
 	SetCurrentDialog();
 
