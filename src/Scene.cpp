@@ -143,6 +143,9 @@ bool Scene::Start(std::string spawnId)
 		titleEaseOutDone = false;*/
 
 		Engine::GetInstance().menuManager->ShowMainMenu();
+		menuFadeAlpha = 255.0f;
+		menuFadePhase = MenuFadePhase::FADE_IN;
+		menuFadeSpeed = 300.0f;
 		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/MainMenu.wav", 5000.0f);
 	}
 
@@ -195,26 +198,19 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	if (id == "intro") {
-		//studioLogoAnims.Update(dt);
-		//const SDL_Rect& animFrame = studioLogoAnims.GetCurrentFrame();
-		//Engine::GetInstance().render->DrawTexture(studioLogoTexture, Engine::GetInstance().window->width - 1600, Engine::GetInstance().window->height - 1080, 1, &animFrame);
-
-		//if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN || studioLogoTimer.ReadMSec() >= 2410) {
-		//	/*studioLogo->active = false;
-		//	studioLogo->Destroy();*/
-		//	Engine::GetInstance().audio->StopFx();
-		//	Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
-		//}
 		UpdateIntroScreen(dt);
-	}
-	if (id == "main menu") {
-		/*gameTitleAnims.Update(dt);
-		const SDL_Rect& animFrame = gameTitleAnims.GetCurrentFrame();
-		Engine::GetInstance().render->DrawTexture(gameTitleTexture, Engine::GetInstance().window->width - 1600, Engine::GetInstance().window->height - 1080, 1, &animFrame);*/
 	}
 	if (id == "game title") {
 		UpdateGameTitle(dt);
 	}
+
+	UpdateMenuFade(dt);
+
+	if (gameStarted && combat && combat->combatBg) {
+		Engine::GetInstance().render->DrawTexture(combat->combatBg, 0, 0, 0);
+	}
+
+	if (menuFadeBlocking) return true;
 
 	if (!gameStarted) return true;
 
@@ -265,12 +261,15 @@ bool Scene::Update(float dt)
 	}*/
 	/////////////////////
 
+
 	return true;
 }
 
 // Called each loop iteration
 bool Scene::PostUpdate(float dt)
 {
+	//DrawMenuFadeOverlay();
+
 	return true;
 }
 
@@ -305,6 +304,72 @@ bool Scene::CleanUp()
 	dialogManager = nullptr;
 
 	return true;
+}
+
+void Scene::OpenMenuWithFade(std::function<void()> showAction, bool hideCurrentMenu)
+{
+	if (menuFadePhase != MenuFadePhase::NONE) return;
+
+	menuFadePendingAction = [this, showAction, hideCurrentMenu]() {
+		showAction();
+		};
+	menuFadeAlpha = 0.0f;
+	menuFadePhase = MenuFadePhase::FADE_OUT;
+	menuFadeBlocking = true;
+}
+
+void Scene::CloseMenuWithFade(std::function<void()> hideAction)
+{
+	if (menuFadePhase != MenuFadePhase::NONE) return;
+
+	menuFadePendingAction = [this, hideAction]() {
+		Engine::GetInstance().menuManager->HideMenu();
+		if (hideAction) hideAction();
+		};
+	menuFadeAlpha = 0.0f;
+	menuFadePhase = MenuFadePhase::FADE_OUT;
+	menuFadeBlocking = true;
+}
+
+void Scene::UpdateMenuFade(float dt)
+{
+	if (menuFadePhase == MenuFadePhase::NONE) return;
+
+	float delta = dt / 1000.0f;
+
+	switch (menuFadePhase) {
+	case MenuFadePhase::FADE_OUT:
+		menuFadeAlpha += menuFadeSpeed * delta;
+		if (menuFadeAlpha >= 255.0f) {
+			menuFadeAlpha = 255.0f;
+			if (menuFadePendingAction) {
+				menuFadePendingAction();
+				menuFadePendingAction = nullptr;
+			}
+			menuFadePhase = MenuFadePhase::FADE_IN;
+		}
+		break;
+
+	case MenuFadePhase::FADE_IN:
+		menuFadeAlpha -= menuFadeSpeed * delta;
+		if (menuFadeAlpha <= 0.0f) {
+			menuFadeAlpha = 0.0f;
+			menuFadePhase = MenuFadePhase::NONE;
+			menuFadeBlocking = false;
+		}
+		break;
+
+	default: break;
+	}
+}
+
+void Scene::DrawMenuFadeOverlay()
+{
+	if (menuFadeAlpha <= 0.0f) return;
+
+	auto render = Engine::GetInstance().render;
+	SDL_Rect rect = { -render->camera.x, -render->camera.y, render->camera.w,  render->camera.h };
+	Engine::GetInstance().render->DrawRectangle(rect, 0, 0, 0, (Uint8)menuFadeAlpha, true);
 }
 
 void Scene::UpdateFadePhase(float dt)
@@ -473,7 +538,8 @@ void Scene::TogglePause()
 		if (combat) combat->DisableCombatElements();
 		Engine::GetInstance().audio->pauseMultiplier = 0.3f;
 		Engine::GetInstance().audio->UpdateMusicVolume();
-		Engine::GetInstance().menuManager->ShowPauseMenu();
+		//Engine::GetInstance().menuManager->ShowPauseMenu();
+		OpenMenuWithFade([this]() {Engine::GetInstance().menuManager->ShowPauseMenu();});
 		showingInventory = false;
 		showingShop = false;
 		dialogManager->SetEnabled(false);
@@ -483,7 +549,8 @@ void Scene::TogglePause()
 		if (combat) combat->EnableCombatElements();
 		Engine::GetInstance().audio->pauseMultiplier = 1.0f;
 		Engine::GetInstance().audio->UpdateMusicVolume();
-		Engine::GetInstance().menuManager->HideMenu();
+		//Engine::GetInstance().menuManager->HideMenu();
+		CloseMenuWithFade();
 		dialogManager->SetEnabled(true);
 	}
 }
@@ -1232,7 +1299,10 @@ void Scene::EndGame()
 {
 	gameStarted = false;
 	entityManager->DestroyEntity(player);
-	Engine::GetInstance().menuManager->ShowDeathScreen();
+	//Engine::GetInstance().menuManager->ShowDeathScreen();
+	OpenMenuWithFade([this]() {
+		Engine::GetInstance().menuManager->ShowDeathScreen();
+		});
 }
 
 void Scene::CheckTimers() {
@@ -1252,12 +1322,18 @@ void Scene::ToggleInventory()
 		entityManager->paused = showingInventory;
 		if (showingInventory)
 		{
-			Engine::GetInstance().menuManager->ShowInventory(player->inventory, player, player->party);
+			/*Engine::GetInstance().menuManager->ShowInventory(player->inventory, player, player->party);
 			currentInventoryIndex = 0;
-			Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+			Engine::GetInstance().audio->PlayFx(openInventoryFxId);*/
+			OpenMenuWithFade([this]() {
+				Engine::GetInstance().menuManager->ShowInventory(player->inventory, player, player->party);
+				currentInventoryIndex = 0;
+				Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+				});
 		}
-		else Engine::GetInstance().menuManager->HideMenu();
-		if (!showingInventory) UpdateInventory();
+		/*else Engine::GetInstance().menuManager->HideMenu();
+		if (!showingInventory) UpdateInventory();*/
+		else CloseMenuWithFade([this]() { UpdateInventory(); });
 	}
 }
 
@@ -1276,8 +1352,11 @@ void Scene::ToggleJournal()
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_J) == KEY_DOWN ||
 		Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_NORTH) == KEY_DOWN)
 	{
-		if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) Engine::GetInstance().menuManager->HideMenu();
-		else Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);
+		/*if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) Engine::GetInstance().menuManager->HideMenu();
+		else Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);*/
+		if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) CloseMenuWithFade();
+		else OpenMenuWithFade([this]() {Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);});
+
 		Engine::GetInstance().audio->PlayFx(journalFxId);
 	}
 }
@@ -1288,16 +1367,28 @@ void Scene::ToggleShop(NPC* shopOwner)
 	entityManager->paused = showingInventory;
 	if (showingInventory)
 	{
-		Engine::GetInstance().menuManager->ShowShop(player->inventory, shopOwner->inventory);
+		/*Engine::GetInstance().menuManager->ShowShop(player->inventory, shopOwner->inventory);
 		showingShop = true;
-		Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+		Engine::GetInstance().audio->PlayFx(openInventoryFxId);*/
+		NPC* capturedOwner = shopOwner;
+		OpenMenuWithFade([this, capturedOwner]() {
+			Engine::GetInstance().menuManager->ShowShop(player->inventory, capturedOwner->inventory);
+			showingShop = true;
+			Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+			});
 	}
 	else
 	{
-		Engine::GetInstance().menuManager->HideMenu();
+		/*Engine::GetInstance().menuManager->HideMenu();
 		UpdateInventory();
 		UpdateInventory(this->shopOwner);
-		showingShop = false;
+		showingShop = false;*/
+		NPC* capturedOwner = this->shopOwner;
+		CloseMenuWithFade([this, capturedOwner]() {
+			UpdateInventory();
+			UpdateInventory(capturedOwner);
+			showingShop = false;
+			});
 	}
 	this->shopOwner = shopOwner;
 }
@@ -1485,7 +1576,10 @@ void Scene::EndDialog()
 		if (activeDialogId == "CH-012" && id == "SC-004") {
 			gameStarted = false;
 			entityManager->paused = true;
-			Engine::GetInstance().menuManager->ShowWinScreen();
+			//Engine::GetInstance().menuManager->ShowWinScreen();
+			OpenMenuWithFade([this]() {
+				Engine::GetInstance().menuManager->ShowWinScreen();
+				});
 		}
 		for (const auto& entity : entityManager->entities) {
 			if (entity->id == activeDialogId) {
@@ -1527,9 +1621,13 @@ void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
 	auto nearEnemies = GetNearEnemies(player->position, 300, enemy->id);
 	for (const auto& e : nearEnemies) enemy->party->AddMember(e);
 	
-	combat = new Combat(player->party, enemy->party, mapsPath, combatMapName, uiClickFxId);
-	combat->Awake();
-	combat->Start();
+	EnemyParty* capturedParty = enemy->party;
+	Combat** combatPtr = &combat;
+	OpenMenuWithFade([this, capturedParty]() {
+		combat = new Combat(player->party, capturedParty, mapsPath, combatMapName, uiClickFxId);
+		combat->Awake();
+		combat->Start();
+		}, false);
 }
 
 void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
@@ -1576,8 +1674,12 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	combat->CleanUp();
 	delete combat;
 	combat = nullptr;
-	UpdateInventory();
-	Engine::GetInstance().render->follow = player;
+	/*UpdateInventory();
+	Engine::GetInstance().render->follow = player;*/
+	OpenMenuWithFade([this]() {
+		UpdateInventory();
+		Engine::GetInstance().render->follow = player;
+		}, false);
 }
 
 void Scene::SetDarknessMode(DarknessMode mode)
@@ -1772,10 +1874,14 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		TogglePause();
 		break;
 	case SETTINGS_BUTTON:
-		Engine::GetInstance().menuManager->ShowSettingsMenu();
+		//Engine::GetInstance().menuManager->ShowSettingsMenu();
+		OpenMenuWithFade([this]() {
+			Engine::GetInstance().menuManager->ShowSettingsMenu();
+			});
 		break;
 	case CREDITS_BUTTON:
-		Engine::GetInstance().menuManager->ShowCreditsMenu();
+		//Engine::GetInstance().menuManager->ShowCreditsMenu();
+		OpenMenuWithFade([this]() { Engine::GetInstance().menuManager->ShowCreditsMenu(); });
 		break;
 	case MUSIC_VOLUME:
 		musicVol = ((UISlider*)uiElement)->GetValue() / 10;
@@ -1797,7 +1903,8 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		SaveSettings();
 		break;
 	case BACK_MENU:
-		Engine::GetInstance().menuManager->ShowPreviousMenu();
+		//Engine::GetInstance().menuManager->ShowPreviousMenu();
+		OpenMenuWithFade([this]() { Engine::GetInstance().menuManager->ShowPreviousMenu(); });
 		break;
 	case BACK_MAIN_MENU:
 		dialogManager->SetCurrentDialog();
@@ -1806,7 +1913,10 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 			delete combat;
 			combat = nullptr;
 		}
-		Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		//Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		OpenMenuWithFade([this]() {
+			Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+			});
 		break;
 	case EXIT:
 		exit(0);
@@ -1817,7 +1927,10 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 			delete combat;
 			combat = nullptr;
 		}
-		Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		//Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		OpenMenuWithFade([this]() {
+			Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+			});
 		break;
 	case WIN_EXIT:
 		exit(0);

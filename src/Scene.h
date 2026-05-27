@@ -24,6 +24,7 @@
 #include <unordered_map>
 #include <type_traits>
 #include <typeinfo>
+#include <functional>
 
 struct SDL_Texture;
 
@@ -47,11 +48,15 @@ enum FadePhase {
 	FADE_OUT
 };
 
+
 enum DarknessMode {
 	NO_DARKNESS,
 	LIGHT,
 	HEAVY
 };
+
+enum class MenuFadePhase { NONE, FADE_OUT, FADE_IN };
+
 
 class Scene : public Module
 {
@@ -82,6 +87,10 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void OpenMenuWithFade(std::function<void()> showAction, bool hideCurrentMenu = true);
+	void CloseMenuWithFade(std::function<void()> hideAction = nullptr);
+	void UpdateMenuFade(float dt);
+	void DrawMenuFadeOverlay();
 	void UpdateFadePhase(float dt);
 	void DrawFadeOverlay();
 	void UpdateIntroScreen(float dt);
@@ -256,6 +265,14 @@ private:
 	int fadeRectW = 0;
 	float transitionTimer = 0.0f;
 	float transitionDuration = 0.1f;
+
+	float menuFadeAlpha = 0.0f;
+	float menuFadeSpeed = 500.0f;
+	MenuFadePhase menuFadePhase = MenuFadePhase::NONE;
+	std::function<void()> menuFadePendingAction;
+	bool menuFadeBlocking = false;
+	float menuFadeHoldMs = 0.0f;
+	float menuFadeHoldElapsed = 0.0f;
 
 	bool showingInventory = false;
 	bool showingInventoryForCombat = false;
