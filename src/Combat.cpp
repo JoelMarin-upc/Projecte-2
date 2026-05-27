@@ -52,6 +52,10 @@ Combat::~Combat() {
 	Engine::GetInstance().uiManager->DestroyUIElement(log2);
 	Engine::GetInstance().uiManager->DestroyUIElement(log3);
 	Engine::GetInstance().uiManager->DestroyUIElement(log4);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer1);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer2);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer3);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer4);
 	Engine::GetInstance().uiManager->DestroyUIElement(hint);
 }
 
@@ -172,6 +176,8 @@ bool Combat::Start() {
 	SDL_Texture* undoPres = Engine::GetInstance().textures->Load("Assets/Textures/undoActionButtonPressed.png");
 	SDL_Texture* undoDis = undoNormal;
 
+	SDL_Texture* selectionImg = Engine::GetInstance().textures->Load("Assets/Textures/down_arrow.png");
+
 	// Action buttons
 	action1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION1, b_action1, this, {  }, -1, uiClickFxId, UIParameters::Image(action1Dis, action1Normal, action1Hov, action1Pres)));
 	action2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION2, b_action2, this, {  }, -1, uiClickFxId, UIParameters::Image(action2Dis, action2Normal, action2Hov, action2Pres)));
@@ -273,7 +279,9 @@ bool Combat::Start() {
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 0) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
+		SDL_Rect selection = { boundaries.x + boundaries.w / 2 - selectionImg->w / 2, boundaries.y - selectionImg->h, selectionImg->w, selectionImg->h };
 		i_player = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_PLAYER, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
+		selectedPlayer1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::SELECTION1, selection, this, {  }, -1, -1, UIParameters::Image(selectionImg, selectionImg, selectionImg, selectionImg)));
 		player = playerParty->player;
 		i_player->active = true;
 		player->hasFled = false;
@@ -287,7 +295,9 @@ bool Combat::Start() {
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 1) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
+		SDL_Rect selection = { boundaries.x + boundaries.w / 2 - selectionImg->w / 2, boundaries.y - selectionImg->h, selectionImg->w, selectionImg->h };
 		i_npc1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC1, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
+		selectedPlayer2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::SELECTION2, selection, this, {  }, -1, -1, UIParameters::Image(selectionImg, selectionImg, selectionImg, selectionImg)));
 		npc1 = playerParty->members[0];
 		i_npc1->active = true;
 		npc1->hasFled = false;
@@ -301,7 +311,9 @@ bool Combat::Start() {
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 2) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
+		SDL_Rect selection = { boundaries.x + boundaries.w / 2 - selectionImg->w / 2, boundaries.y - selectionImg->h, selectionImg->w, selectionImg->h };
 		i_npc2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC2, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
+		selectedPlayer3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::SELECTION3, selection, this, {  }, -1, -1, UIParameters::Image(selectionImg, selectionImg, selectionImg, selectionImg)));
 		npc2 = playerParty->members[1];
 		i_npc2->active = true;
 		npc2->hasFled = false;
@@ -315,13 +327,17 @@ bool Combat::Start() {
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 3) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
+		SDL_Rect selection = { boundaries.x + boundaries.w / 2 - selectionImg->w / 2, boundaries.y - selectionImg->h, selectionImg->w, selectionImg->h };
 		i_npc3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC3, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
+		selectedPlayer4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::SELECTION4, selection, this, {  }, -1, -1, UIParameters::Image(selectionImg, selectionImg, selectionImg, selectionImg)));
 		npc3 = playerParty->members[2];
 		i_npc3->active = true;
 		npc3->hasFled = false;
 		npc3->isDead = false;
 		npc3->position = pos;
 	}
+
+	ShowSelectionHint();
 
 	float highestSpeed = 0;
 	highestSpeed = player->Speed();
@@ -496,6 +512,10 @@ bool Combat::CleanUp() {
 	Engine::GetInstance().uiManager->DestroyUIElement(log2);
 	Engine::GetInstance().uiManager->DestroyUIElement(log3);
 	Engine::GetInstance().uiManager->DestroyUIElement(log4);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer1);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer2);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer3);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer4);
 	Engine::GetInstance().uiManager->DestroyUIElement(hint);
 	Engine::GetInstance().uiManager->DestroyUIElement(cancelAction);
 	return true;
@@ -521,6 +541,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 			if (actionTaken1) return true;
 			turnAction = new TurnAction();
 			turnAction->selected = player;
+			ShowSelectionHint(player);
 			ToggleActions(true);
 		}
 		break;
@@ -534,6 +555,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 			if (actionTaken2) return true;
 			turnAction = new TurnAction();
 			turnAction->selected = npc1;
+			ShowSelectionHint(npc1);
 			ToggleActions(true);
 		}
 		break;
@@ -547,6 +569,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 			if (actionTaken3) return true;
 			turnAction = new TurnAction();
 			turnAction->selected = npc2;
+			ShowSelectionHint(npc2);
 			ToggleActions(true);
 		}
 		break;
@@ -560,6 +583,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 			if (actionTaken4) return true;
 			turnAction = new TurnAction();
 			turnAction->selected = npc3;
+			ShowSelectionHint(npc3);
 			ToggleActions(true);
 		}
 		break;
@@ -651,6 +675,21 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	}
 	return true;
+}
+
+void Combat::ShowSelectionHint(std::shared_ptr<Character> character)
+{
+	selectedPlayer1->active = false;
+	selectedPlayer2->active = false;
+	selectedPlayer3->active = false;
+	selectedPlayer4->active = false;
+	
+	if (!character) return;
+
+	if (character->id == player->id) selectedPlayer1->active = true;
+	if (character->id == npc1->id) selectedPlayer2->active = true;
+	if (character->id == npc2->id) selectedPlayer3->active = true;
+	if (character->id == npc3->id) selectedPlayer4->active = true;
 }
 
 void Combat::ToggleActions(bool show, bool toggleCancel)
@@ -805,6 +844,7 @@ void Combat::AddTurnAction()
 	else if (isPlayerTurn && turnActions.size() < activeCharacters) {
 		hint->text = "Select a character";
 	}
+	ShowSelectionHint();
 }
 
 void Combat::EndTurn()

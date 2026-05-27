@@ -130,6 +130,7 @@ public:
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
 
+	void ShowSelectionHint(std::shared_ptr<Character> character = nullptr);
 	void ToggleActions(bool show, bool toggleCancel = true);
 	void ToggleStances(bool show);
 	void SelectConsumable(std::string consumableName);
@@ -187,6 +188,11 @@ public:
 	std::shared_ptr<UILabel> log2 = nullptr;
 	std::shared_ptr<UILabel> log3 = nullptr;
 	std::shared_ptr<UILabel> log4 = nullptr;
+
+	std::shared_ptr<UIImage> selectedPlayer1 = nullptr;
+	std::shared_ptr<UIImage> selectedPlayer2 = nullptr;
+	std::shared_ptr<UIImage> selectedPlayer3 = nullptr;
+	std::shared_ptr<UIImage> selectedPlayer4 = nullptr;
 
 	std::shared_ptr<UILabel> hint = nullptr;
 
