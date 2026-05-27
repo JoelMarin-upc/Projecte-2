@@ -206,8 +206,18 @@ bool Scene::Update(float dt)
 
 	UpdateMenuFade(dt);
 
-	if (gameStarted && combat && combat->combatBg) {
-		Engine::GetInstance().render->DrawTexture(combat->combatBg, 0, 0, 0);
+	if (gameStarted) {
+		if (combat && combat->combatBg) {
+			Engine::GetInstance().render->DrawTexture(combat->combatBg, 0, 0, 0);
+		}
+		else if (lastCombatBg) {
+			Engine::GetInstance().render->DrawTexture(lastCombatBg, 0, 0, 0);
+		}
+		else if (menuFadePhase == MenuFadePhase::FADE_IN && map) {
+			map->Update(dt);
+			entityManager->Update(dt);
+			DrawDarkness();
+		}
 	}
 
 	if (menuFadeBlocking) return true;
@@ -1671,12 +1681,14 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	default:
 		break;
 	}
+	lastCombatBg = combat->combatBg;
 	combat->CleanUp();
 	delete combat;
 	combat = nullptr;
 	/*UpdateInventory();
 	Engine::GetInstance().render->follow = player;*/
 	OpenMenuWithFade([this]() {
+		lastCombatBg = nullptr;
 		UpdateInventory();
 		Engine::GetInstance().render->follow = player;
 		}, false);

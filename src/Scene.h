@@ -297,4 +297,6 @@ private:
 	DarknessMode darknessMode = DarknessMode::NO_DARKNESS;
 	SDL_Texture* darkness1 = nullptr;
 	SDL_Texture* darkness2 = nullptr;
+
+	SDL_Texture* lastCombatBg = nullptr;
 };
