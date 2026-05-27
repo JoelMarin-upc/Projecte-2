@@ -299,4 +299,8 @@ private:
 	SDL_Texture* darkness2 = nullptr;
 
 	SDL_Texture* lastCombatBg = nullptr;
+	SDL_Texture* lastMenuBg = nullptr;
+
+	SDL_Texture* inventoryBgTexture = nullptr;
+	SDL_Texture* journalBgTexture = nullptr;
 };

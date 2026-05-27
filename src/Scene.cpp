@@ -116,6 +116,8 @@ bool Scene::Start(std::string spawnId)
 	buySellFxId = Engine::GetInstance().audio->LoadFx(buySellFxPath.c_str());
 	saveFxId = Engine::GetInstance().audio->LoadFx(saveFxPath.c_str());
 	uiClickFxId = Engine::GetInstance().audio->LoadFx(clickFxPath.c_str());
+	inventoryBgTexture = Engine::GetInstance().textures->Load("Assets/Textures/inventoryBook.png");
+	journalBgTexture = Engine::GetInstance().textures->Load("Assets/Textures/MissionsPaper.png");
 	//studioLogoTexture = Engine::GetInstance().textures->Load("Assets/Textures/Team_Logo_SpriteSheet.png");
 	//gameTitleTexture = Engine::GetInstance().textures->Load("Assets/Textures/Title_Logo_SpriteSheet.png");
 
@@ -213,6 +215,12 @@ bool Scene::Update(float dt)
 		else if (lastCombatBg) {
 			Engine::GetInstance().render->DrawTexture(lastCombatBg, 0, 0, 0);
 		}
+		else if (lastMenuBg) {
+			map->Update(dt);
+			entityManager->Update(dt);
+			DrawDarkness();
+			Engine::GetInstance().render->DrawTexture(lastMenuBg, 0, 0, 0, nullptr, false);
+		}
 		else if (menuFadePhase == MenuFadePhase::FADE_IN && map) {
 			map->Update(dt);
 			entityManager->Update(dt);
@@ -253,6 +261,9 @@ bool Scene::Update(float dt)
 	map->Update(dt);
 	entityManager->Update(dt);
 	DrawDarkness();
+	if (lastMenuBg) {
+		Engine::GetInstance().render->DrawTexture(lastMenuBg, 0, 0, 0, nullptr, false);
+	}
 	dialogManager->Update(dt);
 
 	if (gameStarted && !paused && !isOnDialog) {
@@ -1336,6 +1347,7 @@ void Scene::ToggleInventory()
 			currentInventoryIndex = 0;
 			Engine::GetInstance().audio->PlayFx(openInventoryFxId);*/
 			OpenMenuWithFade([this]() {
+				lastMenuBg = inventoryBgTexture;
 				Engine::GetInstance().menuManager->ShowInventory(player->inventory, player, player->party);
 				currentInventoryIndex = 0;
 				Engine::GetInstance().audio->PlayFx(openInventoryFxId);
@@ -1343,7 +1355,9 @@ void Scene::ToggleInventory()
 		}
 		/*else Engine::GetInstance().menuManager->HideMenu();
 		if (!showingInventory) UpdateInventory();*/
-		else CloseMenuWithFade([this]() { UpdateInventory(); });
+		else {
+			CloseMenuWithFade([this]() { lastMenuBg = nullptr; UpdateInventory(); });
+		}
 	}
 }
 
@@ -1364,8 +1378,18 @@ void Scene::ToggleJournal()
 	{
 		/*if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) Engine::GetInstance().menuManager->HideMenu();
 		else Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);*/
-		if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) CloseMenuWithFade();
-		else OpenMenuWithFade([this]() {Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);});
+		if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) {
+			CloseMenuWithFade([this]() {
+				lastMenuBg = nullptr;
+				});
+		}
+		else {
+			OpenMenuWithFade([this]() {
+				lastMenuBg = journalBgTexture;
+				Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);
+				});
+		}
+
 
 		Engine::GetInstance().audio->PlayFx(journalFxId);
 	}
@@ -1382,6 +1406,7 @@ void Scene::ToggleShop(NPC* shopOwner)
 		Engine::GetInstance().audio->PlayFx(openInventoryFxId);*/
 		NPC* capturedOwner = shopOwner;
 		OpenMenuWithFade([this, capturedOwner]() {
+			lastMenuBg = inventoryBgTexture;
 			Engine::GetInstance().menuManager->ShowShop(player->inventory, capturedOwner->inventory);
 			showingShop = true;
 			Engine::GetInstance().audio->PlayFx(openInventoryFxId);
@@ -1395,6 +1420,7 @@ void Scene::ToggleShop(NPC* shopOwner)
 		showingShop = false;*/
 		NPC* capturedOwner = this->shopOwner;
 		CloseMenuWithFade([this, capturedOwner]() {
+			lastMenuBg = nullptr;
 			UpdateInventory();
 			UpdateInventory(capturedOwner);
 			showingShop = false;
