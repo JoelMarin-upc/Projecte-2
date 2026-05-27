@@ -57,10 +57,12 @@ bool Player::Start() {
 	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "walk");
 	std::string attackFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "attack");
 	std::string dieFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "die");
+	std::string torchFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "torch");
 
 	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath.c_str());
 	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath.c_str());
 	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath.c_str());
+	torchFxId = Engine::GetInstance().audio->LoadFx(torchFxPath.c_str());
 
 	return true;
 }
@@ -296,6 +298,7 @@ void Player::RunTorchTimer(float dt)
 		torchMS = 0;
 		inventory->RemoveItem(torch);
 		inventory->equippedWeapon = nullptr;
+		Engine::GetInstance().audio->PlayFx(torchFxId);
 		Engine::GetInstance().sceneManager->GetCurrentScene()->SetDarknessMode(DarknessMode::HEAVY);
 	}
 }
