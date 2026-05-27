@@ -57,6 +57,15 @@ private:
 	std::shared_ptr<UIButton> answer3;
 	std::shared_ptr<UIButton> answer4;
 
+	//adding tyewritter effect with delayed typing and sound fx
+	std::string fullText;
+	std::string displayedText;
+	float charTimer = 0.0f;
+	float charInterval = 0.08f;
+	int charIndex = 0;
+	bool isTyping = false;
+	int typingFxId;
+
 	enum DIALOG_UIID {
 		LABEL,
 		SPEAKER_NAME,

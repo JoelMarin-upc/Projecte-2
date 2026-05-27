@@ -8,6 +8,7 @@
 #include "SceneManager.h"
 #include "Textures.h"
 #include "Log.h"
+#include "Audio.h"
 
 DialogManager::DialogManager()
 {
@@ -29,6 +30,8 @@ bool DialogManager::Start() {
 	int sw = BASE_W;
 	int sh = BASE_H;
 	int clickFx = Engine::GetInstance().sceneManager->currentScene->uiClickFxId;
+	std::string typingFxPath = Engine::GetInstance().audio->GetAudioPath("dialog", "typing");
+	typingFxId = Engine::GetInstance().audio->LoadFx(typingFxPath.c_str());
 
 	//IF ANY OF THE BOUNDS ARE MODIFIED, COPY AND PASTE THE SAME VALUES AT ResizeDialogBox()
 	dialogBox = Engine::GetInstance().textures->Load("Assets/Dialogues/TextBox.png");
@@ -57,6 +60,24 @@ bool DialogManager::Update(float dt) {
 		if (answer2->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 460, 0.0f);
 		if (answer3->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 440, 0.0f);
 		if (answer4->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 420, 0.0f);
+		if (isTyping) {
+			charTimer += dt / 1000.0f;
+			if (charTimer >= charInterval) {
+				charTimer = 0.0f;
+				if (charIndex < fullText.size()) {
+					displayedText += fullText[charIndex];
+					dialogText->text = displayedText;
+					charIndex++;
+					// Only play sound on non-space characters
+					if (fullText[charIndex - 1] != ' ' && typingFxId != -1) {
+						Engine::GetInstance().audio->PlayFx(typingFxId);
+					}
+				}
+				else {
+					isTyping = false;
+				}
+			}
+		}
 	}
 	return true;
 }
@@ -184,7 +205,14 @@ void DialogManager::ShowDialog()
 	speakerName->text = currentDialog->characterName;
 	speakerName->active = true;
 
-	dialogText->text = node->text;
+	fullText = node->text;
+	displayedText = "";
+	charIndex = 0;
+	charTimer = 0.0f;
+	isTyping = true;
+	dialogText->text = "";
+
+	//dialogText->text = node->text;
 	dialogText->active = true;
 
 	if (node->answers.size() > 0) {
@@ -226,6 +254,14 @@ void DialogManager::ShowDialog()
 
 bool DialogManager::OnUIMouseClickEvent(UIElement* uiElement)
 {
+	if (isTyping) {
+		isTyping = false;
+		displayedText = fullText;
+		dialogText->text = fullText;
+		Engine::GetInstance().audio->StopFx();
+		return true;
+	}
+
 	int answerNum;
 	switch ((DIALOG_UIID)uiElement->id)
 	{
