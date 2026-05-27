@@ -79,4 +79,6 @@ private:
 	const float MAX_TORCH_MS = 3 * 60 * 1000.f;
 	float torchMS = 0;
 
+	int torchFxId = -1;
+
 };

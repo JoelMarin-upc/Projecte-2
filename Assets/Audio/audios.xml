@@ -28,11 +28,13 @@
 		walk="Assets/Audio/Fx/PlayerWalk.wav" 
 		attack="Assets/Audio/Fx/PlayerAttack.wav" 
 		die="Assets/Audio/Fx/MaleDie.wav" 
+		torch="Assets/Audio/Fx/Torch.wav"
 	/>
 	<human_female
 		walk="Assets/Audio/Fx/PlayerWalk.wav"
 		attack="Assets/Audio/Fx/PlayerAttack.wav"
 		die="Assets/Audio/Fx/FemaleDie.wav"
+		torch="Assets/Audio/Fx/Torch.wav"
 	/>
 	<dog 
 		walk="" 
