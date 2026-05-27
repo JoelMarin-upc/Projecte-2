@@ -47,11 +47,17 @@ enum FadePhase {
 	FADE_OUT
 };
 
+enum DarknessMode {
+	NO_DARKNESS,
+	LIGHT,
+	HEAVY
+};
+
 class Scene : public Module
 {
 public:
 
-	Scene(std::string _id, std::string mapPath, std::string mapName, std::string combatMapName = "");
+	Scene(std::string _id, std::string mapPath, std::string mapName, std::string combatMapName = "", bool hasDarkness = false);
 	
 	Scene();
 
@@ -121,6 +127,9 @@ public:
 	void StartCombat(std::shared_ptr<Enemy> enemy);
 	void EndCombat(EnemyParty* enemyParty, CombatResult combatResult);
 
+	void SetDarknessMode(DarknessMode mode);
+	void DrawDarkness();
+
 	void CopyCleanGameData();
 
 	Vector2D GetPlayerPosition();
@@ -177,6 +186,7 @@ public:
 
 	std::shared_ptr<Player> player;
 	int uiClickFxId;
+	bool hasDarkness = false;
 
 private:
 	const std::string baseTexturePath = "Assets/Textures/";
@@ -266,4 +276,8 @@ private:
 	std::unordered_map<std::string, ItemDef*> itemDefs;
 
 	int currentInventoryIndex = 0;
+
+	DarknessMode darknessMode = DarknessMode::NO_DARKNESS;
+	SDL_Texture* darkness1 = nullptr;
+	SDL_Texture* darkness2 = nullptr;
 };

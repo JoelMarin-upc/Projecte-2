@@ -13,6 +13,8 @@
 		<inventory gold="50">
 			<item id="" name="bandages"/>
 			<item id="" name="bandages"/>
+			<item id="" name="Torch"/>
+			<item id="" name="Torch"/>
 		</inventory>
 	</player>
 	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="GravekeeperCombat.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" recuitMissionId="MI-000" isDead="false" unlockedStance1="4" unlockedStance2="4">
@@ -111,6 +113,7 @@
 			<item id="" name="leather armor"/>
 			<item id="" name="leather boots"/>
 			<item id="" name="padded boots"/>
+			<item id="" name="Torch"/>
 		</inventory>
 	</character>
 	<character id="CH-012" name="Nia" texture="Nia.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">

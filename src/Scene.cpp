@@ -19,11 +19,14 @@
 #include <fstream>
 #include <algorithm>
 
-Scene::Scene(std::string _id, std::string _mapsPath, std::string _mapName, std::string _combatMapName)
+Scene::Scene(std::string _id, std::string _mapsPath, std::string _mapName, std::string _combatMapName, bool hasDarkness)
 {
 	id = _id;
 	name = "scene";
 	
+	this->hasDarkness = hasDarkness;
+	darknessMode = hasDarkness ? HEAVY : NO_DARKNESS;
+
 	entityManager = new EntityManager();
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
@@ -77,6 +80,9 @@ bool Scene::Start(std::string spawnId)
 
 	paused = false;
 	pendingSpawnId = spawnId;
+
+	darkness1 = Engine::GetInstance().textures->Load("Assets/Textures/darkness1.png");
+	darkness2 = Engine::GetInstance().textures->Load("Assets/Textures/darkness2.png");
 
 	Engine::GetInstance().render->SetCursorTexture("Assets/Textures/cursor.png");
 	sw = Engine::GetInstance().window->width;
@@ -240,6 +246,7 @@ bool Scene::Update(float dt)
 	}
 	map->Update(dt);
 	entityManager->Update(dt);
+	DrawDarkness();
 	dialogManager->Update(dt);
 
 	if (gameStarted && !paused && !isOnDialog) {
@@ -1571,6 +1578,30 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	combat = nullptr;
 	UpdateInventory();
 	Engine::GetInstance().render->follow = player;
+}
+
+void Scene::SetDarknessMode(DarknessMode mode)
+{
+	if (hasDarkness) darknessMode = mode;
+	else mode = NO_DARKNESS;
+}
+
+void Scene::DrawDarkness()
+{
+	if (!hasDarkness) return;
+	if (combat) return;
+	switch (darknessMode)
+	{
+	case LIGHT:
+		Engine::GetInstance().render->DrawTexture(darkness2, 0, 0, 0.f);
+		break;
+	case HEAVY:
+		Engine::GetInstance().render->DrawTexture(darkness1, 0, 0, 0.f);
+		break;
+	case NO_DARKNESS:
+	default:
+		break;
+	}
 }
 
 void Scene::CopyCleanGameData()

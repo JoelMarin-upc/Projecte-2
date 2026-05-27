@@ -45,6 +45,7 @@ private:
 	void Move();
 	void ApplyPhysics();
 	void HandleAnimations();
+	void RunTorchTimer(float dt);
 
 public:
 
@@ -75,5 +76,7 @@ private:
 	b2Vec2 velocity;
 	AnimationSet anims;
 	int auxX, auxY;
+	const float MAX_TORCH_MS = 3 * 60 * 1000.f;
+	float torchMS = 0;
 
 };
