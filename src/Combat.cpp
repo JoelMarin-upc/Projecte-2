@@ -679,17 +679,17 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 
 void Combat::ShowSelectionHint(std::shared_ptr<Character> character)
 {
-	selectedPlayer1->active = false;
-	selectedPlayer2->active = false;
-	selectedPlayer3->active = false;
-	selectedPlayer4->active = false;
+	if (player) selectedPlayer1->active = false;
+	if (npc1) selectedPlayer2->active = false;
+	if (npc2) selectedPlayer3->active = false;
+	if (npc3) selectedPlayer4->active = false;
 	
 	if (!character) return;
 
-	if (character->id == player->id) selectedPlayer1->active = true;
-	if (character->id == npc1->id) selectedPlayer2->active = true;
-	if (character->id == npc2->id) selectedPlayer3->active = true;
-	if (character->id == npc3->id) selectedPlayer4->active = true;
+	if (player && character->id == player->id) selectedPlayer1->active = true;
+	if (npc1 && character->id == npc1->id) selectedPlayer2->active = true;
+	if (npc2 && character->id == npc2->id) selectedPlayer3->active = true;
+	if (npc3 && character->id == npc3->id) selectedPlayer4->active = true;
 }
 
 void Combat::ToggleActions(bool show, bool toggleCancel)
