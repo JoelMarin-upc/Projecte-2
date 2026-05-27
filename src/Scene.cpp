@@ -95,6 +95,8 @@ bool Scene::Start(std::string spawnId)
 	std::string equipGearFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "equipGear");
 	std::string dropFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "drop");
 	std::string buySellFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "buySell");
+	std::string saveFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "save");
+	std::string clickFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "click");
 	logoFxId = Engine::GetInstance().audio->LoadFx(logoFxPath.c_str());
 	elevatorFxId = Engine::GetInstance().audio->LoadFx(elevatorFxPath.c_str());
 	doorFxId = Engine::GetInstance().audio->LoadFx(doorFxPath.c_str());
@@ -106,9 +108,10 @@ bool Scene::Start(std::string spawnId)
 	equipGearFxId = Engine::GetInstance().audio->LoadFx(equipGearFxPath.c_str());
 	dropFxId = Engine::GetInstance().audio->LoadFx(dropFxPath.c_str());
 	buySellFxId = Engine::GetInstance().audio->LoadFx(buySellFxPath.c_str());
+	saveFxId = Engine::GetInstance().audio->LoadFx(saveFxPath.c_str());
+	uiClickFxId = Engine::GetInstance().audio->LoadFx(clickFxPath.c_str());
 	//studioLogoTexture = Engine::GetInstance().textures->Load("Assets/Textures/Team_Logo_SpriteSheet.png");
 	//gameTitleTexture = Engine::GetInstance().textures->Load("Assets/Textures/Title_Logo_SpriteSheet.png");
-
 
 	Engine::GetInstance().menuManager->SetObserver(this);
 
@@ -1464,6 +1467,7 @@ void Scene::EndDialog()
 	if (!activeDialogId.empty()) {
 		if (activeDialogId == "statue") {
 			SaveGame();
+			Engine::GetInstance().audio->PlayFx(saveFxId);
 		}
 		if (activeDialogId == "player") {
 			Mission* niaMission = missionManager->ActivateMission("MI-004");
@@ -1516,7 +1520,7 @@ void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
 	auto nearEnemies = GetNearEnemies(player->position, 300, enemy->id);
 	for (const auto& e : nearEnemies) enemy->party->AddMember(e);
 	
-	combat = new Combat(player->party, enemy->party, mapsPath, combatMapName);
+	combat = new Combat(player->party, enemy->party, mapsPath, combatMapName, uiClickFxId);
 	combat->Awake();
 	combat->Start();
 }

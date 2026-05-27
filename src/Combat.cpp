@@ -19,13 +19,14 @@ void sleep_seconds(int seconds) {
 	std::this_thread::sleep_for(std::chrono::seconds(seconds));
 }
 
-Combat::Combat(Party* _playerParty, EnemyParty* _enemyParty, std::string mapPath, std::string mapName)
+Combat::Combat(Party* _playerParty, EnemyParty* _enemyParty, std::string mapPath, std::string mapName, int clickFxId)
 {
 	playerParty = _playerParty;
 	enemyParty = _enemyParty;
 	map = new Map();
 	map->Load(mapPath, mapName);
 	combatData = map->combatData;
+	this->uiClickFxId = clickFxId;
 }
 
 Combat::~Combat() {
@@ -172,20 +173,20 @@ bool Combat::Start() {
 	SDL_Texture* undoDis = undoNormal;
 
 	// Action buttons
-	action1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION1, b_action1, this, {  }, -1, -1, UIParameters::Image(action1Dis, action1Normal, action1Hov, action1Pres)));
-	action2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION2, b_action2, this, {  }, -1, -1, UIParameters::Image(action2Dis, action2Normal, action2Hov, action2Pres)));
-	action3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION3, b_action3, this, {  }, -1, -1, UIParameters::Image(action3Dis, action3Normal, action3Hov, action3Pres)));
-	action4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION4, b_action4, this, {  }, -1, -1, UIParameters::Image(action4Dis, action4Normal, action4Hov, action4Pres)));
+	action1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION1, b_action1, this, {  }, -1, uiClickFxId, UIParameters::Image(action1Dis, action1Normal, action1Hov, action1Pres)));
+	action2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION2, b_action2, this, {  }, -1, uiClickFxId, UIParameters::Image(action2Dis, action2Normal, action2Hov, action2Pres)));
+	action3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION3, b_action3, this, {  }, -1, uiClickFxId, UIParameters::Image(action3Dis, action3Normal, action3Hov, action3Pres)));
+	action4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION4, b_action4, this, {  }, -1, uiClickFxId, UIParameters::Image(action4Dis, action4Normal, action4Hov, action4Pres)));
 
 	// Stance buttons
-	stance1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE1, b_stance1, this, {  }, -1, -1, UIParameters::Image(stance1Dis, stance1Normal, stance1Hov, stance1Pres)));
-	stance2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE2, b_stance2, this, {  }, -1, -1, UIParameters::Image(stance2Dis, stance2Normal, stance2Hov, stance2Pres)));
-	stance3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE3, b_stance3, this, {  }, -1, -1, UIParameters::Image(stance3Dis, stance3Normal, stance3Hov, stance3Pres)));
-	stance4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE4, b_stance4, this, {  }, -1, -1, UIParameters::Image(stance4Dis, stance4Normal, stance4Hov, stance4Pres)));
+	stance1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE1, b_stance1, this, {  }, -1, uiClickFxId, UIParameters::Image(stance1Dis, stance1Normal, stance1Hov, stance1Pres)));
+	stance2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE2, b_stance2, this, {  }, -1, uiClickFxId, UIParameters::Image(stance2Dis, stance2Normal, stance2Hov, stance2Pres)));
+	stance3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE3, b_stance3, this, {  }, -1, uiClickFxId, UIParameters::Image(stance3Dis, stance3Normal, stance3Hov, stance3Pres)));
+	stance4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE4, b_stance4, this, {  }, -1, uiClickFxId, UIParameters::Image(stance4Dis, stance4Normal, stance4Hov, stance4Pres)));
 
 	// End-turn and undo/cancel buttons
-	endTurn = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::END_TURN, b_endTurn, this, {  }, -1, -1, UIParameters::Image(endTurnDis, endTurnNormal, endTurnHov, endTurnPres)));
-	cancelAction = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::CANCEL_ACTION, b_cancelAction, this, {  }, -1, -1, UIParameters::Image(undoDis, undoNormal, undoHov, undoPres)));
+	endTurn = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::END_TURN, b_endTurn, this, {  }, -1, uiClickFxId, UIParameters::Image(endTurnDis, endTurnNormal, endTurnHov, endTurnPres)));
+	cancelAction = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::CANCEL_ACTION, b_cancelAction, this, {  }, -1, uiClickFxId, UIParameters::Image(undoDis, undoNormal, undoHov, undoPres)));
 
 	// Hint label
 	hint = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::HINT, b_hint, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
