@@ -49,8 +49,8 @@ void SceneManager::LoadScenes()
 	sceneInfos.push_back({ "game title", "", "" });
 	sceneInfos.push_back({ "SC-001", mapsPath, "RebelRefuge.tmx" });
 	sceneInfos.push_back({ "SC-002", mapsPath, "GroceriesShop.tmx" });
-	sceneInfos.push_back({ "SC-003", mapsPath, "TutorialDungeon.tmx", "TutorialDungeon_combat.tmx" });
-	sceneInfos.push_back({ "SC-004", mapsPath, "SecondDungeon.tmx", "TutorialDungeon_combat.tmx" });
+	sceneInfos.push_back({ "SC-003", mapsPath, "TutorialDungeon.tmx", "TutorialDungeon_combat.tmx", true });
+	sceneInfos.push_back({ "SC-004", mapsPath, "SecondDungeon.tmx", "TutorialDungeon_combat.tmx", true });
 }
 
 void SceneManager::SetCurrentScene(std::string sceneID, std::string spawnId)
@@ -84,7 +84,7 @@ void SceneManager::DoTransition()
 	//Find the scene you want to transition and create it, spawns the player at the request spawn point and releases the queued transition
 	for (const SceneInfo& info : sceneInfos) {
 		if (info.id == pendingSceneID) {
-			currentScene = new Scene(info.id, info.mapPath, info.mapName, info.combatMapName);
+			currentScene = new Scene(info.id, info.mapPath, info.mapName, info.combatMapName, info.hasDarkness);
 			currentScene->Awake();
 			currentScene->Start(pendingSpawnId);
 			hasQueuedTransition = false;

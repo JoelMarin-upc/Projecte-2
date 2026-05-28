@@ -57,10 +57,12 @@ bool Player::Start() {
 	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "walk");
 	std::string attackFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "attack");
 	std::string dieFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "die");
+	std::string torchFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "torch");
 
 	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath.c_str());
 	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath.c_str());
 	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath.c_str());
+	torchFxId = Engine::GetInstance().audio->LoadFx(torchFxPath.c_str());
 
 	return true;
 }
@@ -75,6 +77,7 @@ bool Player::Update(float dt)
 		ApplyPhysics();
 		HandleAnimations();
 		Draw(dt);
+		RunTorchTimer(dt);
 	}
 
 	return true;
@@ -162,9 +165,7 @@ void Player::Move()
 	float x = 0.f;
 	float y = 0.f;
 
-	// -------------------------
 	// Keyboard
-	// -------------------------
 
 	if (input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT ||
 		input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -190,9 +191,7 @@ void Player::Move()
 		x += 1.0f;
 	}
 
-	// -------------------------
 	// Gamepad
-	// -------------------------
 
 	float stickX = input->GetLeftStickX();
 	float stickY = input->GetLeftStickY();
@@ -200,10 +199,7 @@ void Player::Move()
 	x += stickX;
 	y += stickY;
 
-	// -------------------------
 	// Normalize diagonal movement
-	// -------------------------
-
 	float length = sqrtf(
 		x * x +
 		y * y);
@@ -214,16 +210,12 @@ void Player::Move()
 		y /= length;
 	}
 
-	// -------------------------
 	// Final velocity
-	// -------------------------
 
 	velocity.x = x * speed;
 	velocity.y = y * speed;
 
-	// -------------------------
 	// Facing direction
-	// -------------------------
 
 	if (fabs(x) > fabs(y))
 	{
@@ -240,9 +232,7 @@ void Player::Move()
 			currentFacingDirection = UP;
 	}
 
-	// -------------------------
 	// Walk sound
-	// -------------------------
 
 	bool isMoving =
 		fabs(x) > 0.1f ||
@@ -289,6 +279,27 @@ void Player::HandleAnimations()
 			anims.SetCurrent("idle");
 			currentAnimation = "idle";
 		}
+	}
+}
+
+void Player::RunTorchTimer(float dt)
+{
+	if (!inventory) return;
+	if (!Engine::GetInstance().sceneManager->GetCurrentScene()->hasDarkness) return;
+	std::string torch = "Torch";
+	if (!inventory->equippedWeapon || inventory->equippedWeapon->name != torch)
+	{
+		Engine::GetInstance().sceneManager->GetCurrentScene()->SetDarknessMode(DarknessMode::HEAVY);
+		return;
+	}
+	Engine::GetInstance().sceneManager->GetCurrentScene()->SetDarknessMode(DarknessMode::LIGHT);
+	torchMS += dt;
+	if (torchMS > MAX_TORCH_MS) {
+		torchMS = 0;
+		inventory->RemoveItem(torch);
+		inventory->equippedWeapon = nullptr;
+		Engine::GetInstance().audio->PlayFx(torchFxId);
+		Engine::GetInstance().sceneManager->GetCurrentScene()->SetDarknessMode(DarknessMode::HEAVY);
 	}
 }
 

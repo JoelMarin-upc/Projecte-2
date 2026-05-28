@@ -24,6 +24,7 @@
 #include <unordered_map>
 #include <type_traits>
 #include <typeinfo>
+#include <functional>
 
 struct SDL_Texture;
 
@@ -47,11 +48,21 @@ enum FadePhase {
 	FADE_OUT
 };
 
+
+enum DarknessMode {
+	NO_DARKNESS,
+	LIGHT,
+	HEAVY
+};
+
+enum class MenuFadePhase { NONE, FADE_OUT, FADE_IN };
+
+
 class Scene : public Module
 {
 public:
 
-	Scene(std::string _id, std::string mapPath, std::string mapName, std::string combatMapName = "");
+	Scene(std::string _id, std::string mapPath, std::string mapName, std::string combatMapName = "", bool hasDarkness = false);
 	
 	Scene();
 
@@ -76,6 +87,10 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void OpenMenuWithFade(std::function<void()> showAction, bool hideCurrentMenu = true);
+	void CloseMenuWithFade(std::function<void()> hideAction = nullptr);
+	void UpdateMenuFade(float dt);
+	void DrawMenuFadeOverlay();
 	void UpdateFadePhase(float dt);
 	void DrawFadeOverlay();
 	void UpdateIntroScreen(float dt);
@@ -120,6 +135,9 @@ public:
 	std::vector<std::shared_ptr<Enemy>> GetNearEnemies(Vector2D position, float rangePX, std::string enemyID);
 	void StartCombat(std::shared_ptr<Enemy> enemy);
 	void EndCombat(EnemyParty* enemyParty, CombatResult combatResult);
+
+	void SetDarknessMode(DarknessMode mode);
+	void DrawDarkness();
 
 	void CopyCleanGameData();
 
@@ -177,6 +195,7 @@ public:
 
 	std::shared_ptr<Player> player;
 	int uiClickFxId;
+	bool hasDarkness = false;
 
 private:
 	const std::string baseTexturePath = "Assets/Textures/";
@@ -247,6 +266,14 @@ private:
 	float transitionTimer = 0.0f;
 	float transitionDuration = 0.1f;
 
+	float menuFadeAlpha = 0.0f;
+	float menuFadeSpeed = 500.0f;
+	MenuFadePhase menuFadePhase = MenuFadePhase::NONE;
+	std::function<void()> menuFadePendingAction;
+	bool menuFadeBlocking = false;
+	float menuFadeHoldMs = 0.0f;
+	float menuFadeHoldElapsed = 0.0f;
+
 	bool showingInventory = false;
 	bool showingInventoryForCombat = false;
 	bool showingShop = false;
@@ -266,4 +293,14 @@ private:
 	std::unordered_map<std::string, ItemDef*> itemDefs;
 
 	int currentInventoryIndex = 0;
+
+	DarknessMode darknessMode = DarknessMode::NO_DARKNESS;
+	SDL_Texture* darkness1 = nullptr;
+	SDL_Texture* darkness2 = nullptr;
+
+	SDL_Texture* lastCombatBg = nullptr;
+	SDL_Texture* lastMenuBg = nullptr;
+
+	SDL_Texture* inventoryBgTexture = nullptr;
+	SDL_Texture* journalBgTexture = nullptr;
 };
