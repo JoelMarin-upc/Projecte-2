@@ -45,7 +45,7 @@
 			<stat name="attack" value="20"/>
 		</stats>
 	</item>
-	<item id="" name="Torch" gold="10" description="More visibility" texture="torch.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
+	<item id="" name="Torch" gold="10" description="More visibility" texture="newTorch.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
 		<stats>
 			<stat name="attack" value="5"/>
 		</stats>
