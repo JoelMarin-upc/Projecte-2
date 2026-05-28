@@ -433,14 +433,7 @@
   <object id="187" x="1406.5" y="299.75" width="15.75" height="4.75"/>
   <object id="188" x="1666.91" y="231.636" width="9.63636" height="10.0909"/>
  </objectgroup>
- <objectgroup id="7" name="Accesses">
-  <object id="191" x="1520" y="16" width="48" height="64">
-   <properties>
-    <property name="targetSceneId" value="SC-005"/>
-    <property name="targetSpawnId" value="throne_from_dungeon"/>
-   </properties>
-  </object>
- </objectgroup>
+ <objectgroup id="7" name="Accesses"/>
  <objectgroup id="8" name="Spawns">
   <object id="192" x="119.875" y="359.375">
    <properties>
