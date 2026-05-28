@@ -32,7 +32,7 @@ bool NPC::Start()
 	party = nullptr;
 
 	const char* audioNode;
-	if ("CH-006") audioNode = "dog";
+	if (id == "CH-006") audioNode = "dog";
 	else audioNode = isMale ? "human_male" : "human_female";
 
 	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "walk");
