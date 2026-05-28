@@ -84,7 +84,7 @@ bool Scene::Start(std::string spawnId)
 	darkness1 = Engine::GetInstance().textures->Load("Assets/Textures/darkness1.png");
 	darkness2 = Engine::GetInstance().textures->Load("Assets/Textures/darkness2.png");
 
-	Engine::GetInstance().render->SetCursorTexture("Assets/Textures/cursor.png");
+	Engine::GetInstance().render->SetCursorTexture("Assets/Textures/newCursor.png");
 	sw = Engine::GetInstance().window->width;
 	sh = Engine::GetInstance().window->height;
 	/*logo = Engine::GetInstance().textures->Load("Assets/Textures/TeamDayo_Logo.png");
