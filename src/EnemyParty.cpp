@@ -11,8 +11,15 @@ EnemyParty::EnemyParty(std::shared_ptr<Enemy> _leader)
 void EnemyParty::AddMember(std::shared_ptr<Enemy> member)
 {
 	if (!CanAddMember()) return;
-	members.push_back(member);
-	member->party = this;
+    for (const auto& existing : members) {
+        if (existing->id == member->id) return;
+    }
+    if (member->party != this) {
+        delete member->party;
+    }
+
+    members.push_back(member);
+    member->party = this;
 }
 
 bool EnemyParty::CanAddMember() const
