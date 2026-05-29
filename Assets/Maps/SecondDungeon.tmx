@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="60" height="80" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="302">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="60" height="80" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="311">
  <tileset firstgid="1" name="DungeonDecorative" tilewidth="16" tileheight="16" tilecount="256" columns="16">
   <image source="DungeonDecorative.png" width="256" height="256"/>
  </tileset>
@@ -14428,9 +14428,6 @@
   </data>
  </layer>
  <layer id="4" name="Logic" width="60" height="80">
-  <properties>
-   <property name="Draw" type="bool" value="false"/>
-  </properties>
   <data>
    <tile/>
    <tile/>
@@ -19331,41 +19328,54 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="9" name="NPC"/>
- <objectgroup id="10" name="Items">
-  <object id="296" x="170" y="449.333">
+ <objectgroup id="9" name="NPC">
+  <object id="303" x="168" y="473.333">
    <properties>
     <property name="id" value="CH-014"/>
    </properties>
    <point/>
   </object>
-  <object id="297" x="256" y="816">
+  <object id="304" x="254" y="840">
    <properties>
     <property name="id" value="CH-015"/>
    </properties>
    <point/>
   </object>
-  <object id="298" x="368" y="816">
+  <object id="305" x="366" y="840">
    <properties>
     <property name="id" value="CH-016"/>
    </properties>
    <point/>
   </object>
-  <object id="299" x="388" y="1132">
+  <object id="306" x="386" y="1156">
    <properties>
     <property name="id" value="CH-017"/>
    </properties>
    <point/>
   </object>
-  <object id="300" x="640" y="448">
+  <object id="307" x="638" y="472">
    <properties>
     <property name="id" value="CH-018"/>
    </properties>
    <point/>
   </object>
-  <object id="301" x="768" y="448">
+  <object id="308" x="766" y="472">
    <properties>
     <property name="id" value="CH-019"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="10" name="Items">
+  <object id="302" x="168" y="127.5">
+   <properties>
+    <property name="id" value="EXIT-001"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="310" x="624" y="224">
+   <properties>
+    <property name="id" value="LEVER-001"/>
    </properties>
    <point/>
   </object>
