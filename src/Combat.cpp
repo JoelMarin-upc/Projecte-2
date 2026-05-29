@@ -382,6 +382,8 @@ bool Combat::Start() {
 	if (isPlayerTurn) hint->text = "Select a character";
 	cancelAction->active = false;
 
+	particles.LoadTextures();
+
 	return true;
 }
 
@@ -486,6 +488,8 @@ bool Combat::Update(float dt) {
 
 // Called before all Updates
 bool Combat::PostUpdate(float dt) {
+	particles.Update(dt);
+	particles.Draw();
 	return true;
 }
 

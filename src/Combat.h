@@ -8,6 +8,7 @@
 #include "MenuManager.h"
 #include "Character.h"
 #include "Timer.h"
+#include "ParticleSystem.h"
 
 enum CombatPhase {
 	DECISION,
@@ -236,4 +237,6 @@ public:
 	bool wasCancelActive = false;
 
 	int uiClickFxId = -1;
+
+	ParticleSystem particles;
 };

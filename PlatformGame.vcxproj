@@ -200,6 +200,7 @@
     <ClCompile Include="src\NonInteractableItem.cpp" />
     <ClCompile Include="src\NPC.cpp" />
     <ClCompile Include="src\Obstacle.cpp" />
+    <ClCompile Include="src\ParticleSystem.cpp" />
     <ClCompile Include="src\Party.cpp" />
     <ClCompile Include="src\Pathfinding.cpp" />
     <ClCompile Include="src\PerfTimer.cpp" />
@@ -282,6 +283,7 @@
     <ClInclude Include="src\NonInteractableItem.h" />
     <ClInclude Include="src\NPC.h" />
     <ClInclude Include="src\Obstacle.h" />
+    <ClInclude Include="src\ParticleSystem.h" />
     <ClInclude Include="src\Party.h" />
     <ClInclude Include="src\Pathfinding.h" />
     <ClInclude Include="src\PerfTimer.h" />
