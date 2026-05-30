@@ -456,9 +456,8 @@ bool Combat::Update(float dt) {
 				particles.Emit(ParticleEffectType::BUFF, sx + halfW, sy + halfH);
 
 				if (action->stance == ASSIST) {
-					for (auto& m : members) {
-						particles.Emit(ParticleEffectType::BUFF, sx + halfW, sy + halfH);
-					}
+					for (auto& m : members)
+						particles.Emit(ParticleEffectType::BUFF, m->position.getX() + 176.0f / 2.0f, m->position.getY() + 141.0f / 2.0f);
 				}
 				break;
 			}
