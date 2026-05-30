@@ -45,6 +45,9 @@ bool InteractableItem::Start() {
 	sensorCollider->listener = this;
 	//sensorCollider->listener->type = EntityType::INTERACTABLE_ITEM;
 
+	std::string pickupFxPath = Engine::GetInstance().audio->GetAudioPath("missions", "pickup");
+	pickupFxId = Engine::GetInstance().audio->LoadFx(pickupFxPath.c_str());
+
 	return true;
 }
 
@@ -58,7 +61,8 @@ bool InteractableItem::Update(float dt) {
 	b2Body_SetTransform(sensorCollider->body, { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, b2Body_GetRotation(sensorCollider->body));
 
 	if (isPlayerInRange && !isToggled) {
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN ||
+			Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_SOUTH) == KEY_DOWN) {
 			Interact();
 		}
 	}
@@ -169,6 +173,7 @@ void InteractableItem::Pickup()
 				}
 				player->inventory->PrintContents();
 				LOG("'%s' picked up", name.c_str());
+				Engine::GetInstance().audio->PlayFx(pickupFxId);
 				return;
 			}
 			else {

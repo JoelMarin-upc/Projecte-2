@@ -31,7 +31,7 @@ In this release, the following features have been implemented:
 - ✅UI buttons with multimple states (normal, hover, pressed and disabled)
 - ✅Custom cursor
 - ✅Sound effects
-
+- ✅Gamepad support
 
 **SCREEN: LOGO**
 - ✅Animated logo in/out
@@ -82,7 +82,7 @@ In this release, the following features have been implemented:
 
 ## How to Play / Controls
 
-### Gameplay Controls
+### Gameplay Controls (Keyboard)
 | Action | Key |
 |:--------|:----|
 | Move Up | W/UP |
@@ -95,6 +95,18 @@ In this release, the following features have been implemented:
 | Open mission journal | J |
 | Pause game | P/ESC |
 | Cap FPS | F11 |
+
+### Gameplay Controls (Gamepad)
+| Action | Key |
+|:--------|:----|
+| Move | LEFT JOYSTICK |
+| Interact | A |
+| Open inventory | X |
+| Open mission journal | Y |
+| Pause game | START |
+| Move mouse | RIGHT JOYSTICK |
+| Left click | A |
+| Right click | B |
 
 ### Debug Controls
 | Action | Key |

@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "Textures.h"
 #include "Audio.h"
+#include "SceneManager.h"
 #include <string>
 
 UIManager::UIManager() :Module()
@@ -159,6 +160,8 @@ bool UIManager::PostUpdate(float dt)
 			if (debug) DrawControlDebug(control);
 		}
 	}
+
+	Engine::GetInstance().sceneManager->currentScene->DrawMenuFadeOverlay();
 
 	return true;
 }

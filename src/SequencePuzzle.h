@@ -31,4 +31,5 @@ private:
     Vector2D rewardPosition;
 
     int dingFxId = -1;
+    int failFxId = -1;
 };

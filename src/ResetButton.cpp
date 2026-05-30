@@ -43,7 +43,8 @@ bool ResetButton::Update(float dt)
     }
 
     if (isPlayerInRange) {
-        if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
+        if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN ||
+            Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_SOUTH) == KEY_DOWN) {
             Interact();
         }
     }

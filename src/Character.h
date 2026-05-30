@@ -49,6 +49,7 @@ public:
 	int walkFxId;
 	int attackFxId;
 	int dieFxId;
+	int barkFxId;
 
 	Timer walkTimer;
 	float walkMS = 400.0f;

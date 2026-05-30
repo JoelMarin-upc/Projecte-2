@@ -32,16 +32,18 @@ bool NPC::Start()
 	party = nullptr;
 
 	const char* audioNode;
-	if ("CH-006") audioNode = "dog";
+	if (id == "CH-006") audioNode = "dog";
 	else audioNode = isMale ? "human_male" : "human_female";
 
 	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "walk");
 	std::string attackFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "attack");
 	std::string dieFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "die");
+	std::string barkFxPath = Engine::GetInstance().audio->GetAudioPath("dog", "bark");
 
 	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath.c_str());
 	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath.c_str());
 	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath.c_str());
+	barkFxId = Engine::GetInstance().audio->LoadFx(barkFxPath.c_str());
 
     return true;
 }
@@ -69,7 +71,8 @@ bool NPC::Update(float dt)
 	b2Body_SetTransform(sensorCollider->body, { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, b2Body_GetRotation(sensorCollider->body));
 
 	if (isPlayerInRange) {
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN ||
+			Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_SOUTH) == KEY_DOWN) {
 			Interact();
 		}
 	}
@@ -279,6 +282,7 @@ void NPC::Recruit()
 	isRecruitConditionFulfilled = recuitMissionId == "" || Engine::GetInstance().sceneManager->GetMissionManager()->IsMissionCompleted(recuitMissionId);
 	if (isRecruitConditionFulfilled && !party) {
 		LOG("%s joined the party!", name.c_str());
+		if (id == "CH-006") Engine::GetInstance().audio->PlayFx(barkFxId);
 		Engine::GetInstance().sceneManager->currentScene->player->AddPartyMember(std::dynamic_pointer_cast<NPC>(shared_from_this()), true);
 	}
 	else if (recuitMissionId != "") {

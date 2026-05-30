@@ -57,10 +57,12 @@ bool Player::Start() {
 	std::string walkFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "walk");
 	std::string attackFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "attack");
 	std::string dieFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "die");
+	std::string torchFxPath = Engine::GetInstance().audio->GetAudioPath(audioNode, "torch");
 
 	walkFxId = Engine::GetInstance().audio->LoadFx(walkFxPath.c_str());
 	attackFxId = Engine::GetInstance().audio->LoadFx(attackFxPath.c_str());
 	dieFxId = Engine::GetInstance().audio->LoadFx(dieFxPath.c_str());
+	torchFxId = Engine::GetInstance().audio->LoadFx(torchFxPath.c_str());
 
 	return true;
 }
@@ -75,6 +77,7 @@ bool Player::Update(float dt)
 		ApplyPhysics();
 		HandleAnimations();
 		Draw(dt);
+		RunTorchTimer(dt);
 	}
 
 	return true;
@@ -108,50 +111,140 @@ void Player::GetPhysicsValues() {
 	velocity = { 0, velocity.y };
 }
 
-void Player::Move() {
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-		velocity.y = -speed;
-		currentFacingDirection = UP;
-		if (walkTimer.ReadMSec() > walkMS) {
+//void Player::Move() {
+//	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+//		velocity.y = -speed;
+//		currentFacingDirection = UP;
+//		if (walkTimer.ReadMSec() > walkMS) {
+//			Engine::GetInstance().audio->PlayFx(walkFxId);
+//			walkTimer = Timer();
+//		}
+//	}
+//	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+//		velocity.x = -speed;
+//		currentFacingDirection = LEFT;
+//		if (walkTimer.ReadMSec() > walkMS) {
+//			Engine::GetInstance().audio->PlayFx(walkFxId);
+//			walkTimer = Timer();
+//		}
+//	}
+//	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+//		velocity.y = speed;
+//		currentFacingDirection = DOWN;
+//		if (walkTimer.ReadMSec() > walkMS) {
+//			Engine::GetInstance().audio->PlayFx(walkFxId);
+//			walkTimer = Timer();
+//		}
+//	}
+//	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+//		velocity.x = speed;
+//		currentFacingDirection = RIGHT;
+//		if (walkTimer.ReadMSec() > walkMS) {
+//			Engine::GetInstance().audio->PlayFx(walkFxId);
+//			walkTimer = Timer();
+//		}
+//	}
+//	if ((Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) != KEY_REPEAT &&
+//		Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) != KEY_REPEAT) &&
+//		(Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) != KEY_REPEAT &&
+//			Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) != KEY_REPEAT)) {
+//		velocity.y = 0;
+//	}
+//	if ((Engine::GetInstance().input->GetKey(SDL_SCANCODE_LEFT) != KEY_REPEAT &&
+//		Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) != KEY_REPEAT) &&
+//		(Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) != KEY_REPEAT &&
+//			Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) != KEY_REPEAT)) {
+//		velocity.x = 0;
+//	}
+//}
+
+void Player::Move()
+{
+	std::shared_ptr<Input> input = Engine::GetInstance().input;
+
+	float x = 0.f;
+	float y = 0.f;
+
+	// Keyboard
+
+	if (input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT ||
+		input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	{
+		y -= 1.0f;
+	}
+
+	if (input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT ||
+		input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	{
+		y += 1.0f;
+	}
+
+	if (input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT ||
+		input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	{
+		x -= 1.0f;
+	}
+
+	if (input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT ||
+		input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	{
+		x += 1.0f;
+	}
+
+	// Gamepad
+
+	float stickX = input->GetLeftStickX();
+	float stickY = input->GetLeftStickY();
+
+	x += stickX;
+	y += stickY;
+
+	// Normalize diagonal movement
+	float length = sqrtf(
+		x * x +
+		y * y);
+
+	if (length > 1.0f)
+	{
+		x /= length;
+		y /= length;
+	}
+
+	// Final velocity
+
+	velocity.x = x * speed;
+	velocity.y = y * speed;
+
+	// Facing direction
+
+	if (fabs(x) > fabs(y))
+	{
+		if (x > 0.1f)
+			currentFacingDirection = RIGHT;
+		else if (x < -0.1f)
+			currentFacingDirection = LEFT;
+	}
+	else
+	{
+		if (y > 0.1f)
+			currentFacingDirection = DOWN;
+		else if (y < -0.1f)
+			currentFacingDirection = UP;
+	}
+
+	// Walk sound
+
+	bool isMoving =
+		fabs(x) > 0.1f ||
+		fabs(y) > 0.1f;
+
+	if (isMoving)
+	{
+		if (walkTimer.ReadMSec() > walkMS)
+		{
 			Engine::GetInstance().audio->PlayFx(walkFxId);
 			walkTimer = Timer();
 		}
-	}
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		velocity.x = -speed;
-		currentFacingDirection = LEFT;
-		if (walkTimer.ReadMSec() > walkMS) {
-			Engine::GetInstance().audio->PlayFx(walkFxId);
-			walkTimer = Timer();
-		}
-	}
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-		velocity.y = speed;
-		currentFacingDirection = DOWN;
-		if (walkTimer.ReadMSec() > walkMS) {
-			Engine::GetInstance().audio->PlayFx(walkFxId);
-			walkTimer = Timer();
-		}
-	}
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT || Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		velocity.x = speed;
-		currentFacingDirection = RIGHT;
-		if (walkTimer.ReadMSec() > walkMS) {
-			Engine::GetInstance().audio->PlayFx(walkFxId);
-			walkTimer = Timer();
-		}
-	}
-	if ((Engine::GetInstance().input->GetKey(SDL_SCANCODE_UP) != KEY_REPEAT &&
-		Engine::GetInstance().input->GetKey(SDL_SCANCODE_DOWN) != KEY_REPEAT) &&
-		(Engine::GetInstance().input->GetKey(SDL_SCANCODE_W) != KEY_REPEAT &&
-			Engine::GetInstance().input->GetKey(SDL_SCANCODE_S) != KEY_REPEAT)) {
-		velocity.y = 0;
-	}
-	if ((Engine::GetInstance().input->GetKey(SDL_SCANCODE_LEFT) != KEY_REPEAT &&
-		Engine::GetInstance().input->GetKey(SDL_SCANCODE_RIGHT) != KEY_REPEAT) &&
-		(Engine::GetInstance().input->GetKey(SDL_SCANCODE_A) != KEY_REPEAT &&
-			Engine::GetInstance().input->GetKey(SDL_SCANCODE_D) != KEY_REPEAT)) {
-		velocity.x = 0;
 	}
 }
 
@@ -186,6 +279,27 @@ void Player::HandleAnimations()
 			anims.SetCurrent("idle");
 			currentAnimation = "idle";
 		}
+	}
+}
+
+void Player::RunTorchTimer(float dt)
+{
+	if (!inventory) return;
+	if (!Engine::GetInstance().sceneManager->GetCurrentScene()->hasDarkness) return;
+	std::string torch = "Torch";
+	if (!inventory->equippedWeapon || inventory->equippedWeapon->name != torch)
+	{
+		Engine::GetInstance().sceneManager->GetCurrentScene()->SetDarknessMode(DarknessMode::HEAVY);
+		return;
+	}
+	Engine::GetInstance().sceneManager->GetCurrentScene()->SetDarknessMode(DarknessMode::LIGHT);
+	torchMS += dt;
+	if (torchMS > MAX_TORCH_MS) {
+		torchMS = 0;
+		inventory->RemoveItem(torch);
+		inventory->equippedWeapon = nullptr;
+		Engine::GetInstance().audio->PlayFx(torchFxId);
+		Engine::GetInstance().sceneManager->GetCurrentScene()->SetDarknessMode(DarknessMode::HEAVY);
 	}
 }
 

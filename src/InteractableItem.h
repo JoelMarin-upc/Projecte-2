@@ -70,11 +70,11 @@ public:
 
 protected:
 	//Dialogue type by default
-
 	SDL_Texture* pickupIcon;
 	const char* pickupIconPath;
 	int pickupIconW = 16;
 	int pickupIconH = 16;
+	int pickupFxId;
 
 	//L08 TODO 4: Add a physics to an item
 	Collider* pbody;

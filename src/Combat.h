@@ -8,6 +8,7 @@
 #include "MenuManager.h"
 #include "Character.h"
 #include "Timer.h"
+#include "ParticleSystem.h"
 
 enum CombatPhase {
 	DECISION,
@@ -106,7 +107,7 @@ struct TurnAction {
 class Combat : public Module {
 public:
 
-	Combat(Party* _playerParty, EnemyParty* _enemyParty, std::string mapPath, std::string mapName);
+	Combat(Party* _playerParty, EnemyParty* _enemyParty, std::string mapPath, std::string mapName, int clickFxId);
 
 	virtual ~Combat();
 
@@ -122,6 +123,8 @@ public:
 	// Called each loop iteration
 	bool Update(float dt);
 
+	void Draw(float dt);
+
 	// Called before all Updates
 	bool PostUpdate(float dt);
 
@@ -130,6 +133,7 @@ public:
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
 
+	void ShowSelectionHint(std::shared_ptr<Character> character = nullptr);
 	void ToggleActions(bool show, bool toggleCancel = true);
 	void ToggleStances(bool show);
 	void SelectConsumable(std::string consumableName);
@@ -188,6 +192,11 @@ public:
 	std::shared_ptr<UILabel> log3 = nullptr;
 	std::shared_ptr<UILabel> log4 = nullptr;
 
+	std::shared_ptr<UIImage> selectedPlayer1 = nullptr;
+	std::shared_ptr<UIImage> selectedPlayer2 = nullptr;
+	std::shared_ptr<UIImage> selectedPlayer3 = nullptr;
+	std::shared_ptr<UIImage> selectedPlayer4 = nullptr;
+
 	std::shared_ptr<UILabel> hint = nullptr;
 
 	std::shared_ptr<UIImage> cancelAction = nullptr;
@@ -228,4 +237,8 @@ public:
 	bool wasStance3Active = false;
 	bool wasStance4Active = false;
 	bool wasCancelActive = false;
+
+	int uiClickFxId = -1;
+
+	ParticleSystem particles;
 };

@@ -19,13 +19,14 @@ void sleep_seconds(int seconds) {
 	std::this_thread::sleep_for(std::chrono::seconds(seconds));
 }
 
-Combat::Combat(Party* _playerParty, EnemyParty* _enemyParty, std::string mapPath, std::string mapName)
+Combat::Combat(Party* _playerParty, EnemyParty* _enemyParty, std::string mapPath, std::string mapName, int clickFxId)
 {
 	playerParty = _playerParty;
 	enemyParty = _enemyParty;
 	map = new Map();
 	map->Load(mapPath, mapName);
 	combatData = map->combatData;
+	this->uiClickFxId = clickFxId;
 }
 
 Combat::~Combat() {
@@ -51,6 +52,10 @@ Combat::~Combat() {
 	Engine::GetInstance().uiManager->DestroyUIElement(log2);
 	Engine::GetInstance().uiManager->DestroyUIElement(log3);
 	Engine::GetInstance().uiManager->DestroyUIElement(log4);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer1);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer2);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer3);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer4);
 	Engine::GetInstance().uiManager->DestroyUIElement(hint);
 }
 
@@ -171,21 +176,23 @@ bool Combat::Start() {
 	SDL_Texture* undoPres = Engine::GetInstance().textures->Load("Assets/Textures/undoActionButtonPressed.png");
 	SDL_Texture* undoDis = undoNormal;
 
+	SDL_Texture* selectionImg = Engine::GetInstance().textures->Load("Assets/Textures/down_arrow.png");
+
 	// Action buttons
-	action1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION1, b_action1, this, {  }, -1, -1, UIParameters::Image(action1Dis, action1Normal, action1Hov, action1Pres)));
-	action2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION2, b_action2, this, {  }, -1, -1, UIParameters::Image(action2Dis, action2Normal, action2Hov, action2Pres)));
-	action3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION3, b_action3, this, {  }, -1, -1, UIParameters::Image(action3Dis, action3Normal, action3Hov, action3Pres)));
-	action4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION4, b_action4, this, {  }, -1, -1, UIParameters::Image(action4Dis, action4Normal, action4Hov, action4Pres)));
+	action1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION1, b_action1, this, {  }, -1, uiClickFxId, UIParameters::Image(action1Dis, action1Normal, action1Hov, action1Pres)));
+	action2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION2, b_action2, this, {  }, -1, uiClickFxId, UIParameters::Image(action2Dis, action2Normal, action2Hov, action2Pres)));
+	action3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION3, b_action3, this, {  }, -1, uiClickFxId, UIParameters::Image(action3Dis, action3Normal, action3Hov, action3Pres)));
+	action4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION4, b_action4, this, {  }, -1, uiClickFxId, UIParameters::Image(action4Dis, action4Normal, action4Hov, action4Pres)));
 
 	// Stance buttons
-	stance1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE1, b_stance1, this, {  }, -1, -1, UIParameters::Image(stance1Dis, stance1Normal, stance1Hov, stance1Pres)));
-	stance2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE2, b_stance2, this, {  }, -1, -1, UIParameters::Image(stance2Dis, stance2Normal, stance2Hov, stance2Pres)));
-	stance3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE3, b_stance3, this, {  }, -1, -1, UIParameters::Image(stance3Dis, stance3Normal, stance3Hov, stance3Pres)));
-	stance4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE4, b_stance4, this, {  }, -1, -1, UIParameters::Image(stance4Dis, stance4Normal, stance4Hov, stance4Pres)));
+	stance1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE1, b_stance1, this, {  }, -1, uiClickFxId, UIParameters::Image(stance1Dis, stance1Normal, stance1Hov, stance1Pres)));
+	stance2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE2, b_stance2, this, {  }, -1, uiClickFxId, UIParameters::Image(stance2Dis, stance2Normal, stance2Hov, stance2Pres)));
+	stance3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE3, b_stance3, this, {  }, -1, uiClickFxId, UIParameters::Image(stance3Dis, stance3Normal, stance3Hov, stance3Pres)));
+	stance4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::STANCE4, b_stance4, this, {  }, -1, uiClickFxId, UIParameters::Image(stance4Dis, stance4Normal, stance4Hov, stance4Pres)));
 
 	// End-turn and undo/cancel buttons
-	endTurn = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::END_TURN, b_endTurn, this, {  }, -1, -1, UIParameters::Image(endTurnDis, endTurnNormal, endTurnHov, endTurnPres)));
-	cancelAction = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::CANCEL_ACTION, b_cancelAction, this, {  }, -1, -1, UIParameters::Image(undoDis, undoNormal, undoHov, undoPres)));
+	endTurn = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::END_TURN, b_endTurn, this, {  }, -1, uiClickFxId, UIParameters::Image(endTurnDis, endTurnNormal, endTurnHov, endTurnPres)));
+	cancelAction = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::CANCEL_ACTION, b_cancelAction, this, {  }, -1, uiClickFxId, UIParameters::Image(undoDis, undoNormal, undoHov, undoPres)));
 
 	// Hint label
 	hint = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::HINT, b_hint, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
@@ -272,7 +279,9 @@ bool Combat::Start() {
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 0) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
+		SDL_Rect selection = { boundaries.x + boundaries.w / 2 - selectionImg->w / 2, boundaries.y - selectionImg->h, selectionImg->w, selectionImg->h };
 		i_player = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_PLAYER, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
+		selectedPlayer1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::SELECTION1, selection, this, {  }, -1, -1, UIParameters::Image(selectionImg, selectionImg, selectionImg, selectionImg)));
 		player = playerParty->player;
 		i_player->active = true;
 		player->hasFled = false;
@@ -286,7 +295,9 @@ bool Combat::Start() {
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 1) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
+		SDL_Rect selection = { boundaries.x + boundaries.w / 2 - selectionImg->w / 2, boundaries.y - selectionImg->h, selectionImg->w, selectionImg->h };
 		i_npc1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC1, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
+		selectedPlayer2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::SELECTION2, selection, this, {  }, -1, -1, UIParameters::Image(selectionImg, selectionImg, selectionImg, selectionImg)));
 		npc1 = playerParty->members[0];
 		i_npc1->active = true;
 		npc1->hasFled = false;
@@ -300,7 +311,9 @@ bool Combat::Start() {
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 2) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
+		SDL_Rect selection = { boundaries.x + boundaries.w / 2 - selectionImg->w / 2, boundaries.y - selectionImg->h, selectionImg->w, selectionImg->h };
 		i_npc2 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC2, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
+		selectedPlayer3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::SELECTION3, selection, this, {  }, -1, -1, UIParameters::Image(selectionImg, selectionImg, selectionImg, selectionImg)));
 		npc2 = playerParty->members[1];
 		i_npc2->active = true;
 		npc2->hasFled = false;
@@ -314,13 +327,17 @@ bool Combat::Start() {
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 3) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
+		SDL_Rect selection = { boundaries.x + boundaries.w / 2 - selectionImg->w / 2, boundaries.y - selectionImg->h, selectionImg->w, selectionImg->h };
 		i_npc3 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::C_NPC3, boundaries, this, {  }, -1, -1, UIParameters::Image(tex, tex, tex, tex)));
+		selectedPlayer4 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::SELECTION4, selection, this, {  }, -1, -1, UIParameters::Image(selectionImg, selectionImg, selectionImg, selectionImg)));
 		npc3 = playerParty->members[2];
 		i_npc3->active = true;
 		npc3->hasFled = false;
 		npc3->isDead = false;
 		npc3->position = pos;
 	}
+
+	ShowSelectionHint();
 
 	float highestSpeed = 0;
 	highestSpeed = player->Speed();
@@ -365,6 +382,8 @@ bool Combat::Start() {
 	if (isPlayerTurn) hint->text = "Select a character";
 	cancelAction->active = false;
 
+	particles.LoadTextures();
+
 	return true;
 }
 
@@ -398,14 +417,25 @@ bool Combat::Update(float dt) {
 		for (TurnAction* action : turnActions) {
 			switch (action->action)
 			{
-			case ATTACK:
+			case ATTACK: {
 				Engine::GetInstance().audio->PlayFx(action->selected->attackFxId);
-				if (action->target->TakeDamage(action->selected->Attack())) KillCombatant(action->target);
+				bool killed = action->target->TakeDamage(action->selected->Attack());
+
+				float tx = action->target->position.getX();
+				float ty = action->target->position.getY();
+				bool targetIsEnemy = (action->target == enemy1 || action->target == enemy2 || action->target == enemy3 || action->target == enemy4);
+				float halfW = targetIsEnemy ? 288.0f / 2.0f : 176.0f / 2.0f;
+				float halfH = targetIsEnemy ? 360.0f / 2.0f : 141.0f / 2.0f;
+				particles.Emit(ParticleEffectType::BLOOD, tx + halfW, ty + halfH);
+
+				if (killed) KillCombatant(action->target);
 				break;
+			}
+				
 			case TAKE_STANCE:
+			{
 				if (isPlayerTurn) {
 					if (player->id != action->selected->id) members.push_back(player);
-
 					for (auto& member : playerParty->members)
 						if (member->id != action->selected->id)
 							members.push_back(member);
@@ -417,10 +447,47 @@ bool Combat::Update(float dt) {
 				}
 				if (action->stance == REST) chanceForSecondTurn += unitOfChanceForSecondTurn;
 				action->selected->TakeStance(action->stance, members);
+
+				float sx = action->selected->position.getX();
+				float sy = action->selected->position.getY();
+				bool selectedIsEnemy = (action->selected == enemy1 || action->selected == enemy2 || action->selected == enemy3 || action->selected == enemy4);
+				float halfW = selectedIsEnemy ? 288.0f / 2.0f : 176.0f / 2.0f;
+				float halfH = selectedIsEnemy ? 360.0f / 2.0f : 141.0f / 2.0f;
+				particles.Emit(ParticleEffectType::BUFF, sx + halfW, sy + halfH);
+
+				if (action->stance == ASSIST) {
+					for (auto& m : members) {
+						particles.Emit(ParticleEffectType::BUFF, sx + halfW, sy + halfH);
+					}
+				}
 				break;
+			}
+				
 			case TAKE_CONSUMABLE:
-				action->target->TakeConsumable(action->selected->UseConsumable(action->consumableType));
+			{
+				std::shared_ptr<Consumable> consumable = action->selected->UseConsumable(action->consumableType);
+				action->target->TakeConsumable(consumable);
+
+				bool isHeal = false;
+				if (consumable) {
+					for (const Stat& s : consumable->stats->stats) {
+						if (s.name == "health") { 
+							isHeal = true; 
+							break; 
+						}
+					}
+				}
+
+				float hx = action->target->position.getX();
+				float hy = action->target->position.getY();
+				bool targetIsEnemy2 = (action->target == enemy1 || action->target == enemy2 || action->target == enemy3 || action->target == enemy4);
+				float halfW2 = targetIsEnemy2 ? 288.0f / 2.0f : 176.0f / 2.0f;
+				float halfH2 = targetIsEnemy2 ? 360.0f / 2.0f : 141.0f / 2.0f;
+				particles.Emit(isHeal ? ParticleEffectType::HEAL : ParticleEffectType::BUFF, hx + halfW2, hy + halfH2);
+
 				break;
+			}
+				
 			case FLEE:
 				CombatantFlees(action->selected);
 				break;
@@ -464,11 +531,21 @@ bool Combat::Update(float dt) {
 		break;
 	}
 	DrawHealthBars();
+	particles.Update(dt);
+	particles.Draw();
+
 	return true;
+}
+
+void Combat::Draw(float dt)
+{
+	particles.Update(dt/1000);
+	particles.Draw();
 }
 
 // Called before all Updates
 bool Combat::PostUpdate(float dt) {
+
 	return true;
 }
 
@@ -495,8 +572,13 @@ bool Combat::CleanUp() {
 	Engine::GetInstance().uiManager->DestroyUIElement(log2);
 	Engine::GetInstance().uiManager->DestroyUIElement(log3);
 	Engine::GetInstance().uiManager->DestroyUIElement(log4);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer1);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer2);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer3);
+	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer4);
 	Engine::GetInstance().uiManager->DestroyUIElement(hint);
 	Engine::GetInstance().uiManager->DestroyUIElement(cancelAction);
+	particles.Clear();
 	return true;
 }
 
@@ -520,6 +602,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 			if (actionTaken1) return true;
 			turnAction = new TurnAction();
 			turnAction->selected = player;
+			ShowSelectionHint(player);
 			ToggleActions(true);
 		}
 		break;
@@ -533,6 +616,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 			if (actionTaken2) return true;
 			turnAction = new TurnAction();
 			turnAction->selected = npc1;
+			ShowSelectionHint(npc1);
 			ToggleActions(true);
 		}
 		break;
@@ -546,6 +630,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 			if (actionTaken3) return true;
 			turnAction = new TurnAction();
 			turnAction->selected = npc2;
+			ShowSelectionHint(npc2);
 			ToggleActions(true);
 		}
 		break;
@@ -559,6 +644,7 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 			if (actionTaken4) return true;
 			turnAction = new TurnAction();
 			turnAction->selected = npc3;
+			ShowSelectionHint(npc3);
 			ToggleActions(true);
 		}
 		break;
@@ -650,6 +736,21 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		break;
 	}
 	return true;
+}
+
+void Combat::ShowSelectionHint(std::shared_ptr<Character> character)
+{
+	if (player) selectedPlayer1->active = false;
+	if (npc1) selectedPlayer2->active = false;
+	if (npc2) selectedPlayer3->active = false;
+	if (npc3) selectedPlayer4->active = false;
+	
+	if (!character) return;
+
+	if (player && character->id == player->id) selectedPlayer1->active = true;
+	if (npc1 && character->id == npc1->id) selectedPlayer2->active = true;
+	if (npc2 && character->id == npc2->id) selectedPlayer3->active = true;
+	if (npc3 && character->id == npc3->id) selectedPlayer4->active = true;
 }
 
 void Combat::ToggleActions(bool show, bool toggleCancel)
@@ -804,6 +905,7 @@ void Combat::AddTurnAction()
 	else if (isPlayerTurn && turnActions.size() < activeCharacters) {
 		hint->text = "Select a character";
 	}
+	ShowSelectionHint();
 }
 
 void Combat::EndTurn()
