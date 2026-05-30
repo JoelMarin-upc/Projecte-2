@@ -87,8 +87,6 @@ bool Scene::Start(std::string spawnId)
 	Engine::GetInstance().render->SetCursorTexture("Assets/Textures/cursor.png");
 	sw = Engine::GetInstance().window->width;
 	sh = Engine::GetInstance().window->height;
-	/*logo = Engine::GetInstance().textures->Load("Assets/Textures/TeamDayo_Logo.png");
-	b_logo = { sw/2 - logo->w/2, sh/2 - logo->h/2, 0, 0 };*/
 	
 	std::string logoFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "logo");
 	std::string elevatorFxPath = Engine::GetInstance().audio->GetAudioPath("scene", "elevator");
@@ -118,32 +116,16 @@ bool Scene::Start(std::string spawnId)
 	uiClickFxId = Engine::GetInstance().audio->LoadFx(clickFxPath.c_str());
 	inventoryBgTexture = Engine::GetInstance().textures->Load("Assets/Textures/inventoryBook.png");
 	journalBgTexture = Engine::GetInstance().textures->Load("Assets/Textures/MissionsPaper.png");
-	//studioLogoTexture = Engine::GetInstance().textures->Load("Assets/Textures/Team_Logo_SpriteSheet.png");
-	//gameTitleTexture = Engine::GetInstance().textures->Load("Assets/Textures/Title_Logo_SpriteSheet.png");
 
 	Engine::GetInstance().menuManager->SetObserver(this);
 
 	if (id == "intro")
 	{
 		Engine::GetInstance().menuManager->HideMenu();
-		//std::unordered_map<int, std::string> aliases = {{0, "ease_in"}};
-		//studioLogoAnims.LoadFromTSX("Assets/Textures/Team_Logo_SpriteSheet.tsx", aliases);
-		//studioLogoAnims.PlayOnce("ease_in");
-
-		/*studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));
-		studioLogo->active = true;*/
-		//Engine::GetInstance().audio->PlayFx(logoFxId);
 	}
 
 	if (id == "main menu")
 	{
-		/*std::unordered_map<int, std::string> aliases = {{0, "ease_in"}, {7, "ease_out"}};
-		gameTitleAnims.LoadFromTSX("Assets/Textures/Title_Logo_SpriteSheet.tsx", aliases);
-		gameTitleAnims.SetCurrent("ease_in");
-		titleEaseInDone = false;
-		titleEaseOutPlaying = false;
-		titleEaseOutDone = false;*/
-
 		Engine::GetInstance().menuManager->ShowMainMenu();
 		menuFadeAlpha = 255.0f;
 		menuFadePhase = MenuFadePhase::FADE_IN;
@@ -162,14 +144,13 @@ bool Scene::Start(std::string spawnId)
 			Engine::GetInstance().audio->PlayFx(doorFxId);
 			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav", 5000.0f);
 		}
-		else if (id == "SC-003" || id == "SC-004")
+		else if (id == "SC-003" || id == "SC-004" || id == "SC-OO5")
 		{
 			Engine::GetInstance().audio->PlayFx(elevatorFxId);
 			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
 		}
 	}
 	
-
 	entityManager->Start();
 	missionManager->Start();
 	dialogManager->Start();
@@ -1561,7 +1542,10 @@ void Scene::CheckTransitions()
 					sm->dungeonLevel = 2;
 					UnlockStances(1);
 				}
-				else if (sm->dungeonLevel < 3) {
+			}
+			if (id == "SC-004" && t.targetSpawnId == "refuge_from_dungeon") {
+				auto sm = Engine::GetInstance().sceneManager;
+				if (sm->dungeonLevel < 3) {
 					sm->dungeonLevel = 3;
 					UnlockStances(2);
 				}
@@ -1609,7 +1593,7 @@ void Scene::EndDialog()
 			Mission* mission = missionManager->ActivateMission("MI-000");
 			if (mission) Engine::GetInstance().menuManager->AddMissionPopup(mission);
 		}
-		if (activeDialogId == "CH-012" && id == "SC-004") {
+		if (activeDialogId == "CH-012" && id == "SC-005") {
 			gameStarted = false;
 			entityManager->paused = true;
 			//Engine::GetInstance().menuManager->ShowWinScreen();
