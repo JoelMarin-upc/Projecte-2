@@ -289,7 +289,7 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate(float dt)
 {
-	//DrawMenuFadeOverlay();
+	if (combat) combat->Draw(dt);
 
 	return true;
 }

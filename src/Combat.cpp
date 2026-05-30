@@ -417,14 +417,25 @@ bool Combat::Update(float dt) {
 		for (TurnAction* action : turnActions) {
 			switch (action->action)
 			{
-			case ATTACK:
+			case ATTACK: {
 				Engine::GetInstance().audio->PlayFx(action->selected->attackFxId);
-				if (action->target->TakeDamage(action->selected->Attack())) KillCombatant(action->target);
+				bool killed = action->target->TakeDamage(action->selected->Attack());
+
+				float tx = action->target->position.getX();
+				float ty = action->target->position.getY();
+				bool targetIsEnemy = (action->target == enemy1 || action->target == enemy2 || action->target == enemy3 || action->target == enemy4);
+				float halfW = targetIsEnemy ? 288.0f / 2.0f : 176.0f / 2.0f;
+				float halfH = targetIsEnemy ? 360.0f / 2.0f : 141.0f / 2.0f;
+				particles.Emit(ParticleEffectType::BLOOD, tx + halfW, ty + halfH);
+
+				if (killed) KillCombatant(action->target);
 				break;
+			}
+				
 			case TAKE_STANCE:
+			{
 				if (isPlayerTurn) {
 					if (player->id != action->selected->id) members.push_back(player);
-
 					for (auto& member : playerParty->members)
 						if (member->id != action->selected->id)
 							members.push_back(member);
@@ -436,10 +447,47 @@ bool Combat::Update(float dt) {
 				}
 				if (action->stance == REST) chanceForSecondTurn += unitOfChanceForSecondTurn;
 				action->selected->TakeStance(action->stance, members);
+
+				float sx = action->selected->position.getX();
+				float sy = action->selected->position.getY();
+				bool selectedIsEnemy = (action->selected == enemy1 || action->selected == enemy2 || action->selected == enemy3 || action->selected == enemy4);
+				float halfW = selectedIsEnemy ? 288.0f / 2.0f : 176.0f / 2.0f;
+				float halfH = selectedIsEnemy ? 360.0f / 2.0f : 141.0f / 2.0f;
+				particles.Emit(ParticleEffectType::BUFF, sx + halfW, sy + halfH);
+
+				if (action->stance == ASSIST) {
+					for (auto& m : members) {
+						particles.Emit(ParticleEffectType::BUFF, sx + halfW, sy + halfH);
+					}
+				}
 				break;
+			}
+				
 			case TAKE_CONSUMABLE:
-				action->target->TakeConsumable(action->selected->UseConsumable(action->consumableType));
+			{
+				std::shared_ptr<Consumable> consumable = action->selected->UseConsumable(action->consumableType);
+				action->target->TakeConsumable(consumable);
+
+				bool isHeal = false;
+				if (consumable) {
+					for (const Stat& s : consumable->stats->stats) {
+						if (s.name == "health") { 
+							isHeal = true; 
+							break; 
+						}
+					}
+				}
+
+				float hx = action->target->position.getX();
+				float hy = action->target->position.getY();
+				bool targetIsEnemy2 = (action->target == enemy1 || action->target == enemy2 || action->target == enemy3 || action->target == enemy4);
+				float halfW2 = targetIsEnemy2 ? 288.0f / 2.0f : 176.0f / 2.0f;
+				float halfH2 = targetIsEnemy2 ? 360.0f / 2.0f : 141.0f / 2.0f;
+				particles.Emit(isHeal ? ParticleEffectType::HEAL : ParticleEffectType::BUFF, hx + halfW2, hy + halfH2);
+
 				break;
+			}
+				
 			case FLEE:
 				CombatantFlees(action->selected);
 				break;
@@ -483,13 +531,21 @@ bool Combat::Update(float dt) {
 		break;
 	}
 	DrawHealthBars();
+	particles.Update(dt);
+	particles.Draw();
+
 	return true;
+}
+
+void Combat::Draw(float dt)
+{
+	particles.Update(dt/1000);
+	particles.Draw();
 }
 
 // Called before all Updates
 bool Combat::PostUpdate(float dt) {
-	particles.Update(dt);
-	particles.Draw();
+
 	return true;
 }
 
@@ -522,6 +578,7 @@ bool Combat::CleanUp() {
 	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer4);
 	Engine::GetInstance().uiManager->DestroyUIElement(hint);
 	Engine::GetInstance().uiManager->DestroyUIElement(cancelAction);
+	particles.Clear();
 	return true;
 }
 

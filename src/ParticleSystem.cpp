@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "Render.h"
 #include "Textures.h"
+#include "Log.h"
 #include <cmath>
 #include <random>
 #include <algorithm>
@@ -10,7 +11,7 @@ float ParticleSystem::random_float(float min, float max)
 {
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dist(min, max);
+    std::uniform_real_distribution<float> dist(min, max);
     return dist(gen);
 }
 
@@ -18,7 +19,7 @@ int ParticleSystem::random_int(int min, int max)
 {
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dist(min, max);
+    std::uniform_int_distribution<int> dist(min, max);
     return dist(gen);
 }
 
@@ -28,7 +29,7 @@ void ParticleSystem::LoadTextures()
 
     texBlood = Engine::GetInstance().textures->Load("Assets/Textures/Blood.png");
     texCross = Engine::GetInstance().textures->Load("Assets/Textures/Cross.png");
-    texCross = Engine::GetInstance().textures->Load("Assets/Textures/Cross.png");
+    texArrow = Engine::GetInstance().textures->Load("Assets/Textures/Arrow.png");
 
     texturesLoaded = true;
 }
@@ -49,8 +50,8 @@ void ParticleSystem::SpawnOne(ParticleEffectType type, float cx, float cy)
     Particle& p = AllocParticle();
     p.alive = true;
 
-    p.x = cx + random_float(-12.0f, 12.0f);
-    p.y = cy + random_float(-8.0f, 8.0f);
+    p.x = cx + random_float(-55.0f, 55.0f);
+    p.y = cy + random_float(-45.0f, 45.0f);
 
     switch (type)
     {
@@ -61,7 +62,7 @@ void ParticleSystem::SpawnOne(ParticleEffectType type, float cx, float cy)
         p.maxLife = random_float(0.8f, 1.4f);
         p.scale = random_float(0.8f, 1.3f);
         p.scaleDelta = random_float(-0.15f, 0.05f);
-        //p.r = 80;  p.g = 220; p.b = 80;
+        p.r = 80;  p.g = 220; p.b = 80;
         break;
 
     case ParticleEffectType::BUFF:
@@ -71,17 +72,17 @@ void ParticleSystem::SpawnOne(ParticleEffectType type, float cx, float cy)
         p.maxLife = random_float(0.6f, 1.1f);
         p.scale = random_float(0.9f, 1.4f);
         p.scaleDelta = 0.0f;
-        //p.r = 80;  p.g = 160; p.b = 255;
+        p.r = 80;  p.g = 160; p.b = 255;
         break;
 
     case ParticleEffectType::BLOOD:
         p.texture = texBlood;
-        p.vx = random_float(-60.0f, 60.0f);
-        p.vy = random_float(-75.0f, -15.0f);
+        p.vx = random_float(-150.0f, 150.0f);
+        p.vy = random_float(-180.0f, -50.0f);
         p.maxLife = random_float(0.4f, 0.9f);
         p.scale = random_float(0.8f, 1.6f);
         p.scaleDelta = -0.5f;
-        //p.r = 200; p.g = 0; p.b = 20;
+        p.r = 200; p.g = 0; p.b = 20;
         break;
     }
 
@@ -104,19 +105,20 @@ void ParticleSystem::Emit(ParticleEffectType type, float cx, float cy)
 
 void ParticleSystem::Update(float dt)
 {
+    float dtSec = dt / 1000.0f;
     for (auto& p : pool) {
         if (!p.alive) continue;
 
-        p.life -= dt;
+        p.life -= dtSec;
         if (p.life <= 0.0f) {
             p.alive = false;
             continue;
         }
 
-        p.vy += 130.0f * dt;
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-        p.scale = std::max(0.01f, p.scale + p.scaleDelta * dt);
+        p.vy += 130.0f * dtSec;
+        p.x += p.vx * dtSec;
+        p.y += p.vy * dtSec;
+        p.scale = std::max(0.01f, p.scale + p.scaleDelta * dtSec);
     }
 }
 

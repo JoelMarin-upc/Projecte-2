@@ -123,6 +123,8 @@ public:
 	// Called each loop iteration
 	bool Update(float dt);
 
+	void Draw(float dt);
+
 	// Called before all Updates
 	bool PostUpdate(float dt);
 
