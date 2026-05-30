@@ -3,7 +3,11 @@
 #include "Module.h"
 #include "Inventory.h"
 #include "UIManager.h"
+#include "MissionManager.h"
+#include "Character.h"
+#include "Timer.h"
 #include <list>
+#include <queue>
 
 enum MenuType {
 	MAIN,
@@ -12,7 +16,10 @@ enum MenuType {
 	CREDITS,
 	INVENTORY,
 	SHOP,
+	COMBAT_INVENTORY,
+	MISSION_JOURNAL,
 	DEATHSCREEN,
+	WINSCREEN,
 	NONE
 };
 
@@ -34,9 +41,14 @@ enum UIID {
 	FX_VOLUME,
 	FULLSCREEN_LABEL,
 	FULLSCREEN,
+	VSYNC_LABEL,
+	VSYNC,
 	BACK_MENU,
 	BACK_MAIN_MENU,
 	EXIT,
+	POPUP_TITLE,
+	POPUP,
+	MISSION_JOURNAL_TITLE,
 	C_PLAYER,
 	C_NPC1,
 	C_NPC2,
@@ -45,6 +57,10 @@ enum UIID {
 	C_ENEMY2,
 	C_ENEMY3,
 	C_ENEMY4,
+	SELECTION1,
+	SELECTION2,
+	SELECTION3,
+	SELECTION4,
 	ACTION1,
 	ACTION2,
 	ACTION3,
@@ -58,8 +74,39 @@ enum UIID {
 	STANCE2,
 	STANCE3,
 	STANCE4,
-	HINT
+	HINT,
+	INVENTORY_LABEL,
+	MONEY_LABEL,
+	SHOP_LABEL,
+	USE,
+	DROP,
+	BUY,
+	SELL,
+	AMOUNT,
+	HELMET,
+	BODY,
+	BOOTS,
+	WEAPON,
+	SELECTED_ITEM,
+	EXIT_SHOP,
+	HP_STAT,
+	ATTACK_STAT,
+	DEFEND_STAT,
+	SPEED_STAT,
+
+	WIN_BG,
+	WIN_BACK_MAIN_MENU,
+	WIN_EXIT,
+	DEATH_BG,
+
+	NAME_LABEL,
+	PREV_INVENTORY,
+	NEXT_INVENTORY,
+	CANCEL_ACTION
+
 };
+
+const float POP_UP_SECONDS = 5.f;
 
 class MenuManager : public Module
 {
@@ -87,19 +134,27 @@ public:
 	bool CleanUp();
 
 	void Load(bool onlyPositions);
+	void LoadInventory(bool onlyPositions);
 	void SetObserver(Module* observer);
 	void ShowMainMenu();
 	void ShowPauseMenu();
 	void ShowSettingsMenu();
 	void ShowCreditsMenu();
-	void ShowInventory(Inventory* inventory);
-	void ShowShop(Inventory* customer, Inventory* shop = nullptr);
+	void ShowInventory(Inventory* inventory, std::shared_ptr<Character> character = nullptr, Party* party = nullptr);
+	void ShowShop(Inventory* customer, Inventory* shop);
 	void ShowDeathScreen();
+	void ShowWinScreen();
+	void AddMissionPopup(Mission* mission);
+	void ShowMissionPopup(Mission* mission, float popUpSeconds = POP_UP_SECONDS);
+	void HideMissionPopup();
+	void ShowMissionJournal(MissionManager* missionManager);
 	void HideMenu();
 	void ShowPreviousMenu();
+	void RedrawInventory();
+	void ShowCombatInventory(Inventory* inventory);
 
 private:
-	void ShowInventory(Inventory* inventory, bool isShop);
+	void ShowInventory(Inventory* inventory, bool isShop, std::shared_ptr<Character> character = nullptr, Party* party = nullptr);
 
 public:
 	MenuType currentMenu;
@@ -109,11 +164,11 @@ public:
 	std::shared_ptr<UIImage> studioLogo;
 	std::shared_ptr<UILabel> pausedLabel;
 	std::shared_ptr<UILabel> gameOverLabel;
-	std::shared_ptr<UIButton> startGame;
-	std::shared_ptr<UIButton> continueGame;
-	std::shared_ptr<UIButton> resumeGame;
-	std::shared_ptr<UIButton> settingsButton;
-	std::shared_ptr<UIButton> creditsButton;
+	std::shared_ptr<UIImage> startGame;
+	std::shared_ptr<UIImage> continueGame;
+	std::shared_ptr<UIImage> resumeGame;
+	std::shared_ptr<UIImage> settingsButton;
+	std::shared_ptr<UIImage> creditsButton;
 	std::shared_ptr<UILabel> settingsLabel;
 	std::shared_ptr<UILabel> creditsLabel1;
 	std::shared_ptr<UILabel> creditsLabel2;
@@ -123,9 +178,65 @@ public:
 	std::shared_ptr<UISlider> fxVolumeSlider;
 	std::shared_ptr<UILabel> fullscreenLabel;
 	std::shared_ptr<UICheckbox> fullscreenCheckbox;
-	std::shared_ptr<UIButton> backMenu;
-	std::shared_ptr<UIButton> backMainMenu;
-	std::shared_ptr<UIButton> exit;
+	std::shared_ptr<UILabel> vsyncLabel;
+	std::shared_ptr<UICheckbox> vsyncCheckbox;
+	std::shared_ptr<UIImage> backMenu;
+	std::shared_ptr<UIImage> backMainMenu;
+	std::shared_ptr<UIImage> exit;
+	std::shared_ptr<UIImage> winBackground;
+	std::shared_ptr<UIImage> winBackMainMenu;
+	std::shared_ptr<UIImage> winExit;
+	std::shared_ptr<UIImage> deathBackground;
+
+	std::shared_ptr<UIButton> missionPopUpTitle;
+	std::shared_ptr<UIButton> missionPopUp;
+
+	std::shared_ptr<UIButton> missionJournalTitle;
+	std::vector<std::shared_ptr<UIButton>> missionJournal;
+	const int baseJournalId = 800;
 
 	int uiLockFrame = -1;
+
+	const int baseSlotsId = 900;
+	const int baseShopSlotsId = 950;
+	std::vector<std::shared_ptr<UISlot>> inventorySlots;
+	std::vector<std::shared_ptr<UISlot>> shopSlots;
+	std::shared_ptr<UILabel> nameLabel;
+	std::shared_ptr<UILabel> inventoryLabel;
+	std::shared_ptr<UILabel> moneyLabel;
+	std::shared_ptr<UILabel> shopLabel;
+	std::shared_ptr<UIButton> use;
+	std::shared_ptr<UIButton> drop;
+	std::shared_ptr<UIButton> buy;
+	std::shared_ptr<UIButton> sell;
+	std::shared_ptr<UISlider> amount;
+	std::shared_ptr<UIImage> helmet;
+	std::shared_ptr<UIImage> body;
+	std::shared_ptr<UIImage> boots;
+	std::shared_ptr<UIImage> weapon;
+	std::shared_ptr<UISlot> selectedItem;
+	std::shared_ptr<UIButton> exitShop;
+	std::shared_ptr<UIButton> hp;
+	std::shared_ptr<UIButton> attack;
+	std::shared_ptr<UIButton> defense;
+	std::shared_ptr<UIButton> speed;
+	const int baseGiveToId = 1000;
+	std::vector<std::shared_ptr<UIButton>> giveToButtons;
+	std::shared_ptr<UIButton> previousInventory;
+	std::shared_ptr<UIButton> nextInventory;
+
+	std::shared_ptr<Character> currentCharacter = nullptr;
+	Party* currentParty = nullptr;
+	Inventory* currentInventory = nullptr;
+	Inventory* currentShop = nullptr;
+
+	std::queue<Mission*> popUpQueue = std::queue<Mission*>();
+	Timer popUpTimer;
+	float popUpSeconds = 0.f;
+	bool showingPopUp = false;
+
+	int missionNewFxId;
+	int missionCompletedFxId;
+	int hoverFxId;
+	int clickFxId;
 };

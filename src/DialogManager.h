@@ -40,6 +40,8 @@ public:
 
 	void ResizeDialogBox();
 
+	void SetEnabled(bool enabled);
+
 	std::list<DialogTree*> dialogs;
 	bool paused = false;
 
@@ -47,12 +49,22 @@ private:
 
 	DialogTree* currentDialog;
 	SDL_Texture* dialogBox;
+	SDL_Texture* answerBox;
 	std::shared_ptr<UILabel> dialogText;
 	std::shared_ptr<UILabel> speakerName;
 	std::shared_ptr<UIButton> answer1;
 	std::shared_ptr<UIButton> answer2;
 	std::shared_ptr<UIButton> answer3;
 	std::shared_ptr<UIButton> answer4;
+
+	//adding tyewritter effect with delayed typing and sound fx
+	std::string fullText;
+	std::string displayedText;
+	float charTimer = 0.0f;
+	float charInterval = 0.08f;
+	int charIndex = 0;
+	bool isTyping = false;
+	int typingFxId;
 
 	enum DIALOG_UIID {
 		LABEL,

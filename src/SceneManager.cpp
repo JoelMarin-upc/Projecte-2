@@ -46,9 +46,12 @@ void SceneManager::LoadScenes()
 	//Registers and stores the id and map file of all scenes�
 	sceneInfos.push_back({ "intro", "", "" });
 	sceneInfos.push_back({ "main menu", "", "" });
+	sceneInfos.push_back({ "game title", "", "" });
 	sceneInfos.push_back({ "SC-001", mapsPath, "RebelRefuge.tmx" });
 	sceneInfos.push_back({ "SC-002", mapsPath, "GroceriesShop.tmx" });
-	sceneInfos.push_back({ "SC-003", mapsPath, "TutorialDungeon.tmx", "TutorialDungeon_combat.tmx" });
+	sceneInfos.push_back({ "SC-003", mapsPath, "TutorialDungeon.tmx", "TutorialDungeon_combat.tmx", true });
+	sceneInfos.push_back({ "SC-004", mapsPath, "SecondDungeon.tmx", "TutorialDungeon_combat.tmx", true });
+	sceneInfos.push_back({ "SC-005", mapsPath, "ThirdDungeon.tmx", "TutorialDungeon_combat.tmx", true });
 }
 
 void SceneManager::SetCurrentScene(std::string sceneID, std::string spawnId)
@@ -82,12 +85,25 @@ void SceneManager::DoTransition()
 	//Find the scene you want to transition and create it, spawns the player at the request spawn point and releases the queued transition
 	for (const SceneInfo& info : sceneInfos) {
 		if (info.id == pendingSceneID) {
-			currentScene = new Scene(info.id, info.mapPath, info.mapName, info.combatMapName);
+			currentScene = new Scene(info.id, info.mapPath, info.mapName, info.combatMapName, info.hasDarkness);
 			currentScene->Awake();
 			currentScene->Start(pendingSpawnId);
 			hasQueuedTransition = false;
 			return;
 		}
+	}
+}
+
+void SceneManager::EnterDungeon(std::string spawnId)
+{
+	if (dungeonLevel == 1) {
+		SetCurrentScene("SC-003", spawnId);
+	}
+	else if (dungeonLevel == 2) {
+		SetCurrentScene("SC-004", spawnId);
+	}
+	else if (dungeonLevel == 3) {
+		SetCurrentScene("SC-005", spawnId);
 	}
 }
 
@@ -129,6 +145,12 @@ bool SceneManager::Update(float dt)
 		}
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) {
 			SetCurrentScene("SC-003", "dungeon_from_refuge");
+		}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_4) == KEY_DOWN) {
+			SetCurrentScene("SC-004", "dungeon_from_refuge");
+		}
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) {
+			SetCurrentScene("SC-005", "dungeon_from_refuge");
 		}
 	}
 

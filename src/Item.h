@@ -11,7 +11,7 @@ class Item : public DynamicEntity
 public:
 
 	Item(){}
-	Item(std::string id, std::string name, std::string texturePath, EntityType type);
+	Item(std::string id, std::string name, std::string description, std::string texturePath, EntityType type);
 	virtual ~Item();
 
 	bool Awake();
@@ -26,9 +26,13 @@ public:
 
 	bool Destroy();
 
+	void SetTexSize(int w, int h) { texW = w; texH = h; }
+
 public:
 
 	bool isPicked = false;
+	SDL_Texture* icon;
+	std::string description;
 
 protected:
 
@@ -36,5 +40,7 @@ protected:
 
 	//L08 TODO 4: Add a physics to an item
 	Collider* pbody;
+
+
 
 };

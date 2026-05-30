@@ -7,10 +7,11 @@ public:
 	Stats();
 	~Stats();
 
-	void AddStat(std::string statname, float value, float maxValue = 0.f);
+	void AddStat(std::string statname, float value, float maxValue = 0.f, int turns = -1);
 	void RemoveStat(std::string statname);
 	Stat& GetStat(std::string statname);
 	void SetStat(std::string statname, int value);
+	void AddToStat(std::string statname, int value);
 
 	void ApplyModifier(std::string statname, float multiplier, int turns);
 

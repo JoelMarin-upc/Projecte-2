@@ -1,13 +1,12 @@
 #pragma once
 
 #include "InteractableItem.h"
-#include "Stats.h"
 
 class Equipable : public InteractableItem
 {
 public:
 	Equipable() : InteractableItem() {}
-	Equipable(std::string id, std::string name, std::string texturePath, ItemInteractionType type = ItemInteractionType::PICKUP, bool canStack = false) : InteractableItem(id, name, texturePath, type, canStack){}
+	Equipable(std::string id, std::string name, std::string description, std::string texturePath, ItemInteractionType type = ItemInteractionType::PICKUP, bool canStack = false) : InteractableItem(id, name, description, texturePath, type, canStack){}
 	~Equipable() {}
 
 	virtual void OnEquip() {
@@ -19,7 +18,6 @@ public:
 	}
 
 public:
-	Stats stats;
 	bool isEquipped = false;
 };
 

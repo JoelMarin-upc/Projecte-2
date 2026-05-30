@@ -56,6 +56,8 @@ public:
 
     void DeletePhysBody(Collider* physBody);
     bool IsPendingToDelete(Collider* physBody);
+    
+    bool SetBodyEnabled(Collider* physBody, bool enabled);
 
     // --- Velocity helpers (thin wrappers over Box2D 3.x C API)
     b2Vec2 GetLinearVelocity(const Collider* p) const;

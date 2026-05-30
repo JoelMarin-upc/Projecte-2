@@ -12,7 +12,7 @@ enum class GearSlot
 class Gear : public Equipable {
 public:
 	Gear() {}
-	Gear(std::string id, std::string name, std::string texturePath, GearSlot slot) : Equipable(id, name, texturePath, ItemInteractionType::PICKUP), gearSlot(slot){}
+	Gear(std::string id, std::string name, std::string description, std::string texturePath, GearSlot slot, bool canStack);
 	~Gear() {}
 	void OnEquip() override;
 	void OnUnequip() override;

@@ -92,7 +92,16 @@ bool Engine::Awake() {
     // L05: TODO 3: Read the title from the config file and set the variable gameTitle, read targetFrameRate and set the variables
     gameTitle = configFile.child("config").child("engine").child("title").child_value();
     targetFrameRate = configFile.child("config").child("engine").child("targetFrameRate").attribute("value").as_int();
+    vsyncEnabled = configFile.child("config").child("render").child("vsync").attribute("value").as_bool();
     currentTargetFrameRate = targetFrameRate;
+
+    if (vsyncEnabled) {
+        SDL_SetRenderVSync(render->renderer, 1);  //Enable VSync
+    }
+    else {
+        SDL_SetRenderVSync(render->renderer, 0);  //Disable VSync
+    }
+
     //Iterates the module list and calls Awake on each module
     bool result = true;
     for (const auto& module : moduleList) {
@@ -223,7 +232,7 @@ void Engine::FinishUpdate()
         lastSecFrameCount = 0;
     }
 
-    std::string vsync = render->vsync ? "ON" : "OFF";
+    std::string vsync = vsyncEnabled ? "ON" : "OFF";
 
     // Shows the time measurements in the window title
     // check sprintf formats here https://cplusplus.com/reference/cstdio/printf/
@@ -313,6 +322,15 @@ bool Engine::LoadConfig()
 void Engine::CapFPS()
 {
     if (input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) currentTargetFrameRate = currentTargetFrameRate == targetFrameRate ? 30 : targetFrameRate;
+}
+
+void Engine::SetVSync(bool enabled)
+{
+    vsyncEnabled = enabled;
+
+    SDL_SetRenderVSync(render->renderer, enabled ? 1 : 0);
+
+    LOG("VSync %s", enabled ? "Enabled" : "Disabled");
 }
 
 

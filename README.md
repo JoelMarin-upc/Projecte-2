@@ -28,57 +28,61 @@ The game is built in **C++** using a custom engine powered by **SDL3** for rende
 In this release, the following features have been implemented:
 
 **GENERAL**
-- ✅Game resolution: minimum 1280x720px@60fps, support for windowed mode and fullscreen
-- ✅Include GOD mode (F10)
-- ✅Turn-based battle system
+- ✅UI buttons with multimple states (normal, hover, pressed and disabled)
+- ✅Custom cursor
+- ✅Sound effects
+- ✅Gamepad support
 
 **SCREEN: LOGO**
-- ✅Team logo
-- ✅AUDIO: Sound FX characteristic for the logo
+- ✅Animated logo in/out
 
 **SCREEN: TITLE**
-- ✅Game title
-- ✅Game SAVE/LOAD state to/from external file
-- ✅AUDIO: Sound FX characteristic for the title appearing
-- ✅AUDIO: Music track specific for the screen
-- ✅UI: Main game menu
-- ✅UI: AUDIO: Buttons/controls fx feedback sounds
+- ✅Title animation with easings
+- ✅Music track
 
 **GAMEPLAY**
-- ✅Implement a level with at least 3 locations to visit
-- ✅Implement **2 Playable Characters**, available as the base Team Party
-- ✅Implement **2 NPC Characters**
-- ✅Implement at least **4 Dialogs** with branching with NPC characters
-- ✅INPUTS: Keyboard inputs supported
-- ✅UI: PAUSE menu available on pause
-- ✅AUDIO: Music track specific for the screen
-- ✅AUDIO: Music effects fade-in/fade-out, lower volume on PAUSE
+- ✅Ability system
+- ✅2 Dungeon maps with puzzles
+- ✅Collectable items
+- ✅Gear equipment
+- ✅Quests
+- ✅Journal to check quests
+- ✅Inventory system
+- ✅Shop
+- ✅Basic economic system
   
 **SCREEN: BATTLE**
-- ✅Implement at least **2 Types of Enemies** with different stats
-- ✅Implement turn-based combat system, players and enemies should alternate attacks
-- ✅UI: Implement a minimal menu to choose next player actions
+- ✅Sound FX
+- ✅Turn-based combat system, players and enemies can alternate attacks
+- ✅Minimal menu to choose next player actions
+- ✅Music track
+- ✅New layout
+- ✅Charcters and enemies illustrations
+
+**ABILITIES**
+- ✅Unlock new abilities (stances) through progression
+- ✅Minimal menu system (characters stats, inventory items) 
 
 **MORE IMPLEMENTED FEATURES**
-- UI: Basic game config options implemented with custom font (screen options)
-- UI: OPTION: GRAPHICS: Full Screen mode selection (screen options)
-- UI: OPTION: AUDIO: Music volume slider (screen options)
-- UI: OPTION: AUDIO: Fx sounds volume slider (screen options)
+- ✅Win/Lose screens with respective music tracks
+- ✅Pixel art with animations of the characters and enemies
+- ✅Dialogue boxes
+- ✅Saving of stats, settings, items and mission/NPCs states
+
 
 ---
 ## Known Issues
 
-- The dialog box and its options are drawn on top of the pause menu when player is interacting with someone/something
-- Stats don't get saved by the save system
-- If a party member dies in battle, it comes back alive when exiting the dungeon
-- The lever is only visual for the moment, it has no other function
-- Sometimes when clicking on the intro screen, you can accidentally press buttons from the main menu
-
+- If the party members can collide with the player, they will push the player out of scenes
+- Animations go faster when there's no UI
+- Sometimes enemy combat textures get replaced by ones from other enemies
+- Mission journal can't be opened from inside the dungeon
+- Sometimes can enter combat with dead enemies
 ---
 
 ## How to Play / Controls
 
-### Gameplay Controls
+### Gameplay Controls (Keyboard)
 | Action | Key |
 |:--------|:----|
 | Move Up | W/UP |
@@ -87,6 +91,22 @@ In this release, the following features have been implemented:
 | Move Right | D/RIGHT |
 | Interact | E |
 | Pick dialogue option | Mouse LEFT BT |
+| Open inventory | TAB |
+| Open mission journal | J |
+| Pause game | P/ESC |
+| Cap FPS | F11 |
+
+### Gameplay Controls (Gamepad)
+| Action | Key |
+|:--------|:----|
+| Move | LEFT JOYSTICK |
+| Interact | A |
+| Open inventory | X |
+| Open mission journal | Y |
+| Pause game | START |
+| Move mouse | RIGHT JOYSTICK |
+| Left click | A |
+| Right click | B |
 
 ### Debug Controls
 | Action | Key |
@@ -95,6 +115,8 @@ In this release, the following features have been implemented:
 | Rebel refuge scene | 1 |
 | Shop scene | 2 |
 | Tutorial dungeon scene | 3 |
+| Second dungeon scene | 4 |
+| Kill party NPC member | K |
 
 ---
 
@@ -124,5 +146,11 @@ In this release, the following features have been implemented:
 - Waltz in C (Classical, Piano, Soundtrack) by Ashot_Danielyan: https://pixabay.com/music/modern-classical-waltz-in-c-classical-piano-soundtrack-368728/
 - Follows ( Dark Ambient ) by AmbientAUDIOVISION: https://pixabay.com/music/ambient-follows-dark-ambient-194926/
 - Opening Old Elevator Door by ryanharding95 (Freesound): https://pixabay.com/sound-effects/film-special-effects-opening-old-elevator-door-84624/
+- Dark Ambient (Free Music) - "THE LONG DARK" by Scott Buckley 🇦🇺 : https://www.youtube.com/watch?v=zwyCdIF9flw
+- Dark Cinematic Background Music | Suspense Instrumental Music | Music by Argsound : https://www.youtube.com/watch?v=n0EHNKM-whk
+- Sad Piano (Free Music) - "Stillstand" by @Myuu 🇺🇸 : https://www.youtube.com/watch?v=qg9xayHvhcE
+- [Non Copyrighted Music] Josh Lippi & The Overtimers - St. Francis [Sad] : https://www.youtube.com/watch?v=pLEZgGeTnY8
+- FilmCow Royalty Free Sound Effects Library by FilmCow : https://filmcow.itch.io/filmcow-sfx
+- Footstep Leaves 2 by AardsReal : https://freesound.org/people/AardsReal/sounds/842187/
 
 All original assets in this project are licensed under CC BY 4.0.

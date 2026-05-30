@@ -5,10 +5,11 @@
 #include <list>
 
 struct SceneInfo {
-	std::string id;
-	std::string mapPath;
-	std::string mapName;
-	std::string combatMapName;
+	std::string id = "";
+	std::string mapPath = "";
+	std::string mapName = "";
+	std::string combatMapName = "";
+	bool hasDarkness = false;
 };
 
 class SceneManager : public Module
@@ -42,6 +43,8 @@ public:
 
 	void DoTransition();
 
+	void EnterDungeon(std::string spawnId);
+
 	Scene* GetCurrentScene() const;
 
 	EntityManager* GetEntityManager() const;
@@ -61,4 +64,7 @@ public:
 	bool hasQueuedTransition = false;
 
 	bool triggerFirstMonologue = true;
+	std::vector<std::string> deadNPCs;
+
+	int dungeonLevel = 1;
 };

@@ -8,6 +8,7 @@
 #include "SceneManager.h"
 #include "Textures.h"
 #include "Log.h"
+#include "Audio.h"
 
 DialogManager::DialogManager()
 {
@@ -28,16 +29,21 @@ bool DialogManager::Start() {
 
 	int sw = BASE_W;
 	int sh = BASE_H;
+	int clickFx = Engine::GetInstance().sceneManager->currentScene->uiClickFxId;
+	std::string typingFxPath = Engine::GetInstance().audio->GetAudioPath("dialog", "typing");
+	typingFxId = Engine::GetInstance().audio->LoadFx(typingFxPath.c_str());
 
 	//IF ANY OF THE BOUNDS ARE MODIFIED, COPY AND PASTE THE SAME VALUES AT ResizeDialogBox()
-	dialogBox = Engine::GetInstance().textures->Load("Assets/Dialogues/Text_box.png");
+	dialogBox = Engine::GetInstance().textures->Load("Assets/Dialogues/TextBox.png");
 	speakerName = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)SPEAKER_NAME, { 100, sh - 150, 100, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
 	dialogText = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)LABEL, { 100, sh - 120, 420, 40 }, this, { { 0, 0, 0, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Label("")));
+
 	
-	answer1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER1, { sw / 2 + 60, sh - 210, 500, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	answer2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER2, { sw / 2 + 60, sh - 260, 500, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	answer3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER3, { sw / 2 + 60, sh - 280, 500, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
-	answer4 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER4, { sw / 2 + 60, sh - 300, 500, 40 }, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 255, 255, 255, 255 }, { 0, 0, 0, 255 } }, -1, -1, UIParameters::Button("")));
+	answerBox = Engine::GetInstance().textures->Load("Assets/Dialogues/answerBoxDialog.png");
+	answer1 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER1, { sw / 2 + 60, sh - 210, 500, 40 }, this, { }, -1, clickFx, UIParameters::Button("")));
+	answer2 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER2, { sw / 2 + 60, sh - 260, 500, 40 }, this, { }, -1, clickFx, UIParameters::Button("")));
+	answer3 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER3, { sw / 2 + 60, sh - 280, 500, 40 }, this, { }, -1, clickFx, UIParameters::Button("")));
+	answer4 = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ANSWER4, { sw / 2 + 60, sh - 300, 500, 40 }, this, { }, -1, clickFx, UIParameters::Button("")));
 
 	SetCurrentDialog();
 
@@ -47,7 +53,32 @@ bool DialogManager::Start() {
 bool DialogManager::Update(float dt) {
 	int sw = BASE_W;
 	int sh = BASE_H;
-	if (currentDialog) Engine::GetInstance().render->DrawTexture(dialogBox, 0, 0, 0.0f);
+	if (currentDialog) 
+	{ 
+		Engine::GetInstance().render->DrawTexture(dialogBox, 0, 0, 0.0f);
+		if (answer1->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 510, 0.0f);
+		if (answer2->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 460, 0.0f);
+		if (answer3->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 440, 0.0f);
+		if (answer4->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 420, 0.0f);
+		if (isTyping) {
+			charTimer += dt / 1000.0f;
+			if (charTimer >= charInterval) {
+				charTimer = 0.0f;
+				if (charIndex < fullText.size()) {
+					displayedText += fullText[charIndex];
+					dialogText->text = displayedText;
+					charIndex++;
+					// Only play sound on non-space characters
+					if (fullText[charIndex - 1] != ' ' && typingFxId != -1) {
+						Engine::GetInstance().audio->PlayFx(typingFxId);
+					}
+				}
+				else {
+					isTyping = false;
+				}
+			}
+		}
+	}
 	return true;
 }
 
@@ -65,6 +96,7 @@ void DialogManager::LoadDialogs()
 		tree->id = treeNode.attribute("id").as_string();
 		tree->characterId = treeNode.attribute("characterId").as_string();
 		tree->characterName = treeNode.attribute("characterName").as_string();
+		tree->missionId = treeNode.attribute("missionId").as_string();
 		tree->order = treeNode.attribute("order").as_int();
 		tree->done = treeNode.attribute("done").as_bool();
 		tree->isRepeatable = treeNode.attribute("isRepeatable").as_bool(false);
@@ -124,18 +156,36 @@ bool DialogManager::SetCurrentDialog(std::string characterId)
 		return false;
 	}
 
+	
+
 	DialogTree* dialog = nullptr;
-	int bestOrder = std::numeric_limits<int>::max();
-
-	for (DialogTree* t : dialogs)
-	{
-		if (t->characterId != characterId) continue;
-		if (t->done) continue;
-
-		if (t->order < bestOrder)
-		{
-			bestOrder = t->order;
+	
+	bool missionDialogReady = false;
+	for (DialogTree* t : dialogs) {
+		if (t->characterId == characterId &&
+			!t->done &&
+			t->missionId != "" &&
+			Engine::GetInstance().sceneManager->GetMissionManager()->IsMissionCompleted(t->missionId)) {
+			missionDialogReady = true;
 			dialog = t;
+		}
+	}
+
+	if (!missionDialogReady)
+	{
+		int bestOrder = std::numeric_limits<int>::max();
+
+		for (DialogTree* t : dialogs)
+		{
+			if (t->characterId != characterId) continue;
+			if (t->done) continue;
+			if (t->missionId != "" && !Engine::GetInstance().sceneManager->GetMissionManager()->IsMissionCompleted(t->missionId)) continue;
+
+			if (t->order < bestOrder)
+			{
+				bestOrder = t->order;
+				dialog = t;
+			}
 		}
 	}
 
@@ -155,7 +205,14 @@ void DialogManager::ShowDialog()
 	speakerName->text = currentDialog->characterName;
 	speakerName->active = true;
 
-	dialogText->text = node->text;
+	fullText = node->text;
+	displayedText = "";
+	charIndex = 0;
+	charTimer = 0.0f;
+	isTyping = true;
+	dialogText->text = "";
+
+	//dialogText->text = node->text;
 	dialogText->active = true;
 
 	if (node->answers.size() > 0) {
@@ -197,6 +254,14 @@ void DialogManager::ShowDialog()
 
 bool DialogManager::OnUIMouseClickEvent(UIElement* uiElement)
 {
+	if (isTyping) {
+		isTyping = false;
+		displayedText = fullText;
+		dialogText->text = fullText;
+		Engine::GetInstance().audio->StopFx();
+		return true;
+	}
+
 	int answerNum;
 	switch ((DIALOG_UIID)uiElement->id)
 	{
@@ -263,4 +328,14 @@ void DialogManager::ResizeDialogBox()
 	answer2->bounds = { sw / 2 + 60, sh - 250, 500, 40 };
 	answer3->bounds = { sw / 2 + 60, sh - 270, 500, 40 };
 	answer4->bounds = { sw / 2 + 60, sh - 290, 500, 40 };
+}
+
+void DialogManager::SetEnabled(bool enabled)
+{
+	speakerName->state = enabled ? UIElementState::NORMAL : UIElementState::DISABLED;
+	dialogText->state = enabled ? UIElementState::NORMAL : UIElementState::DISABLED;
+	answer1->state = enabled ? UIElementState::NORMAL : UIElementState::DISABLED;
+	answer2->state = enabled ? UIElementState::NORMAL : UIElementState::DISABLED;
+	answer3->state = enabled ? UIElementState::NORMAL : UIElementState::DISABLED;
+	answer4->state = enabled ? UIElementState::NORMAL : UIElementState::DISABLED;
 }
