@@ -176,7 +176,7 @@ bool Combat::Start() {
 	SDL_Texture* undoPres = Engine::GetInstance().textures->Load("Assets/Textures/undoActionButtonPressed.png");
 	SDL_Texture* undoDis = undoNormal;
 
-	SDL_Texture* selectionImg = Engine::GetInstance().textures->Load("Assets/Textures/down_arrow.png");
+	SDL_Texture* selectionImg = Engine::GetInstance().textures->Load("Assets/Textures/newArrow.png");
 
 	// Action buttons
 	action1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION1, b_action1, this, {  }, -1, uiClickFxId, UIParameters::Image(action1Dis, action1Normal, action1Hov, action1Pres)));
