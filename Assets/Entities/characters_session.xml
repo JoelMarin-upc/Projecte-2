@@ -116,7 +116,7 @@
 			<item id="" name="Torch"/>
 		</inventory>
 	</character>
-	<character id="CH-012" name="Nia" texture="Nia.png" combatTexture="KnightEnemy_Combat.png" type="3" npcInteractionType="4" savedX="-1" savedY="-1" isDead="false" isMale="false">
+	<character id="CH-012" name="Nia" texture="Nia.png" combatTexture="Nia_Combat.png" type="3" npcInteractionType="4" savedX="-1" savedY="-1" isDead="false" isMale="false">
 		<stats>
 			<stat name="health" value="300" max="300" />
 			<stat name="speed"  value="6"/>
