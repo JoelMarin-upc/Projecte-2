@@ -188,8 +188,8 @@ void Enemy::CreateColliders()
 void Enemy::PerformPathfinding()
 {
 	Vector2D pos = GetPosition();
-	float centerX = pos.getX() + texW / 2.0f;
-	float centerY = pos.getY() + texH / 2.0f;
+	float centerX = pos.getX() + texW / 2;
+	float centerY = pos.getY() + texH / 2;
 	Vector2D tilePos = map->WorldToMap((int)centerX, (int)centerY);
 	pathfinding->ResetPath(tilePos);
 
@@ -295,6 +295,8 @@ float Enemy::DistanceTo(const Vector2D& v) const
 void Enemy::Move(const Vector2D& target) {
 	//LOG("moving");
 	Vector2D currentPos = GetPosition();
+	currentPos.setX(currentPos.getX() + texW / 2.0f);
+	currentPos.setY(currentPos.getY() + texH / 2.0f);
 	auto& tiles = pathfinding->pathTiles;
 
 	if (tiles.size() < 2) {
@@ -332,6 +334,7 @@ void Enemy::Move(const Vector2D& target) {
 		velocity.y = dir.getY() * speed;
 	}
 	else {
+		currentPos = nextWorldPos;
 		if (!pathfinding->pathTiles.empty())
 			pathfinding->pathTiles.pop_front();
 		velocity = { 0, 0 };
@@ -354,7 +357,7 @@ Vector2D Enemy::GetPosition() {
 	int x, y;
 	enemyBody->GetPosition(x, y);
 	// Adjust for center
-	return Vector2D((float)x - texW / 2, (float)y - texH / 2);
+	return Vector2D((float)x - texW / 2.0f, (float)y - texH / 2.0f);
 }
 
 
