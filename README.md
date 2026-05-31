@@ -140,5 +140,7 @@ In this release, the following features have been implemented:
 - [Non Copyrighted Music] Josh Lippi & The Overtimers - St. Francis [Sad] : https://www.youtube.com/watch?v=pLEZgGeTnY8
 - FilmCow Royalty Free Sound Effects Library by FilmCow : https://filmcow.itch.io/filmcow-sfx
 - Footstep Leaves 2 by AardsReal : https://freesound.org/people/AardsReal/sounds/842187/
+- 'Undertow' [Sombre Piano & Strings CC-BY] by Scott Buckley : https://www.youtube.com/watch?v=mGpFFxNOiII
+- Cinematic Tense Trailer by Cold Cinema [No Copyright Music] / Ashes - https://www.youtube.com/watch?v=NBW-iRd1R4Q
 
 All original assets in this project are licensed under CC BY 4.0.
