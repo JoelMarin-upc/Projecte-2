@@ -11,7 +11,8 @@ enum class NPCInteractionType {
 	DEFAULT,
 	RECRUIT, //Talk, then recruit into the team
 	SHOP, //Talk, then open shop
-	DIALOGUE //Talk only
+	DIALOGUE, //Talk only
+	BOSS
 };
 
 class NPC : public AICharacter {
@@ -23,18 +24,18 @@ public:
 	}
 	virtual ~NPC();
 
-	bool Awake() override;
-	bool Start() override;
+	virtual bool Awake() override;
+	virtual bool Start() override;
 
 	bool Update(float dt);
 	void Draw(float dt);
-	bool CleanUp();
+	virtual bool CleanUp();
 	void CreateColliders();
 	void Move();
 	void HandleAnimations(b2Vec2 velocity);
 	void LoadAnimations();
 	void Interact();
-	void OnDialogEnd();
+	virtual void OnDialogEnd();
 	void Recruit();
 	void OpenShop();
 	void OnCollision(Collider* physA, Collider* physB) override;
@@ -48,7 +49,7 @@ public:
 	std::string facing = "down";
 	std::string currentAnimation = "";
 	bool isFacingRight = false;
-private:
+protected:
 	AnimationSet anims;
 	NPCInteractionType npcInteractionType;
 	Collider* pbody = nullptr;

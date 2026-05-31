@@ -519,7 +519,7 @@ bool Combat::Update(float dt) {
 		if (enemyTurnTimerActive && enemyTurnTimer.ReadMSec() < enemyTurnMS) break;
 		if (!enemyTurnTimerActive)
 		{
-			for (std::shared_ptr<Enemy> enemy : enemyParty->members) {
+			for (std::shared_ptr<Character> enemy : enemyParty->members) {
 				if (!enemy->isDead) CreateRandomAction(enemy);
 			}
 			enemyTurnTimerActive = true;
@@ -925,7 +925,7 @@ void Combat::EndTurn()
 	hint->text = "";
 }
 
-void Combat::CreateRandomAction(std::shared_ptr<Enemy> enemy)
+void Combat::CreateRandomAction(std::shared_ptr<Character> enemy)
 {
 	turnAction = new TurnAction();
 	turnAction->selected = enemy;

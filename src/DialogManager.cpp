@@ -296,6 +296,7 @@ bool DialogManager::OnUIMouseClickEvent(UIElement* uiElement)
 				}
 			}
 		}
+		Engine::GetInstance().sceneManager->currentScene->lastDialogNodeId = currentDialog->currentNode->id;
 		SetCurrentDialog();
 		Engine::GetInstance().sceneManager->currentScene->EndDialog();
 		return true;
