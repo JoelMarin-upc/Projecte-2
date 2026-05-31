@@ -2499,12 +2499,6 @@
   </object>
  </objectgroup>
  <objectgroup id="11" name="NPC">
-  <object id="38" x="239" y="157.5">
-   <properties>
-    <property name="id" value="CH-003"/>
-   </properties>
-   <point/>
-  </object>
   <object id="39" x="345.667" y="177">
    <properties>
     <property name="id" value="CH-011"/>
