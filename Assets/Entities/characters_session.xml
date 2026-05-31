@@ -118,7 +118,7 @@
 	</character>
 	<character id="CH-012" name="Nia" texture="Nia.png" combatTexture="KnightEnemy_Combat.png" type="3" npcInteractionType="4" savedX="-1" savedY="-1" isDead="false" isMale="false">
 		<stats>
-			<stat name="health" value="50" max="50" />
+			<stat name="health" value="300" max="300" />
 			<stat name="speed"  value="6"/>
 			<stat name="attack" value="60"/>
 			<stat name="defense" value="15"/>
