@@ -142,7 +142,7 @@ void Pathfinding::DrawPath() {
 bool Pathfinding::IsWalkable(int x, int y) {
 
     //Enemy is 32x32 so tiles are 2x2
-    const int size = 2;
+    const int size = 1;
 
     //Loop over all tiles the enemy occupies
     for (int dx = 0; dx < size; ++dx)
@@ -165,6 +165,7 @@ bool Pathfinding::IsWalkable(int x, int y) {
             {
                 return false;
             }
+            
         }
     }
 
@@ -247,7 +248,7 @@ void Pathfinding::PropagateDijkstra() {
     }
 
     //If frontier queue contains elements pop the first element and find the neighbors
-    if (frontier.size() > 0 && !foundDestination) {
+    if (frontierDijkstra.size() > 0 && !foundDestination) {
 
         //Get the value of the firt element in the queue
         Vector2D frontierTile = frontierDijkstra.top().second;
@@ -370,7 +371,7 @@ int Pathfinding::MovementCost(int x, int y)
     {
         int gid = layerNav->Get(x, y);
         if (gid == highCostGid) {
-            ret = 5;
+            ret = 100;
         }
         else ret = 1;
     }

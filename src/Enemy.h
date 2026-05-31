@@ -70,5 +70,6 @@ private:
 	Collider* sensorCollider = nullptr;
 
 	float pathTimer = 0.0f;
+	bool hasPathed = false;
 	float pathInterval = 0.3f;
 };
