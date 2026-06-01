@@ -18,8 +18,8 @@
 		<fullscreen_window value="false" />
 	</window>
 	<audio>
-		<music_volume value="0.5" />
-		<fx_volume value="0.5" />
+		<music_volume value="0" />
+		<fx_volume value="0" />
 	</audio>
 	<scene>
 		<maps>
