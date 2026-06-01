@@ -209,6 +209,8 @@ bool Scene::Update(float dt)
 		}
 	}
 
+	CheckTimers();
+
 	if (menuFadeBlocking) return true;
 
 	if (!gameStarted) return true;
@@ -233,7 +235,7 @@ bool Scene::Update(float dt)
 	//if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) for (const auto& entity : entityManager->entities) if (entity->id == "CH-002" || entity->id == "CH-003") player->AddPartyMember(std::dynamic_pointer_cast<NPC>(entity));
 	////////////////////////////////////////////////
 
-	CheckTimers();
+
 	if (!isOnDialog && !paused)
 	{
 		ToggleInventory();

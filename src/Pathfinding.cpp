@@ -59,7 +59,7 @@ void Pathfinding::ResetPath(Vector2D pos) {
 
 void Pathfinding::DrawPath() {
 
-    if (!debug) return;
+    if (!Engine::GetInstance().physics->debug) return;
 
     Vector2D point;
 	//Map* map = Engine::GetInstance().map.get();
