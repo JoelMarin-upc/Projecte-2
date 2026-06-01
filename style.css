@@ -1,0 +1,124 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0b0b10;
+    color: #eaeaea;
+}
+
+/* HERO */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+    background: radial-gradient(circle at top, #1a1a2a, #050508);
+}
+
+.title-image {
+    max-width: 350px;
+    width: 80%;
+    image-rendering: pixelated;
+}
+
+.subtitle {
+    color: #aaa;
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+/* BUTTONS */
+.buttons {
+    margin-top: 25px;
+}
+
+.btn {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px 18px;
+    border: 1px solid #555;
+    color: #fff;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background: #222;
+}
+
+.primary {
+    background: #6b1d1d;
+    border-color: #a33;
+}
+
+.primary:hover {
+    background: #8b2222;
+}
+
+/* SECTIONS */
+.section {
+    padding: 60px 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.dark {
+    background: #11111a;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+/* PLACEHOLDERS */
+.media-placeholder {
+    background: #1b1b24;
+    border: 1px dashed #444;
+    padding: 60px;
+    text-align: center;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+.media-placeholder.large {
+    padding: 120px;
+}
+
+/* GALLERY */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.shot {
+    background: #1b1b24;
+    border: 1px solid #333;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+/* LISTS */
+.features, .team {
+    max-width: 700px;
+    margin: auto;
+    line-height: 1.8;
+}
+
+pre {
+    background: #111;
+    padding: 15px;
+    border-left: 3px solid #6b1d1d;
+    overflow-x: auto;
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 30px;
+    font-size: 14px;
+    color: #777;
+    border-top: 1px solid #222;
+}
