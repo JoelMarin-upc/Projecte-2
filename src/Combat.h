@@ -200,6 +200,7 @@ public:
 	std::shared_ptr<UILabel> hint = nullptr;
 
 	std::shared_ptr<UIImage> cancelAction = nullptr;
+	std::shared_ptr<UIImage> rollbackAction = nullptr;
 
 	SDL_Texture* combatBg = nullptr;
 
@@ -237,6 +238,7 @@ public:
 	bool wasStance3Active = false;
 	bool wasStance4Active = false;
 	bool wasCancelActive = false;
+	bool wasRollbackActive = false;
 
 	int uiClickFxId = -1;
 
