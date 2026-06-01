@@ -252,6 +252,11 @@ void Enemy::UpdateState(float dt)
 
 	case EnemyState::CHASING:
 	{
+		if (isTouchingPlayer) //if touching player stop moving
+		{
+			velocity = { 0, 0 };
+			break; 
+		}
 
 		Vector2D playerTile = map->WorldToMap(playerPos.getX(), playerPos.getY());
 		pathTimer += dt;
@@ -358,6 +363,22 @@ Vector2D Enemy::GetPosition() {
 	enemyBody->GetPosition(x, y);
 	// Adjust for center
 	return Vector2D((float)x - texW / 2.0f, (float)y - texH / 2.0f);
+}
+
+void Enemy::OnCollision(Collider* physA, Collider* physB)
+{
+	if (physB->etype == EntityType::PLAYER)
+	{
+		isTouchingPlayer = true;
+	}
+}
+
+void Enemy::OnCollisionEnd(Collider* physA, Collider* physB)
+{
+	if (physB->etype == EntityType::PLAYER)
+	{
+		isTouchingPlayer = false;
+	}
 }
 
 

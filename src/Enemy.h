@@ -29,8 +29,8 @@ public:
 
 	Vector2D GetPosition();
 	//void SetMap(Map* m) {map = m;}
-	//void OnCollision(Collider* physA, Collider* physB);
-	//void OnCollisionEnd(Collider* physA, Collider* physB);
+	void OnCollision(Collider* physA, Collider* physB);
+	void OnCollisionEnd(Collider* physA, Collider* physB);
 private:
 	void PerformPathfinding();
 	void GetPhysicsValues();
@@ -68,6 +68,7 @@ private:
 	float chaseDistance = 300.0f;
 
 	Collider* sensorCollider = nullptr;
+	bool isTouchingPlayer = false;
 
 	float pathTimer = 0.0f;
 	bool hasPathed = false;
