@@ -40,7 +40,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-004" name="Executioner" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-004" name="Executioner" texture="SpriteSheet_Executioner.png" animations="Executioner_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
 		<inventory />
 	</character>
 	<character id="CH-005" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
