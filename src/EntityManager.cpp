@@ -150,8 +150,15 @@ std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::stri
 		entity = std::make_shared<Player>(id, name, texturePath, combatTexturePath);
 		break;
 	case EntityType::NPC:
-		entity = std::make_shared<NPC>(id, name, texturePath, combatTexturePath, npcInteractionType, recuitMissionId);
+	{
+		if (npcInteractionType == NPCInteractionType::BOSS) {
+			entity = std::make_shared<BossNPC>(id, name, texturePath, combatTexturePath, id,id + "-OUTRO");
+		}
+		else {
+			entity = std::make_shared<NPC>(id, name, texturePath, combatTexturePath, npcInteractionType, recuitMissionId);
+		}
 		break;
+	}
 	case EntityType::ENEMY:
 		entity = std::make_shared<Enemy>(id, name, texturePath, combatTexturePath);
 		break;

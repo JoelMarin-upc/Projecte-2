@@ -448,50 +448,261 @@
 	</tree>
 	<tree id="DT-095" characterId="CH-012" characterName="Nia" order="1" done="false" isRepeatable="false">
 		<node id="DN-001" first="true">
-			Garnik...!?
+			…Garnik.
 			<answer leadsToNodeId="DN-002">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-002" first="false">
-			H-how did you get here? Why...
+			You actually made it. I wasn't sure if you would.
 			<answer leadsToNodeId="DN-003">
-				Continue
+				Nia! Are you hurt?
 			</answer>
 		</node>
 		<node id="DN-003" first="false">
-			Well... unlucky for you, there's no more content for this game at the moment
+			I'm fine. I've been fine this whole time.
 			<answer leadsToNodeId="DN-004">
-				Continue
+				Then why didn't you say anything?!
 			</answer>
 		</node>
 		<node id="DN-004" first="false">
-			I'll see you again... at Assignment 4: Gold!
+			Because you would've stopped me. And you know that I couldn't possibly say no to you.
+			<answer leadsToNodeId="DN-005">
+				I thought the king took you…
+			</answer>
+		</node>
+		<node id="DN-005" first="false">
+			I came here willingly, Garnik.
+			<answer leadsToNodeId="DN-006">
+				…What?
+			</answer>
+		</node>
+		<node id="DN-006" first="false">
+			He came to me. Offered me a laboratory, resources… a purpose.
+			<answer leadsToNodeId="DN-007">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-007" first="false">
+			So I said yes. No one dragged me here.
+			<answer leadsToNodeId="DN-008">
+				You switched sides… for a lab?
+			</answer>
+		</node>
+		<node id="DN-008" first="false">
+			You don't understand, Garnik!|For the first time in my life,|someone looked at me and saw me as more than just a farmer.
+			<answer leadsToNodeId="DN-009">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-009" first="false">
+			He gave me the tools to actually do something with my mind and my capabilities.
+			<answer leadsToNodeId="DN-010">
+				…People are dead, Nia.
+			</answer>
+		</node>
+		<node id="DN-010" first="false">
+			I-I know… but this infection was never meant to reach civilians.
+			<answer leadsToNodeId="DN-011">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-011" first="false">
+			All that was the king's decision. I built something and he chose how to deploy it.
+			<answer leadsToNodeId="DN-012">
+				You're lying. You knew.
+			</answer>
+		</node>
+		<node id="DN-012" first="false">
+			N-no… I thought that it would end the war faster.
+			<answer leadsToNodeId="DN-013">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-013" first="false">
+			…So that you wouldn't need to suffer anymore.
+			<answer leadsToNodeId="DN-014">
+				Come home, Nia.
+			</answer>
+		</node>
+		<node id="DN-014" first="false">
+			That's not my home anymore. I can't go back to who I was before this.
+			<answer leadsToNodeId="DN-015">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-015" first="false">
+			You wouldn't look at me with the same eyes.|No one would accept me if they knew what I had done.
+			<answer leadsToNodeId="DN-016">
+				I'll protect you.
+			</answer>
+		</node>
+		<node id="DN-016" first="false">
+			…No.
+			<answer leadsToNodeId="DN-017">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-017" first="false">
+			I think you should stop caring about me.
+			<answer leadsToNodeId="DN-018">
+				I'm not leaving you alone.
+			</answer>
+		</node>
+		<node id="DN-018" first="false">
+			Haha… you were always stubborn like that…
+			<answer leadsToNodeId="DN-019">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-019" first="false">
+			Fine. Then I suppose we have a problem.
 			<answer leadsToNodeId="">
 				Continue
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-0094" characterId="CH-004" characterName="Executioner" order="6" done="false">
+	<tree id="DT-094" characterId="CH-012-OUTRO" characterName="Nia" order="1" done="false" isRepeatable="false">
 		<node id="DN-001" first="true">
-			...
+			You're… strong…
 			<answer leadsToNodeId="DN-002">
-				Why are you here by yourself?
-			</answer>
-			<answer leadsToNodeId="DN-003">
-				I haven't seen you around
+				Continue
 			</answer>
 		</node>
 		<node id="DN-002" first="false">
-			......
-			<answer leadsToNodeId="">
-				End conversation
+			You grew up so much while I wasn't there… and I missed it all.
+			<answer leadsToNodeId="DN-003">
+				Don't give me that…
 			</answer>
 		</node>
 		<node id="DN-003" first="false">
-			......
+			I mean it. The scrawny kid that struggled to even carry a hoe… he's gone.
+			<answer leadsToNodeId="DN-004">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			I guess you don't need me anymore after all.
+			<answer leadsToNodeId="DN-005">
+				Continue
+			</answer>
+		</node>
+
+		<node id="DN-005" first="false">
+			I won't fight anymore. Whatever you decide, I won't fight it.
+			<answer leadsToNodeId="DN-MERCY-001">
+				Help me end this.
+			</answer>
+			<answer leadsToNodeId="DN-KILL-001">
+				I can't forgive you.
+			</answer>
+		</node>
+
+		<!-- Mercy -->
+
+		<node id="DN-MERCY-001" first="false">
+			…You want me to fix what I broke?
+			<answer leadsToNodeId="DN-MERCY-002">
+				No. I want you back.
+			</answer>
+		</node>
+		<node id="DN-MERCY-002" first="false">
+			…Maybe she's not there anymore. The Nia you knew.
+			<answer leadsToNodeId="DN-MERCY-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-MERCY-003" first="false">
+			I'm a shell of who I once was… I don't deserve it.
+			<answer leadsToNodeId="DN-MERCY-004">
+				Probably not…
+			</answer>
+		</node>
+		<node id="DN-MERCY-004" first="false">
+			…So?
+			<answer leadsToNodeId="DN-MERCY-005">
+				But you can have a future.
+			</answer>
+		</node>
+		<node id="DN-MERCY-005" first="false">
+			What do you mean? After all that I've done, I'm tied to this lab.
+			<answer leadsToNodeId="DN-MERCY-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-MERCY-006" first="false">
+			There's nothing for me outside of here.
+			<answer leadsToNodeId="DN-MERCY-007">
+				There is. I'll be with you.
+			</answer>
+		</node>
+		<node id="DN-MERCY-007" first="false">
+			Why?
+			<answer leadsToNodeId="DN-MERCY-008">
+				You've always been by my side.
+			</answer>
+		</node>
+		<node id="DN-MERCY-008" first="false">
+			…
 			<answer leadsToNodeId="">
-				End conversation
+				So don't think I'll ever leave yours.
+			</answer>
+		</node>
+
+		<!-- Kill -->
+		
+		<node id="DN-KILL-001" first="false">
+			…I know.
+			<answer leadsToNodeId="DN-KILL-002">
+				You're not going to object?
+			</answer>
+		</node>
+		<node id="DN-KILL-002" first="false">
+			I can't. I don't have the right to.
+			<answer leadsToNodeId="DN-KILL-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-KILL-003" first="false">
+			I wish I could tell you that this wasn't worth it,|but I can no longer lie to you.
+			<answer leadsToNodeId="DN-KILL-004">
+				I don't know you anymore.
+			</answer>
+		</node>
+		<node id="DN-KILL-004" first="false">
+			I could say the same thing.
+			<answer leadsToNodeId="DN-KILL-005">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-KILL-005" first="false">
+			It's okay. I'm not afraid.
+			<answer leadsToNodeId="DN-KILL-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-KILL-006" first="false">
+			…Is the farm still standing?
+			<answer leadsToNodeId="DN-KILL-007">
+				Yes, it is.
+			</answer>
+		</node>
+		<node id="DN-KILL-007" first="false">
+			…Was the potato harvest good this year?
+			<answer leadsToNodeId="DN-KILL-008">
+				It was okay.
+			</answer>
+		</node>
+		<node id="DN-KILL-008" first="false">
+			…Is everyone back at the refuge still hanging on?
+			<answer leadsToNodeId="DN-KILL-009">
+				Somewhat.
+			</answer>
+		</node>
+		<node id="DN-KILL-009" first="false">
+			…Will you remember me|even after all of this?
+			<answer leadsToNodeId="">
+				…Goodbye, Nia.
 			</answer>
 		</node>
 	</tree>

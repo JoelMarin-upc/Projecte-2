@@ -84,7 +84,7 @@ bool Scene::Start(std::string spawnId)
 	darkness1 = Engine::GetInstance().textures->Load("Assets/Textures/darkness1.png");
 	darkness2 = Engine::GetInstance().textures->Load("Assets/Textures/darkness2.png");
 
-	Engine::GetInstance().render->SetCursorTexture("Assets/Textures/cursor.png");
+	Engine::GetInstance().render->SetCursorTexture("Assets/Textures/newCursor.png");
 	sw = Engine::GetInstance().window->width;
 	sh = Engine::GetInstance().window->height;
 	
@@ -1574,6 +1574,9 @@ void Scene::StartDialog(std::string characterId)
 	activeDialogId = characterId;
 	entityManager->paused = true;
 	Engine::GetInstance().audio->PlayFx(dialogFxId);
+	if (characterId == "CH-012" || characterId == "CH-012-OUTRO") {
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Nia_Dialogue.wav", 3000.0f);
+	}
 }
 
 void Scene::EndDialog()
@@ -1593,23 +1596,31 @@ void Scene::EndDialog()
 			Mission* mission = missionManager->ActivateMission("MI-000");
 			if (mission) Engine::GetInstance().menuManager->AddMissionPopup(mission);
 		}
-		if (activeDialogId == "CH-012" && id == "SC-005") {
-			gameStarted = false;
-			entityManager->paused = true;
-			//Engine::GetInstance().menuManager->ShowWinScreen();
-			OpenMenuWithFade([this]() {
-				Engine::GetInstance().menuManager->ShowWinScreen();
-				});
+
+		if (activeDialogId == "CH-012-OUTRO") {
+			bool isTerminal = (lastDialogNodeId == "DN-MERCY-008" || lastDialogNodeId == "DN-KILL-009");
+			if (isTerminal) {
+				for (const auto& entity : entityManager->entities) {
+					if (auto boss = std::dynamic_pointer_cast<BossNPC>(entity)) {
+						boss->endingChoice = (lastDialogNodeId == "DN-MERCY-008") ? BossNPC::EndingChoice::MERCY : BossNPC::EndingChoice::KILL;
+						boss->OnDialogEnd();
+						break;
+					}
+				}
+			}
 		}
-		for (const auto& entity : entityManager->entities) {
-			if (entity->id == activeDialogId) {
-				if (auto npc = std::dynamic_pointer_cast<NPC>(entity)) {
-					npc->OnDialogEnd();
-					break;
+		else {
+			for (const auto& entity : entityManager->entities) {
+				if (entity->id == activeDialogId) {
+					if (auto npc = std::dynamic_pointer_cast<NPC>(entity)) {
+						npc->OnDialogEnd();
+						break;
+					}
 				}
 			}
 		}
 		activeDialogId = "";
+		lastDialogNodeId = "";
 	}
 }
 
@@ -1655,38 +1666,56 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	std::shared_ptr<Enemy> leader;
 	switch (combatResult)
 	{
-	case WIN:
-		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
-		for (const auto& enemy : enemyParty->members) {
-			CheckCompletedMissions<KillMission>(enemy->id, enemy->name);
-			entityManager->DestroyEntity(enemy);
-		}
-		for (const auto& npc : player->party->members) {
-			if (npc->isDead) {
-				Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
-				player->party->RemoveMember(npc->id);
-				entityManager->DestroyEntity(npc);
+	case WIN: {
+		bool wasBossFight = false;
+		for (const auto& entity : entityManager->entities) {
+			if (auto boss = std::dynamic_pointer_cast<BossNPC>(entity)) {
+				if (boss->bossParty == enemyParty) {
+					wasBossFight = true;
+					Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Nia_Dialogue.wav", 3000.0f);
+					boss->OnCombatWon();
+					break;
+				}
 			}
 		}
-			
+		if (!wasBossFight) {
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
+			for (const auto& enemy : enemyParty->members) {
+				CheckCompletedMissions<KillMission>(enemy->id, enemy->name);
+				entityManager->DestroyEntity(enemy);
+			}
+		}
+		std::vector<std::shared_ptr<NPC>> deadMembers;
+		for (const auto& npc : player->party->members) {
+			if (npc && npc->isDead) deadMembers.push_back(npc);
+		}
+		for (const auto& npc : deadMembers) {
+			Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
+			player->party->RemoveMember(npc->id);
+			entityManager->DestroyEntity(npc);
+		}
 		break;
+	}
 	case LOSE:
 		EndGame();
 		break;
 	case FLED:
 		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
+		std::vector<std::shared_ptr<NPC>> deadMembers;
 		for (const auto& npc : player->party->members) {
-			if (npc->isDead) {
-				Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
-				player->party->RemoveMember(npc->id);
-				entityManager->DestroyEntity(npc);
-			}
+			if (npc && npc->isDead) deadMembers.push_back(npc);
+		}
+		for (const auto& npc : deadMembers) {
+			Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
+			player->party->RemoveMember(npc->id);
+			entityManager->DestroyEntity(npc);
 		}
 		combatTimer.Start();
 		hasCombatCooldown = true;
 		leader = enemyParty->leader;
 		enemyParty->members.clear();
-		enemyParty->AddMember(leader);
+		if (enemyParty->leader != nullptr)
+			enemyParty->AddMember(leader);
 		break;
 	default:
 		break;
@@ -1723,6 +1752,46 @@ void Scene::DrawDarkness()
 		Engine::GetInstance().render->DrawTexture(darkness1, 0, 0, 0.f);
 		break;
 	case NO_DARKNESS:
+	default:
+		break;
+	}
+}
+
+void Scene::StartBossCombat(EnemyParty* bossParty)
+{
+	if (hasCombatCooldown || isOnDialog || showingInventory || paused || combat) return;
+	Engine::GetInstance().render->follow = nullptr;
+	
+	OpenMenuWithFade([this, bossParty]() {
+		combat = new Combat(player->party, bossParty, mapsPath, combatMapName, uiClickFxId);
+		combat->Awake();
+		combat->Start();
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Nia_Combat.wav", 3000.0f);
+		combat->isBossFight = true;
+		}, false);
+}
+
+void Scene::TriggerNiaEnding(BossNPC::EndingChoice choice)
+{
+	gameStarted = false;
+	entityManager->paused = true;
+
+	switch (choice)
+	{
+	case BossNPC::EndingChoice::MERCY:
+		LOG("Ending: Mercy");
+		OpenMenuWithFade([this]() {
+			Engine::GetInstance().menuManager->ShowWinScreen();
+			});
+		break;
+
+	case BossNPC::EndingChoice::KILL:
+		LOG("Ending: Kill");
+		OpenMenuWithFade([this]() {
+			Engine::GetInstance().menuManager->ShowWinScreen();
+			});
+		break;
+
 	default:
 		break;
 	}
@@ -1803,6 +1872,22 @@ static std::shared_ptr<InteractableItem> CopyItem(std::shared_ptr<InteractableIt
 bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	
 	if (Engine::GetInstance().uiManager->uiLockFrame == Engine::GetInstance().frameCount) return true;
+
+	if (isOnDialog && activeDialogId == "CH-012-OUTRO") {
+		for (const auto& entity : entityManager->entities) {
+			if (auto boss = std::dynamic_pointer_cast<BossNPC>(entity)) {
+				if (boss->id == "CH-012") {
+					if (uiElement->info == "Show mercy") {
+						boss->endingChoice = BossNPC::EndingChoice::MERCY;
+					}
+					else if (uiElement->info == "End it") {
+						boss->endingChoice = BossNPC::EndingChoice::KILL;
+					}
+					break;
+				}
+			}
+		}
+	}
 
 	float musicVol;
 	float fxVol;

@@ -176,7 +176,7 @@ bool Combat::Start() {
 	SDL_Texture* undoPres = Engine::GetInstance().textures->Load("Assets/Textures/undoActionButtonPressed.png");
 	SDL_Texture* undoDis = undoNormal;
 
-	SDL_Texture* selectionImg = Engine::GetInstance().textures->Load("Assets/Textures/down_arrow.png");
+	SDL_Texture* selectionImg = Engine::GetInstance().textures->Load("Assets/Textures/newArrow.png");
 
 	// Action buttons
 	action1 = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ACTION1, b_action1, this, {  }, -1, uiClickFxId, UIParameters::Image(action1Dis, action1Normal, action1Hov, action1Pres)));
@@ -518,7 +518,7 @@ bool Combat::Update(float dt) {
 		if (enemyTurnTimerActive && enemyTurnTimer.ReadMSec() < enemyTurnMS) break;
 		if (!enemyTurnTimerActive)
 		{
-			for (std::shared_ptr<Enemy> enemy : enemyParty->members) {
+			for (std::shared_ptr<Character> enemy : enemyParty->members) {
 				if (!enemy->isDead) CreateRandomAction(enemy);
 			}
 			enemyTurnTimerActive = true;
@@ -924,7 +924,7 @@ void Combat::EndTurn()
 	hint->text = "";
 }
 
-void Combat::CreateRandomAction(std::shared_ptr<Enemy> enemy)
+void Combat::CreateRandomAction(std::shared_ptr<Character> enemy)
 {
 	turnAction = new TurnAction();
 	turnAction->selected = enemy;

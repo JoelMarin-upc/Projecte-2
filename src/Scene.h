@@ -21,6 +21,7 @@
 #include "ResetButton.h"
 #include "SequencePuzzle.h"
 #include "SequenceButton.h"
+#include "BossNPC.h"
 #include <unordered_map>
 #include <type_traits>
 #include <typeinfo>
@@ -139,6 +140,9 @@ public:
 	void SetDarknessMode(DarknessMode mode);
 	void DrawDarkness();
 
+	void StartBossCombat(EnemyParty* bossParty);
+	void TriggerNiaEnding(BossNPC::EndingChoice choice);
+
 	void CopyCleanGameData();
 
 	Vector2D GetPlayerPosition();
@@ -196,7 +200,7 @@ public:
 	std::shared_ptr<Player> player;
 	int uiClickFxId;
 	bool hasDarkness = false;
-
+	std::string lastDialogNodeId = "";
 private:
 	const std::string baseTexturePath = "Assets/Textures/";
 
@@ -303,4 +307,6 @@ private:
 
 	SDL_Texture* inventoryBgTexture = nullptr;
 	SDL_Texture* journalBgTexture = nullptr;
+
+
 };

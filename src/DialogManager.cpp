@@ -60,6 +60,14 @@ bool DialogManager::Update(float dt) {
 		if (answer2->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 460, 0.0f);
 		if (answer3->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 440, 0.0f);
 		if (answer4->active) Engine::GetInstance().render->DrawTexture(answerBox, 700, 420, 0.0f);
+
+		if (isTyping && Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+			isTyping = false;
+			displayedText = fullText;
+			dialogText->text = fullText;
+			Engine::GetInstance().audio->StopFx();
+		}
+
 		if (isTyping) {
 			charTimer += dt / 1000.0f;
 			if (charTimer >= charInterval) {
@@ -296,6 +304,7 @@ bool DialogManager::OnUIMouseClickEvent(UIElement* uiElement)
 				}
 			}
 		}
+		Engine::GetInstance().sceneManager->currentScene->lastDialogNodeId = currentDialog->currentNode->id;
 		SetCurrentDialog();
 		Engine::GetInstance().sceneManager->currentScene->EndDialog();
 		return true;
