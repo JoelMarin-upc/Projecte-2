@@ -241,6 +241,7 @@
     <ClCompile Include="src\Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\AICharacter.h" />
     <ClInclude Include="src\Animal.h" />
     <ClInclude Include="src\Animation.h" />
@@ -342,6 +343,12 @@
     <Xml Include="Assets\Missions\missions_session.xml" />
     <Xml Include="config.xml" />
     <Xml Include="gamesave.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TheGraveyard.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Textures\icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
