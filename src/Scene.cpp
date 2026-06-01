@@ -1699,7 +1699,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	case LOSE:
 		EndGame();
 		break;
-	case FLED:
+	case FLED: {
 		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
 		std::vector<std::shared_ptr<NPC>> deadMembers;
 		for (const auto& npc : player->party->members) {
@@ -1717,6 +1717,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 		if (enemyParty->leader != nullptr)
 			enemyParty->AddMember(leader);
 		break;
+	}	
 	default:
 		break;
 	}
