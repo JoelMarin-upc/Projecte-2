@@ -1123,6 +1123,7 @@ void Scene::LoadScene(std::string spawnId)
 	for (ItemData item : mapData.items) {
 		for (pugi::xml_node iNode = items.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
 			if (iNode.attribute("id").as_string() != item.id) continue;
+			if (iNode.attribute("isPickedUp").as_bool(false)) continue;
 			std::string name = iNode.attribute("name").as_string();
 			ItemDef* def = GetItemDefinition(item.id, name);
 			if (name == "Exit") {
@@ -1818,6 +1819,14 @@ void Scene::CopyCleanGameData()
 	{
 		std::ifstream src("Assets/Entities/items_clean.xml", std::ios::binary);
 		std::ofstream dst("Assets/Entities/items.xml", std::ios::binary | std::ios::trunc);
+		dst << src.rdbuf();
+		src.close();
+		dst.close();
+	}
+
+	{
+		std::ifstream src("Assets/Entities/items_clean.xml", std::ios::binary);
+		std::ofstream dst("Assets/Entities/items_session.xml", std::ios::binary | std::ios::trunc);
 		dst << src.rdbuf();
 		src.close();
 		dst.close();

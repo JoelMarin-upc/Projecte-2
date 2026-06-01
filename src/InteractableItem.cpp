@@ -163,6 +163,21 @@ void InteractableItem::Pickup()
 				isPicked = true;
 				isPlayerInRange = false;
 				active = false;
+
+				auto writePickedUp = [&](const char* path) {
+					pugi::xml_document doc = XMLHandler::LoadFile(path);
+					for (pugi::xml_node n = doc.child("items").child("item"); n; n = n.next_sibling("item")) {
+						if (std::string(n.attribute("id").as_string()) == id) {
+							if (n.attribute("isPickedUp")) n.attribute("isPickedUp").set_value(true);
+							else n.append_attribute("isPickedUp").set_value(true);
+							break;
+						}
+					}
+					doc.save_file(path);
+					};
+				writePickedUp("Assets/Entities/items.xml");
+				writePickedUp("Assets/Entities/items_session.xml");
+
 				if (pbody) {
 					Engine::GetInstance().physics->DeletePhysBody(pbody);
 					pbody = nullptr;
