@@ -1685,12 +1685,14 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 				entityManager->DestroyEntity(enemy);
 			}
 		}
+		std::vector<std::shared_ptr<NPC>> deadMembers;
 		for (const auto& npc : player->party->members) {
-			if (npc->isDead) {
-				Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
-				player->party->RemoveMember(npc->id);
-				entityManager->DestroyEntity(npc);
-			}
+			if (npc && npc->isDead) deadMembers.push_back(npc);
+		}
+		for (const auto& npc : deadMembers) {
+			Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
+			player->party->RemoveMember(npc->id);
+			entityManager->DestroyEntity(npc);
 		}
 		break;
 	}
@@ -1699,12 +1701,14 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 		break;
 	case FLED:
 		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
+		std::vector<std::shared_ptr<NPC>> deadMembers;
 		for (const auto& npc : player->party->members) {
-			if (npc->isDead) {
-				Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
-				player->party->RemoveMember(npc->id);
-				entityManager->DestroyEntity(npc);
-			}
+			if (npc && npc->isDead) deadMembers.push_back(npc);
+		}
+		for (const auto& npc : deadMembers) {
+			Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
+			player->party->RemoveMember(npc->id);
+			entityManager->DestroyEntity(npc);
 		}
 		combatTimer.Start();
 		hasCombatCooldown = true;
