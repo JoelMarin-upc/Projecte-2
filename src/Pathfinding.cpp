@@ -161,7 +161,7 @@ bool Pathfinding::IsWalkable(int x, int y) {
 
             //Check if the tile is blocked
             int gid = layerNav->Get(tx, ty);
-            if (gid == blockedGid)
+            if (gid == blockedGid || gid ==6887 || gid == 2817)
             {
                 return false;
             }
