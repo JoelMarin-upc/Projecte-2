@@ -26,6 +26,8 @@ UIImage::~UIImage()
 
 bool UIImage::Update(float dt)
 {
+	if (!active) return true;
+	
 	if (state != UIElementState::DISABLED)
 	{
 		// L16: TODO 3: Update the state of the GUiButton according to the mouse position
@@ -50,7 +52,7 @@ bool UIImage::Update(float dt)
 
 			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
 				if (clickFxId != -1) Engine::GetInstance().audio->PlayFx(clickFxId);
-				NotifyObserver();
+				if(canClick) NotifyObserver();
 			}
 		}
 		else {

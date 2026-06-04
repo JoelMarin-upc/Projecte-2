@@ -16,9 +16,10 @@ public:
 
 	void SetImage(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex);
 
+	bool canClick = true;
+
 private:
 
-	bool canClick = true;
 	bool drawBasic = false;
 	bool drawImageOnCenter = false;
 	SDL_Texture* disabledTex;

@@ -75,6 +75,11 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Texture* creditsHov = Engine::GetInstance().textures->Load("Assets/Textures/creditsButtonHover.png");
 	SDL_Texture* creditsPres = Engine::GetInstance().textures->Load("Assets/Textures/creditsButtonPressed.png");
 	SDL_Texture* creditsDis = creditsNormal;
+	SDL_Texture* controls = Engine::GetInstance().textures->Load("Assets/Textures/controls.png");
+	SDL_Texture* controlsNormal = Engine::GetInstance().textures->Load("Assets/Textures/controlsButtonNormal.png");
+	SDL_Texture* controlsHov = Engine::GetInstance().textures->Load("Assets/Textures/controlsButtonHover.png");
+	SDL_Texture* controlsPres = Engine::GetInstance().textures->Load("Assets/Textures/controlsButtonPressed.png");
+	SDL_Texture* controlsDis = controlsNormal;
 	SDL_Texture* exitNormal = Engine::GetInstance().textures->Load("Assets/Textures/exitButtonNormal.png");
 	SDL_Texture* exitHov = Engine::GetInstance().textures->Load("Assets/Textures/exitButtonHover.png");
 	SDL_Texture* exitPres = Engine::GetInstance().textures->Load("Assets/Textures/exitButtonPressed.png");
@@ -130,6 +135,7 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_settings = { centerX - 100, centerY + 140, 192, 64 };
 	SDL_Rect b_credits_btn = { centerX - 90, centerY + 210, 176, 64 };
 	SDL_Rect b_exit = { centerX - 75, centerY + 280, 144, 64 };
+	SDL_Rect b_controls_btn = { centerX - 280, centerY + 210, 176, 64 };
 	
 	//Settings menu elements
 	SDL_Rect b_settings_lbl = { centerX - 100, centerY - 200, 200, 40 };
@@ -147,6 +153,10 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_credits1 = { centerX - 500, centerY - 200, 1000, 25 };
 	SDL_Rect b_credits2 = { centerX - 500, centerY - 160, 1000, 25 };
 	SDL_Rect b_backMainMenu = { centerX - 75, centerY + 210, 144, 64 };
+
+	//Controls menu elements
+	SDL_Rect b_controlsTex = { 0, 0, 1280, 720 };
+	b_backMenu = { centerX - 100, centerY + 260, 144, 64 };
 
 	//Pause menu elements
 	SDL_Rect b_paused_lbl = { centerX - 60, centerY - 10, 200, 40 };
@@ -174,6 +184,8 @@ void MenuManager::Load(bool onlyPositions)
 		creditsButton->SetBounds(b_credits_btn);
 		creditsLabel1->SetBounds(b_credits1);
 		creditsLabel2->SetBounds(b_credits2);
+		controlsButton->SetBounds(b_controls_btn);
+		controlsTexture->SetBounds(b_controlsTex);
 		musicVolumeLabel->SetBounds(b_musicVolume_lbl);
 		musicVolumeSlider->SetBounds(b_musicVolume);
 		fxVolumeLabel->SetBounds(b_fxVolume_lbl);
@@ -210,6 +222,9 @@ void MenuManager::Load(bool onlyPositions)
 		creditsButton = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)CREDITS_BUTTON, b_credits_btn, this, { }, hoverFxId, clickFxId, UIParameters::Image(creditsDis, creditsNormal, creditsHov, creditsPres), false, true));
 		creditsLabel1 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)CREDITS_LABEL, b_credits1, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("This game was made by TEAMDAYO, a game studio created by"), false, true));
 		creditsLabel2 = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)CREDITS_LABEL, b_credits2, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Clara Sanchez, Sofia Barja, Yin Ye, Kirsten Neubauer and Joel Marin."), false, true));
+		controlsButton = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)CONTROLS_BUTTON, b_controls_btn, this, { }, hoverFxId, clickFxId, UIParameters::Image(controlsDis, controlsNormal, controlsHov, controlsPres), false, true));
+		controlsTexture = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)CONTROLS, b_controlsTex, this, {  }, 0, 0, UIParameters::Image(controls, controls, controls, controls), false, true));
+		controlsTexture->canClick = false;
 		musicVolumeLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)MUSIC_VOLUME_LABEL, b_musicVolume_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Music volume"), false, true));
 		musicVolumeSlider = std::dynamic_pointer_cast<UISlider>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLIDER, (int)MUSIC_VOLUME, b_musicVolume, this, { white, mainColorDis, mainColorDef, mainColorHov, mainColorPre, mainColorDis, white }, hoverFxId, clickFxId, UIParameters::Slider(true, 0, 10, 1, 10), false, true));
 		fxVolumeLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)FX_VOLUME_LABEL, b_fxVolume_lbl, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("FX volume"), false, true));
@@ -404,6 +419,8 @@ void MenuManager::SetObserver(Module* observer)
 	creditsButton->observer = observer;
 	creditsLabel1->observer = observer;
 	creditsLabel2->observer = observer;
+	controlsButton->observer = observer;
+	controlsTexture->observer = observer;
 	musicVolumeLabel->observer = observer;
 	musicVolumeSlider->observer = observer;
 	fxVolumeLabel->observer = observer;
@@ -470,6 +487,7 @@ void MenuManager::ShowMainMenu()
 	//if (XMLHandler::SaveFileExists()) continueGame->Enable();
 	//else continueGame->Disable();
 	creditsButton->active = true;
+	controlsButton->active = true;
 	settingsButton->active = true;
 	exit->active = true;
 }
@@ -486,6 +504,7 @@ void MenuManager::ShowPauseMenu()
 	resumeGame->active = true;
 	backMainMenu->active = true;
 	settingsButton->active = true;
+	controlsButton->active = true;
 	exit->active = true;
 }
 
@@ -525,6 +544,26 @@ void MenuManager::ShowCreditsMenu()
 	creditsLabel1->active = true;
 	creditsLabel2->active = true;
 	backMainMenu->active = true;
+}
+
+void MenuManager::ShowControlsMenu()
+{
+	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
+
+	previousMenu = currentMenu;
+	HideMenu();
+	currentMenu = CONTROLS;
+
+	controlsTexture->active = true;
+	backMenu->active = true;
+
+	startGame->active = false;
+	continueGame->active = false;
+	settingsButton->active = false;
+	creditsButton->active = false;
+	controlsButton->active = false;
+	exit->active = false;
+
 }
 
 void MenuManager::ShowInventory(Inventory* inventory, std::shared_ptr<Character> character, Party* party)
@@ -644,6 +683,8 @@ void MenuManager::HideMenu()
 	creditsButton->active = false;
 	creditsLabel1->active = false;
 	creditsLabel2->active = false;
+	controlsButton->active = false;
+	controlsTexture->active = false;
 	musicVolumeLabel->active = false;
 	musicVolumeSlider->active = false;
 	fxVolumeLabel->active = false;
@@ -716,6 +757,9 @@ void MenuManager::ShowPreviousMenu()
 		break;
 	case CREDITS:
 		ShowCreditsMenu();
+		break;
+	case CONTROLS:
+		ShowControlsMenu();
 		break;
 	case DEATHSCREEN:
 		ShowDeathScreen();

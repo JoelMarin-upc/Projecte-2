@@ -5,7 +5,7 @@
 		<targetFrameRate value="60" />
 	</engine>
 	<render>
-		<vsync value="false" />
+		<vsync value="true" />
 	</render>
 	<MenuManager>
 		<audios hover="Assets/Audio/Fx/hover.wav" click="Assets/Audio/Fx/click.wav" />
@@ -18,8 +18,8 @@
 		<fullscreen_window value="false" />
 	</window>
 	<audio>
-		<music_volume value="0" />
-		<fx_volume value="0" />
+		<music_volume value="0.300000012" />
+		<fx_volume value="0.300000012" />
 	</audio>
 	<scene>
 		<maps>

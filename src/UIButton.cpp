@@ -29,6 +29,8 @@ UIButton::~UIButton()
 
 bool UIButton::Update(float dt)
 {
+	if (!active) return true;
+	
 	if (state != UIElementState::DISABLED)
 	{
 		float mouseX, mouseY;

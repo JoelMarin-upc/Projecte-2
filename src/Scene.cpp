@@ -2000,6 +2000,11 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		//Engine::GetInstance().menuManager->ShowCreditsMenu();
 		OpenMenuWithFade([this]() { Engine::GetInstance().menuManager->ShowCreditsMenu(); });
 		break;
+
+	case CONTROLS_BUTTON:
+		//Engine::GetInstance().menuManager->ShowControlsMenu();
+		OpenMenuWithFade([this]() { Engine::GetInstance().menuManager->ShowControlsMenu(); });
+		break;
 	case MUSIC_VOLUME:
 		musicVol = ((UISlider*)uiElement)->GetValue() / 10;
 		Engine::GetInstance().audio->SetMusicVolume(musicVol);
@@ -2034,6 +2039,9 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		OpenMenuWithFade([this]() {
 			Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
 			});
+		break;
+	case BACK_PREV_MENU:
+		OpenMenuWithFade([this]() { Engine::GetInstance().menuManager->ShowPreviousMenu(); });
 		break;
 	case EXIT:
 		exit(0);
