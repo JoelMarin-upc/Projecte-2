@@ -1,23 +1,21 @@
 <?xml version="1.0"?>
 <characters savedGame="false">
-	<player id="player" name="Garnik" texture="SpriteSheet_Garnik.png" combatTexture="garnikCombat.png" animations="Garnik_SpriteSheet.tsx" savedX="-1" savedY="-1" dungeonLevel="1" unlockedStance1="4" unlockedStance2="4">
+	<player id="player" name="Garnik" texture="SpriteSheet_Garnik.png" combatTexture="garnikCombat.png" animations="Garnik_SpriteSheet.tsx" savedX="2699" savedY="2320" dungeonLevel="1" unlockedStance1="4" unlockedStance2="4">
 		<stats>
 			<stat name="health" value="100" max="100" />
 			<stat name="speed" value="5" />
 			<stat name="attack" value="30" />
 			<stat name="defense" value="10" />
 		</stats>
-		<party>
-			<member id="CH-001" />
-		</party>
 		<inventory gold="50">
 			<item id="" name="bandages" />
 			<item id="" name="bandages" />
 			<item id="" name="Torch" />
 			<item id="" name="Torch" />
 		</inventory>
+		<party />
 	</player>
-	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="GravekeeperCombat.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" recuitMissionId="MI-000" isDead="false" unlockedStance1="4" unlockedStance2="4">
+	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="GravekeeperCombat.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="3008" savedY="2910" recuitMissionId="MI-000" isDead="false" unlockedStance1="4" unlockedStance2="4">
 		<stats>
 			<stat name="health" value="110" max="110" />
 			<stat name="speed" value="4" />
@@ -28,10 +26,10 @@
 			<item id="" name="shovel" />
 		</inventory>
 	</character>
-	<character id="CH-002" name="Medic" texture="SpriteSheet_Medic.png" combatTexture="Medic_Combat.png" animations="Medic_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-002" name="Medic" texture="SpriteSheet_Medic.png" combatTexture="Medic_Combat.png" animations="Medic_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="1824" savedY="1695" isDead="false" unlockedStance1="4" unlockedStance2="4">
 		<inventory />
 	</character>
-	<character id="CH-003" name="Thief" texture="SpriteSheet_Thief.png" combatTexture="ThiefCombat.png" animations="Thief_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" isMale="false" unlockedStance1="4" unlockedStance2="4">
+	<character id="CH-003" name="Thief" texture="SpriteSheet_Thief.png" combatTexture="ThiefCombat.png" animations="Thief_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="3423" savedY="3391" isDead="false" recuitMissionId="MI-005" isMale="false" unlockedStance1="4" unlockedStance2="4">
 		<stats>
 			<stat name="health" value="70" max="70" />
 			<stat name="speed" value="8" />
@@ -40,7 +38,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-004" name="Executioner" texture="SpriteSheet_Executioner.png" animations="Executioner_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-004" name="Executioner" texture="SpriteSheet_Executioner.png" animations="Executioner_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="6335" savedY="677" isDead="false" unlockedStance1="4" unlockedStance2="4">
 		<inventory />
 	</character>
 	<character id="CH-005" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
@@ -52,7 +50,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-006" name="Barbara" texture="SpriteSheet_Barbara.png" combatTexture="barbara1Combat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" unlockedStance1="4" unlockedStance2="4">
+	<character id="CH-006" name="Barbara" texture="SpriteSheet_Barbara.png" combatTexture="barbara1Combat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="8160" savedY="1088" isDead="false" recuitMissionId="MI-005" unlockedStance1="4" unlockedStance2="4">
 		<stats>
 			<stat name="health" value="100" max="100" />
 			<stat name="speed" value="5" />
@@ -104,7 +102,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-011" name="Shopkeeper" texture="heart.png" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-011" name="Shopkeeper" texture="SpriteSheet_Shopkeeper.png" animations="Shopkeeper_SpriteSheet.tsx" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
 		<inventory>
 			<item id="" name="bandages" />
 			<item id="" name="bandages" />

@@ -104,7 +104,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-011" name="Shopkeeper" texture="heart.png" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-011" name="Shopkeeper" texture="SpriteSheet_Shopkeeper.png" animations="Shopkeeper_SpriteSheet.tsx" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
 		<inventory>
 			<item id="" name="bandages"/>
 			<item id="" name="bandages"/>
