@@ -5,7 +5,7 @@
 		<targetFrameRate value="60" />
 	</engine>
 	<render>
-		<vsync value="true" />
+		<vsync value="false" />
 	</render>
 	<MenuManager>
 		<audios hover="Assets/Audio/Fx/hover.wav" click="Assets/Audio/Fx/click.wav" />
