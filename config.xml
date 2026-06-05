@@ -15,11 +15,11 @@
 		<fullscreen value="false" />
 		<borderless value="false" />
 		<resizable value="false" />
-		<fullscreen_window value="true" />
+		<fullscreen_window value="false" />
 	</window>
 	<audio>
-		<music_volume value="0.300000012" />
-		<fx_volume value="0.300000012" />
+		<music_volume value="0.200000003" />
+		<fx_volume value="0.200000003" />
 	</audio>
 	<scene>
 		<maps>
