@@ -36,6 +36,7 @@ Combat::~Combat() {
 	Engine::GetInstance().uiManager->DestroyUIElement(action4);
 	Engine::GetInstance().uiManager->DestroyUIElement(endTurn);
 	Engine::GetInstance().uiManager->DestroyUIElement(cancelAction);
+	Engine::GetInstance().uiManager->DestroyUIElement(rollbackAction);
 	Engine::GetInstance().uiManager->DestroyUIElement(stance1);
 	Engine::GetInstance().uiManager->DestroyUIElement(stance2);
 	Engine::GetInstance().uiManager->DestroyUIElement(stance3);
@@ -119,6 +120,7 @@ bool Combat::Start() {
 	const int ctrlPanelX = sw - btnW - 40;
 	SDL_Rect b_endTurn = { ctrlPanelX, panelY + gap, btnW, btnH };
 	SDL_Rect b_cancelAction = { ctrlPanelX, panelY + gap + btnH + gap, btnW, btnH };
+	SDL_Rect b_rollbackAction = { ctrlPanelX, panelY + gap + btnH + gap, btnW, btnH };
 
 	/*const int logPanelH = gap + logLineH + gap + logLineH + gap + logLineH + gap + logLineH + gap + logLineH + gap;
 	panelRect1 = { logPanelX, panelY, logPanelW, logPanelH };
@@ -175,6 +177,11 @@ bool Combat::Start() {
 	SDL_Texture* undoHov = Engine::GetInstance().textures->Load("Assets/Textures/undoActionButtonHover.png");
 	SDL_Texture* undoPres = Engine::GetInstance().textures->Load("Assets/Textures/undoActionButtonPressed.png");
 	SDL_Texture* undoDis = undoNormal;
+	// Rollback Action
+	SDL_Texture* backNormal = Engine::GetInstance().textures->Load("Assets/Textures/backButtonNormal.png");
+	SDL_Texture* backHov = Engine::GetInstance().textures->Load("Assets/Textures/backButtonHover.png");
+	SDL_Texture* backPres = Engine::GetInstance().textures->Load("Assets/Textures/backButtonPressed.png");
+	SDL_Texture* backDis = backNormal;
 
 	SDL_Texture* selectionImg = Engine::GetInstance().textures->Load("Assets/Textures/newArrow.png");
 
@@ -193,6 +200,7 @@ bool Combat::Start() {
 	// End-turn and undo/cancel buttons
 	endTurn = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::END_TURN, b_endTurn, this, {  }, -1, uiClickFxId, UIParameters::Image(endTurnDis, endTurnNormal, endTurnHov, endTurnPres)));
 	cancelAction = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::CANCEL_ACTION, b_cancelAction, this, {  }, -1, uiClickFxId, UIParameters::Image(undoDis, undoNormal, undoHov, undoPres)));
+	rollbackAction = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)UIID::ROLLBACK_ACTION, b_rollbackAction, this, {  }, -1, uiClickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
 
 	// Hint label
 	hint = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)UIID::HINT, b_hint, this, { { 255, 255, 255, 255 }, { 255, 255, 255, 255 } }, -1, -1, UIParameters::Label("")));
@@ -210,6 +218,7 @@ bool Combat::Start() {
 
 	endTurn->active = false;
 	cancelAction->active = false;
+	rollbackAction->active = false;
 
 	log1->active = true;
 	log2->active = true;
@@ -381,6 +390,7 @@ bool Combat::Start() {
 	enemyTurnTimerActive = false;
 	if (isPlayerTurn) hint->text = "Select a character";
 	cancelAction->active = false;
+	rollbackAction->active = false;
 
 	particles.LoadTextures();
 
@@ -577,13 +587,14 @@ bool Combat::CleanUp() {
 	Engine::GetInstance().uiManager->DestroyUIElement(selectedPlayer4);
 	Engine::GetInstance().uiManager->DestroyUIElement(hint);
 	Engine::GetInstance().uiManager->DestroyUIElement(cancelAction);
+	Engine::GetInstance().uiManager->DestroyUIElement(rollbackAction);
 	particles.Clear();
 	return true;
 }
 
 bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 	if (Engine::GetInstance().uiManager->uiLockFrame == Engine::GetInstance().frameCount) return true;
-
+	std::string id;
 	if (combatPhase != DECISION) return true;
 	if (uiElement->id == END_TURN) {
 		EndTurn();
@@ -729,7 +740,26 @@ bool Combat::OnUIMouseClickEvent(UIElement* uiElement) {
 		if (turnAction->action == TAKE_CONSUMABLE) Engine::GetInstance().sceneManager->currentScene->ToggleInventoryForCombat(false);
 		if (turnAction->action == TAKE_STANCE) ToggleStances(false);
 		turnAction->action = Action::NO_ACTION;
+		if (turnActions.size() > 0) rollbackAction->active = true;
 		ToggleActions(true);
+		break;
+	case ROLLBACK_ACTION:
+		if (turnActions.size() < 1) return true;
+		id = turnActions.back()->selected->id;
+		turnActions.pop_back();
+		if (player && player->id == id) actionTaken1 = false;
+		if (npc1 && npc1->id == id) actionTaken2 = false;
+		if (npc2 && npc2->id == id) actionTaken3 = false;
+		if (npc3 && npc3->id == id) actionTaken4 = false;
+		if (turnActions.size() == 1) log1->text = turnActions[0]->ToString();
+		else log1->text = "";
+		if (turnActions.size() == 2) log2->text = turnActions[1]->ToString();
+		else log2->text = "";
+		if (turnActions.size() == 3) log3->text = turnActions[2]->ToString();
+		else log3->text = "";
+		if (turnActions.size() == 4) log4->text = turnActions[3]->ToString();
+		else log4->text = "";
+		rollbackAction->active = turnActions.size() > 0;
 		break;
 	default:
 		break;
@@ -773,6 +803,7 @@ void Combat::ToggleActions(bool show, bool toggleCancel)
 		if (toggleCancel) {
 			endTurn->active = false;
 			cancelAction->active = true;
+			rollbackAction->active = false;
 		}
 		hint->text = "Select a target";
 	}
@@ -895,6 +926,7 @@ void Combat::AddTurnAction()
 
 	endTurn->active = true;
 	cancelAction->active = false;
+	rollbackAction->active = isPlayerTurn;
 
 	int activeCharacters = 1;
 	for (std::shared_ptr<NPC> c : playerParty->members) if (!c->isDead && !c->hasFled) activeCharacters++;
@@ -913,6 +945,7 @@ void Combat::EndTurn()
 	combatPhase = ACTION;
 	endTurn->active = false;
 	cancelAction->active = false;
+	rollbackAction->active = false;
 	actionTaken1 = false;
 	actionTaken2 = false;
 	actionTaken3 = false;
@@ -992,6 +1025,7 @@ void Combat::DisableCombatElements()
 	wasStance3Active = stance3->active;
 	wasStance4Active = stance4->active;
 	wasCancelActive = cancelAction->active;
+	wasRollbackActive = rollbackAction->active;
 
 	action1->Disable();
 	action2->Disable();
@@ -1024,6 +1058,7 @@ void Combat::EnableCombatElements()
 	stance3->active = wasStance3Active;
 	stance4->active = wasStance4Active;
 	cancelAction->active = wasCancelActive;
+	rollbackAction->active = wasRollbackActive;
 	if (wasAction1Active) action1->Enable();
 	if (wasAction2Active) action2->Enable();
 	if (wasAction3Active) action3->Enable();
@@ -1033,6 +1068,7 @@ void Combat::EnableCombatElements()
 	if (wasStance3Active) stance3->Enable();
 	if (wasStance4Active) stance4->Enable();
 	if (wasCancelActive)  cancelAction->Enable();
+	if (wasRollbackActive)  rollbackAction->Enable();
 
 	endTurn->Enable();
 	if (i_player) i_player->Enable();

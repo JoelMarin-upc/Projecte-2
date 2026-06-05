@@ -155,7 +155,8 @@ void NPC::CreateColliders()
 
 void NPC::Move()
 {
-	if (!party || !party->player) return;
+	if (!party) return;
+	std::shared_ptr<Character> characterToFollow = party->GetMemberToFollow(partyIndex);
 	if (colliders.empty() || !colliders[0]) return;
 
 	const float speed = 2.5f;
@@ -167,8 +168,8 @@ void NPC::Move()
 	npcPos.x = PIXEL_TO_METERS(x);
 	npcPos.y = PIXEL_TO_METERS(y);
 
-	float playerX = PIXEL_TO_METERS(party->player->position.getX());
-	float playerY = PIXEL_TO_METERS(party->player->position.getY());
+	float playerX = PIXEL_TO_METERS(characterToFollow->position.getX());
+	float playerY = PIXEL_TO_METERS(characterToFollow->position.getY());
 	b2Vec2 playerPos = b2Vec2();
 	playerPos.x = playerX;
 	playerPos.y = playerY;

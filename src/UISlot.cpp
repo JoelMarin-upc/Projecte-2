@@ -32,6 +32,8 @@ UISlot::~UISlot()
 
 bool UISlot::Update(float dt)
 {
+	if (!active) return true;
+	
 	if (state != UIElementState::DISABLED)
 	{
 		// L16: TODO 3: Update the state of the GUiButton according to the mouse position

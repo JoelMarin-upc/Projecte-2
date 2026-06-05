@@ -21,6 +21,8 @@ UILabel::~UILabel()
 
 bool UILabel::Update(float dt)
 {
+	if (!active) return true;
+	
 	switch (state)
 	{
 	case UIElementState::DISABLED:

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="SpriteSheet_KnightEnemy" tilewidth="32" tileheight="64" tilecount="24" columns="4">
- <image source="SpriteSheet_KnightEnemy.png" width="128" height="384"/>
+<tileset version="1.10" tiledversion="1.11.2" name="SpriteSheet_Medic" tilewidth="32" tileheight="64" tilecount="64" columns="16">
+ <image source="SpriteSheet_Medic.png" width="512" height="256"/>
  <tile id="0">
   <animation>
    <frame tileid="0" duration="500"/>
@@ -15,14 +15,10 @@
    <frame tileid="9" duration="500"/>
    <frame tileid="10" duration="500"/>
    <frame tileid="11" duration="500"/>
-  </animation>
- </tile>
- <tile id="12">
-  <animation>
-   <frame tileid="12" duration="300"/>
-   <frame tileid="13" duration="300"/>
-   <frame tileid="14" duration="300"/>
-   <frame tileid="15" duration="300"/>
+   <frame tileid="12" duration="500"/>
+   <frame tileid="13" duration="500"/>
+   <frame tileid="14" duration="500"/>
+   <frame tileid="15" duration="500"/>
   </animation>
  </tile>
  <tile id="16">
@@ -33,12 +29,20 @@
    <frame tileid="19" duration="300"/>
   </animation>
  </tile>
- <tile id="20">
+ <tile id="32">
   <animation>
-   <frame tileid="20" duration="300"/>
-   <frame tileid="21" duration="300"/>
-   <frame tileid="22" duration="300"/>
-   <frame tileid="23" duration="300"/>
+   <frame tileid="32" duration="300"/>
+   <frame tileid="33" duration="300"/>
+   <frame tileid="34" duration="300"/>
+   <frame tileid="35" duration="300"/>
+  </animation>
+ </tile>
+ <tile id="48">
+  <animation>
+   <frame tileid="48" duration="300"/>
+   <frame tileid="49" duration="300"/>
+   <frame tileid="50" duration="300"/>
+   <frame tileid="51" duration="300"/>
   </animation>
  </tile>
 </tileset>

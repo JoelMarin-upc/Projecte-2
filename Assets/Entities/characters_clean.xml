@@ -28,7 +28,7 @@
 			<item id="" name="shovel"/>
 		</inventory>
 	</character>
-	<character id="CH-002" name="Medic" texture="heart.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-002" name="Medic" texture="SpriteSheet_Medic.png" combatTexture="Medic_Combat.png" animations="Medic_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
 		<inventory />
 	</character>
 	<character id="CH-003" name="Thief" texture="SpriteSheet_Thief.png" combatTexture="ThiefCombat.png" animations="Thief_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" isMale="false" unlockedStance1="4" unlockedStance2="4">
@@ -104,7 +104,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-011" name="Shopkeeper" texture="heart.png" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-011" name="Shopkeeper" texture="SpriteSheet_Shopkeeper.png" animations="Shopkeeper_SpriteSheet.tsx" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
 		<inventory>
 			<item id="" name="bandages"/>
 			<item id="" name="bandages"/>

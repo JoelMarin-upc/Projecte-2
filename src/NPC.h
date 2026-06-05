@@ -45,6 +45,7 @@ public:
 	bool isPlayerInRange = false;
 	bool isRecruitConditionFulfilled = false;
 	Party* party;
+	int partyIndex = 1;
 	std::string animationsPath;
 	std::string facing = "down";
 	std::string currentAnimation = "";
