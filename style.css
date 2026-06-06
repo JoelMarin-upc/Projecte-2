@@ -90,17 +90,8 @@ h2 {
     gap: 10px;
 }
 
-img {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 5px;
-  width: 150px;
-}
-
 .shot {
     background: #1b1b24;
-    border: 1px solid #333;
-    height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
