@@ -87,13 +87,13 @@ h2 {
 .gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
+    gap: 80px;
 }
 
 .gallery-item {
   margin: 5px;
   border: 1px solid #ccc;
-  width: 540px;
+  width: 135;
 }
 
 .gallery-item img {
