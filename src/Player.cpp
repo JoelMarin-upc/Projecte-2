@@ -71,6 +71,27 @@ bool Player::Update(float dt)
 {
 	GodMode();
 	CheckTimers();
+	Scene* scene = Engine::GetInstance().sceneManager->GetCurrentScene();
+	if (!canTriggerCombat)
+	{
+		if (!scene->hasCombatCooldown)
+			canTriggerCombat = true;
+	}
+	if (canTriggerCombat && !scene->hasCombatCooldown)
+	{
+		auto enemies = scene->GetNearEnemies(GetPosition(), 50.0f, "");
+
+		if (!enemies.empty())
+		{
+			auto leader = enemies[0];
+
+			leader->party->members.clear();
+			leader->party->AddMember(leader);
+
+			scene->StartCombat(leader);
+			canTriggerCombat = false;
+		}
+	}
 	if (isActive) {
 		GetPhysicsValues();
 		Move();
@@ -352,10 +373,10 @@ void Player::OnCollision(Collider* physA, Collider* physB) {
 	case EntityType::INTERACTABLE_ITEM:
 		LOG("Player is in range of interadctable item");
 		break;
-	case EntityType::ENEMY:
+	/*case EntityType::ENEMY:
 		Enemy* enemy = static_cast<Enemy*>(physB->listener);
 		Engine::GetInstance().sceneManager->currentScene->StartCombat(std::static_pointer_cast<Enemy>(enemy->shared_from_this()));
-		break;
+		break;*/
 	}
 }
 

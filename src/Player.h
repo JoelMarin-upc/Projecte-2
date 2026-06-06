@@ -71,6 +71,7 @@ public:
 	bool draw = true;
 
 	Party* party;
+	bool canTriggerCombat = true;
 
 private:
 	b2Vec2 velocity;

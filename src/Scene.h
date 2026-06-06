@@ -196,6 +196,8 @@ public:
 	std::shared_ptr<Player> player;
 	int uiClickFxId;
 	bool hasDarkness = false;
+	bool hasCombatCooldown = false;
+
 
 private:
 	const std::string baseTexturePath = "Assets/Textures/";
@@ -215,8 +217,8 @@ private:
 	bool isOnDialog = false;
 	float previousMusicVolume = 1.0f;
 
-	float combatCooldownSeconds = 5.f;
-	bool hasCombatCooldown = false;
+	float combatCooldownSeconds = 3.f;
+	//bool hasCombatCooldown = false;
 	Timer combatTimer;
 
 	Combat* combat = nullptr;
