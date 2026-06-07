@@ -97,6 +97,7 @@ enum UIID {
 	ATTACK_STAT,
 	DEFEND_STAT,
 	SPEED_STAT,
+	INFECTION_STAT,
 
 	WIN_BG,
 	WIN_BACK_MAIN_MENU,
@@ -228,6 +229,7 @@ public:
 	std::shared_ptr<UIButton> attack;
 	std::shared_ptr<UIButton> defense;
 	std::shared_ptr<UIButton> speed;
+	std::shared_ptr<UIButton> infection;
 	const int baseGiveToId = 1000;
 	std::vector<std::shared_ptr<UIButton>> giveToButtons;
 	std::shared_ptr<UIButton> previousInventory;

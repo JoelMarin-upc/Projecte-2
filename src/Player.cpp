@@ -12,7 +12,7 @@
 #include "SceneManager.h"
 #include <memory>
 
-Player::Player(std::string id, std::string name, std::string texturePath, std::string combatTexturePath) : Character(id, name, texturePath, combatTexturePath, EntityType::PLAYER)
+Player::Player(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, std::string infectedTexturePath) : Character(id, name, texturePath, combatTexturePath, EntityType::PLAYER), infectedTexturePath(infectedTexturePath)
 {
 }
 
@@ -41,6 +41,7 @@ bool Player::Start() {
 
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
 	if (combatTexturePath != "") combatTexture = Engine::GetInstance().textures->Load(combatTexturePath.c_str());
+	if (infectedTexturePath != "") infectedTexture = Engine::GetInstance().textures->Load(infectedTexturePath.c_str());
 
 	//AddCollider(ColliderType::CIRCLE, texture, 0, 0, -110, 0, 1, 1);
 	AddCollider(ColliderType::SQUARE, texture, 0, 0, -110, -225, 1, 1);

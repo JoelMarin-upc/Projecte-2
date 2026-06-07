@@ -288,6 +288,7 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	SDL_Rect b_attack = { sw / 2 + 150, sh / 2 - 50, 200, 40 };
 	SDL_Rect b_defense = { sw / 2 + 150, sh / 2 + 10, 200, 40 };
 	SDL_Rect b_speed = { sw / 2 + 150, sh / 2 + 70, 200, 40 };
+	SDL_Rect b_infection = { sw / 2 + 150, sh / 2 + 130, 200, 40 };
 	SDL_Rect b_nameLabel = { sw - 220, 20, 200, 40 };
 	SDL_Rect b_previousInventory = { sw - 440, 80, 200, 40 };
 	SDL_Rect b_nextInventory = { sw - 220, 80, 200, 40 };
@@ -321,6 +322,7 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		attack->SetBounds(b_attack);
 		defense->SetBounds(b_defense);
 		speed->SetBounds(b_speed);
+		infection->SetBounds(b_infection);
 		inventoryLabel->SetBounds(b_inventoryLabel);
 		moneyLabel->SetBounds(b_moneyLabel);
 		shopLabel->SetBounds(b_shopLabel);
@@ -367,10 +369,12 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		attack = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ATTACK_STAT, b_attack, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Attack: ", 5), false, true));
 		defense = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)DEFEND_STAT, b_defense, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Defense: ", 5), false, true));
 		speed = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)SPEED_STAT, b_speed, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Speed: ", 5), false, true));
+		infection = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)SPEED_STAT, b_infection, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Infection: ", 5), false, true));
 		hp->state = UIElementState::DISABLED;
 		attack->state = UIElementState::DISABLED;
 		defense->state = UIElementState::DISABLED;
 		speed->state = UIElementState::DISABLED;
+		infection->state = UIElementState::DISABLED;
 
 		inventoryLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)INVENTORY_LABEL, b_inventoryLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Inventory"), false, true));
 		moneyLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)MONEY_LABEL, b_moneyLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label("Gold: "), false, true));
@@ -456,6 +460,7 @@ void MenuManager::SetObserver(Module* observer)
 	attack->observer = observer;
 	defense->observer = observer;
 	speed->observer = observer;
+	infection->observer = observer;
 	nameLabel->observer = observer;
 	previousInventory->observer = observer;
 	nextInventory->observer = observer;
@@ -726,6 +731,7 @@ void MenuManager::HideMenu()
 	attack->active = false;
 	defense->active = false;
 	speed->active = false;
+	infection->active = false;
 	nameLabel->active = false;
 	previousInventory->active = false;
 	nextInventory->active = false;
@@ -794,6 +800,7 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop, std::shared_p
 		attack->active = false;
 		defense->active = false;
 		speed->active = false;
+		infection->active = false;
 		for (int i = 0; i < shopSlots.size(); i++) {
 			std::shared_ptr<UISlot> slot = shopSlots[i];
 			slot->active = true;
@@ -827,6 +834,8 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop, std::shared_p
 			defense->text = "Defense: " + std::to_string((int)character->Defense());
 			speed->active = true;
 			speed->text = "Speed: " + std::to_string((int)character->Speed());
+			infection->active = true;
+			infection->text = "Infection: " + std::to_string((int)character->Infection()) + "/" + std::to_string((int)character->MaxInfection());
 			if (party)
 			{
 				if (party->allMembers.size() > 1) {
@@ -846,6 +855,7 @@ void MenuManager::ShowInventory(Inventory* inventory, bool isShop, std::shared_p
 			attack->active = false;
 			defense->active = false;
 			speed->active = false;
+			infection->active = false;
 			nameLabel->active = false;
 			previousInventory->active = false;
 			nextInventory->active = false;

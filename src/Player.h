@@ -15,7 +15,7 @@ class Player : public Character//, public std::enable_shared_from_this<Player>
 {
 public:
 
-	Player(std::string id, std::string name, std::string texturePath, std::string combatTexturePath);
+	Player(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, std::string infectedTexturePath);
 	
 	virtual ~Player();
 
@@ -48,6 +48,9 @@ private:
 	void RunTorchTimer(float dt);
 
 public:
+
+	std::string infectedTexturePath;
+	SDL_Texture* infectedTexture = nullptr;
 
 	std::string animationsPath;
 	std::string facing = "down";

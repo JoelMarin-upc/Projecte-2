@@ -58,6 +58,9 @@ enum DarknessMode {
 
 enum class MenuFadePhase { NONE, FADE_OUT, FADE_IN };
 
+const int INFECTION_THRESHOLD_1 = 30;
+const int INFECTION_THRESHOLD_2 = 60;
+const int INFECTION_THRESHOLD_3 = 90;
 
 class Scene : public Module
 {
@@ -139,6 +142,9 @@ public:
 
 	void SetDarknessMode(DarknessMode mode);
 	void DrawDarkness();
+	void RunInfectionTimer(float dt);
+	void ConvertMember(std::shared_ptr<Character> member);
+	void DrawInfectionEffect();
 
 	void StartBossCombat(EnemyParty* bossParty);
 	void TriggerNiaEnding(BossNPC::EndingChoice choice);
@@ -278,6 +284,7 @@ private:
 	float menuFadeHoldMs = 0.0f;
 	float menuFadeHoldElapsed = 0.0f;
 
+	bool showingJournal = false;
 	bool showingInventory = false;
 	bool showingInventoryForCombat = false;
 	bool showingShop = false;
@@ -309,4 +316,7 @@ private:
 	SDL_Texture* journalBgTexture = nullptr;
 
 
+	const float timePerInfectionPercentage = 0.1f * 1000.f;
+	float infectionTimer = 0.f;
+	SDL_Texture* infectionEffect = nullptr;
 };

@@ -18,7 +18,7 @@ enum class NPCInteractionType {
 class NPC : public AICharacter {
 public:
 	NPC(){}
-	NPC(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, NPCInteractionType type = NPCInteractionType::DEFAULT, std::string recuitMissionId = "") : AICharacter(id, name, texturePath, combatTexturePath, EntityType::NPC) {
+	NPC(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, NPCInteractionType type = NPCInteractionType::DEFAULT, std::string recuitMissionId = "", std::string infectedTexturePath = "") : AICharacter(id, name, texturePath, combatTexturePath, EntityType::NPC), infectedTexturePath(infectedTexturePath) {
 		npcInteractionType = type;
 		this->recuitMissionId = recuitMissionId;
 	}
@@ -50,6 +50,8 @@ public:
 	std::string facing = "down";
 	std::string currentAnimation = "";
 	bool isFacingRight = false;
+	std::string infectedTexturePath;
+	SDL_Texture* infectedTexture = nullptr;
 protected:
 	AnimationSet anims;
 	NPCInteractionType npcInteractionType;

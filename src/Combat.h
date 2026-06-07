@@ -153,6 +153,10 @@ public:
 
 	void DisableCombatElements();
 	void EnableCombatElements();
+	
+	void ChangeTarget(TurnAction* turnAction);
+
+	void ChangeImages();
 
 	Party* playerParty;
 	EnemyParty* enemyParty;

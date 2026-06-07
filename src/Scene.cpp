@@ -116,6 +116,7 @@ bool Scene::Start(std::string spawnId)
 	uiClickFxId = Engine::GetInstance().audio->LoadFx(clickFxPath.c_str());
 	inventoryBgTexture = Engine::GetInstance().textures->Load("Assets/Textures/inventoryBook.png");
 	journalBgTexture = Engine::GetInstance().textures->Load("Assets/Textures/MissionsPaper.png");
+	infectionEffect = Engine::GetInstance().textures->Load("Assets/Textures/infectionEffect.png");
 
 	Engine::GetInstance().menuManager->SetObserver(this);
 
@@ -239,6 +240,7 @@ bool Scene::Update(float dt)
 		ToggleInventory();
 		ToggleJournal();
 	}
+	RunInfectionTimer(dt);
 	map->Update(dt);
 	entityManager->Update(dt);
 	DrawDarkness();
@@ -263,6 +265,7 @@ bool Scene::Update(float dt)
 	}*/
 	/////////////////////
 
+	DrawInfectionEffect();
 
 	return true;
 }
@@ -543,6 +546,7 @@ void Scene::TogglePause()
 		//Engine::GetInstance().menuManager->ShowPauseMenu();
 		OpenMenuWithFade([this]() {Engine::GetInstance().menuManager->ShowPauseMenu();});
 		showingInventory = false;
+		showingJournal = false;
 		showingShop = false;
 		dialogManager->SetEnabled(false);
 	} 
@@ -976,6 +980,7 @@ void Scene::LoadScene(std::string spawnId)
 	std::string name = pNode.attribute("name").as_string();
 	std::string texture = pNode.attribute("texture").as_string();
 	std::string combatTexture = pNode.attribute("combatTexture").as_string();
+	std::string infectedTexture = pNode.attribute("infectedTexture").as_string();
 	bool playerIsMale = pNode.attribute("isMale").as_bool(true);
 
 	//Loads the spawnpoint
@@ -1008,7 +1013,7 @@ void Scene::LoadScene(std::string spawnId)
 		partyMembers.push_back(member);
 	}
 
-	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT, "", playerIsMale));
+	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT, "", baseTexturePath + infectedTexture, playerIsMale));
 
 	std::string animations = pNode.attribute("animations").as_string();
 	player->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
@@ -1058,11 +1063,12 @@ void Scene::LoadScene(std::string spawnId)
 			std::string texture = cNode.attribute("texture").as_string();
 			std::string combatTexture = cNode.attribute("combatTexture").as_string();
 			std::string recuitMissionId = cNode.attribute("recuitMissionId").as_string();
+			std::string infTexture = cNode.attribute("infectedTexture").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 			bool isMale = cNode.attribute("isMale").as_bool(true);
 			
-			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, isMale));
+			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, baseTexturePath + infTexture, isMale));
 			
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
@@ -1086,9 +1092,11 @@ void Scene::LoadScene(std::string spawnId)
 			std::string texture = cNode.attribute("texture").as_string();
 			std::string combatTexture = cNode.attribute("combatTexture").as_string();
 			std::string recuitMissionId = cNode.attribute("recuitMissionId").as_string();
+			std::string infTexture = cNode.attribute("infectedTexture").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 			bool isMale = cNode.attribute("isMale").as_bool(true);
+			bool canInfect = cNode.attribute("canInfect").as_bool(false);
 
 			float savedX = cNode.attribute("savedX").as_float();
 			float savedY = cNode.attribute("savedY").as_float();
@@ -1097,7 +1105,7 @@ void Scene::LoadScene(std::string spawnId)
 			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
 			//LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 
-			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, isMale));
+			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, infTexture, isMale, canInfect));
 
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
@@ -1302,6 +1310,7 @@ void Scene::EndGame()
 {
 	gameStarted = false;
 	entityManager->DestroyEntity(player);
+	entityManager->paused = true;
 	//Engine::GetInstance().menuManager->ShowDeathScreen();
 	OpenMenuWithFade([this]() {
 		Engine::GetInstance().menuManager->ShowDeathScreen();
@@ -1323,6 +1332,7 @@ void Scene::ToggleInventory()
 		}
 		showingInventory = !showingInventory;
 		entityManager->paused = showingInventory;
+		showingJournal = false;
 		if (showingInventory)
 		{
 			/*Engine::GetInstance().menuManager->ShowInventory(player->inventory, player, player->party);
@@ -1361,11 +1371,13 @@ void Scene::ToggleJournal()
 		/*if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) Engine::GetInstance().menuManager->HideMenu();
 		else Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);*/
 		if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) {
+			entityManager->paused = false;
 			CloseMenuWithFade([this]() {
 				lastMenuBg = nullptr;
 				});
 		}
 		else {
+			entityManager->paused = true;
 			OpenMenuWithFade([this]() {
 				lastMenuBg = journalBgTexture;
 				Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);
@@ -1647,7 +1659,7 @@ std::vector<std::shared_ptr<Enemy>> Scene::GetNearEnemies(Vector2D position, flo
 
 void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
 {
-	if (hasCombatCooldown || isOnDialog || showingInventory || paused || combat) return;
+	if (hasCombatCooldown || isOnDialog || showingInventory || showingJournal || paused || combat) return;
 	Engine::GetInstance().render->follow = nullptr;
 
 	auto nearEnemies = GetNearEnemies(player->position, 300, enemy->id);
@@ -1707,9 +1719,12 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 			if (npc && npc->isDead) deadMembers.push_back(npc);
 		}
 		for (const auto& npc : deadMembers) {
-			Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
-			player->party->RemoveMember(npc->id);
-			entityManager->DestroyEntity(npc);
+			if (npc->IsFullyInfected()) ConvertMember(npc);
+			else {
+				Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
+				player->party->RemoveMember(npc->id);
+				entityManager->DestroyEntity(npc);
+			}
 		}
 		combatTimer.Start();
 		hasCombatCooldown = true;
@@ -1759,9 +1774,65 @@ void Scene::DrawDarkness()
 	}
 }
 
+void Scene::RunInfectionTimer(float dt)
+{
+	if (!hasDarkness || isOnDialog || paused || combat || showingInventory || showingJournal || showingShop) return;
+	infectionTimer += dt;
+	if (infectionTimer > timePerInfectionPercentage) {
+		for (std::shared_ptr<Character> member : player->party->allMembers) {
+			bool infected = member->ChangeInfection(1);
+			if (!infected) continue;
+			if (member->id == player->id) EndGame();
+			else ConvertMember(member);
+		}
+		infectionTimer = 0.f;
+	}
+}
+
+void Scene::ConvertMember(std::shared_ptr<Character> member)
+{
+	if (player->isDead || player->IsFullyInfected()) return;
+	std::string memberId = member->id;
+	Vector2D pos = member->position;
+	member->active = false;
+	member->isDead = true;
+	Engine::GetInstance().sceneManager->deadNPCs.push_back(member->id);
+	player->party->RemoveMember(member->id);
+	entityManager->DestroyEntity(member);
+
+	pugi::xml_document enemyDoc = XMLHandler::LoadFile("Assets/Entities/spawn_enemy.xml");
+	pugi::xml_node enemy = enemyDoc.child("character");
+	std::string name = enemy.attribute("name").as_string();
+	std::string texture = enemy.attribute("texture").as_string();
+	std::string combatTexture = enemy.attribute("combatTexture").as_string();
+	std::string recuitMissionId = enemy.attribute("recuitMissionId").as_string();
+	int type = enemy.attribute("type").as_int();
+	int npcInteractionType = enemy.attribute("npcInteractionType").as_int();
+	bool isMale = enemy.attribute("isMale").as_bool(true);
+	bool canInfect = enemy.attribute("canInfect").as_bool(false);
+	std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(memberId, name, baseTexturePath + texture, baseTexturePath + combatTexture, pos, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, "", isMale, canInfect));
+	if (!m) return;
+	m->stats = LoadStats(enemy);
+	m->inventory = LoadInventory(enemy);
+	auto enemyPtr = std::dynamic_pointer_cast<Enemy>(m);
+	if (!enemyPtr) return;
+	std::string animations = enemy.attribute("animations").as_string();
+	enemyPtr->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
+	enemyPtr->LoadAnimations();
+	enemyPtr->CreateColliders();
+}
+
+void Scene::DrawInfectionEffect()
+{
+	if (!gameStarted || showingInventory || showingShop || showingJournal) return;
+	float infectionPercentage = player->stats->GetStat("infection").getValue() / 100.f;
+	SDL_SetTextureAlphaMod(infectionEffect, 60 * infectionPercentage);
+	Engine::GetInstance().render->DrawTexture(infectionEffect, 0, 0, 0.f);
+}
+
 void Scene::StartBossCombat(EnemyParty* bossParty)
 {
-	if (hasCombatCooldown || isOnDialog || showingInventory || paused || combat) return;
+	if (hasCombatCooldown || isOnDialog || showingInventory || showingJournal || paused || combat) return;
 	Engine::GetInstance().render->follow = nullptr;
 	
 	OpenMenuWithFade([this, bossParty]() {

@@ -24,6 +24,11 @@ public:
 	float Speed();
 	float HP();
 	float MaxHP();
+	float Infection();
+	float MaxInfection();
+	bool IsInfected();
+	bool IsFullyInfected();
+	bool ChangeInfection(int amount);
 	std::shared_ptr<Consumable> UseConsumable(std::string type);
 	void TakeConsumable(std::shared_ptr<Consumable> consumable);
 	void TakeStance(Stance stance, std::vector<std::shared_ptr<Character>> affectedCharacters = std::vector<std::shared_ptr<Character>>());
@@ -53,5 +58,7 @@ public:
 
 	Timer walkTimer;
 	float walkMS = 400.0f;
+
+	bool canInfect = false;
 
 };
