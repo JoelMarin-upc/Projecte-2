@@ -1093,6 +1093,12 @@ void Scene::LoadScene(std::string spawnId)
 			
 			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, baseTexturePath + infTexture, isMale));
 			
+			if (m->id == "CH-006") {
+				std::string ct2 = cNode.attribute("combatTexture2").as_string();
+				if (!ct2.empty())
+					m->combatTexture2Path = baseTexturePath + ct2;
+			}
+
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
 			int s1 = cNode.attribute("unlockedStance1").as_int(NO_STANCE);
@@ -1129,6 +1135,14 @@ void Scene::LoadScene(std::string spawnId)
 			//LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 
 			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, infTexture, isMale, canInfect));
+
+			if (auto npcPtr = std::dynamic_pointer_cast<NPC>(m)) {
+				if (npcPtr->id == "CH-006") {
+					std::string ct2 = cNode.attribute("combatTexture2").as_string();
+					if (!ct2.empty())
+						npcPtr->combatTexture2Path = baseTexturePath + ct2;
+				}
+			}
 
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);

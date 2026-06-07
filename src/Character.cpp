@@ -62,7 +62,7 @@ float Character::MaxInfection()
     return infection.maxValue;
 }
 
-bool Character::IsInfected()
+bool Character::IsInfected() const
 {
     Stat& infection = stats->GetStat("infection");
     return infection.value >= INFECTION_THRESHOLD_1;
