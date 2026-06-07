@@ -135,7 +135,7 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Rect b_settings = { centerX - 100, centerY + 140, 192, 64 };
 	SDL_Rect b_credits_btn = { centerX - 90, centerY + 210, 176, 64 };
 	SDL_Rect b_exit = { centerX - 75, centerY + 280, 144, 64 };
-	SDL_Rect b_controls_btn = { centerX - 280, centerY + 210, 176, 64 };
+	SDL_Rect b_controls_btn = { sw - 206, sh - 84, 176, 64 };
 	
 	//Settings menu elements
 	SDL_Rect b_settings_lbl = { centerX - 100, centerY - 200, 200, 40 };
