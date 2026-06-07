@@ -316,7 +316,7 @@ private:
 	SDL_Texture* journalBgTexture = nullptr;
 
 
-	const float timePerInfectionPercentage = 0.1f * 1000.f;
+	const float msPerInfectionPercentage = 15.f * 1000.f;
 	float infectionTimer = 0.f;
 	SDL_Texture* infectionEffect = nullptr;
 };

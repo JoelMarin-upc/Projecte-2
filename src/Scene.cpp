@@ -1778,7 +1778,7 @@ void Scene::RunInfectionTimer(float dt)
 {
 	if (!hasDarkness || isOnDialog || paused || combat || showingInventory || showingJournal || showingShop) return;
 	infectionTimer += dt;
-	if (infectionTimer > timePerInfectionPercentage) {
+	if (infectionTimer > msPerInfectionPercentage) {
 		for (std::shared_ptr<Character> member : player->party->allMembers) {
 			bool infected = member->ChangeInfection(1);
 			if (!infected) continue;
