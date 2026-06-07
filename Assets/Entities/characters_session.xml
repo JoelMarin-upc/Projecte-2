@@ -59,7 +59,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-006" name="Barbara" texture="SpriteSheet_Barbara.png" combatTexture="barbara1Combat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" unlockedStance1="4" unlockedStance2="4">
+	<character id="CH-006" name="Barbara" texture="SpriteSheet_Barbara.png" combatTexture="barbara1Combat.png" combatTexture2="Barbara2_Combat.png" infectedTexture="barbara3Combat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" unlockedStance1="4" unlockedStance2="4">
 		<stats>
 			<stat name="health" value="100" max="100" />
 			<stat name="speed" value="5"/>
@@ -114,6 +114,8 @@
 	</character>
 	<character id="CH-011" name="Shopkeeper" texture="SpriteSheet_Shopkeeper.png" animations="Shopkeeper_SpriteSheet.tsx" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
 		<inventory>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
 			<item id="" name="bandages"/>
 			<item id="" name="bandages"/>
 			<item id="" name="hoe"/>
@@ -269,5 +271,17 @@
 			<stat name="defense" value="8"/>
 		</stats>
 		<inventory />
+	</character>
+	<character id="CH-026" name="Attorney" texture="SpriteSheet_Attorney.png" combatTexture="AttorneyCombat.png" infectedTexture="Attorney_Combat_Infected.png" animations="Attorney_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" unlockedStance1="4" unlockedStance2="4">
+		<stats>
+			<stat name="health" value="75" max="75" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="30"/>
+			<stat name="defense" value="7"/>
+			<stat name="infection" value="0" max="100"/>
+		</stats>
+		<inventory>
+			<item id="" name="bandages"/>
+		</inventory>
 	</character>
 </characters>
