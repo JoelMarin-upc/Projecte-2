@@ -400,12 +400,14 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		nextInventory = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)NEXT_INVENTORY, b_nextInventory, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Next", 5, 5), false, true));
 		for (int i = 0; i < giveToBounds.size(); i++)
 			giveToButtons.push_back(std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, baseGiveToId + i, giveToBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Button("Give to ", 5, 5), false, true)));
+		auto slotConfig = UIParameters::Default();
+		slotConfig.smallText = true;
 		for (int i = 0; i < inventorySlotBounds.size(); i++) {
-			std::shared_ptr<UISlot> slot = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)baseSlotsId + i, inventorySlotBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Default(), false, true));
+			std::shared_ptr<UISlot> slot = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)baseSlotsId + i, inventorySlotBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, slotConfig, false, true));
 			inventorySlots.push_back(slot);
 		}
 		for (int i = 0; i < shopSlotBounds.size(); i++) {
-			std::shared_ptr<UISlot> slot = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)baseShopSlotsId + i, shopSlotBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Default(), false, true));
+			std::shared_ptr<UISlot> slot = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)baseShopSlotsId + i, shopSlotBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, slotConfig, false, true));
 			shopSlots.push_back(slot);
 		}
 	}
