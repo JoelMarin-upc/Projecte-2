@@ -84,6 +84,9 @@ bool Scene::Start(std::string spawnId)
 	darkness1 = Engine::GetInstance().textures->Load("Assets/Textures/darkness1.png");
 	darkness2 = Engine::GetInstance().textures->Load("Assets/Textures/darkness2.png");
 
+	epilogueMercyTexture = Engine::GetInstance().textures->Load("Assets/Textures/Epilogue_Mercy.png");
+	epilogueKillTexture = Engine::GetInstance().textures->Load("Assets/Textures/Epilogue_Kill.png");
+
 	Engine::GetInstance().render->SetCursorTexture("Assets/Textures/newCursor.png");
 	sw = Engine::GetInstance().window->width;
 	sh = Engine::GetInstance().window->height;
@@ -209,6 +212,23 @@ bool Scene::Update(float dt)
 		}
 	}
 
+	if (showingEpilogue && activeEpilogueTexture) {
+		Engine::GetInstance().render->DrawTexture(activeEpilogueTexture, 0, 0, 0.0f);
+
+		if (!menuFadeBlocking) {
+			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN ||
+				Engine::GetInstance().input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN ||
+				Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_SOUTH) == KEY_DOWN) {
+				showingEpilogue = false;
+				activeEpilogueTexture = nullptr;
+				OpenMenuWithFade([this]() {
+					Engine::GetInstance().menuManager->ShowWinScreen();
+					});
+			}
+		}
+		return true;
+	}
+
 	if (menuFadeBlocking) return true;
 
 	if (!gameStarted) return true;
@@ -271,6 +291,9 @@ bool Scene::Update(float dt)
 bool Scene::PostUpdate(float dt)
 {
 	if (combat) combat->Draw(dt);
+	if (showingEpilogue && activeEpilogueTexture) {
+		Engine::GetInstance().render->DrawTexture(activeEpilogueTexture, 0, 0, 0.0f);
+	}
 
 	return true;
 }
@@ -1781,16 +1804,18 @@ void Scene::TriggerNiaEnding(BossNPC::EndingChoice choice)
 	switch (choice)
 	{
 	case BossNPC::EndingChoice::MERCY:
-		LOG("Ending: Mercy");
 		OpenMenuWithFade([this]() {
-			Engine::GetInstance().menuManager->ShowWinScreen();
+			Engine::GetInstance().menuManager->HideMenu();
+			activeEpilogueTexture = epilogueMercyTexture;
+			showingEpilogue = true;
 			});
 		break;
 
 	case BossNPC::EndingChoice::KILL:
-		LOG("Ending: Kill");
 		OpenMenuWithFade([this]() {
-			Engine::GetInstance().menuManager->ShowWinScreen();
+			Engine::GetInstance().menuManager->HideMenu();
+			activeEpilogueTexture = epilogueKillTexture;
+			showingEpilogue = true;
 			});
 		break;
 

@@ -308,5 +308,8 @@ private:
 	SDL_Texture* inventoryBgTexture = nullptr;
 	SDL_Texture* journalBgTexture = nullptr;
 
-
+	bool showingEpilogue = false;
+	SDL_Texture* epilogueMercyTexture = nullptr;
+	SDL_Texture* epilogueKillTexture = nullptr;
+	SDL_Texture* activeEpilogueTexture = nullptr;
 };
