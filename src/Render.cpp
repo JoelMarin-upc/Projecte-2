@@ -83,7 +83,7 @@ bool Render::Awake()
 
 	TTF_Init();
 	font = TTF_OpenFont("Assets/Fonts/Leander.ttf", 25);
-	smallFont = TTF_OpenFont("Assets/Fonts/Leander.ttf", 18);
+	smallFont = TTF_OpenFont("Assets/Fonts/Leander.ttf", 14);
 
 	return true;
 }

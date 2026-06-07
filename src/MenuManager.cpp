@@ -296,7 +296,7 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	std::vector<SDL_Rect> shopSlotBounds = std::vector<SDL_Rect>();
 	std::vector<SDL_Rect> giveToBounds = std::vector<SDL_Rect>();
 	for (int i = 0; i < 4; i++) {
-		giveToBounds.push_back({ sw - 320, 160 + 60 * i, 200, 40 });
+		giveToBounds.push_back({ sw - 330, 160 + 60 * i, 230, 40 });
 	}
 	const int margin = 10;
 	const int columns = 4;
@@ -364,6 +364,8 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		SDL_Color yellow = { 255, 255, 0, 255 };
 		SDL_Color blue = { 0, 255, 255, 255 };
 		SDL_Color red = { 255, 0, 0, 0 };
+		auto slotConfig = UIParameters::Default();
+		slotConfig.smallText = true;
 
 		hp = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)HP_STAT, b_hp, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("HP: ", 5), false, true));
 		attack = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)ATTACK_STAT, b_attack, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Attack: ", 5), false, true));
@@ -392,7 +394,7 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		boots->state = UIElementState::DISABLED;
 		weapon = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)WEAPON, b_weapon, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Image(nullptr, nullptr, nullptr, nullptr, new SDL_Color(mainColorDef), true), false, true));
 		weapon->state = UIElementState::DISABLED;
-		selectedItem = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)SELECTED_ITEM, b_selectedItem, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Default(), false, true));
+		selectedItem = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)SELECTED_ITEM, b_selectedItem, this, { mainColorDef, mainColorDef, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, slotConfig, false, true));
 		selectedItem->state = UIElementState::DISABLED;
 		exitShop = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)EXIT_SHOP, b_exitShop, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Exit", 5, 5), false, true));
 		nameLabel = std::dynamic_pointer_cast<UILabel>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::LABEL, (int)NAME_LABEL, b_nameLabel, this, { white, mainColorDis }, hoverFxId, clickFxId, UIParameters::Label(""), false, true));
@@ -400,8 +402,6 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		nextInventory = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)NEXT_INVENTORY, b_nextInventory, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("Next", 5, 5), false, true));
 		for (int i = 0; i < giveToBounds.size(); i++)
 			giveToButtons.push_back(std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, baseGiveToId + i, giveToBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, UIParameters::Button("Give to ", 5, 5), false, true)));
-		auto slotConfig = UIParameters::Default();
-		slotConfig.smallText = true;
 		for (int i = 0; i < inventorySlotBounds.size(); i++) {
 			std::shared_ptr<UISlot> slot = std::dynamic_pointer_cast<UISlot>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::SLOT, (int)baseSlotsId + i, inventorySlotBounds[i], this, {mainColorDef, mainColorDis, mainColorHov, mainColorPre, white}, hoverFxId, clickFxId, slotConfig, false, true));
 			inventorySlots.push_back(slot);

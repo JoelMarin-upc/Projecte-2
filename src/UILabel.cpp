@@ -27,10 +27,10 @@ bool UILabel::Update(float dt)
 	switch (state)
 	{
 	case UIElementState::DISABLED:
-		Engine::GetInstance().render->DrawTextMultiline(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h, colorDis, smallText);
+		Engine::GetInstance().render->DrawTextMultiline(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h, colorDis, 20, smallText);
 		break;
 	case UIElementState::NORMAL:
-		Engine::GetInstance().render->DrawTextMultiline(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h, color, smallText);
+		Engine::GetInstance().render->DrawTextMultiline(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h, color, 20, smallText);
 		break;
 	}
 
