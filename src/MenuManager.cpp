@@ -270,48 +270,48 @@ void MenuManager::LoadInventory(bool onlyPositions)
 	int centerX = sw / 2;
 	int centerY = sh / 2;
 
-	SDL_Rect b_inventoryLabel = { 20, 20, 200, 20 };
-	SDL_Rect b_moneyLabel = { centerX - 60, 20, 100, 20 };
-	SDL_Rect b_shopLabel = { sw - 80, 20, 60, 20 };
-	SDL_Rect b_use = { centerX - 110, 60, 90, 40};
-	SDL_Rect b_drop = { centerX + 10, 60, 90, 40 };
-	SDL_Rect b_buy = { centerX - 110, 120, 90, 40 };
-	SDL_Rect b_sell = { centerX + 10, 120, 90, 40 };
-	SDL_Rect b_helmet = { centerX - 65, centerY - 100, 60, 60 };
-	SDL_Rect b_body = { centerX - 65, centerY - 30, 60, 60 };
-	SDL_Rect b_boots = { centerX - 65, centerY + 40, 60, 60 };
-	SDL_Rect b_weapon = { centerX + 5, centerY - 30, 60, 60 };
-	SDL_Rect b_amount = { centerX - 100, 180, 200, 40 };
+	SDL_Rect b_inventoryLabel = { 320, 40, 200, 20 };
+	SDL_Rect b_moneyLabel = { centerX + 20, 40, 100, 20 };
+	SDL_Rect b_shopLabel = { sw - 320, 20, 60, 20 };
+	SDL_Rect b_use = { centerX - 110, 100, 90, 40};
+	SDL_Rect b_drop = { centerX + 10, 100, 90, 40 };
+	SDL_Rect b_buy = { centerX - 110, 160, 90, 40 };
+	SDL_Rect b_sell = { centerX + 10, 160, 90, 40 };
+	SDL_Rect b_helmet = { centerX - 65, centerY - 60, 60, 60 };
+	SDL_Rect b_body = { centerX - 65, centerY + 10, 60, 60 };
+	SDL_Rect b_boots = { centerX - 65, centerY + 80, 60, 60 };
+	SDL_Rect b_weapon = { centerX + 5, centerY + 10, 60, 60 };
+	SDL_Rect b_amount = { centerX - 100, 220, 200, 40 };
 	SDL_Rect b_selectedItem = { centerX - 100, sh - 200, 200, 160 };
-	SDL_Rect b_exitShop = { sw - 200, 15, 100, 30 };
-	SDL_Rect b_hp = { sw / 2 + 150, sh / 2 - 110, 200, 40 };
-	SDL_Rect b_attack = { sw / 2 + 150, sh / 2 - 50, 200, 40 };
-	SDL_Rect b_defense = { sw / 2 + 150, sh / 2 + 10, 200, 40 };
-	SDL_Rect b_speed = { sw / 2 + 150, sh / 2 + 70, 200, 40 };
-	SDL_Rect b_infection = { sw / 2 + 150, sh / 2 + 130, 200, 40 };
-	SDL_Rect b_nameLabel = { sw - 220, 20, 200, 40 };
-	SDL_Rect b_previousInventory = { sw - 440, 80, 200, 40 };
-	SDL_Rect b_nextInventory = { sw - 220, 80, 200, 40 };
+	SDL_Rect b_exitShop = { sw - 340, 60, 100, 30 };
+	SDL_Rect b_hp = { sw / 2 + 100, sh / 2 - 90, 200, 40 };
+	SDL_Rect b_attack = { sw / 2 + 100, sh / 2 - 40, 200, 40 };
+	SDL_Rect b_defense = { sw / 2 + 100, sh / 2 + 10, 200, 40 };
+	SDL_Rect b_speed = { sw / 2 + 100, sh / 2 + 60, 200, 40 };
+	SDL_Rect b_infection = { sw / 2 + 100, sh / 2 + 110, 200, 40 };
+	SDL_Rect b_nameLabel = { sw - 380, 40, 200, 40 };
+	SDL_Rect b_previousInventory = { sw - 520, 100, 200, 40 };
+	SDL_Rect b_nextInventory = { sw - 300, 100, 200, 40 };
 	std::vector<SDL_Rect> inventorySlotBounds = std::vector<SDL_Rect>();
 	std::vector<SDL_Rect> shopSlotBounds = std::vector<SDL_Rect>();
 	std::vector<SDL_Rect> giveToBounds = std::vector<SDL_Rect>();
 	for (int i = 0; i < 4; i++) {
-		giveToBounds.push_back({ sw - 220, 160 + 60 * i, 200, 40 });
+		giveToBounds.push_back({ sw - 320, 160 + 60 * i, 200, 40 });
 	}
 	const int margin = 10;
 	const int columns = 4;
 	const int rows = MAX_SLOTS / columns;
-	int x = margin;
-	int y = margin + 40;
-	int boxW = 160;
-	int boxY = 150;
+	int x = margin + 100;
+	int y = margin + 100;
+	int boxW = 130;
+	int boxY = 120;
 
 	for (int i = 0; i < rows; i++)
 		for (int j = 0; j < columns; j++)
 			inventorySlotBounds.push_back({ x + boxW * i + margin * i, y + boxY * j + margin * j, boxW, boxY });
 
-	x = sw;
-	y = margin + 40;
+	x = sw - 100;
+	y = margin + 100;
 
 	for (int i = 0; i < rows; i++)
 		for (int j = 0; j < columns; j++)
@@ -353,10 +353,10 @@ void MenuManager::LoadInventory(bool onlyPositions)
 		}
 	}
 	else {
-		SDL_Color mainColorDef = { 100, 100, 100, 255 };
+		SDL_Color mainColorDef = { 110, 79, 50, 255 };
 		SDL_Color mainColorDis = { 200, 200, 200, 255 };
-		SDL_Color mainColorHov = { 0, 0, 100, 255 };
-		SDL_Color mainColorPre = { 0, 255, 255, 255 };
+		SDL_Color mainColorHov = { 51, 36, 23, 255 };
+		SDL_Color mainColorPre = { 166, 111, 58, 255 };
 		SDL_Color secondaryDef = { 0, 255, 0, 255 };
 		SDL_Color secondaryDis = { 100, 100, 100, 255 };
 		SDL_Color white = { 255, 255, 255, 255 };
