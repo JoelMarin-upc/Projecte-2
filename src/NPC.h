@@ -40,6 +40,7 @@ public:
 	void OpenShop();
 	void OnCollision(Collider* physA, Collider* physB) override;
 	void OnCollisionEnd(Collider* physA, Collider* physB) override;
+	SDL_Texture* GetCombatTexture() const override;
 
 public:
 	bool isPlayerInRange = false;
@@ -52,6 +53,8 @@ public:
 	bool isFacingRight = false;
 	std::string infectedTexturePath;
 	SDL_Texture* infectedTexture = nullptr;
+	SDL_Texture* combatTexture2 = nullptr;
+	std::string combatTexture2Path;
 protected:
 	AnimationSet anims;
 	NPCInteractionType npcInteractionType;

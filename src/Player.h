@@ -38,7 +38,10 @@ public:
 
 	void AddPartyMember(std::shared_ptr<NPC> member, bool write = false);
 	void GodMode();
-
+	SDL_Texture* GetCombatTexture() const override {
+		if (IsInfected() && infectedTexture) return infectedTexture;
+		return combatTexture;
+	}
 private:
 	void CheckTimers();
 	void GetPhysicsValues();
