@@ -192165,12 +192165,6 @@
    </properties>
    <point/>
   </object>
-  <object id="726" x="1712" y="1696">
-   <properties>
-    <property name="id" value="CH-003"/>
-   </properties>
-   <point/>
-  </object>
  </objectgroup>
  <objectgroup id="19" name="Items">
   <object id="583" x="1344.18" y="1425.82">

@@ -58,9 +58,7 @@ enum DarknessMode {
 
 enum class MenuFadePhase { NONE, FADE_OUT, FADE_IN };
 
-const int INFECTION_THRESHOLD_1 = 30;
-const int INFECTION_THRESHOLD_2 = 60;
-const int INFECTION_THRESHOLD_3 = 90;
+
 
 class Scene : public Module
 {
@@ -315,7 +313,7 @@ private:
 	SDL_Texture* inventoryBgTexture = nullptr;
 	SDL_Texture* journalBgTexture = nullptr;
 
-	const float msPerInfectionPercentage = 15.f * 1000.f;
+	const float msPerInfectionPercentage = 0.5f * 1000.f;
 	float infectionTimer = 0.f;
 	SDL_Texture* infectionEffect = nullptr;
 

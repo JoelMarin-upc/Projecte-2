@@ -284,7 +284,8 @@ bool Combat::Start() {
 
 	if (playerParty->player)
 	{
-		SDL_Texture* tex = playerParty->player->IsInfected() ? playerParty->player->infectedTexture : playerParty->player->combatTexture;
+		//SDL_Texture* tex = playerParty->player->IsInfected() ? playerParty->player->infectedTexture : playerParty->player->combatTexture;
+		SDL_Texture* tex = playerParty->player->GetCombatTexture();
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 0) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -300,7 +301,8 @@ bool Combat::Start() {
 
 	if (playerParty->members.size() > 0)
 	{
-		SDL_Texture* tex = playerParty->members[0]->IsInfected() ? playerParty->members[0]->infectedTexture : playerParty->members[0]->combatTexture;
+		//SDL_Texture* tex = playerParty->members[0]->IsInfected() ? playerParty->members[0]->infectedTexture : playerParty->members[0]->combatTexture;
+		SDL_Texture* tex = playerParty->members[0]->GetCombatTexture();
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 1) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -316,7 +318,8 @@ bool Combat::Start() {
 
 	if (playerParty->members.size() > 1)
 	{
-		SDL_Texture* tex = playerParty->members[1]->IsInfected() ? playerParty->members[1]->infectedTexture : playerParty->members[1]->combatTexture;
+		//SDL_Texture* tex = playerParty->members[1]->IsInfected() ? playerParty->members[1]->infectedTexture : playerParty->members[1]->combatTexture;
+		SDL_Texture* tex = playerParty->members[1]->GetCombatTexture();
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 2) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -332,7 +335,8 @@ bool Combat::Start() {
 
 	if (playerParty->members.size() > 2)
 	{
-		SDL_Texture* tex = playerParty->members[2]->IsInfected() ? playerParty->members[2]->infectedTexture : playerParty->members[2]->combatTexture;
+		//SDL_Texture* tex = playerParty->members[2]->IsInfected() ? playerParty->members[2]->infectedTexture : playerParty->members[2]->combatTexture;
+		SDL_Texture* tex = playerParty->members[2]->GetCombatTexture();
 		Vector2D pos;
 		for (CombatPosition cPos : combatData.positions) if (!cPos.isEnemy && cPos.order == 3) pos = cPos.position;
 		SDL_Rect boundaries = { pos.getX() + cx, pos.getY() + cy, tex->w, tex->h };
@@ -1107,22 +1111,22 @@ void Combat::ChangeImages()
 {
 	if (player && !player->isDead)
 	{
-		SDL_Texture* texture = player->IsInfected() ? player->infectedTexture : player->combatTexture;
+		SDL_Texture* texture = player->GetCombatTexture();
 		i_player->SetImage(texture, texture, texture, texture);
 	}
 	if (npc1 && !npc1->isDead)
 	{
-		SDL_Texture* texture = npc1->IsInfected() ? npc1->infectedTexture : npc1->combatTexture;
+		SDL_Texture* texture = npc1->GetCombatTexture();
 		i_npc1->SetImage(texture, texture, texture, texture);
 	}
 	if (npc2 && !npc2->isDead)
 	{
-		SDL_Texture* texture = npc2->IsInfected() ? npc2->infectedTexture : npc2->combatTexture;
+		SDL_Texture* texture = npc2->GetCombatTexture();
 		i_npc2->SetImage(texture, texture, texture, texture);
 	}
 	if (npc3 && !npc3->isDead)
 	{
-		SDL_Texture* texture = npc3->IsInfected() ? npc3->infectedTexture : npc3->combatTexture;
+		SDL_Texture* texture = npc3->GetCombatTexture();
 		i_npc3->SetImage(texture, texture, texture, texture);
 	}
 }

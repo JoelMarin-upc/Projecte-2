@@ -6,6 +6,10 @@
 #include "Party.h"
 #include "EnemyParty.h"
 
+const int INFECTION_THRESHOLD_1 = 30;
+const int INFECTION_THRESHOLD_2 = 60;
+const int INFECTION_THRESHOLD_3 = 90;
+
 enum Stance {
 	REST,
 	DEFEND,
@@ -26,7 +30,7 @@ public:
 	float MaxHP();
 	float Infection();
 	float MaxInfection();
-	bool IsInfected();
+	bool IsInfected() const;
 	bool IsFullyInfected();
 	bool ChangeInfection(int amount);
 	std::shared_ptr<Consumable> UseConsumable(std::string type);
@@ -37,6 +41,7 @@ public:
 	void DrawHealthBar(const SDL_Rect& rect);
 	void DrawCombatHealthBar(float worldX, float worldY, int width);
 	void DrawHealthBar(SDL_Texture* texture);
+	virtual SDL_Texture* GetCombatTexture() const { return combatTexture; }
 
 	Stats* stats = nullptr;
 	Inventory* inventory = nullptr;

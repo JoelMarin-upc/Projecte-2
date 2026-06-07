@@ -19,6 +19,8 @@ bool NPC::Start()
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
 	if (combatTexturePath != "") combatTexture = Engine::GetInstance().textures->Load(combatTexturePath.c_str());
 	if (infectedTexturePath != "") infectedTexture = Engine::GetInstance().textures->Load(infectedTexturePath.c_str());
+	if (combatTexture2Path != "") combatTexture2 = Engine::GetInstance().textures->Load(combatTexture2Path.c_str());
+
 
 	//if (!animationsPath.empty()) {
 	//	std::unordered_map<int, std::string> aliases = { {0,"idle"},{16,"move_down"},{20,"move_up"},{24,"move_left"} };
@@ -317,4 +319,17 @@ void NPC::OnCollisionEnd(Collider* physA, Collider* physB)
 	default:
 		break;
 	}
+}
+
+SDL_Texture* NPC::GetCombatTexture() const
+{
+	if (id == "CH-006") {
+		Stat& inf = stats->GetStat("infection");
+		if (inf.value >= INFECTION_THRESHOLD_2 && infectedTexture) return infectedTexture;
+		if (inf.value >= INFECTION_THRESHOLD_1 && combatTexture2) return combatTexture2;
+		return combatTexture;
+	}
+
+	if (IsInfected() && infectedTexture) return infectedTexture;
+	return combatTexture;
 }
