@@ -100,11 +100,11 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Texture* deathBg = Engine::GetInstance().textures->Load("Assets/Textures/GameOver.png");
 
 
-	SDL_Color mainColorDef = { 0, 0, 255, 255 };
-	SDL_Color mainColorDis = { 200, 200, 200, 255 };
-	SDL_Color mainColorHov = { 0, 0, 100, 255 };
-	SDL_Color mainColorPre = { 0, 255, 255, 255 };
-	SDL_Color secondaryDef = { 0, 255, 0, 255 };
+	SDL_Color mainColorDef = { 110, 79, 50, 255 };
+	SDL_Color mainColorDis = { 166, 130, 93, 255 };
+	SDL_Color mainColorHov = { 51, 36, 23, 255 };
+	SDL_Color mainColorPre = { 166, 111, 58, 255 };
+	SDL_Color secondaryDef = { 51, 36, 23, 255 };
 	SDL_Color secondaryDis = { 100, 100, 100, 255 };
 	SDL_Color white = { 255, 255, 255, 255 };
 	SDL_Color black = { 0, 0, 0, 255 };
@@ -112,6 +112,7 @@ void MenuManager::Load(bool onlyPositions)
 	SDL_Color yellow = { 255, 255, 0, 255 };
 	SDL_Color blue = { 0, 255, 255, 255 };
 	SDL_Color red = { 255, 0, 0, 0 };
+	SDL_Color brown = { 48, 37, 31, 255 };
 
 	/*int sw = Engine::GetInstance().render->camera.w;
 	int sh = Engine::GetInstance().render->camera.h;*/
@@ -241,7 +242,7 @@ void MenuManager::Load(bool onlyPositions)
 		winBackMainMenu = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)WIN_BACK_MAIN_MENU, b_winBackMainMenu, this, { }, hoverFxId, clickFxId, UIParameters::Image(backDis, backNormal, backHov, backPres)));
 		winExit = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)WIN_EXIT, b_winExit, this, { }, hoverFxId, clickFxId, UIParameters::Image(exitDis, exitNormal, exitHov, exitPres)));
 
-		missionPopUpTitle = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)POPUP_TITLE, b_popUpTitle, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, green }, hoverFxId, clickFxId, UIParameters::Button("", 20)));
+		missionPopUpTitle = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)POPUP_TITLE, b_popUpTitle, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("", 20)));
 		missionPopUp = std::dynamic_pointer_cast<UIButton>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::BUTTON, (int)POPUP, b_popUp, this, { mainColorDef, mainColorDis, mainColorHov, mainColorPre, white }, hoverFxId, clickFxId, UIParameters::Button("", 20)));
 		missionPopUpTitle->state = UIElementState::DISABLED;
 		missionPopUp->state = UIElementState::DISABLED;
