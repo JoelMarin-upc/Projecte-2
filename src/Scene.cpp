@@ -170,6 +170,14 @@ bool Scene::Start(std::string spawnId)
 			StartDialog("player");
 			Engine::GetInstance().sceneManager->triggerFirstMonologue = false;
 		}
+		if (Engine::GetInstance().sceneManager->triggerDungeonLevel2Monologue == true) {
+			StartDialog("player_dungeon2");
+			Engine::GetInstance().sceneManager->triggerDungeonLevel2Monologue = false;
+		}
+		else if (Engine::GetInstance().sceneManager->triggerDungeonLevel3Monologue == true) {
+			StartDialog("player_dungeon3");
+			Engine::GetInstance().sceneManager->triggerDungeonLevel3Monologue = false;
+		}
 	}
 
 	return true;
@@ -1595,6 +1603,7 @@ void Scene::CheckTransitions()
 				auto sm = Engine::GetInstance().sceneManager;
 				if (sm->dungeonLevel < 2) {
 					sm->dungeonLevel = 2;
+					sm->triggerDungeonLevel2Monologue = true;
 					UnlockStances(1);
 				}
 			}
@@ -1602,6 +1611,7 @@ void Scene::CheckTransitions()
 				auto sm = Engine::GetInstance().sceneManager;
 				if (sm->dungeonLevel < 3) {
 					sm->dungeonLevel = 3;
+					sm->triggerDungeonLevel3Monologue = true;
 					UnlockStances(2);
 				}
 			}
