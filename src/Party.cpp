@@ -17,6 +17,7 @@ void Party::AddMember(std::shared_ptr<NPC> member, bool write)
 	members.push_back(member);
 	allMembers.push_back(member);
 	member->party = this;
+	member->partyIndex = allMembers.size() - 1;
 
 	if (write)
 	{
@@ -59,4 +60,10 @@ void Party::RemoveMember(std::string id, bool write)
 bool Party::CanAddMember() const
 {
 	return members.size() < maxMembers;
+}
+
+std::shared_ptr<Character> Party::GetMemberToFollow(int index) const
+{
+	if (index == 0) return player;
+	return allMembers[index - 1];
 }

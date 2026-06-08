@@ -21,6 +21,7 @@
 #include "ResetButton.h"
 #include "SequencePuzzle.h"
 #include "SequenceButton.h"
+#include "BossNPC.h"
 #include <unordered_map>
 #include <type_traits>
 #include <typeinfo>
@@ -56,6 +57,7 @@ enum DarknessMode {
 };
 
 enum class MenuFadePhase { NONE, FADE_OUT, FADE_IN };
+
 
 
 class Scene : public Module
@@ -138,6 +140,12 @@ public:
 
 	void SetDarknessMode(DarknessMode mode);
 	void DrawDarkness();
+	void RunInfectionTimer(float dt);
+	void ConvertMember(std::shared_ptr<Character> member);
+	void DrawInfectionEffect();
+
+	void StartBossCombat(EnemyParty* bossParty);
+	void TriggerNiaEnding(BossNPC::EndingChoice choice);
 
 	void CopyCleanGameData();
 
@@ -196,9 +204,7 @@ public:
 	std::shared_ptr<Player> player;
 	int uiClickFxId;
 	bool hasDarkness = false;
-	bool hasCombatCooldown = false;
-
-
+	std::string lastDialogNodeId = "";
 private:
 	const std::string baseTexturePath = "Assets/Textures/";
 
@@ -217,8 +223,8 @@ private:
 	bool isOnDialog = false;
 	float previousMusicVolume = 1.0f;
 
-	float combatCooldownSeconds = 3.f;
-	//bool hasCombatCooldown = false;
+	float combatCooldownSeconds = 5.f;
+	bool hasCombatCooldown = false;
 	Timer combatTimer;
 
 	Combat* combat = nullptr;
@@ -276,6 +282,7 @@ private:
 	float menuFadeHoldMs = 0.0f;
 	float menuFadeHoldElapsed = 0.0f;
 
+	bool showingJournal = false;
 	bool showingInventory = false;
 	bool showingInventoryForCombat = false;
 	bool showingShop = false;
@@ -305,4 +312,14 @@ private:
 
 	SDL_Texture* inventoryBgTexture = nullptr;
 	SDL_Texture* journalBgTexture = nullptr;
+
+	const float msPerInfectionPercentage = 0.5f * 1000.f;
+	float infectionTimer = 0.f;
+	SDL_Texture* infectionEffect = nullptr;
+
+	bool showingEpilogue = false;
+	SDL_Texture* epilogueMercyTexture = nullptr;
+	SDL_Texture* epilogueKillTexture = nullptr;
+	SDL_Texture* activeEpilogueTexture = nullptr;
+
 };

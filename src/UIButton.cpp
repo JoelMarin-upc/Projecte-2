@@ -4,7 +4,7 @@
 #include "Log.h"
 #include "Audio.h"
 
-UIButton::UIButton(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId) : UIElement(UIElementType::BUTTON, id)
+UIButton::UIButton(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId, bool smallText) : UIElement(UIElementType::BUTTON, id)
 {
 	this->hoverFxId = hoverFxId;
 	this->clickFxId = clickFxId;
@@ -17,6 +17,7 @@ UIButton::UIButton(int id, SDL_Rect bounds, const char* text, int horizotalSpaci
 	this->colorTxt = colorTxt;
 	this->horizotalSpacing = horizotalSpacing;
 	this->verticalSpacing = verticalSpacing;
+	this->smallText = smallText;
 
 	canClick = true;
 	drawBasic = false;
@@ -29,6 +30,8 @@ UIButton::~UIButton()
 
 bool UIButton::Update(float dt)
 {
+	if (!active) return true;
+	
 	if (state != UIElementState::DISABLED)
 	{
 		float mouseX, mouseY;
@@ -88,7 +91,7 @@ bool UIButton::Update(float dt)
 		TTF_GetStringSize(font, text.c_str(), 0, &textW, &textH);
 		int centeredX = bounds.x + (bounds.w - textW) / 2;
 		int centeredY = bounds.y + (bounds.h - textH) / 2;
-		Engine::GetInstance().render->DrawText(text.c_str(), centeredX, centeredY, 0, 0, colorTxt);
+		Engine::GetInstance().render->DrawText(text.c_str(), centeredX, centeredY, 0, 0, colorTxt, smallText);
 	}
 
 	return false;

@@ -8,7 +8,7 @@ class UILabel : public UIElement
 
 public:
 
-	UILabel(int id, SDL_Rect bounds, const char* text, SDL_Color color, SDL_Color colorDis);
+	UILabel(int id, SDL_Rect bounds, const char* text, SDL_Color color, SDL_Color colorDis, bool smallText = false);
 	virtual ~UILabel();
 
 	// Called each loop iteration
@@ -17,6 +17,7 @@ public:
 private:
 
 	bool drawBasic = false;
+	bool smallText = false;
 	SDL_Color color;
 	SDL_Color colorDis;
 };

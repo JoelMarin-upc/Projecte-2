@@ -8,7 +8,7 @@ class UIButton : public UIElement
 
 public:
 
-	UIButton(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId);
+	UIButton(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId, bool smallText = false);
 	virtual ~UIButton();
 
 	// Called each loop iteration
@@ -18,6 +18,7 @@ private:
 
 	bool canClick = true;
 	bool drawBasic = false;
+	bool smallText = false;
 	int horizotalSpacing;
 	int verticalSpacing;
 	SDL_Color colorDef;

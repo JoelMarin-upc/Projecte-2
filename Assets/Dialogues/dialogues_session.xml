@@ -13,13 +13,13 @@
 			</answer>
 		</node>
 		<node id="DN-003" first="false">
-			I almost wanted to believe you at some point,|you’re always right after all.     
+			I almost wanted to believe you at some point, you’re always right after all.     
 			<answer leadsToNodeId="DN-004">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-004" first="false">
-			But if they really listened to my prayers…|Why are you not coming back to me?
+			But if they really listened to my prayers… Why are you not coming back to me?
 			<answer leadsToNodeId="DN-005">
 				Continue
 			</answer>
@@ -31,7 +31,7 @@
 			</answer>
 		</node>
 		<node id="DN-006" first="false">
-			I don’t know what I’ll find inside...|but I can’t stand here waiting anymore.
+			I don’t know what I’ll find inside... but I can’t stand here waiting anymore.
 			<answer leadsToNodeId="DN-007">
 				Continue
 			</answer>
@@ -65,7 +65,7 @@
 	</tree>
 	<tree id="DT-003" characterId="CH-001" characterName="Gravekeeper" order="1" done="false">
 		<node id="DN-001" first="true">
-			You have been pacing around|the cemetery for quite a while.
+			You have been pacing around the cemetery for quite a while.
 			<answer leadsToNodeId="DN-002">
 				Continue
 			</answer>
@@ -86,19 +86,19 @@
 			</answer>
 		</node>
 		<node id="DN-004" first="false">
-			The castle... Many people|go there looking for answers.
+			The castle... Many people go there looking for answers.
 			<answer leadsToNodeId="DN-005">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-005" first="false">
-			But they end up here instead,|keeping me company.
+			But they end up here instead, keeping me company.
 			<answer leadsToNodeId="DN-006">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-006" first="false">
-			The main gates are closed and watched,|but there is an older entrance.
+			The main gates are closed and watched, but there is an older entrance.
 			<answer leadsToNodeId="DN-007">
 				Continue
 			</answer>
@@ -110,7 +110,7 @@
 			</answer>
 		</node>
 		<node id="DN-008" first="false">
-			If you truly desire to go below,|you should not go empty-handed.
+			If you truly desire to go below, you should not go empty-handed.
 			<answer leadsToNodeId="DN-009">
 				Continue
 			</answer>
@@ -122,7 +122,7 @@
 			</answer>
 		</node>
 		<node id="DN-010" first="false">
-			It may help you defend yourself…|or at least buy you some time.
+			It may help you defend yourself… or at least buy you some time.
 			<answer leadsToNodeId="DN-011">
 				Thank you.
 			</answer>
@@ -131,25 +131,25 @@
 			</answer>
 		</node>
 		<node id="DN-011" first="false">
-			I cannot promise that you will find what|you are looking for.
+			I cannot promise that you will find what you are looking for.
 			<answer leadsToNodeId="DN-012">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-012" first="false">
-			But maybe if you descend low enough, the secrets of|the castle will be unveiled to you.
+			But maybe if you descend low enough,|the secrets of the castle will be unveiled to you.
 			<answer leadsToNodeId="DN-013">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-013" first="false">
-			Before going down, however, you may|wish to stop by the statue again.
+			Before going down, however, you may wish to stop by the statue again.
 			<answer leadsToNodeId="DN-014">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-014" first="false">
-			It shall be the last peaceful moment|you will have for quite a while.
+			It shall be the last peaceful moment you will have for quite a while.
 			<answer leadsToNodeId="">
 				End Conversation
 			</answer>
@@ -161,31 +161,31 @@
 			</answer>
 		</node>
 		<node id="DN-016" first="false">
-			The dead are patient,|but they do not bury themselves.
+			The dead are patient, but they do not bury themselves.
 			<answer leadsToNodeId="DN-017">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-017" first="false">
-			On top of that, they have been|increasingly restless lately.
+			On top of that, they have been increasingly restless lately.
 			<answer leadsToNodeId="DN-018">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-018" first="false">
-			Whatever is happening behind those|castle walls, it is complete blasphemy.
+			Whatever is happening behind those castle walls, it is complete blasphemy.
 			<answer leadsToNodeId="DN-020">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-020" first="false">
-			Which is why, before going down, you may|wish to stop by the statue again.
+			Which is why, before going down, you may wish to stop by the statue again.
 			<answer leadsToNodeId="DN-021">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-021" first="false">
-			It shall be the last peaceful moment|you will have for quite a while.
+			It shall be the last peaceful moment you will have for quite a while.
 			<answer leadsToNodeId="">
 				End Conversation
 			</answer>
@@ -197,25 +197,25 @@
 			</answer>
 		</node>
 		<node id="DN-023" first="false">
-			Is it perhaps the lovely damsel that|frequented the castle?
+			Is it perhaps the lovely damsel that frequented the castle?
 			<answer leadsToNodeId="DN-024">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-024" first="false">
-			She seemed like a resourceful one,|it is difficult to believe that she|went there for no reason at all.
+			She seemed like a resourceful one,|it is difficult to believe that she went there for no reason at all.
 			<answer leadsToNodeId="DN-025">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-025" first="false">
-			However, just behind the castle, there’s|a forgotten elevator that goes|right into the castle dungeons.
+			However, just behind the castle,|there’s a forgotten elevator that goes right into the castle dungeons.
 			<answer leadsToNodeId="DN-026">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-026" first="false">
-			If you truly desire to go below,|you should not go empty-handed.
+			If you truly desire to go below, you should not go empty-handed.
 			<answer leadsToNodeId="DN-027">
 				Continue
 			</answer>
@@ -227,7 +227,7 @@
 			</answer>
 		</node>
 		<node id="DN-028" first="false">
-			It may help you defend yourself…|or at least buy you some time.
+			It may help you defend yourself… or at least buy you some time.
 			<answer leadsToNodeId="DN-029">
 				Thank you
 			</answer>
@@ -236,25 +236,25 @@
 			</answer>
 		</node>
 		<node id="DN-029" first="false">
-			I cannot promise that you will find|what you are looking for.
+			I cannot promise that you will find what you are looking for.
 			<answer leadsToNodeId="DN-030">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-030" first="false">
-			But maybe if you descend low enough,|the secrets of the castle will be unveiled to you.
+			But maybe if you descend low enough, the secrets of the castle will be unveiled to you.
 			<answer leadsToNodeId="DN-031">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-031" first="false">
-			Before going down, however, you may|wish to stop by the statue again.
+			Before going down, however, you may wish to stop by the statue again.
 			<answer leadsToNodeId="DN-032">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-032" first="false">
-			It shall be the last peaceful moment|you will have for quite a while.
+			It shall be the last peaceful moment you will have for quite a while.
 			<answer leadsToNodeId="">
 				End conversation
 			</answer>
@@ -266,7 +266,7 @@
 			</answer>
 		</node>
 		<node id="DN-034" first="false">
-			Soulless carcasses are meant to return to|the Earth that birthed them.
+			Soulless carcasses are meant to return to the Earth that birthed them.
 			<answer leadsToNodeId="DN-035">
 				Continue
 			</answer>
@@ -278,89 +278,53 @@
 			</answer>
 		</node>
 		<node id="DN-036" first="false">
-			However, something behind those castle|walls is disturbing that.
+			However, something behind those castle walls is disturbing that.
 			<answer leadsToNodeId="DN-037">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-037" first="false">
-			Which is why, before going down, you may wish|to stop by the statue again.
+			Which is why, before going down, you may wish to stop by the statue again.
 			<answer leadsToNodeId="DN-038">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-038" first="false">
-			It shall be the last peaceful moment|you will have for quite a while.
+			It shall be the last peaceful moment you will have for quite a while.
 			<answer leadsToNodeId="">
 				End conversation
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-004" characterId="CH-002" characterName="Medic" order="4" done="false">
+	<tree id="DT-004" characterId="CH-002" characterName="Medic" order="4" missionId="MI-010" done="false">
 		<node id="DN-001" first="true">
 			I see that you’re finally heading out,|it must take a lot of courage.
 			<answer leadsToNodeId="DN-002">
 				I need to find her.
 			</answer>
-			<answer leadsToNodeId="DN-004">
-				Do you have anything that could help me?
-			</answer>
 		</node>
 		<node id="DN-002" first="false">
-			I understand, Nia’s disappearance is|felt throughout the entire Refuge.
+			You're determined... I won't try to stop you then.
 			<answer leadsToNodeId="DN-003">
-				Continue
+				You sound a bit sad.
 			</answer>
 		</node>
 		<node id="DN-003" first="false">
-			Be careful Garnik, I have no idea|what you may find out there.
-			<answer leadsToNodeId="">
-				End conversation
+			I am. I've seen you two grow up,|it's hard to imagine both of you gone...
+			<answer leadsToNodeId="DN-004">
+				Continue
 			</answer>
 		</node>
 		<node id="DN-004" first="false">
-			I… maybe I do have something.
+			Let me come with you.
 			<answer leadsToNodeId="DN-005">
-				Continue
+				What? But... you're sick...
 			</answer>
 		</node>
 		<node id="DN-005" first="false">
-			I’ve been holding onto this for quite|some time, it’s a little something to|fight back the infected air.
-			<answer leadsToNodeId="DN-006">
-				Continue
-			</answer>
-		</node>
-		<node id="DN-006" first="false">
-			Take it, I’ve got no clue what’s inside|the castle… but hundreds of corpses|are walking out from those doors.
-			<answer leadsToNodeId="DN-007">
-				Wait, won’t you need this?
-			</answer>
-			<answer leadsToNodeId="DN-010">
-				I changed my mind, please keep it
-			</answer>
-		</node>
-		<node id="DN-007" first="false">
-			Haha… it’s okay, you’ll need it|more than I do.
-			<answer leadsToNodeId="DN-008">
-				Continue
-			</answer>
-		</node>
-		<node id="DN-008" first="false">
-			I don’t have much left,|nor much to fight for.
-			<answer leadsToNodeId="DN-009">
-				Continue
-			</answer>
-		</node>
-		<node id="DN-009" first="false">
-			So I’ll try my best to help|with what little I have left.
+			Maybe I'm not in a great shape... but if you bring me some medicine, I'll come with you.
 			<answer leadsToNodeId="">
-				End conversation
-			</answer>
-		</node>
-		<node id="DN-010" first="false">
-			That's okay, you can come to me|whenever you need anything.
-			<answer leadsToNodeId="">
-				End conversation
+				Okay... please take care.
 			</answer>
 		</node>
 	</tree>
@@ -448,50 +412,425 @@
 	</tree>
 	<tree id="DT-095" characterId="CH-012" characterName="Nia" order="1" done="false" isRepeatable="false">
 		<node id="DN-001" first="true">
-			Garnik...!?
+			…Garnik.
 			<answer leadsToNodeId="DN-002">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-002" first="false">
-			H-how did you get here? Why...
+			You actually made it. I wasn't sure if you would.
 			<answer leadsToNodeId="DN-003">
-				Continue
+				Nia! Are you hurt?
 			</answer>
 		</node>
 		<node id="DN-003" first="false">
-			Well... unlucky for you, there's no more content for this game at the moment
+			I'm fine. I've been fine this whole time.
 			<answer leadsToNodeId="DN-004">
-				Continue
+				Then why didn't you say anything?!
 			</answer>
 		</node>
 		<node id="DN-004" first="false">
-			I'll see you again... at Assignment 4: Gold!
+			Because you would've stopped me. And you know that I couldn't possibly say no to you.
+			<answer leadsToNodeId="DN-005">
+				I thought the king took you…
+			</answer>
+		</node>
+		<node id="DN-005" first="false">
+			I came here willingly, Garnik.
+			<answer leadsToNodeId="DN-006">
+				…What?
+			</answer>
+		</node>
+		<node id="DN-006" first="false">
+			He came to me. Offered me a laboratory, resources… a purpose.
+			<answer leadsToNodeId="DN-007">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-007" first="false">
+			So I said yes. No one dragged me here.
+			<answer leadsToNodeId="DN-008">
+				You switched sides… for a lab?
+			</answer>
+		</node>
+		<node id="DN-008" first="false">
+			You don't understand, Garnik!|For the first time in my life,|someone looked at me and saw me as more than just a farmer.
+			<answer leadsToNodeId="DN-009">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-009" first="false">
+			He gave me the tools to actually do something with my mind and my capabilities.
+			<answer leadsToNodeId="DN-010">
+				…People are dead, Nia.
+			</answer>
+		</node>
+		<node id="DN-010" first="false">
+			I-I know… but this infection was never meant to reach civilians.
+			<answer leadsToNodeId="DN-011">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-011" first="false">
+			All that was the king's decision. I built something and he chose how to deploy it.
+			<answer leadsToNodeId="DN-012">
+				You're lying. You knew.
+			</answer>
+		</node>
+		<node id="DN-012" first="false">
+			N-no… I thought that it would end the war faster.
+			<answer leadsToNodeId="DN-013">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-013" first="false">
+			…So that you wouldn't need to suffer anymore.
+			<answer leadsToNodeId="DN-014">
+				Come home, Nia.
+			</answer>
+		</node>
+		<node id="DN-014" first="false">
+			That's not my home anymore. I can't go back to who I was before this.
+			<answer leadsToNodeId="DN-015">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-015" first="false">
+			You wouldn't look at me with the same eyes.|No one would accept me if they knew what I had done.
+			<answer leadsToNodeId="DN-016">
+				I'll protect you.
+			</answer>
+		</node>
+		<node id="DN-016" first="false">
+			…No.
+			<answer leadsToNodeId="DN-017">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-017" first="false">
+			I think you should stop caring about me.
+			<answer leadsToNodeId="DN-018">
+				I'm not leaving you alone.
+			</answer>
+		</node>
+		<node id="DN-018" first="false">
+			Haha… you were always stubborn like that…
+			<answer leadsToNodeId="DN-019">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-019" first="false">
+			Fine. Then I suppose we have a problem.
 			<answer leadsToNodeId="">
 				Continue
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-0094" characterId="CH-004" characterName="Executioner" order="6" done="false">
+	<tree id="DT-094" characterId="CH-012-OUTRO" characterName="Nia" order="1" done="false" isRepeatable="false">
 		<node id="DN-001" first="true">
-			...
+			You're… strong…
 			<answer leadsToNodeId="DN-002">
-				Why are you here by yourself?
-			</answer>
-			<answer leadsToNodeId="DN-003">
-				I haven't seen you around
+				Continue
 			</answer>
 		</node>
 		<node id="DN-002" first="false">
-			......
+			You grew up so much while I wasn't there… and I missed it all.
+			<answer leadsToNodeId="DN-003">
+				Don't give me that…
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			I mean it. The scrawny kid that struggled to even carry a hoe… he's gone.
+			<answer leadsToNodeId="DN-004">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			I guess you don't need me anymore after all.
+			<answer leadsToNodeId="DN-005">
+				Continue
+			</answer>
+		</node>
+
+		<node id="DN-005" first="false">
+			I won't fight anymore. Whatever you decide, I won't fight it.
+			<answer leadsToNodeId="DN-MERCY-001">
+				Help me end this.
+			</answer>
+			<answer leadsToNodeId="DN-KILL-001">
+				I can't forgive you.
+			</answer>
+		</node>
+
+		<!-- Mercy -->
+
+		<node id="DN-MERCY-001" first="false">
+			…You want me to fix what I broke?
+			<answer leadsToNodeId="DN-MERCY-002">
+				No. I want you back.
+			</answer>
+		</node>
+		<node id="DN-MERCY-002" first="false">
+			…Maybe she's not there anymore. The Nia you knew.
+			<answer leadsToNodeId="DN-MERCY-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-MERCY-003" first="false">
+			I'm a shell of who I once was… I don't deserve it.
+			<answer leadsToNodeId="DN-MERCY-004">
+				Probably not…
+			</answer>
+		</node>
+		<node id="DN-MERCY-004" first="false">
+			…So?
+			<answer leadsToNodeId="DN-MERCY-005">
+				But you can have a future.
+			</answer>
+		</node>
+		<node id="DN-MERCY-005" first="false">
+			What do you mean? After all that I've done, I'm tied to this lab.
+			<answer leadsToNodeId="DN-MERCY-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-MERCY-006" first="false">
+			There's nothing for me outside of here.
+			<answer leadsToNodeId="DN-MERCY-007">
+				There is. I'll be with you.
+			</answer>
+		</node>
+		<node id="DN-MERCY-007" first="false">
+			Why?
+			<answer leadsToNodeId="DN-MERCY-008">
+				You've always been by my side.
+			</answer>
+		</node>
+		<node id="DN-MERCY-008" first="false">
+			…
+			<answer leadsToNodeId="">
+				So don't think I'll ever leave yours.
+			</answer>
+		</node>
+
+		<!-- Kill -->
+		
+		<node id="DN-KILL-001" first="false">
+			…I know.
+			<answer leadsToNodeId="DN-KILL-002">
+				You're not going to object?
+			</answer>
+		</node>
+		<node id="DN-KILL-002" first="false">
+			I can't. I don't have the right to.
+			<answer leadsToNodeId="DN-KILL-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-KILL-003" first="false">
+			I wish I could tell you that this wasn't worth it,|but I can no longer lie to you.
+			<answer leadsToNodeId="DN-KILL-004">
+				I don't know you anymore.
+			</answer>
+		</node>
+		<node id="DN-KILL-004" first="false">
+			I could say the same thing.
+			<answer leadsToNodeId="DN-KILL-005">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-KILL-005" first="false">
+			It's okay. I'm not afraid.
+			<answer leadsToNodeId="DN-KILL-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-KILL-006" first="false">
+			…Is the farm still standing?
+			<answer leadsToNodeId="DN-KILL-007">
+				Yes, it is.
+			</answer>
+		</node>
+		<node id="DN-KILL-007" first="false">
+			…Was the potato harvest good this year?
+			<answer leadsToNodeId="DN-KILL-008">
+				It was okay.
+			</answer>
+		</node>
+		<node id="DN-KILL-008" first="false">
+			…Is everyone back at the refuge still hanging on?
+			<answer leadsToNodeId="DN-KILL-009">
+				Somewhat.
+			</answer>
+		</node>
+		<node id="DN-KILL-009" first="false">
+			…Will you remember me|even after all of this?
+			<answer leadsToNodeId="">
+				…Goodbye, Nia.
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-094" characterId="CH-026" characterName="Attorney" missionId="MI-009" order="1" done="false" isRepeatable="true">
+		<node id="DN-001" first="true">
+			You know, I'm also interested in going down that dungeon.
+			<answer leadsToNodeId="DN-002">
+				Why's that?
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			This horrible illness... these disgusting creatures...
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			They all must be coming out of somewhere.
+			<answer leadsToNodeId="DN-004">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			And everything points to those dungeons.
+			<answer leadsToNodeId="DN-005">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-005" first="false">
+			Call it morbid curiosity, but I want to see what's down there.
+			<answer leadsToNodeId="DN-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-006" first="false">
+			The evils of this world... intrigue me.
+			<answer leadsToNodeId="DN-007">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-007" first="false">
+			However... I'm a bit wounded.
+			<answer leadsToNodeId="DN-008">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-008" first="false">
+			Some bandages will put me in good shape,|and I'll be able to come with you.
 			<answer leadsToNodeId="">
 				End conversation
 			</answer>
 		</node>
+	</tree>
+	<tree id="DT-093" characterId="CH-026" characterName="Attorney" missionId="MI-002" order="2" done="false">
+		<node id="DN-001" first="true">
+			That's it, thank you.
+			<answer leadsToNodeId="DN-002">
+				Would you like to come with me?
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			Yes, I will support you as much as I can.
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
 		<node id="DN-003" first="false">
-			......
+			Now, let's find what hideous truth lies down there...
 			<answer leadsToNodeId="">
 				End conversation
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-092" characterId="CH-002" characterName="Medic" missionId="MI-011" order="2" done="false">
+		<node id="DN-001" first="true">
+			Is that...? That'll help keep the infection at bay for a while.
+			<answer leadsToNodeId="DN-002">
+				It's nothing.
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			No, I owe you one. I'll come with you.
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			Let's go find Nia together.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-091" characterId="CH-004" characterName="Executioner" order="1" done="false" isRepeatable="true">
+		<node id="DN-001" first="true">
+			...And who are you?
+			<answer leadsToNodeId="DN-002">
+				A farmer from the Refuge.
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			The Refuge...
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			I had burnt down some houses from there, the civilian's cries still ring in my head.
+			<answer leadsToNodeId="DN-004">
+				...
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			Orders from the King. Back when his orders still meant something.
+			<answer leadsToNodeId="DN-005">
+				What do you mean?
+			</answer>
+		</node>
+		<node id="DN-005" first="false">
+			He's hiding. Has been for months. Whatever this infection is, it's broken him.
+			<answer leadsToNodeId="DN-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-006" first="false">
+			And while he hides, the rest of us are left to deal with... this.
+			<answer leadsToNodeId="DN-007">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-007" first="false">
+			I've burnt more bodies this past year than in my entire career before it.
+			<answer leadsToNodeId="DN-008">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-008" first="false">
+			Rebels, loyalists, civilians... The infection doesn't pick sides.
+			<answer leadsToNodeId="DN-009">
+				Where does it come from?
+			</answer>
+		</node>
+		<node id="DN-009" first="false">
+			The dungeons, they say. Something down there started all of this.
+			<answer leadsToNodeId="DN-010">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-010" first="false">
+			The King knows more than he lets on. I'm certain of it.|But he won't come out to tell us.
+			<answer leadsToNodeId="DN-011">
+				And you? What will you do?
+			</answer>
+		</node>
+		<node id="DN-011" first="false">
+			Sit here for a while longer, I suppose.
+			<answer leadsToNodeId="DN-012">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-012" first="false">
+			I have nowhere to go back to. And I'm not sure I deserve to anyway.
+			<answer leadsToNodeId="">
+				...Good luck.
 			</answer>
 		</node>
 	</tree>

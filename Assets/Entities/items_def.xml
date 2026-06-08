@@ -45,9 +45,19 @@
 			<stat name="attack" value="20"/>
 		</stats>
 	</item>
-	<item id="" name="Torch" gold="10" description="More visibility" texture="torch.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
+	<item id="" name="Torch" gold="10" description="More visibility" texture="newTorch.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
 		<stats>
 			<stat name="attack" value="5"/>
+		</stats>
+	</item>
+	<item id="" name="Infection Syringe" gold="6" description="Adds infection" texture="infectonSyringe.png" type="4" itemClass="consumable" interactionType="1" canStack="true">
+		<stats>
+			<stat name="infection" value="10"/>
+		</stats>
+	</item>
+	<item id="" name="Cure Syringe" gold="6" description="Cures infection" texture="cureSyringe.png" type="4" itemClass="consumable" interactionType="1" canStack="true">
+		<stats>
+			<stat name="infection" value="-10"/>
 		</stats>
 	</item>
 	<item id="IT-001" name="statue" texture="transparent.png" type="4" itemClass="item" interactionType="3" canStack="false"/>

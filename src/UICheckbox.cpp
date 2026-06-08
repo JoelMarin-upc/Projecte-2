@@ -31,6 +31,8 @@ UICheckbox::~UICheckbox()
 
 bool UICheckbox::Update(float dt)
 {
+	if (!active) return true;
+	
 	int gameX = 0;
 	int gameY = 0;
 

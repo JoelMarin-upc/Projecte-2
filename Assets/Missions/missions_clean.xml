@@ -4,16 +4,16 @@
 		<unlocks>
 			<mission id="MI-001" />
 			<mission id="MI-009" />
+			<mission id="MI-010" />
 		</unlocks>
 	</mission>
 	<mission id="MI-001" type="1" targetId="SC-002" targetName="Grocery Store" rewardGold="" rewardItemName="bandages" active="false" completed="false">
 		<unlocks>
 			<mission id="MI-006" />
-			<mission id="MI-002" />
 			<mission id="MI-003" />
 		</unlocks>
 	</mission>
-	<mission id="MI-002" type="4" targetId="CH-002" targetName="Medic" itemName="bandages" rewardGold="30" rewardItemName="leather armor" active="false" completed="false" />
+	<mission id="MI-002" type="4" targetId="CH-026" targetName="Attorney" itemName="bandages" rewardGold="30" rewardItemName="leather armor" active="false" completed="false" />
 	<mission id="MI-003" type="2" targetId="" targetName="enemy" rewardGold="100" rewardItemName="" active="false" completed="false" />
 	<mission id="MI-004" type="0" targetId="CH-012" targetName="Nia" rewardGold="500" rewardItemName="" active="false" completed="false">
 		<unlocks />
@@ -36,4 +36,15 @@
 	<mission id="MI-008" type="0" targetId="CH-003" targetName="Thief" rewardGold="5" rewardItemName="" active="false" completed="false">
 		<unlocks />
 	</mission>
+	<mission id="MI-009" type="0" targetId="CH-026" targetName="Attorney" rewardGold="5" rewardItemName="" active="false" completed="false">
+		<unlocks>
+			<mission id="MI-002" />
+		</unlocks>
+	</mission>
+	<mission id="MI-010" type="0" targetId="CH-002" targetName="Medic" rewardGold="5" rewardItemName="" active="false" completed="false">
+		<unlocks>
+			<mission id="MI-011" />
+		</unlocks>
+	</mission>
+	<mission id="MI-011" type="4" targetId="CH-002" targetName="Medic" itemName="Cure Syringe" rewardGold="30" rewardItemName="leather boots" active="false" completed="false" />
 </missions>

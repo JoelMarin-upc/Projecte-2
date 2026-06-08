@@ -15,10 +15,14 @@ bool NPC::Awake() {
 
 bool NPC::Start()
 {
+	interactIconPath = "Assets/Textures/item.png";
 	//texturePath = "Assets/Textures/heart.png";
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
 	if (combatTexturePath != "") combatTexture = Engine::GetInstance().textures->Load(combatTexturePath.c_str());
+	if (infectedTexturePath != "") infectedTexture = Engine::GetInstance().textures->Load(infectedTexturePath.c_str());
+	if (combatTexture2Path != "") combatTexture2 = Engine::GetInstance().textures->Load(combatTexture2Path.c_str());
 
+	interactIcon = Engine::GetInstance().textures->Load(interactIconPath);
 	//if (!animationsPath.empty()) {
 	//	std::unordered_map<int, std::string> aliases = { {0,"idle"},{16,"move_down"},{20,"move_up"},{24,"move_left"} };
 	//	anims.LoadFromTSX(animationsPath.c_str(), aliases);
@@ -71,6 +75,7 @@ bool NPC::Update(float dt)
 	b2Body_SetTransform(sensorCollider->body, { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, b2Body_GetRotation(sensorCollider->body));
 
 	if (isPlayerInRange) {
+		Engine::GetInstance().render->DrawTexture(interactIcon, x - interactIconW - 8, y - interactIconH - 8);
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN ||
 			Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_SOUTH) == KEY_DOWN) {
 			Interact();
@@ -126,7 +131,7 @@ void NPC::CreateColliders()
 		massData.rotationalInertia = 0.0f;
 		b2Body_SetMassData(pbody->body, massData);
 
-		AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 20, 20, 1, 1);
+		AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 30, 30, 1, 1);
 		sensorCollider = colliders[1];
 		sensorCollider->listener = this;
 		sensorCollider->etype = EntityType::NPC;
@@ -155,7 +160,8 @@ void NPC::CreateColliders()
 
 void NPC::Move()
 {
-	if (!party || !party->player) return;
+	if (!party) return;
+	std::shared_ptr<Character> characterToFollow = party->GetMemberToFollow(partyIndex);
 	if (colliders.empty() || !colliders[0]) return;
 
 	const float speed = 2.5f;
@@ -167,8 +173,8 @@ void NPC::Move()
 	npcPos.x = PIXEL_TO_METERS(x);
 	npcPos.y = PIXEL_TO_METERS(y);
 
-	float playerX = PIXEL_TO_METERS(party->player->position.getX());
-	float playerY = PIXEL_TO_METERS(party->player->position.getY());
+	float playerX = PIXEL_TO_METERS(characterToFollow->position.getX());
+	float playerY = PIXEL_TO_METERS(characterToFollow->position.getY());
 	b2Vec2 playerPos = b2Vec2();
 	playerPos.x = playerX;
 	playerPos.y = playerY;
@@ -315,4 +321,17 @@ void NPC::OnCollisionEnd(Collider* physA, Collider* physB)
 	default:
 		break;
 	}
+}
+
+SDL_Texture* NPC::GetCombatTexture() const
+{
+	if (id == "CH-006") {
+		Stat& inf = stats->GetStat("infection");
+		if (inf.value >= INFECTION_THRESHOLD_2 && infectedTexture) return infectedTexture;
+		if (inf.value >= INFECTION_THRESHOLD_1 && combatTexture2) return combatTexture2;
+		return combatTexture;
+	}
+
+	if (IsInfected() && infectedTexture) return infectedTexture;
+	return combatTexture;
 }
