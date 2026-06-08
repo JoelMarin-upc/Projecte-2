@@ -19,7 +19,7 @@
 		<stats>
 			<stat name="health" value="110" max="110" />
 			<stat name="speed" value="4"/>
-			<stat name="attack" value="50"/>
+			<stat name="attack" value="40"/>
 			<stat name="defense" value="10"/>
 			<stat name="infection" value="0" max="100"/>
 		</stats>
@@ -28,8 +28,20 @@
 			<item id="" name="bandages"/>
 		</inventory>
 	</character>
-	<character id="CH-002" name="Medic" texture="SpriteSheet_Medic.png" combatTexture="Medic_Combat.png" infectedTexture="Medic_Combat_Infected.png" animations="Medic_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
-		<inventory />
+	<character id="CH-002" name="Medic" texture="SpriteSheet_Medic.png" combatTexture="Medic_Combat.png" infectedTexture="Medic_Combat_Infected.png" animations="Medic_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-011" unlockedStance1="4" unlockedStance2="4">
+		<stats>
+			<stat name="health" value="50" max="50" />
+			<stat name="speed" value="9"/>
+			<stat name="attack" value="45"/>
+			<stat name="defense" value="5"/>
+			<stat name="infection" value="0" max="100"/>
+		</stats>
+		<inventory>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+		</inventory>
 	</character>
 	<character id="CH-003" name="Thief" texture="SpriteSheet_Thief.png" combatTexture="ThiefCombat.png" infectedTexture="Thief_Combat_Infected.png" animations="Thief_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" isMale="false" unlockedStance1="4" unlockedStance2="4">
 		<stats>

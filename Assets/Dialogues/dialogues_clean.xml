@@ -296,71 +296,35 @@
 			</answer>
 		</node>
 	</tree>
-	<tree id="DT-004" characterId="CH-002" characterName="Medic" order="4" done="false">
+	<tree id="DT-004" characterId="CH-002" characterName="Medic" order="4" missionId="MI-010" done="false">
 		<node id="DN-001" first="true">
 			I see that you’re finally heading out,|it must take a lot of courage.
 			<answer leadsToNodeId="DN-002">
 				I need to find her.
 			</answer>
-			<answer leadsToNodeId="DN-004">
-				Do you have anything that could help me?
-			</answer>
 		</node>
 		<node id="DN-002" first="false">
-			I understand, Nia’s disappearance is|felt throughout the entire Refuge.
+			You're determined... I won't try to stop you then.
 			<answer leadsToNodeId="DN-003">
-				Continue
+				You sound a bit sad.
 			</answer>
 		</node>
 		<node id="DN-003" first="false">
-			Be careful Garnik, I have no idea|what you may find out there.
-			<answer leadsToNodeId="">
-				End conversation
+			I am. I've seen you two grow up,|it's hard to imagine both of you gone...
+			<answer leadsToNodeId="DN-004">
+				Continue
 			</answer>
 		</node>
 		<node id="DN-004" first="false">
-			I… maybe I do have something.
+			Let me come with you.
 			<answer leadsToNodeId="DN-005">
-				Continue
+				What? But... you're sick...
 			</answer>
 		</node>
 		<node id="DN-005" first="false">
-			I’ve been holding onto this for quite|some time, it’s a little something to|fight back the infected air.
-			<answer leadsToNodeId="DN-006">
-				Continue
-			</answer>
-		</node>
-		<node id="DN-006" first="false">
-			Take it, I’ve got no clue what’s inside|the castle… but hundreds of corpses|are walking out from those doors.
-			<answer leadsToNodeId="DN-007">
-				Wait, won’t you need this?
-			</answer>
-			<answer leadsToNodeId="DN-010">
-				I changed my mind, please keep it
-			</answer>
-		</node>
-		<node id="DN-007" first="false">
-			Haha… it’s okay, you’ll need it|more than I do.
-			<answer leadsToNodeId="DN-008">
-				Continue
-			</answer>
-		</node>
-		<node id="DN-008" first="false">
-			I don’t have much left,|nor much to fight for.
-			<answer leadsToNodeId="DN-009">
-				Continue
-			</answer>
-		</node>
-		<node id="DN-009" first="false">
-			So I’ll try my best to help|with what little I have left.
+			Maybe I'm not in a great shape... but if you bring me some medicine, I'll come with you.
 			<answer leadsToNodeId="">
-				End conversation
-			</answer>
-		</node>
-		<node id="DN-010" first="false">
-			That's okay, you can come to me|whenever you need anything.
-			<answer leadsToNodeId="">
-				End conversation
+				Okay... please take care.
 			</answer>
 		</node>
 	</tree>
@@ -771,6 +735,26 @@
 		</node>
 		<node id="DN-003" first="false">
 			Now, let's find what hideous truth lies down there...
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-092" characterId="CH-002" characterName="Medic" missionId="MI-011" order="2" done="false">
+		<node id="DN-001" first="true">
+			Is that...? That'll help keep the infection at bay for a while.
+			<answer leadsToNodeId="DN-002">
+				It's nothing.
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			No, I owe you one. I'll come with you.
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			Let's go find Nia together.
 			<answer leadsToNodeId="">
 				End conversation
 			</answer>
