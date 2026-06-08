@@ -105,38 +105,44 @@ h2 {
   text-align: center;
 }
 
-.screenshots {
+.screenshotsA {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 180px;
+    gap: 60px;
 }
 
-.screenshots-itemA {
+.screenshotsA-item {
   margin: 5px;
   width: 400;
 }
 
-.screenshots-itemA img {
+.screenshotsA-item img {
   width: 100%;
   height: auto;
 }
 
-.screenshots-itemA div.desc {
+.screenshotsA-item div.desc {
   padding: 15px;
   text-align: center;
 }
 
-.screenshots-itemB {
-  margin: 5px;
-  width: 800;
+.screenshotsB {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 300px;
 }
 
-.screenshots-itemB img {
+.screenshotsB-item {
+  margin: 5px;
+  width: 400;
+}
+
+.screenshotsB-item img {
   width: 100%;
   height: auto;
 }
 
-.screenshots-itemB div.desc {
+.screenshotsB-item div.desc {
   padding: 15px;
   text-align: center;
 }
