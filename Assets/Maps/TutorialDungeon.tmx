@@ -8185,7 +8185,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="197"/>
+   <tile/>
    <tile gid="212"/>
    <tile gid="213"/>
    <tile gid="197"/>
@@ -15197,7 +15197,7 @@
    <tile gid="2824"/>
    <tile/>
    <tile/>
-   <tile gid="2824"/>
+   <tile/>
    <tile gid="2824"/>
    <tile gid="2824"/>
    <tile gid="2824"/>
@@ -17641,7 +17641,6 @@
   <object id="109" x="115.75" y="384" width="8.25" height="47.6667"/>
   <object id="111" x="160" y="432" width="16" height="48"/>
   <object id="114" x="64" y="328.227" width="44.6136" height="6.02273"/>
-  <object id="117" x="100.614" y="373.75" width="11.3864" height="10.25"/>
   <object id="118" x="112.955" y="469" width="29.5455" height="11"/>
   <object id="119" x="142.5" y="466" width="17.75" height="14"/>
   <object id="125" x="112" y="656" width="16" height="16"/>
