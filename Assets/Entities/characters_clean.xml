@@ -307,7 +307,7 @@
 		<stats>
 			<stat name="health" value="75" max="75" />
 			<stat name="speed" value="6"/>
-			<stat name="attack" value="30"/>
+			<stat name="attack" value="15"/>
 			<stat name="defense" value="7"/>
 			<stat name="infection" value="0" max="100"/>
 		</stats>
