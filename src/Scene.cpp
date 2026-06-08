@@ -1818,6 +1818,7 @@ void Scene::RunInfectionTimer(float dt)
 	infectionTimer += dt;
 	if (infectionTimer > msPerInfectionPercentage) {
 		for (std::shared_ptr<Character> member : player->party->allMembers) {
+			if (!member) continue;
 			bool infected = member->ChangeInfection(1);
 			if (!infected) continue;
 			if (member->id == player->id) EndGame();
