@@ -205,6 +205,7 @@ public:
 	int uiClickFxId;
 	bool hasDarkness = false;
 	std::string lastDialogNodeId = "";
+	bool hasCombatCooldown = false;
 private:
 	const std::string baseTexturePath = "Assets/Textures/";
 
@@ -223,8 +224,8 @@ private:
 	bool isOnDialog = false;
 	float previousMusicVolume = 1.0f;
 
-	float combatCooldownSeconds = 5.f;
-	bool hasCombatCooldown = false;
+	float combatCooldownSeconds = 3.f;
+	//bool hasCombatCooldown = false;
 	Timer combatTimer;
 
 	Combat* combat = nullptr;
