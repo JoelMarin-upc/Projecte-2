@@ -108,35 +108,20 @@ h2 {
 .screenshots {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 180px;
+    gap: 60px;
 }
 
-.screenshots-itemA {
-  margin: 5px;
-  width: 400;
-}
-
-.screenshots-itemA img {
-  width: 100%;
-  height: auto;
-}
-
-.screenshots-itemA div.desc {
-  padding: 15px;
-  text-align: center;
-}
-
-.screenshots-itemB {
+.screenshots-item {
   margin: 5px;
   width: 800;
 }
 
-.screenshots-itemB img {
+.screenshots-item img {
   width: 100%;
   height: auto;
 }
 
-.screenshots-itemB div.desc {
+.screenshots-item div.desc {
   padding: 15px;
   text-align: center;
 }
