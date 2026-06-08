@@ -1104,9 +1104,9 @@ void Combat::ChangeTarget(TurnAction* turnAction)
 	if (!selected || selected->isDead) return;
 	int chanceOfChanging = 0;
 	Stat& infection = selected->stats->GetStat("infection");
-	if (infection.value >= INFECTION_THRESHOLD_1) chanceOfChanging = 10;
-	if (infection.value >= INFECTION_THRESHOLD_2) chanceOfChanging = 25;
-	if (infection.value >= INFECTION_THRESHOLD_3) chanceOfChanging = 50;
+	if (infection.value >= INFECTION_THRESHOLD_1) chanceOfChanging = 20;
+	if (infection.value >= INFECTION_THRESHOLD_2) chanceOfChanging = 40;
+	if (infection.value >= INFECTION_THRESHOLD_3) chanceOfChanging = 70;
 	if (random_int(1, 100) > chanceOfChanging) return;
 	int max = playerParty->allMembers.size();
 	int target = random_int(0, max - 1);
