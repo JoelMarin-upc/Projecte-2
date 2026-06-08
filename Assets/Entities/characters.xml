@@ -12,12 +12,7 @@
 			
 		</party>
 		<inventory gold="50">
-			<item id="" name="bandages"/>
-			<item id="" name="bandages"/>
 			<item id="" name="Torch"/>
-			<item id="" name="Torch"/>
-			<item id="" name="Infection Syringe"/>
-			<item id="" name="Cure Syringe"/>
 		</inventory>
 	</player>
 	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="GravekeeperCombat.png" infectedTexture="Gravekeeper_Combat_Infected.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" recuitMissionId="MI-000" isDead="false" unlockedStance1="4" unlockedStance2="4">
@@ -30,6 +25,7 @@
 		</stats>
 		<inventory gold="0">
 			<item id="" name="shovel"/>
+			<item id="" name="bandages"/>
 		</inventory>
 	</character>
 	<character id="CH-002" name="Medic" texture="SpriteSheet_Medic.png" combatTexture="Medic_Combat.png" infectedTexture="Medic_Combat_Infected.png" animations="Medic_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
@@ -44,7 +40,8 @@
 			<stat name="infection" value="0" max="100"/>
 		</stats>
 		<inventory>
-			<item id="" name="Infection Syringe"/>
+			<item id="" name="hoe"/>
+			<item id="" name="bandages"/>
 		</inventory>
 	</character>
 	<character id="CH-004" name="Executioner" texture="SpriteSheet_Executioner.png" animations="Executioner_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
@@ -272,7 +269,7 @@
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-026" name="Attorney" texture="SpriteSheet_Attorney.png" combatTexture="AttorneyCombat.png" infectedTexture="Attorney_Combat_Infected.png" animations="Attorney_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" unlockedStance1="4" unlockedStance2="4">
+	<character id="CH-026" name="Attorney" texture="SpriteSheet_Attorney.png" combatTexture="AttorneyCombat.png" infectedTexture="Attorney_Combat_Infected.png" animations="Attorney_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-002" unlockedStance1="4" unlockedStance2="4">
 		<stats>
 			<stat name="health" value="75" max="75" />
 			<stat name="speed" value="6"/>
@@ -281,7 +278,7 @@
 			<stat name="infection" value="0" max="100"/>
 		</stats>
 		<inventory>
-			<item id="" name="bandages"/>
+			<item id="" name="Infection Syringe"/>
 		</inventory>
 	</character>
 </characters>
