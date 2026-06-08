@@ -303,4 +303,16 @@
 		</stats>
 		<inventory />
 	</character>
+	<character id="CH-026" name="Attorney" texture="SpriteSheet_Attorney.png" combatTexture="AttorneyCombat.png" infectedTexture="Attorney_Combat_Infected.png" animations="Attorney_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-002" unlockedStance1="4" unlockedStance2="4">
+		<stats>
+			<stat name="health" value="75" max="75" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="30"/>
+			<stat name="defense" value="7"/>
+			<stat name="infection" value="0" max="100"/>
+		</stats>
+		<inventory>
+			<item id="" name="Infection Syringe"/>
+		</inventory>
+	</character>
 </characters>
