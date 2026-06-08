@@ -706,4 +706,74 @@
 			</answer>
 		</node>
 	</tree>
+	<tree id="DT-094" characterId="CH-026" characterName="Attorney" missionId="MI-009" order="1" done="false" isRepeatable="true">
+		<node id="DN-001" first="true">
+			You know, I'm also interested in going down that dungeon.
+			<answer leadsToNodeId="DN-002">
+				Why's that?
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			This horrible illness... these disgusting creatures...
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			They all must be coming out of somewhere.
+			<answer leadsToNodeId="DN-004">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			And everything points to those dungeons.
+			<answer leadsToNodeId="DN-005">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-005" first="false">
+			Call it morbid curiosity, but I want to see what's down there.
+			<answer leadsToNodeId="DN-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-006" first="false">
+			The evils of this world... intrigue me.
+			<answer leadsToNodeId="DN-007">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-007" first="false">
+			However... I'm a bit wounded.
+			<answer leadsToNodeId="DN-008">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-008" first="false">
+			Some bandages will put me in good shape,|and I'll be able to come with you.
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+	</tree>
+	<tree id="DT-093" characterId="CH-026" characterName="Attorney" missionId="MI-002" order="2" done="false">
+		<node id="DN-001" first="true">
+			That's it, thank you.
+			<answer leadsToNodeId="DN-002">
+				Would you like to come with me?
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			Yes, I will support you as much as I can.
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			Now, let's find what hideous truth lies down there...
+			<answer leadsToNodeId="">
+				End conversation
+			</answer>
+		</node>
+	</tree>
 </dialogs>
