@@ -105,6 +105,42 @@ h2 {
   text-align: center;
 }
 
+.screenshots {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 180px;
+}
+
+.screenshots-itemA {
+  margin: 5px;
+  width: 400;
+}
+
+.screenshots-itemA img {
+  width: 100%;
+  height: auto;
+}
+
+.screenshots-itemA div.desc {
+  padding: 15px;
+  text-align: center;
+}
+
+.screenshots-itemB {
+  margin: 5px;
+  width: 800;
+}
+
+.screenshots-itemB img {
+  width: 100%;
+  height: auto;
+}
+
+.screenshots-itemB div.desc {
+  padding: 15px;
+  text-align: center;
+}
+
 .shot {
     background: #1b1b24;
     display: flex;
