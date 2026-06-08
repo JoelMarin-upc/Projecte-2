@@ -61,4 +61,8 @@ protected:
 	Collider* pbody = nullptr;
 	Collider* sensorCollider = nullptr;
 	std::string recuitMissionId;
+	SDL_Texture* interactIcon;
+	const char* interactIconPath;
+	int interactIconW = 16;
+	int interactIconH = 16;
 };

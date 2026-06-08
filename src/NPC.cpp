@@ -15,13 +15,14 @@ bool NPC::Awake() {
 
 bool NPC::Start()
 {
+	interactIconPath = "Assets/Textures/item.png";
 	//texturePath = "Assets/Textures/heart.png";
 	texture = Engine::GetInstance().textures->Load(texturePath.c_str());
 	if (combatTexturePath != "") combatTexture = Engine::GetInstance().textures->Load(combatTexturePath.c_str());
 	if (infectedTexturePath != "") infectedTexture = Engine::GetInstance().textures->Load(infectedTexturePath.c_str());
 	if (combatTexture2Path != "") combatTexture2 = Engine::GetInstance().textures->Load(combatTexture2Path.c_str());
 
-
+	interactIcon = Engine::GetInstance().textures->Load(interactIconPath);
 	//if (!animationsPath.empty()) {
 	//	std::unordered_map<int, std::string> aliases = { {0,"idle"},{16,"move_down"},{20,"move_up"},{24,"move_left"} };
 	//	anims.LoadFromTSX(animationsPath.c_str(), aliases);
@@ -74,6 +75,7 @@ bool NPC::Update(float dt)
 	b2Body_SetTransform(sensorCollider->body, { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, b2Body_GetRotation(sensorCollider->body));
 
 	if (isPlayerInRange) {
+		Engine::GetInstance().render->DrawTexture(interactIcon, x - interactIconW - 8, y - interactIconH - 8);
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN ||
 			Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_SOUTH) == KEY_DOWN) {
 			Interact();
@@ -129,7 +131,7 @@ void NPC::CreateColliders()
 		massData.rotationalInertia = 0.0f;
 		b2Body_SetMassData(pbody->body, massData);
 
-		AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 20, 20, 1, 1);
+		AddCollider(ColliderType::CIRCLE_SENSOR, texture, 0, 0, 30, 30, 1, 1);
 		sensorCollider = colliders[1];
 		sensorCollider->listener = this;
 		sensorCollider->etype = EntityType::NPC;
