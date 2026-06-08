@@ -83,6 +83,12 @@ h2 {
     padding: 120px;
 }
 
+/* VIDEO */
+.video {
+  max-width: 100%;
+  height: auto;
+}
+
 /* GALLERY */
 .gallery {
     display: grid;
