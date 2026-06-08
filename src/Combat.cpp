@@ -442,7 +442,8 @@ bool Combat::Update(float dt) {
 				ChangeTarget(action);
 				bool killed = action->target->TakeDamage(damage);
 				if (action->selected->canInfect) {
-					killed = action->target->ChangeInfection(std::floor(damage / 3.f));
+					bool fullyInfected = action->target->ChangeInfection(std::floor(damage / 3.f));
+					killed = killed || fullyInfected;
 					ChangeImages();
 				}
 
