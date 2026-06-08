@@ -128,5 +128,7 @@ void Window::SetFullscreen(bool fullscreen)
 		Engine::GetInstance().configFile.save_file("config.xml");
 	}
 
+	this->fullscreen = fullscreen_window;
+
 	Engine::GetInstance().sceneManager->currentScene->dialogManager->ResizeDialogBox();
 }

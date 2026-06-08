@@ -519,7 +519,6 @@ void MenuManager::ShowPauseMenu()
 void MenuManager::ShowSettingsMenu()
 {
 	Engine::GetInstance().uiManager->uiLockFrame = Engine::GetInstance().frameCount;
-
 	previousMenu = currentMenu;
 	HideMenu();
 	currentMenu = SETTINGS;
@@ -534,9 +533,11 @@ void MenuManager::ShowSettingsMenu()
 	fullscreenLabel->active = true;
 	fullscreenCheckbox->active = true;
 	fullscreenCheckbox->checked = Engine::GetInstance().window->fullscreen;
+	fullscreenCheckbox->state = fullscreenCheckbox->checked ? UIElementState::PRESSED : UIElementState::NORMAL;
 	vsyncLabel->active = true;
 	vsyncCheckbox->active = true;
 	vsyncCheckbox->checked = Engine::GetInstance().vsyncEnabled;
+	vsyncCheckbox->state = vsyncCheckbox->checked ? UIElementState::PRESSED : UIElementState::NORMAL;
 
 	backMenu->active = true;
 }
