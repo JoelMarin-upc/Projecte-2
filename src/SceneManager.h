@@ -64,6 +64,8 @@ public:
 	bool hasQueuedTransition = false;
 
 	bool triggerFirstMonologue = true;
+	bool triggerDungeonLevel2Monologue = false;
+	bool triggerDungeonLevel3Monologue = false;
 	std::vector<std::string> deadNPCs;
 
 	int dungeonLevel = 1;

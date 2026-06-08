@@ -15,7 +15,7 @@
 			<item id="" name="Torch"/>
 		</inventory>
 	</player>
-	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="GravekeeperCombat.png" infectedTexture="Gravekeeper_Combat_Infected.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" recuitMissionId="MI-000" isDead="false" unlockedStance1="4" unlockedStance2="4">
+	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="GravekeeperCombat.png" infectedTexture="Gravekeeper_Combat_Infected.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" recuitMissionId="MI-000" isMale="false" isDead="false" unlockedStance1="4" unlockedStance2="4">
 		<stats>
 			<stat name="health" value="110" max="110" />
 			<stat name="speed" value="4"/>
@@ -43,7 +43,7 @@
 			<item id="" name="bandages"/>
 		</inventory>
 	</character>
-	<character id="CH-003" name="Thief" texture="SpriteSheet_Thief.png" combatTexture="ThiefCombat.png" infectedTexture="Thief_Combat_Infected.png" animations="Thief_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" isMale="false" unlockedStance1="4" unlockedStance2="4">
+	<character id="CH-003" name="Thief" texture="SpriteSheet_Thief.png" combatTexture="ThiefCombat.png" infectedTexture="Thief_Combat_Infected.png" animations="Thief_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" unlockedStance1="4" unlockedStance2="4">
 		<stats>
 			<stat name="health" value="70" max="70" />
 			<stat name="speed" value="8"/>
