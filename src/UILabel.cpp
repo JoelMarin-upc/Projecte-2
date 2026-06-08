@@ -3,12 +3,13 @@
 #include "Engine.h"
 #include "Audio.h"
 
-UILabel::UILabel(int id, SDL_Rect bounds, const char* text, SDL_Color color, SDL_Color colorDis) : UIElement(UIElementType::LABEL, id)
+UILabel::UILabel(int id, SDL_Rect bounds, const char* text, SDL_Color color, SDL_Color colorDis, bool smallText) : UIElement(UIElementType::LABEL, id)
 {
 	this->bounds = bounds;
 	this->text = text;
 	this->color = color;
 	this->colorDis = colorDis;
+	this->smallText = smallText;
 
 	drawBasic = false;
 	state = UIElementState::NORMAL;
@@ -21,13 +22,15 @@ UILabel::~UILabel()
 
 bool UILabel::Update(float dt)
 {
+	if (!active) return true;
+	
 	switch (state)
 	{
 	case UIElementState::DISABLED:
-		Engine::GetInstance().render->DrawTextMultiline(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h, colorDis);
+		Engine::GetInstance().render->DrawTextMultiline(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h, colorDis, 20, smallText);
 		break;
 	case UIElementState::NORMAL:
-		Engine::GetInstance().render->DrawTextMultiline(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h, color);
+		Engine::GetInstance().render->DrawTextMultiline(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h, color, 20, smallText);
 		break;
 	}
 

@@ -35,6 +35,7 @@ void Stats::SetStat(std::string statname, int value)
 {
 	Stat& stat = GetStat(statname);
 	if (stat.maxValue > 0 && value > stat.maxValue) value = stat.maxValue;
+	if (value < 0) value = 0;
 	stat.value = value;
 }
 
@@ -43,6 +44,7 @@ void Stats::AddToStat(std::string statname, int value)
 	Stat& stat = GetStat(statname);
 	int newValue = stat.value + value;
 	if (stat.maxValue > 0 && newValue > stat.maxValue) newValue = stat.maxValue;
+	if (newValue < 0) newValue = 0;
 	stat.value = newValue;
 }
 

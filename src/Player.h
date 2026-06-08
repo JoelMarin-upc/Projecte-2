@@ -15,7 +15,7 @@ class Player : public Character//, public std::enable_shared_from_this<Player>
 {
 public:
 
-	Player(std::string id, std::string name, std::string texturePath, std::string combatTexturePath);
+	Player(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, std::string infectedTexturePath);
 	
 	virtual ~Player();
 
@@ -38,15 +38,22 @@ public:
 
 	void AddPartyMember(std::shared_ptr<NPC> member, bool write = false);
 	void GodMode();
-
+	SDL_Texture* GetCombatTexture() const override {
+		if (IsInfected() && infectedTexture) return infectedTexture;
+		return combatTexture;
+	}
 private:
 	void CheckTimers();
 	void GetPhysicsValues();
 	void Move();
 	void ApplyPhysics();
 	void HandleAnimations();
+	void RunTorchTimer(float dt);
 
 public:
+
+	std::string infectedTexturePath;
+	SDL_Texture* infectedTexture = nullptr;
 
 	std::string animationsPath;
 	std::string facing = "down";
@@ -70,10 +77,15 @@ public:
 	bool draw = true;
 
 	Party* party;
+	bool canTriggerCombat = true;
 
 private:
 	b2Vec2 velocity;
 	AnimationSet anims;
 	int auxX, auxY;
+	const float MAX_TORCH_MS = 3 * 60 * 1000.f;
+	float torchMS = 0;
+
+	int torchFxId = -1;
 
 };

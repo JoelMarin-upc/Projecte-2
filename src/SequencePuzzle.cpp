@@ -41,6 +41,8 @@ void SequencePuzzle::LoadSounds()
 {
     std::string dingFxPath = Engine::GetInstance().audio->GetAudioPath("puzzle", "ding");
     dingFxId = Engine::GetInstance().audio->LoadFx(dingFxPath.c_str());
+    std::string failFxPath = Engine::GetInstance().audio->GetAudioPath("puzzle", "fail");
+    failFxId = Engine::GetInstance().audio->LoadFx(failFxPath.c_str());
 }
 
 void SequencePuzzle::OnSuccess()
@@ -54,5 +56,6 @@ void SequencePuzzle::OnSuccess()
 void SequencePuzzle::OnFailure()
 {
     currentSequence.clear();
+    Engine::GetInstance().audio->PlayFx(failFxId);
     //if (dingFxId != -1) Engine::GetInstance().audio->PlayFx(dingFxId);
 }

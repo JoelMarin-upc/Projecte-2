@@ -19,11 +19,14 @@
 #include <fstream>
 #include <algorithm>
 
-Scene::Scene(std::string _id, std::string _mapsPath, std::string _mapName, std::string _combatMapName)
+Scene::Scene(std::string _id, std::string _mapsPath, std::string _mapName, std::string _combatMapName, bool hasDarkness)
 {
 	id = _id;
 	name = "scene";
 	
+	this->hasDarkness = hasDarkness;
+	darknessMode = hasDarkness ? HEAVY : NO_DARKNESS;
+
 	entityManager = new EntityManager();
 	missionManager = new MissionManager();
 	dialogManager = new DialogManager();
@@ -78,11 +81,15 @@ bool Scene::Start(std::string spawnId)
 	paused = false;
 	pendingSpawnId = spawnId;
 
-	Engine::GetInstance().render->SetCursorTexture("Assets/Textures/cursor.png");
+	darkness1 = Engine::GetInstance().textures->Load("Assets/Textures/darkness1.png");
+	darkness2 = Engine::GetInstance().textures->Load("Assets/Textures/darkness2.png");
+
+	epilogueMercyTexture = Engine::GetInstance().textures->Load("Assets/Textures/Epilogue_Mercy.png");
+	epilogueKillTexture = Engine::GetInstance().textures->Load("Assets/Textures/Epilogue_Kill.png");
+
+	Engine::GetInstance().render->SetCursorTexture("Assets/Textures/newCursor.png");
 	sw = Engine::GetInstance().window->width;
 	sh = Engine::GetInstance().window->height;
-	/*logo = Engine::GetInstance().textures->Load("Assets/Textures/TeamDayo_Logo.png");
-	b_logo = { sw/2 - logo->w/2, sh/2 - logo->h/2, 0, 0 };*/
 	
 	std::string logoFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "logo");
 	std::string elevatorFxPath = Engine::GetInstance().audio->GetAudioPath("scene", "elevator");
@@ -95,6 +102,8 @@ bool Scene::Start(std::string spawnId)
 	std::string equipGearFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "equipGear");
 	std::string dropFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "drop");
 	std::string buySellFxPath = Engine::GetInstance().audio->GetAudioPath("inventory", "buySell");
+	std::string saveFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "save");
+	std::string clickFxPath = Engine::GetInstance().audio->GetAudioPath("ui", "click");
 	logoFxId = Engine::GetInstance().audio->LoadFx(logoFxPath.c_str());
 	elevatorFxId = Engine::GetInstance().audio->LoadFx(elevatorFxPath.c_str());
 	doorFxId = Engine::GetInstance().audio->LoadFx(doorFxPath.c_str());
@@ -106,34 +115,26 @@ bool Scene::Start(std::string spawnId)
 	equipGearFxId = Engine::GetInstance().audio->LoadFx(equipGearFxPath.c_str());
 	dropFxId = Engine::GetInstance().audio->LoadFx(dropFxPath.c_str());
 	buySellFxId = Engine::GetInstance().audio->LoadFx(buySellFxPath.c_str());
-	//studioLogoTexture = Engine::GetInstance().textures->Load("Assets/Textures/Team_Logo_SpriteSheet.png");
-	//gameTitleTexture = Engine::GetInstance().textures->Load("Assets/Textures/Title_Logo_SpriteSheet.png");
-
+	saveFxId = Engine::GetInstance().audio->LoadFx(saveFxPath.c_str());
+	uiClickFxId = Engine::GetInstance().audio->LoadFx(clickFxPath.c_str());
+	inventoryBgTexture = Engine::GetInstance().textures->Load("Assets/Textures/inventoryBook.png");
+	journalBgTexture = Engine::GetInstance().textures->Load("Assets/Textures/MissionsPaper.png");
+	pauseBgTexture = Engine::GetInstance().textures->Load("Assets/Textures/MissionsPaper.png");
+	infectionEffect = Engine::GetInstance().textures->Load("Assets/Textures/infectionEffect.png");
 
 	Engine::GetInstance().menuManager->SetObserver(this);
 
 	if (id == "intro")
 	{
 		Engine::GetInstance().menuManager->HideMenu();
-		//std::unordered_map<int, std::string> aliases = {{0, "ease_in"}};
-		//studioLogoAnims.LoadFromTSX("Assets/Textures/Team_Logo_SpriteSheet.tsx", aliases);
-		//studioLogoAnims.PlayOnce("ease_in");
-
-		/*studioLogo = std::dynamic_pointer_cast<UIImage>(Engine::GetInstance().uiManager->CreateUIElement(UIElementType::IMAGE, (int)LOGO, b_logo, this, {  }, hoverFxId, clickFxId, UIParameters::Image(logo, logo, logo, logo)));
-		studioLogo->active = true;*/
-		//Engine::GetInstance().audio->PlayFx(logoFxId);
 	}
 
 	if (id == "main menu")
 	{
-		/*std::unordered_map<int, std::string> aliases = {{0, "ease_in"}, {7, "ease_out"}};
-		gameTitleAnims.LoadFromTSX("Assets/Textures/Title_Logo_SpriteSheet.tsx", aliases);
-		gameTitleAnims.SetCurrent("ease_in");
-		titleEaseInDone = false;
-		titleEaseOutPlaying = false;
-		titleEaseOutDone = false;*/
-
 		Engine::GetInstance().menuManager->ShowMainMenu();
+		menuFadeAlpha = 255.0f;
+		menuFadePhase = MenuFadePhase::FADE_IN;
+		menuFadeSpeed = 300.0f;
 		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/MainMenu.wav", 5000.0f);
 	}
 
@@ -148,14 +149,13 @@ bool Scene::Start(std::string spawnId)
 			Engine::GetInstance().audio->PlayFx(doorFxId);
 			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/shop.wav", 5000.0f);
 		}
-		else if (id == "SC-003" || id == "SC-004")
+		else if (id == "SC-003" || id == "SC-004" || id == "SC-OO5")
 		{
 			Engine::GetInstance().audio->PlayFx(elevatorFxId);
 			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
 		}
 	}
 	
-
 	entityManager->Start();
 	missionManager->Start();
 	dialogManager->Start();
@@ -170,6 +170,14 @@ bool Scene::Start(std::string spawnId)
 		if (Engine::GetInstance().sceneManager->triggerFirstMonologue == true) {
 			StartDialog("player");
 			Engine::GetInstance().sceneManager->triggerFirstMonologue = false;
+		}
+		if (Engine::GetInstance().sceneManager->triggerDungeonLevel2Monologue == true) {
+			StartDialog("player_dungeon2");
+			Engine::GetInstance().sceneManager->triggerDungeonLevel2Monologue = false;
+		}
+		else if (Engine::GetInstance().sceneManager->triggerDungeonLevel3Monologue == true) {
+			StartDialog("player_dungeon3");
+			Engine::GetInstance().sceneManager->triggerDungeonLevel3Monologue = false;
 		}
 	}
 
@@ -186,30 +194,61 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	if (id == "intro") {
-		//studioLogoAnims.Update(dt);
-		//const SDL_Rect& animFrame = studioLogoAnims.GetCurrentFrame();
-		//Engine::GetInstance().render->DrawTexture(studioLogoTexture, Engine::GetInstance().window->width - 1600, Engine::GetInstance().window->height - 1080, 1, &animFrame);
-
-		//if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN || studioLogoTimer.ReadMSec() >= 2410) {
-		//	/*studioLogo->active = false;
-		//	studioLogo->Destroy();*/
-		//	Engine::GetInstance().audio->StopFx();
-		//	Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
-		//}
 		UpdateIntroScreen(dt);
-	}
-	if (id == "main menu") {
-		/*gameTitleAnims.Update(dt);
-		const SDL_Rect& animFrame = gameTitleAnims.GetCurrentFrame();
-		Engine::GetInstance().render->DrawTexture(gameTitleTexture, Engine::GetInstance().window->width - 1600, Engine::GetInstance().window->height - 1080, 1, &animFrame);*/
 	}
 	if (id == "game title") {
 		UpdateGameTitle(dt);
 	}
 
+	UpdateMenuFade(dt);
+
+	if (gameStarted) {
+		if (combat && combat->combatBg) {
+			Engine::GetInstance().render->DrawTexture(combat->combatBg, 0, 0, 0);
+		}
+		else if (lastCombatBg) {
+			Engine::GetInstance().render->DrawTexture(lastCombatBg, 0, 0, 0);
+		}
+		else if (lastMenuBg) {
+			map->Update(dt);
+			entityManager->Update(dt);
+			DrawDarkness();
+			Engine::GetInstance().render->DrawTexture(lastMenuBg, 0, 0, 0, nullptr, false);
+		}
+		else if (menuFadePhase == MenuFadePhase::FADE_IN && map) {
+			map->Update(dt);
+			entityManager->Update(dt);
+			DrawDarkness();
+		}
+	}
+
+	if (showingEpilogue && activeEpilogueTexture) {
+		Engine::GetInstance().render->DrawTexture(activeEpilogueTexture, 0, 0, 0.0f);
+
+		if (!menuFadeBlocking) {
+			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN ||
+				Engine::GetInstance().input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN ||
+				Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_SOUTH) == KEY_DOWN) {
+				showingEpilogue = false;
+				activeEpilogueTexture = nullptr;
+				OpenMenuWithFade([this]() {
+					Engine::GetInstance().menuManager->ShowWinScreen();
+					});
+			}
+		}
+		return true;
+	}
+
+	if (menuFadeBlocking) return true;
+
 	if (!gameStarted) return true;
 
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN || Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) TogglePause();
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_P) == KEY_DOWN ||
+		Engine::GetInstance().input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN ||
+		Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_START) == KEY_DOWN)
+	{
+		TogglePause();
+	}
 	
 	missionManager->Update(dt);
 	
@@ -230,8 +269,13 @@ bool Scene::Update(float dt)
 		ToggleInventory();
 		ToggleJournal();
 	}
+	RunInfectionTimer(dt);
 	map->Update(dt);
 	entityManager->Update(dt);
+	DrawDarkness();
+	if (lastMenuBg) {
+		Engine::GetInstance().render->DrawTexture(lastMenuBg, 0, 0, 0, nullptr, false);
+	}
 	dialogManager->Update(dt);
 
 	if (gameStarted && !paused && !isOnDialog) {
@@ -250,12 +294,19 @@ bool Scene::Update(float dt)
 	}*/
 	/////////////////////
 
+	DrawInfectionEffect();
+
 	return true;
 }
 
 // Called each loop iteration
 bool Scene::PostUpdate(float dt)
 {
+	if (combat) combat->Draw(dt);
+	if (showingEpilogue && activeEpilogueTexture) {
+		Engine::GetInstance().render->DrawTexture(activeEpilogueTexture, 0, 0, 0.0f);
+	}
+
 	return true;
 }
 
@@ -290,6 +341,72 @@ bool Scene::CleanUp()
 	dialogManager = nullptr;
 
 	return true;
+}
+
+void Scene::OpenMenuWithFade(std::function<void()> showAction, bool hideCurrentMenu)
+{
+	if (menuFadePhase != MenuFadePhase::NONE) return;
+
+	menuFadePendingAction = [this, showAction, hideCurrentMenu]() {
+		showAction();
+		};
+	menuFadeAlpha = 0.0f;
+	menuFadePhase = MenuFadePhase::FADE_OUT;
+	menuFadeBlocking = true;
+}
+
+void Scene::CloseMenuWithFade(std::function<void()> hideAction)
+{
+	if (menuFadePhase != MenuFadePhase::NONE) return;
+
+	menuFadePendingAction = [this, hideAction]() {
+		Engine::GetInstance().menuManager->HideMenu();
+		if (hideAction) hideAction();
+		};
+	menuFadeAlpha = 0.0f;
+	menuFadePhase = MenuFadePhase::FADE_OUT;
+	menuFadeBlocking = true;
+}
+
+void Scene::UpdateMenuFade(float dt)
+{
+	if (menuFadePhase == MenuFadePhase::NONE) return;
+
+	float delta = dt / 1000.0f;
+
+	switch (menuFadePhase) {
+	case MenuFadePhase::FADE_OUT:
+		menuFadeAlpha += menuFadeSpeed * delta;
+		if (menuFadeAlpha >= 255.0f) {
+			menuFadeAlpha = 255.0f;
+			if (menuFadePendingAction) {
+				menuFadePendingAction();
+				menuFadePendingAction = nullptr;
+			}
+			menuFadePhase = MenuFadePhase::FADE_IN;
+		}
+		break;
+
+	case MenuFadePhase::FADE_IN:
+		menuFadeAlpha -= menuFadeSpeed * delta;
+		if (menuFadeAlpha <= 0.0f) {
+			menuFadeAlpha = 0.0f;
+			menuFadePhase = MenuFadePhase::NONE;
+			menuFadeBlocking = false;
+		}
+		break;
+
+	default: break;
+	}
+}
+
+void Scene::DrawMenuFadeOverlay()
+{
+	if (menuFadeAlpha <= 0.0f) return;
+
+	auto render = Engine::GetInstance().render;
+	SDL_Rect rect = { -render->camera.x, -render->camera.y, render->camera.w,  render->camera.h };
+	Engine::GetInstance().render->DrawRectangle(rect, 0, 0, 0, (Uint8)menuFadeAlpha, true);
 }
 
 void Scene::UpdateFadePhase(float dt)
@@ -458,8 +575,14 @@ void Scene::TogglePause()
 		if (combat) combat->DisableCombatElements();
 		Engine::GetInstance().audio->pauseMultiplier = 0.3f;
 		Engine::GetInstance().audio->UpdateMusicVolume();
-		Engine::GetInstance().menuManager->ShowPauseMenu();
+		if (lastMenuBg) lastMenuBg = nullptr;
+		//Engine::GetInstance().menuManager->ShowPauseMenu();
+		OpenMenuWithFade([this]() {
+			lastMenuBg = pauseBgTexture;
+			Engine::GetInstance().menuManager->ShowPauseMenu();
+			});
 		showingInventory = false;
+		showingJournal = false;
 		showingShop = false;
 		dialogManager->SetEnabled(false);
 	} 
@@ -468,7 +591,9 @@ void Scene::TogglePause()
 		if (combat) combat->EnableCombatElements();
 		Engine::GetInstance().audio->pauseMultiplier = 1.0f;
 		Engine::GetInstance().audio->UpdateMusicVolume();
-		Engine::GetInstance().menuManager->HideMenu();
+		//Engine::GetInstance().menuManager->HideMenu();
+		CloseMenuWithFade();
+		lastMenuBg = nullptr;
 		dialogManager->SetEnabled(true);
 	}
 }
@@ -793,12 +918,16 @@ void Scene::UnlockStances(int level)
 			{ "CH-006", Stance::CONCENTRATE },
 			{ "CH-001", Stance::ASSIST },
 			{ "CH-003", Stance::REST },
+			{ "CH-002", Stance::DEFEND },
+			{ "CH-026", Stance::CONCENTRATE },
 		}},
 		{ 2, {
 			{ "player", Stance::REST },
 			{ "CH-006", Stance::ASSIST },
 			{ "CH-001", Stance::DEFEND },
 			{ "CH-003", Stance::CONCENTRATE },
+			{ "CH-002", Stance::ASSIST },
+			{ "CH-026", Stance::DEFEND },
 		}},
 	};
 
@@ -892,6 +1021,7 @@ void Scene::LoadScene(std::string spawnId)
 	std::string name = pNode.attribute("name").as_string();
 	std::string texture = pNode.attribute("texture").as_string();
 	std::string combatTexture = pNode.attribute("combatTexture").as_string();
+	std::string infectedTexture = pNode.attribute("infectedTexture").as_string();
 	bool playerIsMale = pNode.attribute("isMale").as_bool(true);
 
 	//Loads the spawnpoint
@@ -924,7 +1054,7 @@ void Scene::LoadScene(std::string spawnId)
 		partyMembers.push_back(member);
 	}
 
-	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT, "", playerIsMale));
+	player = std::dynamic_pointer_cast<Player>(entityManager->CreateCharacter(id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, EntityType::PLAYER, NPCInteractionType::DEFAULT, "", baseTexturePath + infectedTexture, playerIsMale));
 
 	std::string animations = pNode.attribute("animations").as_string();
 	player->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
@@ -974,12 +1104,19 @@ void Scene::LoadScene(std::string spawnId)
 			std::string texture = cNode.attribute("texture").as_string();
 			std::string combatTexture = cNode.attribute("combatTexture").as_string();
 			std::string recuitMissionId = cNode.attribute("recuitMissionId").as_string();
+			std::string infTexture = cNode.attribute("infectedTexture").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 			bool isMale = cNode.attribute("isMale").as_bool(true);
 			
-			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, isMale));
+			std::shared_ptr<NPC> m = std::static_pointer_cast<NPC>(entityManager->CreateCharacter(member.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, member.position, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, baseTexturePath + infTexture, isMale));
 			
+			if (m->id == "CH-006") {
+				std::string ct2 = cNode.attribute("combatTexture2").as_string();
+				if (!ct2.empty())
+					m->combatTexture2Path = baseTexturePath + ct2;
+			}
+
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
 			int s1 = cNode.attribute("unlockedStance1").as_int(NO_STANCE);
@@ -1002,9 +1139,11 @@ void Scene::LoadScene(std::string spawnId)
 			std::string texture = cNode.attribute("texture").as_string();
 			std::string combatTexture = cNode.attribute("combatTexture").as_string();
 			std::string recuitMissionId = cNode.attribute("recuitMissionId").as_string();
+			std::string infTexture = cNode.attribute("infectedTexture").as_string();
 			int type = cNode.attribute("type").as_int();
 			int npcInteractionType = cNode.attribute("npcInteractionType").as_int();
 			bool isMale = cNode.attribute("isMale").as_bool(true);
+			bool canInfect = cNode.attribute("canInfect").as_bool(false);
 
 			float savedX = cNode.attribute("savedX").as_float();
 			float savedY = cNode.attribute("savedY").as_float();
@@ -1013,7 +1152,15 @@ void Scene::LoadScene(std::string spawnId)
 			//entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, npc.position, (EntityType)type, (NPCInteractionType)npcInteractionType);
 			//LOG("NPC POSTITION: %f, %f", npc.position.getX(), npc.position.getY());
 
-			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, isMale));
+			std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(npc.id, name, baseTexturePath + texture, baseTexturePath + combatTexture, spawnPos, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, infTexture, isMale, canInfect));
+
+			if (auto npcPtr = std::dynamic_pointer_cast<NPC>(m)) {
+				if (npcPtr->id == "CH-006") {
+					std::string ct2 = cNode.attribute("combatTexture2").as_string();
+					if (!ct2.empty())
+						npcPtr->combatTexture2Path = baseTexturePath + ct2;
+				}
+			}
 
 			m->stats = LoadStats(cNode);
 			m->inventory = LoadInventory(cNode);
@@ -1039,6 +1186,7 @@ void Scene::LoadScene(std::string spawnId)
 	for (ItemData item : mapData.items) {
 		for (pugi::xml_node iNode = items.child("item"); iNode != NULL; iNode = iNode.next_sibling("item")) {
 			if (iNode.attribute("id").as_string() != item.id) continue;
+			if (iNode.attribute("isPickedUp").as_bool(false)) continue;
 			std::string name = iNode.attribute("name").as_string();
 			ItemDef* def = GetItemDefinition(item.id, name);
 			if (name == "Exit") {
@@ -1217,7 +1365,11 @@ void Scene::EndGame()
 {
 	gameStarted = false;
 	entityManager->DestroyEntity(player);
-	Engine::GetInstance().menuManager->ShowDeathScreen();
+	entityManager->paused = true;
+	//Engine::GetInstance().menuManager->ShowDeathScreen();
+	OpenMenuWithFade([this]() {
+		Engine::GetInstance().menuManager->ShowDeathScreen();
+		});
 }
 
 void Scene::CheckTimers() {
@@ -1226,7 +1378,8 @@ void Scene::CheckTimers() {
 
 void Scene::ToggleInventory()
 {
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN)
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN ||
+		Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_WEST) == KEY_DOWN)
 	{
 		if (showingShop) {
 			ToggleShop(nullptr);
@@ -1234,14 +1387,24 @@ void Scene::ToggleInventory()
 		}
 		showingInventory = !showingInventory;
 		entityManager->paused = showingInventory;
+		showingJournal = false;
 		if (showingInventory)
 		{
-			Engine::GetInstance().menuManager->ShowInventory(player->inventory, player, player->party);
+			/*Engine::GetInstance().menuManager->ShowInventory(player->inventory, player, player->party);
 			currentInventoryIndex = 0;
-			Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+			Engine::GetInstance().audio->PlayFx(openInventoryFxId);*/
+			OpenMenuWithFade([this]() {
+				lastMenuBg = inventoryBgTexture;
+				Engine::GetInstance().menuManager->ShowInventory(player->inventory, player, player->party);
+				currentInventoryIndex = 0;
+				Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+				});
 		}
-		else Engine::GetInstance().menuManager->HideMenu();
-		if (!showingInventory) UpdateInventory();
+		/*else Engine::GetInstance().menuManager->HideMenu();
+		if (!showingInventory) UpdateInventory();*/
+		else {
+			CloseMenuWithFade([this]() { lastMenuBg = nullptr; UpdateInventory(); });
+		}
 	}
 }
 
@@ -1257,10 +1420,26 @@ void Scene::ToggleInventoryForCombat(bool show, std::shared_ptr<Character> chara
 
 void Scene::ToggleJournal()
 {
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_J) == KEY_DOWN)
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_J) == KEY_DOWN ||
+		Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_NORTH) == KEY_DOWN)
 	{
-		if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) Engine::GetInstance().menuManager->HideMenu();
-		else Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);
+		/*if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) Engine::GetInstance().menuManager->HideMenu();
+		else Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);*/
+		if (Engine::GetInstance().menuManager->currentMenu == MISSION_JOURNAL) {
+			entityManager->paused = false;
+			CloseMenuWithFade([this]() {
+				lastMenuBg = nullptr;
+				});
+		}
+		else {
+			entityManager->paused = true;
+			OpenMenuWithFade([this]() {
+				lastMenuBg = journalBgTexture;
+				Engine::GetInstance().menuManager->ShowMissionJournal(missionManager);
+				});
+		}
+
+
 		Engine::GetInstance().audio->PlayFx(journalFxId);
 	}
 }
@@ -1271,16 +1450,30 @@ void Scene::ToggleShop(NPC* shopOwner)
 	entityManager->paused = showingInventory;
 	if (showingInventory)
 	{
-		Engine::GetInstance().menuManager->ShowShop(player->inventory, shopOwner->inventory);
+		/*Engine::GetInstance().menuManager->ShowShop(player->inventory, shopOwner->inventory);
 		showingShop = true;
-		Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+		Engine::GetInstance().audio->PlayFx(openInventoryFxId);*/
+		NPC* capturedOwner = shopOwner;
+		OpenMenuWithFade([this, capturedOwner]() {
+			lastMenuBg = inventoryBgTexture;
+			Engine::GetInstance().menuManager->ShowShop(player->inventory, capturedOwner->inventory);
+			showingShop = true;
+			Engine::GetInstance().audio->PlayFx(openInventoryFxId);
+			});
 	}
 	else
 	{
-		Engine::GetInstance().menuManager->HideMenu();
+		/*Engine::GetInstance().menuManager->HideMenu();
 		UpdateInventory();
 		UpdateInventory(this->shopOwner);
-		showingShop = false;
+		showingShop = false;*/
+		NPC* capturedOwner = this->shopOwner;
+		CloseMenuWithFade([this, capturedOwner]() {
+			lastMenuBg = nullptr;
+			UpdateInventory();
+			UpdateInventory(capturedOwner);
+			showingShop = false;
+			});
 	}
 	this->shopOwner = shopOwner;
 }
@@ -1415,10 +1608,15 @@ void Scene::CheckTransitions()
 				auto sm = Engine::GetInstance().sceneManager;
 				if (sm->dungeonLevel < 2) {
 					sm->dungeonLevel = 2;
+					sm->triggerDungeonLevel2Monologue = true;
 					UnlockStances(1);
 				}
-				else if (sm->dungeonLevel < 3) {
+			}
+			if (id == "SC-004" && t.targetSpawnId == "refuge_from_dungeon") {
+				auto sm = Engine::GetInstance().sceneManager;
+				if (sm->dungeonLevel < 3) {
 					sm->dungeonLevel = 3;
+					sm->triggerDungeonLevel3Monologue = true;
 					UnlockStances(2);
 				}
 			}
@@ -1446,6 +1644,9 @@ void Scene::StartDialog(std::string characterId)
 	activeDialogId = characterId;
 	entityManager->paused = true;
 	Engine::GetInstance().audio->PlayFx(dialogFxId);
+	if (characterId == "CH-012" || characterId == "CH-012-OUTRO") {
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Nia_Dialogue.wav", 3000.0f);
+	}
 }
 
 void Scene::EndDialog()
@@ -1457,6 +1658,7 @@ void Scene::EndDialog()
 	if (!activeDialogId.empty()) {
 		if (activeDialogId == "statue") {
 			SaveGame();
+			Engine::GetInstance().audio->PlayFx(saveFxId);
 		}
 		if (activeDialogId == "player") {
 			Mission* niaMission = missionManager->ActivateMission("MI-004");
@@ -1464,20 +1666,31 @@ void Scene::EndDialog()
 			Mission* mission = missionManager->ActivateMission("MI-000");
 			if (mission) Engine::GetInstance().menuManager->AddMissionPopup(mission);
 		}
-		if (activeDialogId == "CH-012" && id == "SC-004") {
-			gameStarted = false;
-			entityManager->paused = true;
-			Engine::GetInstance().menuManager->ShowWinScreen();
+
+		if (activeDialogId == "CH-012-OUTRO") {
+			bool isTerminal = (lastDialogNodeId == "DN-MERCY-008" || lastDialogNodeId == "DN-KILL-009");
+			if (isTerminal) {
+				for (const auto& entity : entityManager->entities) {
+					if (auto boss = std::dynamic_pointer_cast<BossNPC>(entity)) {
+						boss->endingChoice = (lastDialogNodeId == "DN-MERCY-008") ? BossNPC::EndingChoice::MERCY : BossNPC::EndingChoice::KILL;
+						boss->OnDialogEnd();
+						break;
+					}
+				}
+			}
 		}
-		for (const auto& entity : entityManager->entities) {
-			if (entity->id == activeDialogId) {
-				if (auto npc = std::dynamic_pointer_cast<NPC>(entity)) {
-					npc->OnDialogEnd();
-					break;
+		else {
+			for (const auto& entity : entityManager->entities) {
+				if (entity->id == activeDialogId) {
+					if (auto npc = std::dynamic_pointer_cast<NPC>(entity)) {
+						npc->OnDialogEnd();
+						break;
+					}
 				}
 			}
 		}
 		activeDialogId = "";
+		lastDialogNodeId = "";
 	}
 }
 
@@ -1503,15 +1716,19 @@ std::vector<std::shared_ptr<Enemy>> Scene::GetNearEnemies(Vector2D position, flo
 
 void Scene::StartCombat(std::shared_ptr<Enemy> enemy)
 {
-	if (hasCombatCooldown || isOnDialog || showingInventory || paused || combat) return;
+	if (hasCombatCooldown || isOnDialog || showingInventory || showingJournal || paused || combat) return;
 	Engine::GetInstance().render->follow = nullptr;
 
 	auto nearEnemies = GetNearEnemies(player->position, 300, enemy->id);
 	for (const auto& e : nearEnemies) enemy->party->AddMember(e);
 	
-	combat = new Combat(player->party, enemy->party, mapsPath, combatMapName);
-	combat->Awake();
-	combat->Start();
+	EnemyParty* capturedParty = enemy->party;
+	Combat** combatPtr = &combat;
+	OpenMenuWithFade([this, capturedParty]() {
+		combat = new Combat(player->party, capturedParty, mapsPath, combatMapName, uiClickFxId);
+		combat->Awake();
+		combat->Start();
+		}, false);
 }
 
 void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
@@ -1519,47 +1736,206 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 	std::shared_ptr<Enemy> leader;
 	switch (combatResult)
 	{
-	case WIN:
-		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
-		for (const auto& enemy : enemyParty->members) {
-			CheckCompletedMissions<KillMission>(enemy->id, enemy->name);
-			entityManager->DestroyEntity(enemy);
-		}
-		for (const auto& npc : player->party->members) {
-			if (npc->isDead) {
-				Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
-				player->party->RemoveMember(npc->id);
-				entityManager->DestroyEntity(npc);
+	case WIN: {
+		bool wasBossFight = false;
+		for (const auto& entity : entityManager->entities) {
+			if (auto boss = std::dynamic_pointer_cast<BossNPC>(entity)) {
+				if (boss->bossParty == enemyParty) {
+					wasBossFight = true;
+					Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Nia_Dialogue.wav", 3000.0f);
+					boss->OnCombatWon();
+					break;
+				}
 			}
 		}
-			
+		if (!wasBossFight) {
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
+			for (const auto& enemy : enemyParty->members) {
+				CheckCompletedMissions<KillMission>(enemy->id, enemy->name);
+				entityManager->DestroyEntity(enemy);
+			}
+		}
+		std::vector<std::shared_ptr<NPC>> deadMembers;
+		for (const auto& npc : player->party->members) {
+			if (npc && npc->isDead) deadMembers.push_back(npc);
+		}
+		for (const auto& npc : deadMembers) {
+			Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
+			player->party->RemoveMember(npc->id);
+			entityManager->DestroyEntity(npc);
+		}
 		break;
+	}
 	case LOSE:
 		EndGame();
 		break;
-	case FLED:
+	case FLED: {
 		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/dungeon.wav", 5000.0f);
+		std::vector<std::shared_ptr<NPC>> deadMembers;
 		for (const auto& npc : player->party->members) {
-			if (npc->isDead) {
+			if (npc && npc->isDead) deadMembers.push_back(npc);
+		}
+		for (const auto& npc : deadMembers) {
+			if (npc->IsFullyInfected()) ConvertMember(npc);
+			else {
 				Engine::GetInstance().sceneManager->deadNPCs.push_back(npc->id);
 				player->party->RemoveMember(npc->id);
 				entityManager->DestroyEntity(npc);
 			}
 		}
+
+		for (const auto& enemy : enemyParty->members) {
+			if (enemy && enemy->isDead) {
+				CheckCompletedMissions<KillMission>(enemy->id, enemy->name);
+				entityManager->DestroyEntity(enemy);
+			}
+		}
+
 		combatTimer.Start();
 		hasCombatCooldown = true;
 		leader = enemyParty->leader;
 		enemyParty->members.clear();
-		enemyParty->AddMember(leader);
+		if (enemyParty->leader != nullptr)
+			enemyParty->AddMember(leader);
 		break;
+	}	
 	default:
 		break;
 	}
+	lastCombatBg = combat->combatBg;
 	combat->CleanUp();
 	delete combat;
 	combat = nullptr;
-	UpdateInventory();
-	Engine::GetInstance().render->follow = player;
+	/*UpdateInventory();
+	Engine::GetInstance().render->follow = player;*/
+	OpenMenuWithFade([this]() {
+		lastCombatBg = nullptr;
+		UpdateInventory();
+		Engine::GetInstance().render->follow = player;
+		}, false);
+}
+
+void Scene::SetDarknessMode(DarknessMode mode)
+{
+	if (hasDarkness) darknessMode = mode;
+	else mode = NO_DARKNESS;
+}
+
+void Scene::DrawDarkness()
+{
+	if (!hasDarkness) return;
+	if (combat) return;
+	switch (darknessMode)
+	{
+	case LIGHT:
+		Engine::GetInstance().render->DrawTexture(darkness2, 0, 0, 0.f);
+		break;
+	case HEAVY:
+		Engine::GetInstance().render->DrawTexture(darkness1, 0, 0, 0.f);
+		break;
+	case NO_DARKNESS:
+	default:
+		break;
+	}
+}
+
+void Scene::RunInfectionTimer(float dt)
+{
+	if (!hasDarkness || isOnDialog || paused || combat || showingInventory || showingJournal || showingShop) return;
+	infectionTimer += dt;
+	if (infectionTimer > msPerInfectionPercentage) {
+		for (std::shared_ptr<Character> member : player->party->allMembers) {
+			if (!member) continue;
+			bool infected = member->ChangeInfection(1);
+			if (!infected) continue;
+			if (member->id == player->id) EndGame();
+			else ConvertMember(member);
+		}
+		infectionTimer = 0.f;
+	}
+}
+
+void Scene::ConvertMember(std::shared_ptr<Character> member)
+{
+	if (player->isDead || player->IsFullyInfected()) return;
+	std::string memberId = member->id;
+	Vector2D pos = member->position;
+	member->active = false;
+	member->isDead = true;
+	Engine::GetInstance().sceneManager->deadNPCs.push_back(member->id);
+	player->party->RemoveMember(member->id);
+	entityManager->DestroyEntity(member);
+
+	pugi::xml_document enemyDoc = XMLHandler::LoadFile("Assets/Entities/spawn_enemy.xml");
+	pugi::xml_node enemy = enemyDoc.child("character");
+	std::string name = enemy.attribute("name").as_string();
+	std::string texture = enemy.attribute("texture").as_string();
+	std::string combatTexture = enemy.attribute("combatTexture").as_string();
+	std::string recuitMissionId = enemy.attribute("recuitMissionId").as_string();
+	int type = enemy.attribute("type").as_int();
+	int npcInteractionType = enemy.attribute("npcInteractionType").as_int();
+	bool isMale = enemy.attribute("isMale").as_bool(true);
+	bool canInfect = enemy.attribute("canInfect").as_bool(false);
+	std::shared_ptr<Character> m = std::static_pointer_cast<Character>(entityManager->CreateCharacter(memberId, name, baseTexturePath + texture, baseTexturePath + combatTexture, pos, (EntityType)type, (NPCInteractionType)npcInteractionType, recuitMissionId, "", isMale, canInfect));
+	if (!m) return;
+	m->stats = LoadStats(enemy);
+	m->inventory = LoadInventory(enemy);
+	auto enemyPtr = std::dynamic_pointer_cast<Enemy>(m);
+	if (!enemyPtr) return;
+	std::string animations = enemy.attribute("animations").as_string();
+	enemyPtr->animationsPath = animations.empty() ? "" : baseTexturePath + animations;
+	enemyPtr->LoadAnimations();
+	enemyPtr->CreateColliders();
+}
+
+void Scene::DrawInfectionEffect()
+{
+	if (!gameStarted || showingInventory || showingShop || showingJournal) return;
+	float infectionPercentage = player->stats->GetStat("infection").getValue() / 100.f;
+	SDL_SetTextureAlphaMod(infectionEffect, 60 * infectionPercentage);
+	Engine::GetInstance().render->DrawTexture(infectionEffect, 0, 0, 0.f);
+}
+
+void Scene::StartBossCombat(EnemyParty* bossParty)
+{
+	if (hasCombatCooldown || isOnDialog || showingInventory || showingJournal || paused || combat) return;
+	Engine::GetInstance().render->follow = nullptr;
+	
+	OpenMenuWithFade([this, bossParty]() {
+		combat = new Combat(player->party, bossParty, mapsPath, combatMapName, uiClickFxId);
+		combat->isBossFight = true;
+		combat->Awake();
+		combat->Start();
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Nia_Combat.wav", 3000.0f);
+		}, false);
+}
+
+void Scene::TriggerNiaEnding(BossNPC::EndingChoice choice)
+{
+	gameStarted = false;
+	entityManager->paused = true;
+
+	switch (choice)
+	{
+	case BossNPC::EndingChoice::MERCY:
+		OpenMenuWithFade([this]() {
+			Engine::GetInstance().menuManager->HideMenu();
+			activeEpilogueTexture = epilogueMercyTexture;
+			showingEpilogue = true;
+			});
+		break;
+
+	case BossNPC::EndingChoice::KILL:
+		OpenMenuWithFade([this]() {
+			Engine::GetInstance().menuManager->HideMenu();
+			activeEpilogueTexture = epilogueKillTexture;
+			showingEpilogue = true;
+			});
+		break;
+
+	default:
+		break;
+	}
 }
 
 void Scene::CopyCleanGameData()
@@ -1582,6 +1958,14 @@ void Scene::CopyCleanGameData()
 	{
 		std::ifstream src("Assets/Entities/items_clean.xml", std::ios::binary);
 		std::ofstream dst("Assets/Entities/items.xml", std::ios::binary | std::ios::trunc);
+		dst << src.rdbuf();
+		src.close();
+		dst.close();
+	}
+
+	{
+		std::ifstream src("Assets/Entities/items_clean.xml", std::ios::binary);
+		std::ofstream dst("Assets/Entities/items_session.xml", std::ios::binary | std::ios::trunc);
 		dst << src.rdbuf();
 		src.close();
 		dst.close();
@@ -1637,6 +2021,22 @@ static std::shared_ptr<InteractableItem> CopyItem(std::shared_ptr<InteractableIt
 bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 	
 	if (Engine::GetInstance().uiManager->uiLockFrame == Engine::GetInstance().frameCount) return true;
+
+	if (isOnDialog && activeDialogId == "CH-012-OUTRO") {
+		for (const auto& entity : entityManager->entities) {
+			if (auto boss = std::dynamic_pointer_cast<BossNPC>(entity)) {
+				if (boss->id == "CH-012") {
+					if (uiElement->info == "Show mercy") {
+						boss->endingChoice = BossNPC::EndingChoice::MERCY;
+					}
+					else if (uiElement->info == "End it") {
+						boss->endingChoice = BossNPC::EndingChoice::KILL;
+					}
+					break;
+				}
+			}
+		}
+	}
 
 	float musicVol;
 	float fxVol;
@@ -1730,10 +2130,19 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		TogglePause();
 		break;
 	case SETTINGS_BUTTON:
-		Engine::GetInstance().menuManager->ShowSettingsMenu();
+		//Engine::GetInstance().menuManager->ShowSettingsMenu();
+		OpenMenuWithFade([this]() {
+			Engine::GetInstance().menuManager->ShowSettingsMenu();
+			});
 		break;
 	case CREDITS_BUTTON:
-		Engine::GetInstance().menuManager->ShowCreditsMenu();
+		//Engine::GetInstance().menuManager->ShowCreditsMenu();
+		OpenMenuWithFade([this]() { Engine::GetInstance().menuManager->ShowCreditsMenu(); });
+		break;
+
+	case CONTROLS_BUTTON:
+		//Engine::GetInstance().menuManager->ShowControlsMenu();
+		OpenMenuWithFade([this]() { Engine::GetInstance().menuManager->ShowControlsMenu(); });
 		break;
 	case MUSIC_VOLUME:
 		musicVol = ((UISlider*)uiElement)->GetValue() / 10;
@@ -1755,7 +2164,8 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 		SaveSettings();
 		break;
 	case BACK_MENU:
-		Engine::GetInstance().menuManager->ShowPreviousMenu();
+		//Engine::GetInstance().menuManager->ShowPreviousMenu();
+		OpenMenuWithFade([this]() { Engine::GetInstance().menuManager->ShowPreviousMenu(); });
 		break;
 	case BACK_MAIN_MENU:
 		dialogManager->SetCurrentDialog();
@@ -1764,7 +2174,13 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 			delete combat;
 			combat = nullptr;
 		}
-		Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		//Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		OpenMenuWithFade([this]() {
+			Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+			});
+		break;
+	case BACK_PREV_MENU:
+		OpenMenuWithFade([this]() { Engine::GetInstance().menuManager->ShowPreviousMenu(); });
 		break;
 	case EXIT:
 		exit(0);
@@ -1775,7 +2191,10 @@ bool Scene::OnUIMouseClickEvent(UIElement* uiElement) {
 			delete combat;
 			combat = nullptr;
 		}
-		Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		//Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+		OpenMenuWithFade([this]() {
+			Engine::GetInstance().sceneManager->SetCurrentScene("main menu");
+			});
 		break;
 	case WIN_EXIT:
 		exit(0);

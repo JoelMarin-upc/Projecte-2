@@ -1,11 +1,21 @@
 #include "Character.h"
+#include "Scene.h"
 
 float Character::Attack()
 {
     Stat& attack = stats->GetStat("attack");
     float weaponModifier = 0;
     if (inventory->equippedWeapon) weaponModifier = inventory->equippedWeapon->stats->GetStat("attack").value;
-    return attack.getValue(weaponModifier);
+    
+    float attackValue = attack.getValue(weaponModifier);
+    
+    float infectionModifier = 1.f;
+    Stat& infection = stats->GetStat("infection");
+    if (infection.value >= INFECTION_THRESHOLD_1) infectionModifier = 1.2f;
+    if (infection.value >= INFECTION_THRESHOLD_2) infectionModifier = 1.5f;
+    if (infection.value >= INFECTION_THRESHOLD_3) infectionModifier = 2.f;
+    
+    return attackValue * infectionModifier;
 }
 
 float Character::Defense()
@@ -40,6 +50,39 @@ float Character::MaxHP()
     return health.maxValue;
 }
 
+float Character::Infection()
+{
+    Stat& infection = stats->GetStat("infection");
+    return infection.getValue();
+}
+
+float Character::MaxInfection()
+{
+    Stat& infection = stats->GetStat("infection");
+    return infection.maxValue;
+}
+
+bool Character::IsInfected() const
+{
+    Stat& infection = stats->GetStat("infection");
+    return infection.value >= INFECTION_THRESHOLD_1;
+}
+
+bool Character::IsFullyInfected()
+{
+    Stat& infection = stats->GetStat("infection");
+    return infection.value >= infection.maxValue;
+}
+
+bool Character::ChangeInfection(int amount)
+{
+    Stat& infection = stats->GetStat("infection");
+    int newValue = infection.value + amount;
+    if (newValue < 0) newValue = 0;
+    stats->SetStat("infection", newValue);
+    return infection.value >= infection.maxValue;
+}
+
 std::shared_ptr<Consumable> Character::UseConsumable(std::string type)
 {
     if (type == "") return nullptr;
@@ -54,7 +97,7 @@ void Character::TakeConsumable(std::shared_ptr<Consumable> consumable)
 {
     if (!consumable) return;
     for (Stat stat : consumable->stats->stats) {
-        if (stat.name == "health") stats->AddToStat(stat.name, stat.value);
+        if (stat.name == "health" || stat.name == "infection" || stat.name == "cure") stats->AddToStat(stat.name, stat.value);
         else stats->ApplyModifier(stat.name, stat.value, stat.modifierTurnsLeft);
     }
 }
@@ -118,19 +161,33 @@ void Character::CheckModifiers()
 void Character::DrawHealthBar(const SDL_Rect& rect)
 {
     int healthW = rect.w * stats->GetStat("health").getValue() / stats->GetStat("health").maxValue;
-    int x = position.getX() - rect.w / 2;
-    int y = position.getY() - rect.h / 2;
-    Engine::GetInstance().render->DrawRectangle({ x, y - 15, rect.w, 10 }, 255, 0, 0);
-    Engine::GetInstance().render->DrawRectangle({ x, y - 15, healthW, 10 }, 0, 255, 0);
+    int hx = position.getX() - rect.w / 2;
+    int hy = position.getY() - rect.h / 2;
+    Engine::GetInstance().render->DrawRectangle({ hx, hy - 15, rect.w, 5 }, 255, 0, 0);
+    Engine::GetInstance().render->DrawRectangle({ hx, hy - 15, healthW, 5 }, 0, 255, 0);
+
+    int infectionW = rect.w * stats->GetStat("infection").getValue() / stats->GetStat("infection").maxValue;
+    int ix = position.getX() - rect.w / 2;
+    int iy = position.getY() - rect.h / 2;
+    //Engine::GetInstance().render->DrawRectangle({ ix, iy - 25, rect.w, 5 }, 255, 0, 0);
+    Engine::GetInstance().render->DrawRectangle({ ix, iy - 20, infectionW, 5 }, 123, 37, 161);
 }
 
 void Character::DrawCombatHealthBar(float worldX, float worldY, int width)
 {
     int healthW = width * stats->GetStat("health").getValue() / stats->GetStat("health").maxValue;
-    int x = (int)worldX;
-    int y = (int)worldY + 100;
-    Engine::GetInstance().render->DrawRectangle({ x, y, width, 10 }, 255, 0, 0);
-    Engine::GetInstance().render->DrawRectangle({ x, y, healthW, 10 }, 0, 255, 0);
+    int hx = (int)worldX;
+    int hy = (int)worldY + 110;
+    Engine::GetInstance().render->DrawRectangle({ hx, hy, width, 10 }, 255, 0, 0);
+    Engine::GetInstance().render->DrawRectangle({ hx, hy, healthW, 10 }, 0, 255, 0);
+
+    if (stats->GetStat("infection").getValue() <= 0) return;
+
+    int infectionW = width * stats->GetStat("infection").getValue() / stats->GetStat("infection").maxValue;
+    int ix = (int)worldX;
+    int iy = (int)worldY + 100;
+    //Engine::GetInstance().render->DrawRectangle({ ix, iy, width, 10 }, 255, 0, 0);
+    Engine::GetInstance().render->DrawRectangle({ ix, iy, infectionW, 10 }, 255, 0, 255);
 }
 
 void Character::DrawHealthBar(SDL_Texture* texture) { DrawHealthBar({0, 0, texture->w, texture->h }); }

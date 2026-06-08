@@ -139,7 +139,7 @@ std::shared_ptr<Entity> EntityManager::CreateItem(std::string id, std::string na
 	return entity;
 }
 
-std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, Vector2D position, EntityType type, NPCInteractionType npcInteractionType, std::string recuitMissionId, bool isMale)
+std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, Vector2D position, EntityType type, NPCInteractionType npcInteractionType, std::string recuitMissionId, std::string infectedTexturePath, bool isMale, bool canInfect)
 {
 	std::shared_ptr<Entity> entity = std::make_shared<Entity>();
 
@@ -147,13 +147,20 @@ std::shared_ptr<Entity> EntityManager::CreateCharacter(std::string id, std::stri
 	switch (type)
 	{
 	case EntityType::PLAYER:
-		entity = std::make_shared<Player>(id, name, texturePath, combatTexturePath);
+		entity = std::make_shared<Player>(id, name, texturePath, combatTexturePath, infectedTexturePath);
 		break;
 	case EntityType::NPC:
-		entity = std::make_shared<NPC>(id, name, texturePath, combatTexturePath, npcInteractionType, recuitMissionId);
+	{
+		if (npcInteractionType == NPCInteractionType::BOSS) {
+			entity = std::make_shared<BossNPC>(id, name, texturePath, combatTexturePath, id,id + "-OUTRO");
+		}
+		else {
+			entity = std::make_shared<NPC>(id, name, texturePath, combatTexturePath, npcInteractionType, recuitMissionId, infectedTexturePath);
+		}
 		break;
+	}
 	case EntityType::ENEMY:
-		entity = std::make_shared<Enemy>(id, name, texturePath, combatTexturePath);
+		entity = std::make_shared<Enemy>(id, name, texturePath, combatTexturePath, canInfect);
 		break;
 	default:
 		break;

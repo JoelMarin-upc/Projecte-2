@@ -11,47 +11,58 @@ enum class NPCInteractionType {
 	DEFAULT,
 	RECRUIT, //Talk, then recruit into the team
 	SHOP, //Talk, then open shop
-	DIALOGUE //Talk only
+	DIALOGUE, //Talk only
+	BOSS
 };
 
 class NPC : public AICharacter {
 public:
 	NPC(){}
-	NPC(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, NPCInteractionType type = NPCInteractionType::DEFAULT, std::string recuitMissionId = "") : AICharacter(id, name, texturePath, combatTexturePath, EntityType::NPC) {
+	NPC(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, NPCInteractionType type = NPCInteractionType::DEFAULT, std::string recuitMissionId = "", std::string infectedTexturePath = "") : AICharacter(id, name, texturePath, combatTexturePath, EntityType::NPC), infectedTexturePath(infectedTexturePath) {
 		npcInteractionType = type;
 		this->recuitMissionId = recuitMissionId;
 	}
 	virtual ~NPC();
 
-	bool Awake() override;
-	bool Start() override;
+	virtual bool Awake() override;
+	virtual bool Start() override;
 
 	bool Update(float dt);
 	void Draw(float dt);
-	bool CleanUp();
+	virtual bool CleanUp();
 	void CreateColliders();
 	void Move();
 	void HandleAnimations(b2Vec2 velocity);
 	void LoadAnimations();
 	void Interact();
-	void OnDialogEnd();
+	virtual void OnDialogEnd();
 	void Recruit();
 	void OpenShop();
 	void OnCollision(Collider* physA, Collider* physB) override;
 	void OnCollisionEnd(Collider* physA, Collider* physB) override;
+	SDL_Texture* GetCombatTexture() const override;
 
 public:
 	bool isPlayerInRange = false;
 	bool isRecruitConditionFulfilled = false;
 	Party* party;
+	int partyIndex = 1;
 	std::string animationsPath;
 	std::string facing = "down";
 	std::string currentAnimation = "";
 	bool isFacingRight = false;
-private:
+	std::string infectedTexturePath;
+	SDL_Texture* infectedTexture = nullptr;
+	SDL_Texture* combatTexture2 = nullptr;
+	std::string combatTexture2Path;
+protected:
 	AnimationSet anims;
 	NPCInteractionType npcInteractionType;
 	Collider* pbody = nullptr;
 	Collider* sensorCollider = nullptr;
 	std::string recuitMissionId;
+	SDL_Texture* interactIcon;
+	const char* interactIconPath;
+	int interactIconW = 16;
+	int interactIconH = 16;
 };

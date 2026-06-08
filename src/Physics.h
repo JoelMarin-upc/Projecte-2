@@ -109,10 +109,12 @@ public:
 
     bool paused = false;
 
-private:
 
     // Debug mode
     bool debug;
+
+private:
+
 
     // Box2D World (id instead of pointer)
     b2WorldId world;

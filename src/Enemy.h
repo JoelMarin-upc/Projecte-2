@@ -12,7 +12,10 @@ enum class EnemyState {
 
 class Enemy : public AICharacter {
 public:
-	Enemy(std::string id, std::string name, std::string texturePath, std::string combatTexturePath) : AICharacter(id, name, texturePath, combatTexturePath, EntityType::ENEMY) {}
+	Enemy(std::string id, std::string name, std::string texturePath, std::string combatTexturePath, bool canInfect) : AICharacter(id, name, texturePath, combatTexturePath, EntityType::ENEMY) 
+	{
+		this->canInfect = canInfect;
+	}
 	virtual ~Enemy();
 
 	bool Awake() override;
@@ -29,8 +32,8 @@ public:
 
 	Vector2D GetPosition();
 	//void SetMap(Map* m) {map = m;}
-	//void OnCollision(Collider* physA, Collider* physB);
-	//void OnCollisionEnd(Collider* physA, Collider* physB);
+	void OnCollision(Collider* physA, Collider* physB);
+	void OnCollisionEnd(Collider* physA, Collider* physB);
 private:
 	void PerformPathfinding();
 	void GetPhysicsValues();
@@ -68,7 +71,9 @@ private:
 	float chaseDistance = 300.0f;
 
 	Collider* sensorCollider = nullptr;
+	bool isTouchingPlayer = false;
 
 	float pathTimer = 0.0f;
+	bool hasPathed = false;
 	float pathInterval = 0.3f;
 };

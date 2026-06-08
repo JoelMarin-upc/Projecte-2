@@ -21,9 +21,11 @@
 #include "ResetButton.h"
 #include "SequencePuzzle.h"
 #include "SequenceButton.h"
+#include "BossNPC.h"
 #include <unordered_map>
 #include <type_traits>
 #include <typeinfo>
+#include <functional>
 
 struct SDL_Texture;
 
@@ -47,11 +49,22 @@ enum FadePhase {
 	FADE_OUT
 };
 
+
+enum DarknessMode {
+	NO_DARKNESS,
+	LIGHT,
+	HEAVY
+};
+
+enum class MenuFadePhase { NONE, FADE_OUT, FADE_IN };
+
+
+
 class Scene : public Module
 {
 public:
 
-	Scene(std::string _id, std::string mapPath, std::string mapName, std::string combatMapName = "");
+	Scene(std::string _id, std::string mapPath, std::string mapName, std::string combatMapName = "", bool hasDarkness = false);
 	
 	Scene();
 
@@ -76,6 +89,10 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void OpenMenuWithFade(std::function<void()> showAction, bool hideCurrentMenu = true);
+	void CloseMenuWithFade(std::function<void()> hideAction = nullptr);
+	void UpdateMenuFade(float dt);
+	void DrawMenuFadeOverlay();
 	void UpdateFadePhase(float dt);
 	void DrawFadeOverlay();
 	void UpdateIntroScreen(float dt);
@@ -120,6 +137,15 @@ public:
 	std::vector<std::shared_ptr<Enemy>> GetNearEnemies(Vector2D position, float rangePX, std::string enemyID);
 	void StartCombat(std::shared_ptr<Enemy> enemy);
 	void EndCombat(EnemyParty* enemyParty, CombatResult combatResult);
+
+	void SetDarknessMode(DarknessMode mode);
+	void DrawDarkness();
+	void RunInfectionTimer(float dt);
+	void ConvertMember(std::shared_ptr<Character> member);
+	void DrawInfectionEffect();
+
+	void StartBossCombat(EnemyParty* bossParty);
+	void TriggerNiaEnding(BossNPC::EndingChoice choice);
 
 	void CopyCleanGameData();
 
@@ -176,7 +202,10 @@ public:
 	DialogManager* dialogManager;
 
 	std::shared_ptr<Player> player;
-
+	int uiClickFxId;
+	bool hasDarkness = false;
+	std::string lastDialogNodeId = "";
+	bool hasCombatCooldown = false;
 private:
 	const std::string baseTexturePath = "Assets/Textures/";
 
@@ -195,8 +224,8 @@ private:
 	bool isOnDialog = false;
 	float previousMusicVolume = 1.0f;
 
-	float combatCooldownSeconds = 5.f;
-	bool hasCombatCooldown = false;
+	float combatCooldownSeconds = 3.f;
+	//bool hasCombatCooldown = false;
 	Timer combatTimer;
 
 	Combat* combat = nullptr;
@@ -222,6 +251,7 @@ private:
 	int equipGearFxId;
 	int dropFxId;
 	int buySellFxId;
+	int saveFxId;
 
 	float introAnimDurationMs = 0.0f;
 	float introAnimElapsedMs = 0.0f;
@@ -245,6 +275,15 @@ private:
 	float transitionTimer = 0.0f;
 	float transitionDuration = 0.1f;
 
+	float menuFadeAlpha = 0.0f;
+	float menuFadeSpeed = 500.0f;
+	MenuFadePhase menuFadePhase = MenuFadePhase::NONE;
+	std::function<void()> menuFadePendingAction;
+	bool menuFadeBlocking = false;
+	float menuFadeHoldMs = 0.0f;
+	float menuFadeHoldElapsed = 0.0f;
+
+	bool showingJournal = false;
 	bool showingInventory = false;
 	bool showingInventoryForCombat = false;
 	bool showingShop = false;
@@ -264,4 +303,25 @@ private:
 	std::unordered_map<std::string, ItemDef*> itemDefs;
 
 	int currentInventoryIndex = 0;
+
+	DarknessMode darknessMode = DarknessMode::NO_DARKNESS;
+	SDL_Texture* darkness1 = nullptr;
+	SDL_Texture* darkness2 = nullptr;
+
+	SDL_Texture* lastCombatBg = nullptr;
+	SDL_Texture* lastMenuBg = nullptr;
+
+	SDL_Texture* inventoryBgTexture = nullptr;
+	SDL_Texture* journalBgTexture = nullptr;
+	SDL_Texture* pauseBgTexture = nullptr;
+
+	const float msPerInfectionPercentage = 9.0f * 1000.f;
+	float infectionTimer = 0.f;
+	SDL_Texture* infectionEffect = nullptr;
+
+	bool showingEpilogue = false;
+	SDL_Texture* epilogueMercyTexture = nullptr;
+	SDL_Texture* epilogueKillTexture = nullptr;
+	SDL_Texture* activeEpilogueTexture = nullptr;
+
 };

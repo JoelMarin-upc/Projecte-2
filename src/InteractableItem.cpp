@@ -45,6 +45,9 @@ bool InteractableItem::Start() {
 	sensorCollider->listener = this;
 	//sensorCollider->listener->type = EntityType::INTERACTABLE_ITEM;
 
+	std::string pickupFxPath = Engine::GetInstance().audio->GetAudioPath("missions", "pickup");
+	pickupFxId = Engine::GetInstance().audio->LoadFx(pickupFxPath.c_str());
+
 	return true;
 }
 
@@ -58,7 +61,8 @@ bool InteractableItem::Update(float dt) {
 	b2Body_SetTransform(sensorCollider->body, { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, b2Body_GetRotation(sensorCollider->body));
 
 	if (isPlayerInRange && !isToggled) {
-		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_E) == KEY_DOWN ||
+			Engine::GetInstance().input->GetGamepadButton(SDL_GAMEPAD_BUTTON_SOUTH) == KEY_DOWN) {
 			Interact();
 		}
 	}
@@ -159,6 +163,21 @@ void InteractableItem::Pickup()
 				isPicked = true;
 				isPlayerInRange = false;
 				active = false;
+
+				auto writePickedUp = [&](const char* path) {
+					pugi::xml_document doc = XMLHandler::LoadFile(path);
+					for (pugi::xml_node n = doc.child("items").child("item"); n; n = n.next_sibling("item")) {
+						if (std::string(n.attribute("id").as_string()) == id) {
+							if (n.attribute("isPickedUp")) n.attribute("isPickedUp").set_value(true);
+							else n.append_attribute("isPickedUp").set_value(true);
+							break;
+						}
+					}
+					doc.save_file(path);
+					};
+				writePickedUp("Assets/Entities/items.xml");
+				writePickedUp("Assets/Entities/items_session.xml");
+
 				if (pbody) {
 					Engine::GetInstance().physics->DeletePhysBody(pbody);
 					pbody = nullptr;
@@ -169,6 +188,7 @@ void InteractableItem::Pickup()
 				}
 				player->inventory->PrintContents();
 				LOG("'%s' picked up", name.c_str());
+				Engine::GetInstance().audio->PlayFx(pickupFxId);
 				return;
 			}
 			else {

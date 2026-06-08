@@ -1,111 +1,305 @@
 <?xml version="1.0"?>
 <characters savedGame="false">
-	<player id="player" name="Garnik" texture="SpriteSheet_Garnik.png" combatTexture="garnikCombat.png" animations="Garnik_SpriteSheet.tsx" savedX="2692" savedY="2350" dungeonLevel="1" unlockedStance1="4" unlockedStance2="4">
+	<player id="player" name="Garnik" texture="SpriteSheet_Garnik.png" combatTexture="garnikCombat.png" infectedTexture="Garnik_Combat_Infected.png" animations="Garnik_SpriteSheet.tsx" savedX="-1" savedY="-1" dungeonLevel="1" unlockedStance1="4" unlockedStance2="4">
 		<stats>
 			<stat name="health" value="100" max="100" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="30" />
-			<stat name="defense" value="10" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="5"/>
+			<stat name="defense" value="8"/>
+			<stat name="infection" value="0" max="100"/>
 		</stats>
-		<inventory gold="50">
-			<item id="" name="hoe" />
-			<item id="" name="hoe" />
+		<party>
+			
+		</party>
+		<inventory gold="10">
+			<item id="" name="Torch"/>
 		</inventory>
-		<party />
 	</player>
-	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="garnikCombat.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="3008" savedY="2910" isDead="false" unlockedStance1="4" unlockedStance2="4">
-		<inventory />
-	</character>
-	<character id="CH-002" name="Medic" texture="heart.png" type="3" npcInteractionType="3" savedX="2959" savedY="2399" isDead="false" unlockedStance1="4" unlockedStance2="4">
-		<inventory />
-	</character>
-	<character id="CH-003" name="Thief" texture="SpriteSheet_Thief.png" combatTexture="ThiefCombat.png" animations="Thief_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false" isMale="false">
-		<inventory />
-	</character>
-	<character id="CH-004" name="Executioner" texture="heart.png" type="3" npcInteractionType="3" savedX="6335" savedY="677" isDead="false" unlockedStance1="4" unlockedStance2="4">
-		<inventory />
-	</character>
-	<character id="CH-005" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-001" name="Gravekeeper" texture="SpriteSheet_Gravekeeper.png" combatTexture="GravekeeperCombat.png" infectedTexture="Gravekeeper_Combat_Infected.png" animations="Gravekeeper_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" recuitMissionId="MI-000" isMale="false" isDead="false" unlockedStance1="4" unlockedStance2="4">
 		<stats>
-			<stat name="health" value="80" max="80" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="35" />
-			<stat name="defense" value="5" />
+			<stat name="health" value="110" max="110" />
+			<stat name="speed" value="4"/>
+			<stat name="attack" value="12"/>
+			<stat name="defense" value="7"/>
+			<stat name="infection" value="0" max="100"/>
 		</stats>
-		<inventory />
-	</character>
-	<character id="CH-006" name="Barbara" texture="SpriteSheet_Barbara.png" combatTexture="barbara1Combat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="8160" savedY="1088" isDead="false" recuitMissionId="MI-000" unlockedStance1="4" unlockedStance2="4">
-		<stats>
-			<stat name="health" value="100" max="100" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="30" />
-			<stat name="defense" value="10" />
-		</stats>
-		<inventory>
-			<item id="" name="bandages" />
+		<inventory gold="0">
+			<item id="" name="shovel"/>
+			<item id="" name="bandages"/>
 		</inventory>
 	</character>
-	<character id="CH-007" name="Long Enemy" texture="SpriteSheet_LongEnemy.png" combatTexture="LongEnemy_Combat.png" animations="LongEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-002" name="Medic" texture="SpriteSheet_Medic.png" combatTexture="Medic_Combat.png" infectedTexture="Medic_Combat_Infected.png" animations="Medic_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-011" unlockedStance1="4" unlockedStance2="4">
+		<stats>
+			<stat name="health" value="50" max="50" />
+			<stat name="speed" value="9"/>
+			<stat name="attack" value="25"/>
+			<stat name="defense" value="5"/>
+			<stat name="infection" value="20" max="100"/>
+		</stats>
+		<inventory>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+		</inventory>
+	</character>
+	<character id="CH-003" name="Thief" texture="SpriteSheet_Thief.png" combatTexture="ThiefCombat.png" infectedTexture="Thief_Combat_Infected.png" animations="Thief_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" unlockedStance1="4" unlockedStance2="4">
+		<stats>
+			<stat name="health" value="70" max="70" />
+			<stat name="speed" value="8"/>
+			<stat name="attack" value="7"/>
+			<stat name="defense" value="8"/>
+			<stat name="infection" value="0" max="100"/>
+		</stats>
+		<inventory>
+			<item id="" name="hoe"/>
+			<item id="" name="bandages"/>
+		</inventory>
+	</character>
+	<character id="CH-004" name="Executioner" texture="SpriteSheet_Executioner.png" animations="Executioner_SpriteSheet.tsx" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
+		<inventory />
+	</character>
+	<character id="CH-005" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
 		<stats>
 			<stat name="health" value="150" max="150" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="45" />
-			<stat name="defense" value="20" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="35"/>
+			<stat name="defense" value="5"/>
+		</stats>
+		<inventory />
+	</character>
+	<character id="CH-006" name="Barbara" texture="SpriteSheet_Barbara.png" combatTexture="barbara1Combat.png" combatTexture2="Barbara2_Combat.png" infectedTexture="barbara3Combat.png" animations="Barbara_SpriteSheet.tsx" type="3" npcInteractionType="1" savedX="-1" savedY="-1" isDead="false" recuitMissionId="MI-005" unlockedStance1="4" unlockedStance2="4">
+		<stats>
+			<stat name="health" value="75" max="75" />
+			<stat name="speed" value="8"/>
+			<stat name="attack" value="18"/>
+			<stat name="defense" value="10"/>
+			<stat name="infection" value="0" max="100"/>
 		</stats>
 		<inventory>
-			<item id="" name="bandages" />
+			<item id="" name="bandages"/>
 		</inventory>
 	</character>
-	<character id="CH-008" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-007" name="Long Enemy" texture="SpriteSheet_LongEnemy.png" combatTexture="LongEnemy_Combat.png" animations="LongEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="200" max="200" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="45"/>
+			<stat name="defense" value="10"/>
+		</stats>
+		<inventory>
+			<item id="" name="bandages"/>
+		</inventory>
+	</character>
+
+	<character id="CH-008" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="250" max="250" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="50"/>
+			<stat name="defense" value="8"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-009" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
 		<stats>
 			<stat name="health" value="150" max="150" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="50" />
-			<stat name="defense" value="20" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="35"/>
+			<stat name="defense" value="5"/>
+		</stats>
+		<inventory>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+		</inventory>
+	</character>
+
+	<character id="CH-010" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="150" max="150" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="35"/>
+			<stat name="defense" value="5"/>
 		</stats>
 		<inventory />
 	</character>
-	<character id="CH-009" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
-		<stats>
-			<stat name="health" value="80" max="80" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="35" />
-			<stat name="defense" value="5" />
-		</stats>
+
+	<character id="CH-011" name="Shopkeeper" texture="SpriteSheet_Shopkeeper.png" animations="Shopkeeper_SpriteSheet.tsx" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
 		<inventory>
-			<item id="" name="bandages" />
-			<item id="" name="bandages" />
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+			<item id="" name="bandages"/>
+			<item id="" name="hoe"/>
+			<item id="" name="hoe"/>
+			<item id="" name="leather helmet"/>
+			<item id="" name="leather armor"/>
+			<item id="" name="leather boots"/>
+			<item id="" name="padded helmet"/>
+			<item id="" name="padded armor"/>
+			<item id="" name="padded boots"/>
+			<item id="" name="Torch"/>
+			<item id="" name="Torch"/>
+			<item id="" name="Infection Syringe"/>
+			<item id="" name="Infection Syringe"/>
+			<item id="" name="Infection Syringe"/>
+			<item id="" name="Infection Syringe"/>
+			<item id="" name="Infection Syringe"/>
+			<item id="" name="Infection Syringe"/>
+			<item id="" name="Infection Syringe"/>
+			<item id="" name="Infection Syringe"/>
+			<item id="" name="Cure Syringe"/>
+			<item id="" name="Cure Syringe"/>
+			<item id="" name="Cure Syringe"/>
+			<item id="" name="Cure Syringe"/>
+			<item id="" name="Cure Syringe"/>
+			<item id="" name="Cure Syringe"/>
+			<item id="" name="Cure Syringe"/>
 		</inventory>
 	</character>
-	<character id="CH-010" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
+	<character id="CH-012" name="Nia" texture="SpriteSheet_Nia.png" combatTexture="Nia_Combat.png" animations="Nia_SpriteSheet.tsx" type="3" npcInteractionType="4" savedX="-1" savedY="-1" isDead="false" isMale="false">
 		<stats>
-			<stat name="health" value="80" max="80" />
-			<stat name="speed" value="5" />
-			<stat name="attack" value="35" />
-			<stat name="defense" value="5" />
+			<stat name="health" value="400" max="300" />
+			<stat name="speed"  value="6"/>
+			<stat name="attack" value="60"/>
+			<stat name="defense" value="15"/>
+			<stat name="infection" value="0" max="100"/>
 		</stats>
-		<inventory />
-	</character>
-	<character id="CH-011" name="Shopkeeper" texture="heart.png" type="3" npcInteractionType="2" savedX="-1" savedY="-1" isDead="false">
-		<inventory>
-			<item id="" name="bandages" />
-			<item id="" name="bandages" />
-			<item id="" name="hoe" />
-			<item id="" name="helmet" />
-			<item id="" name="leather armor" />
-			<item id="" name="leather boots" />
-			<item id="" name="padded boots" />
-		</inventory>
-	</character>
-	<character id="CH-012" name="Nia" texture="Nia.png" type="3" npcInteractionType="3" savedX="-1" savedY="-1" isDead="false">
 		<inventory />
 	</character>
 	<character id="CH-013" name="Knight" texture="SpriteSheet_KnightEnemy.png" combatTexture="KnightEnemy_Combat.png" animations="KnightEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
-			<stat name="health" value="100" max="100" />
-			<stat name="speed" value="3" />
-			<stat name="attack" value="40" />
-			<stat name="defense" value="6" />
+			<stat name="health" value="170" max="170" />
+			<stat name="speed" value="3"/>
+			<stat name="attack" value="40"/>
+			<stat name="defense" value="7"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-014" name="Knight" texture="SpriteSheet_KnightEnemy.png" combatTexture="KnightEnemy_Combat.png" animations="KnightEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
+		<stats>
+			<stat name="health" value="170" max="170" />
+			<stat name="speed" value="4"/>
+			<stat name="attack" value="40"/>
+			<stat name="defense" value="7"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-015" name="Long Enemy" texture="SpriteSheet_LongEnemy.png" combatTexture="LongEnemy_Combat.png" animations="LongEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="200" max="200" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="50"/>
+			<stat name="defense" value="10"/>
+		</stats>
+		<inventory>
+			<item id="" name="bandages"/>
+		</inventory>
+	</character>
+
+	<character id="CH-016" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="150" max="150" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="35"/>
+			<stat name="defense" value="6"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-017" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="250" max="250" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="50"/>
+			<stat name="defense" value="8"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-018" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="250" max="250" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="50"/>
+			<stat name="defense" value="8"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-019" name="Long Enemy" texture="SpriteSheet_LongEnemy.png" combatTexture="LongEnemy_Combat.png" animations="LongEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="200" max="200" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="45"/>
+			<stat name="defense" value="10"/>
+		</stats>
+		<inventory>
+			<item id="" name="bandages"/>
+		</inventory>
+	</character>
+
+	<character id="CH-020" name="Knight" texture="SpriteSheet_KnightEnemy.png" combatTexture="KnightEnemy_Combat.png" animations="KnightEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
+		<stats>
+			<stat name="health" value="170" max="170" />
+			<stat name="speed" value="3"/>
+			<stat name="attack" value="50"/>
+			<stat name="defense" value="7"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-021" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="250" max="250" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="50"/>
+			<stat name="defense" value="8"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-022" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="150" max="150" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="40"/>
+			<stat name="defense" value="6"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-023" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="150" max="150" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="40"/>
+			<stat name="defense" value="6"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-024" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="250" max="250" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="50"/>
+			<stat name="defense" value="8"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-025" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="250" max="250" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="50"/>
+			<stat name="defense" value="8"/>
 		</stats>
 		<inventory />
 	</character>
