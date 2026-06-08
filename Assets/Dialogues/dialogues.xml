@@ -760,4 +760,78 @@
 			</answer>
 		</node>
 	</tree>
+	<tree id="DT-091" characterId="CH-004" characterName="Executioner" order="1" done="false" isRepeatable="true">
+		<node id="DN-001" first="true">
+			...And who are you?
+			<answer leadsToNodeId="DN-002">
+				A farmer from the Refuge.
+			</answer>
+		</node>
+		<node id="DN-002" first="false">
+			The Refuge...
+			<answer leadsToNodeId="DN-003">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-003" first="false">
+			I had burnt down some houses from there, the civilian's cries still ring in my head.
+			<answer leadsToNodeId="DN-004">
+				...
+			</answer>
+		</node>
+		<node id="DN-004" first="false">
+			Orders from the King. Back when his orders still meant something.
+			<answer leadsToNodeId="DN-005">
+				What do you mean?
+			</answer>
+		</node>
+		<node id="DN-005" first="false">
+			He's hiding. Has been for months. Whatever this infection is, it's broken him.
+			<answer leadsToNodeId="DN-006">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-006" first="false">
+			And while he hides, the rest of us are left to deal with... this.
+			<answer leadsToNodeId="DN-007">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-007" first="false">
+			I've burnt more bodies this past year than in my entire career before it.
+			<answer leadsToNodeId="DN-008">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-008" first="false">
+			Rebels, loyalists, civilians... The infection doesn't pick sides.
+			<answer leadsToNodeId="DN-009">
+				Where does it come from?
+			</answer>
+		</node>
+		<node id="DN-009" first="false">
+			The dungeons, they say. Something down there started all of this.
+			<answer leadsToNodeId="DN-010">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-010" first="false">
+			The King knows more than he lets on. I'm certain of it.|But he won't come out to tell us.
+			<answer leadsToNodeId="DN-011">
+				And you? What will you do?
+			</answer>
+		</node>
+		<node id="DN-011" first="false">
+			Sit here for a while longer, I suppose.
+			<answer leadsToNodeId="DN-012">
+				Continue
+			</answer>
+		</node>
+		<node id="DN-012" first="false">
+			I have nowhere to go back to. And I'm not sure I deserve to anyway.
+			<answer leadsToNodeId="">
+				...Good luck.
+			</answer>
+		</node>
+	</tree>
 </dialogs>
