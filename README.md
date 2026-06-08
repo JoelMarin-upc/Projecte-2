@@ -69,7 +69,7 @@ In this release, the following features have been implemented:
 
 - Pause menu background doesn't display during combat.
 - Dialogue elements are rendered above the pause background texture.
-- Sometimes, after pausing during a combat, the UI elements are disabled until you pause and resume again the game.
+- Sometimes, during a combat, the UI elements are disabled until you pause and resume again the game.
 ---
 
 ## How to Play / Controls
