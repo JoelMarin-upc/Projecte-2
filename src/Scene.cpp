@@ -119,6 +119,7 @@ bool Scene::Start(std::string spawnId)
 	uiClickFxId = Engine::GetInstance().audio->LoadFx(clickFxPath.c_str());
 	inventoryBgTexture = Engine::GetInstance().textures->Load("Assets/Textures/inventoryBook.png");
 	journalBgTexture = Engine::GetInstance().textures->Load("Assets/Textures/MissionsPaper.png");
+	pauseBgTexture = Engine::GetInstance().textures->Load("Assets/Textures/MissionsPaper.png");
 	infectionEffect = Engine::GetInstance().textures->Load("Assets/Textures/infectionEffect.png");
 
 	Engine::GetInstance().menuManager->SetObserver(this);
@@ -576,7 +577,10 @@ void Scene::TogglePause()
 		Engine::GetInstance().audio->UpdateMusicVolume();
 		if (lastMenuBg) lastMenuBg = nullptr;
 		//Engine::GetInstance().menuManager->ShowPauseMenu();
-		OpenMenuWithFade([this]() {Engine::GetInstance().menuManager->ShowPauseMenu();});
+		OpenMenuWithFade([this]() {
+			lastMenuBg = pauseBgTexture;
+			Engine::GetInstance().menuManager->ShowPauseMenu();
+			});
 		showingInventory = false;
 		showingJournal = false;
 		showingShop = false;
@@ -589,6 +593,7 @@ void Scene::TogglePause()
 		Engine::GetInstance().audio->UpdateMusicVolume();
 		//Engine::GetInstance().menuManager->HideMenu();
 		CloseMenuWithFade();
+		lastMenuBg = nullptr;
 		dialogManager->SetEnabled(true);
 	}
 }
