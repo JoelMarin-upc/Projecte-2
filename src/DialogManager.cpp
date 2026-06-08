@@ -120,6 +120,12 @@ void DialogManager::LoadDialogs()
 
 			// Convert | to newline
 			std::replace(node->text.begin(), node->text.end(), '|', '\n');
+			std::string spaced;
+			for (char c : node->text) {
+				spaced += c;
+				if (c == '\n') spaced += '\n';
+			}
+			node->text = spaced;
 
 			node->answers = std::vector<DialogAnswer*>();
 

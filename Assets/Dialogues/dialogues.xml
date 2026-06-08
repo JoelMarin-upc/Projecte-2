@@ -13,13 +13,13 @@
 			</answer>
 		</node>
 		<node id="DN-003" first="false">
-			I almost wanted to believe you at some point,|you’re always right after all.     
+			I almost wanted to believe you at some point, you’re always right after all.     
 			<answer leadsToNodeId="DN-004">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-004" first="false">
-			But if they really listened to my prayers…|Why are you not coming back to me?
+			But if they really listened to my prayers… Why are you not coming back to me?
 			<answer leadsToNodeId="DN-005">
 				Continue
 			</answer>
@@ -31,7 +31,7 @@
 			</answer>
 		</node>
 		<node id="DN-006" first="false">
-			I don’t know what I’ll find inside...|but I can’t stand here waiting anymore.
+			I don’t know what I’ll find inside... but I can’t stand here waiting anymore.
 			<answer leadsToNodeId="DN-007">
 				Continue
 			</answer>
@@ -65,7 +65,7 @@
 	</tree>
 	<tree id="DT-003" characterId="CH-001" characterName="Gravekeeper" order="1" done="false">
 		<node id="DN-001" first="true">
-			You have been pacing around|the cemetery for quite a while.
+			You have been pacing around the cemetery for quite a while.
 			<answer leadsToNodeId="DN-002">
 				Continue
 			</answer>
@@ -86,19 +86,19 @@
 			</answer>
 		</node>
 		<node id="DN-004" first="false">
-			The castle... Many people|go there looking for answers.
+			The castle... Many people go there looking for answers.
 			<answer leadsToNodeId="DN-005">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-005" first="false">
-			But they end up here instead,|keeping me company.
+			But they end up here instead, keeping me company.
 			<answer leadsToNodeId="DN-006">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-006" first="false">
-			The main gates are closed and watched,|but there is an older entrance.
+			The main gates are closed and watched, but there is an older entrance.
 			<answer leadsToNodeId="DN-007">
 				Continue
 			</answer>
@@ -110,7 +110,7 @@
 			</answer>
 		</node>
 		<node id="DN-008" first="false">
-			If you truly desire to go below,|you should not go empty-handed.
+			If you truly desire to go below, you should not go empty-handed.
 			<answer leadsToNodeId="DN-009">
 				Continue
 			</answer>
@@ -122,7 +122,7 @@
 			</answer>
 		</node>
 		<node id="DN-010" first="false">
-			It may help you defend yourself…|or at least buy you some time.
+			It may help you defend yourself… or at least buy you some time.
 			<answer leadsToNodeId="DN-011">
 				Thank you.
 			</answer>
@@ -131,25 +131,25 @@
 			</answer>
 		</node>
 		<node id="DN-011" first="false">
-			I cannot promise that you will find what|you are looking for.
+			I cannot promise that you will find what you are looking for.
 			<answer leadsToNodeId="DN-012">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-012" first="false">
-			But maybe if you descend low enough, the secrets of|the castle will be unveiled to you.
+			But maybe if you descend low enough,|the secrets of the castle will be unveiled to you.
 			<answer leadsToNodeId="DN-013">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-013" first="false">
-			Before going down, however, you may|wish to stop by the statue again.
+			Before going down, however, you may wish to stop by the statue again.
 			<answer leadsToNodeId="DN-014">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-014" first="false">
-			It shall be the last peaceful moment|you will have for quite a while.
+			It shall be the last peaceful moment you will have for quite a while.
 			<answer leadsToNodeId="">
 				End Conversation
 			</answer>
@@ -161,31 +161,31 @@
 			</answer>
 		</node>
 		<node id="DN-016" first="false">
-			The dead are patient,|but they do not bury themselves.
+			The dead are patient, but they do not bury themselves.
 			<answer leadsToNodeId="DN-017">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-017" first="false">
-			On top of that, they have been|increasingly restless lately.
+			On top of that, they have been increasingly restless lately.
 			<answer leadsToNodeId="DN-018">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-018" first="false">
-			Whatever is happening behind those|castle walls, it is complete blasphemy.
+			Whatever is happening behind those castle walls, it is complete blasphemy.
 			<answer leadsToNodeId="DN-020">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-020" first="false">
-			Which is why, before going down, you may|wish to stop by the statue again.
+			Which is why, before going down, you may wish to stop by the statue again.
 			<answer leadsToNodeId="DN-021">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-021" first="false">
-			It shall be the last peaceful moment|you will have for quite a while.
+			It shall be the last peaceful moment you will have for quite a while.
 			<answer leadsToNodeId="">
 				End Conversation
 			</answer>
@@ -197,25 +197,25 @@
 			</answer>
 		</node>
 		<node id="DN-023" first="false">
-			Is it perhaps the lovely damsel that|frequented the castle?
+			Is it perhaps the lovely damsel that frequented the castle?
 			<answer leadsToNodeId="DN-024">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-024" first="false">
-			She seemed like a resourceful one,|it is difficult to believe that she|went there for no reason at all.
+			She seemed like a resourceful one,|it is difficult to believe that she went there for no reason at all.
 			<answer leadsToNodeId="DN-025">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-025" first="false">
-			However, just behind the castle, there’s|a forgotten elevator that goes|right into the castle dungeons.
+			However, just behind the castle,|there’s a forgotten elevator that goes right into the castle dungeons.
 			<answer leadsToNodeId="DN-026">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-026" first="false">
-			If you truly desire to go below,|you should not go empty-handed.
+			If you truly desire to go below, you should not go empty-handed.
 			<answer leadsToNodeId="DN-027">
 				Continue
 			</answer>
@@ -227,7 +227,7 @@
 			</answer>
 		</node>
 		<node id="DN-028" first="false">
-			It may help you defend yourself…|or at least buy you some time.
+			It may help you defend yourself… or at least buy you some time.
 			<answer leadsToNodeId="DN-029">
 				Thank you
 			</answer>
@@ -236,25 +236,25 @@
 			</answer>
 		</node>
 		<node id="DN-029" first="false">
-			I cannot promise that you will find|what you are looking for.
+			I cannot promise that you will find what you are looking for.
 			<answer leadsToNodeId="DN-030">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-030" first="false">
-			But maybe if you descend low enough,|the secrets of the castle will be unveiled to you.
+			But maybe if you descend low enough, the secrets of the castle will be unveiled to you.
 			<answer leadsToNodeId="DN-031">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-031" first="false">
-			Before going down, however, you may|wish to stop by the statue again.
+			Before going down, however, you may wish to stop by the statue again.
 			<answer leadsToNodeId="DN-032">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-032" first="false">
-			It shall be the last peaceful moment|you will have for quite a while.
+			It shall be the last peaceful moment you will have for quite a while.
 			<answer leadsToNodeId="">
 				End conversation
 			</answer>
@@ -266,7 +266,7 @@
 			</answer>
 		</node>
 		<node id="DN-034" first="false">
-			Soulless carcasses are meant to return to|the Earth that birthed them.
+			Soulless carcasses are meant to return to the Earth that birthed them.
 			<answer leadsToNodeId="DN-035">
 				Continue
 			</answer>
@@ -278,19 +278,19 @@
 			</answer>
 		</node>
 		<node id="DN-036" first="false">
-			However, something behind those castle|walls is disturbing that.
+			However, something behind those castle walls is disturbing that.
 			<answer leadsToNodeId="DN-037">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-037" first="false">
-			Which is why, before going down, you may wish|to stop by the statue again.
+			Which is why, before going down, you may wish to stop by the statue again.
 			<answer leadsToNodeId="DN-038">
 				Continue
 			</answer>
 		</node>
 		<node id="DN-038" first="false">
-			It shall be the last peaceful moment|you will have for quite a while.
+			It shall be the last peaceful moment you will have for quite a while.
 			<answer leadsToNodeId="">
 				End conversation
 			</answer>
