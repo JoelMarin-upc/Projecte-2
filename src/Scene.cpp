@@ -566,6 +566,7 @@ void Scene::TogglePause()
 		if (combat) combat->DisableCombatElements();
 		Engine::GetInstance().audio->pauseMultiplier = 0.3f;
 		Engine::GetInstance().audio->UpdateMusicVolume();
+		if (lastMenuBg) lastMenuBg = nullptr;
 		//Engine::GetInstance().menuManager->ShowPauseMenu();
 		OpenMenuWithFade([this]() {Engine::GetInstance().menuManager->ShowPauseMenu();});
 		showingInventory = false;
