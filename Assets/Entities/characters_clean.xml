@@ -63,7 +63,7 @@
 		<stats>
 			<stat name="health" value="150" max="150" />
 			<stat name="speed" value="5"/>
-			<stat name="attack" value="35"/>
+			<stat name="attack" value="30"/>
 			<stat name="defense" value="5"/>
 		</stats>
 		<inventory />
@@ -84,7 +84,7 @@
 		<stats>
 			<stat name="health" value="200" max="200" />
 			<stat name="speed" value="5"/>
-			<stat name="attack" value="45"/>
+			<stat name="attack" value="40"/>
 			<stat name="defense" value="10"/>
 		</stats>
 		<inventory>
@@ -96,7 +96,7 @@
 		<stats>
 			<stat name="health" value="250" max="250" />
 			<stat name="speed" value="5"/>
-			<stat name="attack" value="50"/>
+			<stat name="attack" value="45"/>
 			<stat name="defense" value="8"/>
 		</stats>
 		<inventory />
@@ -106,7 +106,7 @@
 		<stats>
 			<stat name="health" value="150" max="150" />
 			<stat name="speed" value="5"/>
-			<stat name="attack" value="35"/>
+			<stat name="attack" value="30"/>
 			<stat name="defense" value="5"/>
 		</stats>
 		<inventory>
@@ -119,7 +119,7 @@
 		<stats>
 			<stat name="health" value="150" max="150" />
 			<stat name="speed" value="5"/>
-			<stat name="attack" value="35"/>
+			<stat name="attack" value="30"/>
 			<stat name="defense" value="5"/>
 		</stats>
 		<inventory />
@@ -174,7 +174,7 @@
 		<stats>
 			<stat name="health" value="170" max="170" />
 			<stat name="speed" value="3"/>
-			<stat name="attack" value="40"/>
+			<stat name="attack" value="35"/>
 			<stat name="defense" value="7"/>
 		</stats>
 		<inventory />
@@ -184,55 +184,13 @@
 		<stats>
 			<stat name="health" value="170" max="170" />
 			<stat name="speed" value="4"/>
-			<stat name="attack" value="40"/>
+			<stat name="attack" value="35"/>
 			<stat name="defense" value="7"/>
 		</stats>
 		<inventory />
 	</character>
 
 	<character id="CH-015" name="Long Enemy" texture="SpriteSheet_LongEnemy.png" combatTexture="LongEnemy_Combat.png" animations="LongEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
-		<stats>
-			<stat name="health" value="200" max="200" />
-			<stat name="speed" value="5"/>
-			<stat name="attack" value="50"/>
-			<stat name="defense" value="10"/>
-		</stats>
-		<inventory>
-			<item id="" name="bandages"/>
-		</inventory>
-	</character>
-
-	<character id="CH-016" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
-		<stats>
-			<stat name="health" value="150" max="150" />
-			<stat name="speed" value="6"/>
-			<stat name="attack" value="35"/>
-			<stat name="defense" value="6"/>
-		</stats>
-		<inventory />
-	</character>
-
-	<character id="CH-017" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
-		<stats>
-			<stat name="health" value="250" max="250" />
-			<stat name="speed" value="6"/>
-			<stat name="attack" value="50"/>
-			<stat name="defense" value="8"/>
-		</stats>
-		<inventory />
-	</character>
-
-	<character id="CH-018" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
-		<stats>
-			<stat name="health" value="250" max="250" />
-			<stat name="speed" value="6"/>
-			<stat name="attack" value="50"/>
-			<stat name="defense" value="8"/>
-		</stats>
-		<inventory />
-	</character>
-
-	<character id="CH-019" name="Long Enemy" texture="SpriteSheet_LongEnemy.png" combatTexture="LongEnemy_Combat.png" animations="LongEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
 		<stats>
 			<stat name="health" value="200" max="200" />
 			<stat name="speed" value="5"/>
@@ -244,11 +202,53 @@
 		</inventory>
 	</character>
 
+	<character id="CH-016" name="Hands Enemy" texture="SpriteSheet_Slime.png" combatTexture="HandsEnemy_Combat.png" animations="Slime_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="150" max="150" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="30"/>
+			<stat name="defense" value="6"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-017" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="250" max="250" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="45"/>
+			<stat name="defense" value="8"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-018" name="Insect Enemy" texture="SpriteSheet_InsectEnemy.png" combatTexture="InsectEnemy_Combat.png" animations="InsectEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="250" max="250" />
+			<stat name="speed" value="6"/>
+			<stat name="attack" value="45"/>
+			<stat name="defense" value="8"/>
+		</stats>
+		<inventory />
+	</character>
+
+	<character id="CH-019" name="Long Enemy" texture="SpriteSheet_LongEnemy.png" combatTexture="LongEnemy_Combat.png" animations="LongEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false" canInfect="true">
+		<stats>
+			<stat name="health" value="200" max="200" />
+			<stat name="speed" value="5"/>
+			<stat name="attack" value="40"/>
+			<stat name="defense" value="10"/>
+		</stats>
+		<inventory>
+			<item id="" name="bandages"/>
+		</inventory>
+	</character>
+
 	<character id="CH-020" name="Knight" texture="SpriteSheet_KnightEnemy.png" combatTexture="KnightEnemy_Combat.png" animations="KnightEnemy_SpriteSheet.tsx" type="5" savedX="-1" savedY="-1" isDead="false">
 		<stats>
 			<stat name="health" value="170" max="170" />
 			<stat name="speed" value="3"/>
-			<stat name="attack" value="50"/>
+			<stat name="attack" value="45"/>
 			<stat name="defense" value="7"/>
 		</stats>
 		<inventory />
@@ -258,7 +258,7 @@
 		<stats>
 			<stat name="health" value="250" max="250" />
 			<stat name="speed" value="6"/>
-			<stat name="attack" value="50"/>
+			<stat name="attack" value="45"/>
 			<stat name="defense" value="8"/>
 		</stats>
 		<inventory />
@@ -268,7 +268,7 @@
 		<stats>
 			<stat name="health" value="150" max="150" />
 			<stat name="speed" value="6"/>
-			<stat name="attack" value="40"/>
+			<stat name="attack" value="35"/>
 			<stat name="defense" value="6"/>
 		</stats>
 		<inventory />
@@ -278,7 +278,7 @@
 		<stats>
 			<stat name="health" value="150" max="150" />
 			<stat name="speed" value="6"/>
-			<stat name="attack" value="40"/>
+			<stat name="attack" value="35"/>
 			<stat name="defense" value="6"/>
 		</stats>
 		<inventory />
@@ -288,7 +288,7 @@
 		<stats>
 			<stat name="health" value="250" max="250" />
 			<stat name="speed" value="6"/>
-			<stat name="attack" value="50"/>
+			<stat name="attack" value="45"/>
 			<stat name="defense" value="8"/>
 		</stats>
 		<inventory />
@@ -298,7 +298,7 @@
 		<stats>
 			<stat name="health" value="250" max="250" />
 			<stat name="speed" value="6"/>
-			<stat name="attack" value="50"/>
+			<stat name="attack" value="45"/>
 			<stat name="defense" value="8"/>
 		</stats>
 		<inventory />
