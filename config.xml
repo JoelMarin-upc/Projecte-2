@@ -12,10 +12,10 @@
 	</MenuManager>
 	<window>
 		<resolution width="1280" height="720" scale="1" />
-		<fullscreen value="false" />
+		<fullscreen value="true" />
 		<borderless value="false" />
 		<resizable value="false" />
-		<fullscreen_window value="false" />
+		<fullscreen_window value="true" />
 	</window>
 	<audio>
 		<music_volume value="0.5" />

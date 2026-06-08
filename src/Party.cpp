@@ -46,7 +46,7 @@ void Party::RemoveMember(std::string id, bool write)
 		allMembers.end()
 	);
 	for (int i = 0; i < members.size(); i++) {
-		std::shared_ptr<NPC> npc = members[0];
+		std::shared_ptr<NPC> npc = members[i];
 		npc->partyIndex = i;
 	}
 	if (write)
