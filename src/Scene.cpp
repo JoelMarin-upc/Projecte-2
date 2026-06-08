@@ -1783,6 +1783,13 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 				entityManager->DestroyEntity(npc);
 			}
 		}
+
+		for (const auto& enemy : enemyParty->members) {
+			if (enemy && enemy->isDead) {
+				entityManager->DestroyEntity(enemy);
+			}
+		}
+
 		combatTimer.Start();
 		hasCombatCooldown = true;
 		leader = enemyParty->leader;
