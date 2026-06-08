@@ -107,8 +107,8 @@ h2 {
 
 .screenshots {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(800px, 1fr));
-    gap: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(900px, 1fr));
+    gap: 80px;
 }
 
 .screenshots-item {
