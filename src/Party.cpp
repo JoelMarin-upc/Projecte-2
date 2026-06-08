@@ -45,6 +45,10 @@ void Party::RemoveMember(std::string id, bool write)
 			}),
 		allMembers.end()
 	);
+	for (int i = 0; i < members.size(); i++) {
+		std::shared_ptr<NPC> npc = members[0];
+		npc->partyIndex = i;
+	}
 	if (write)
 	{
 		pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
