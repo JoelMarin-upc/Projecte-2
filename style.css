@@ -107,13 +107,13 @@ h2 {
 
 .screenshots {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 60px;
+    grid-template-columns: repeat(auto-fit, minmax(900px, 1fr));
+    gap: 400px;
 }
 
 .screenshots-item {
   margin: 5px;
-  width: 800;
+  width: 400;
 }
 
 .screenshots-item img {
