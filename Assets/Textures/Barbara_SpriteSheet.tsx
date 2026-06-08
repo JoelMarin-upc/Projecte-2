@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.11.2" name="SpriteSheet_Barbara" tilewidth="32" tileheight="32" tilecount="64" columns="16">
- <image source="../../../../../Downloads/SpriteSheet_Barbara.png" width="512" height="128"/>
+ <image source="SpriteSheet_Barbara.png" width="512" height="128"/>
  <tile id="0">
   <animation>
    <frame tileid="0" duration="150"/>

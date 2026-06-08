@@ -14,6 +14,7 @@ enum MenuType {
 	PAUSE,
 	SETTINGS,
 	CREDITS,
+	CONTROLS,
 	INVENTORY,
 	SHOP,
 	COMBAT_INVENTORY,
@@ -32,6 +33,8 @@ enum UIID {
 	RESUME_GAME,
 	CREDITS_BUTTON,
 	CREDITS_LABEL,
+	CONTROLS_BUTTON,
+	CONTROLS_LABEL,
 	GAME_OVER_LABEL,
 	SETTINGS_BUTTON,
 	SETTINGS_LABEL,
@@ -45,6 +48,7 @@ enum UIID {
 	VSYNC,
 	BACK_MENU,
 	BACK_MAIN_MENU,
+	BACK_PREV_MENU,
 	EXIT,
 	POPUP_TITLE,
 	POPUP,
@@ -57,6 +61,10 @@ enum UIID {
 	C_ENEMY2,
 	C_ENEMY3,
 	C_ENEMY4,
+	SELECTION1,
+	SELECTION2,
+	SELECTION3,
+	SELECTION4,
 	ACTION1,
 	ACTION2,
 	ACTION3,
@@ -89,6 +97,7 @@ enum UIID {
 	ATTACK_STAT,
 	DEFEND_STAT,
 	SPEED_STAT,
+	INFECTION_STAT,
 
 	WIN_BG,
 	WIN_BACK_MAIN_MENU,
@@ -98,7 +107,8 @@ enum UIID {
 	NAME_LABEL,
 	PREV_INVENTORY,
 	NEXT_INVENTORY,
-	CANCEL_ACTION
+	CANCEL_ACTION,
+	ROLLBACK_ACTION
 
 };
 
@@ -136,6 +146,7 @@ public:
 	void ShowPauseMenu();
 	void ShowSettingsMenu();
 	void ShowCreditsMenu();
+	void ShowControlsMenu();
 	void ShowInventory(Inventory* inventory, std::shared_ptr<Character> character = nullptr, Party* party = nullptr);
 	void ShowShop(Inventory* customer, Inventory* shop);
 	void ShowDeathScreen();
@@ -165,6 +176,8 @@ public:
 	std::shared_ptr<UIImage> resumeGame;
 	std::shared_ptr<UIImage> settingsButton;
 	std::shared_ptr<UIImage> creditsButton;
+	std::shared_ptr<UIImage> controlsButton;
+	std::shared_ptr<UIImage> controlsTexture;
 	std::shared_ptr<UILabel> settingsLabel;
 	std::shared_ptr<UILabel> creditsLabel1;
 	std::shared_ptr<UILabel> creditsLabel2;
@@ -216,6 +229,7 @@ public:
 	std::shared_ptr<UIButton> attack;
 	std::shared_ptr<UIButton> defense;
 	std::shared_ptr<UIButton> speed;
+	std::shared_ptr<UIButton> infection;
 	const int baseGiveToId = 1000;
 	std::vector<std::shared_ptr<UIButton>> giveToButtons;
 	std::shared_ptr<UIButton> previousInventory;

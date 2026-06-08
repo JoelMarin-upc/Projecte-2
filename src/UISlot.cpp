@@ -4,7 +4,7 @@
 #include "Audio.h"
 #include <string>
 
-UISlot::UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId, std::shared_ptr<InteractableItem> item, int amount, bool showPrice) : UIElement(UIElementType::IMAGE, id)
+UISlot::UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, int verticalSpacing, SDL_Color colorDef, SDL_Color colorDis, SDL_Color colorHov, SDL_Color colorPre, SDL_Color colorTxt, int hoverFxId, int clickFxId, std::shared_ptr<InteractableItem> item, int amount, bool showPrice, bool smallText) : UIElement(UIElementType::IMAGE, id)
 {
 	this->hoverFxId = hoverFxId;
 	this->clickFxId = clickFxId;
@@ -20,6 +20,7 @@ UISlot::UISlot(int id, SDL_Rect bounds, const char* text, int horizotalSpacing, 
 	this->item = item;
 	this->amount = amount;
 	this->showPrice = showPrice;
+	this->smallText = smallText;
 
 	canClick = true;
 	drawBasic = false;
@@ -32,6 +33,8 @@ UISlot::~UISlot()
 
 bool UISlot::Update(float dt)
 {
+	if (!active) return true;
+	
 	if (state != UIElementState::DISABLED)
 	{
 		// L16: TODO 3: Update the state of the GUiButton according to the mouse position
@@ -88,10 +91,10 @@ void UISlot::Draw(SDL_Color color)
 	Engine::GetInstance().render->DrawTexture(item->icon, bounds.x + bounds.w / 2 - item->icon->w / 2, bounds.y, 0.0f);
 	std::string name = item->name;
 	if (amount > 1) name += "(" + std::to_string(amount) + ")";
-	Engine::GetInstance().render->DrawTextMultiline(name.c_str(), bounds.x, bounds.y + item->icon->h, bounds.w, 20, colorTxt);
-	//Engine::GetInstance().render->DrawTextMultiline(std::to_string(amount).c_str(), bounds.x, bounds.y, bounds.w, bounds.h, colorTxt);
-	Engine::GetInstance().render->DrawTextMultiline(item->description.c_str(), bounds.x, bounds.y + item->icon->h + 25, bounds.w, bounds.h - (bounds.y + item->icon->h + 25), colorTxt);
-	if (showPrice) Engine::GetInstance().render->DrawTextMultiline((std::to_string(price) + " gold").c_str(), bounds.x, bounds.y + bounds.h - 30, bounds.w, 30, colorTxt);
+	Engine::GetInstance().render->DrawTextMultiline(name.c_str(), bounds.x, bounds.y + item->icon->h, bounds.w, 20, colorTxt, 20, smallText);
+	//Engine::GetInstance().render->DrawTextMultiline(std::to_string(amount).c_str(), bounds.x, bounds.y, bounds.w, bounds.h, colorTxt, smallText);
+	Engine::GetInstance().render->DrawTextMultiline(item->description.c_str(), bounds.x, bounds.y + item->icon->h + 25, bounds.w, bounds.h - (bounds.y + item->icon->h + 25), colorTxt, 20, smallText);
+	if (showPrice) Engine::GetInstance().render->DrawTextMultiline((std::to_string(price) + " gold").c_str(), bounds.x, bounds.y + bounds.h - 30, bounds.w, 30, colorTxt, 20, smallText);
 }
 
 void UISlot::SetItem(std::shared_ptr<InteractableItem> item, int amount, bool showPrice, bool sellingPrice)

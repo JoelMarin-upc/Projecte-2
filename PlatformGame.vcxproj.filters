@@ -335,6 +335,12 @@
     <ClCompile Include="src\SequencePuzzle.cpp">
       <Filter>Source Files\Scene\Entities\Misc</Filter>
     </ClCompile>
+    <ClCompile Include="src\BossNPC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ParticleSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio.h">
@@ -577,6 +583,9 @@
     <ClInclude Include="src\SequencePuzzle.h">
       <Filter>Source Files\Scene\Entities\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="src\BossNPC.h" />
+    <ClInclude Include="src\ParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml">
@@ -600,5 +609,12 @@
     <Xml Include="Assets\Audio\audios.xml">
       <Filter>Configuration FIles</Filter>
     </Xml>
+    <Xml Include="Assets\Entities\spawn_enemy.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TheGraveyard.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Textures\icon.ico" />
   </ItemGroup>
 </Project>

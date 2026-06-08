@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{a9c663a5-00a3-466d-94be-bc98bc72effe}</ProjectGuid>
+    <RootNamespace>PlatformGame</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>TheGraveyard</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions> TRACY_ENABLE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:preprocessor %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);SDL3.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories> .\vcpkg_installed\x64-windows\x64-windows\lib\manual-link</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>if exist "$(ProjectDir)Assets" xcopy /E /I /Y "$(ProjectDir)Assets" "$(OutDir)Assets\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);SDL3.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories> .\vcpkg_installed\x64-windows\x64-windows\lib\manual-link</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /E /I /Y "$(ProjectDir)Assets" "$(OutDir)Assets"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include="Assets\Maps\MapTemplate.tmx" />
+    <None Include="Assets\Maps\MapTemplate1.tmx" />
+    <None Include="Assets\Maps\RebelRefuge.tmx" />
+    <None Include="Assets\Maps\TutorialDungeon.tmx" />
+    <None Include="Assets\Textures\AnimationSheet_Character.tsx" />
+    <None Include="Assets\Textures\Barbara_SpriteSheet.tsx" />
+    <None Include="Assets\Textures\bat.tsx" />
+    <None Include="Assets\Textures\bat32.tsx" />
+    <None Include="Assets\Textures\Boss.tsx" />
+    <None Include="Assets\Textures\LongEnemy_SpriteSheet.tsx" />
+    <None Include="Assets\Textures\Multi_Slime_Spritesheet.tsx" />
+    <None Include="Assets\Textures\Slime_SpriteSheet.tsx" />
+    <None Include="vcpkg-configuration.json" />
+    <None Include="vcpkg.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AICharacter.cpp" />
+    <ClCompile Include="src\Animal.cpp" />
+    <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="src\Audio.cpp" />
+    <ClCompile Include="src\BossNPC.cpp" />
+    <ClCompile Include="src\BreakableObstacle.cpp" />
+    <ClCompile Include="src\BringMission.cpp" />
+    <ClCompile Include="src\Building.cpp" />
+    <ClCompile Include="src\Character.cpp" />
+    <ClCompile Include="src\CollectMission.cpp" />
+    <ClCompile Include="src\Collider.cpp" />
+    <ClCompile Include="src\Combat.cpp" />
+    <ClCompile Include="src\Consumable.cpp" />
+    <ClCompile Include="src\DialogAnswer.cpp" />
+    <ClCompile Include="src\DialogManager.cpp" />
+    <ClCompile Include="src\DialogNode.cpp" />
+    <ClCompile Include="src\DialogTree.cpp" />
+    <ClCompile Include="src\DungeonExit.cpp" />
+    <ClCompile Include="src\DungeonGate.cpp" />
+    <ClCompile Include="src\DungeonLever.cpp" />
+    <ClCompile Include="src\DynamicEntity.cpp" />
+    <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\EnemyParty.cpp" />
+    <ClCompile Include="src\Engine.cpp" />
+    <ClCompile Include="src\EntityManager.cpp" />
+    <ClCompile Include="src\Equipable.cpp" />
+    <ClCompile Include="src\Gear.cpp" />
+    <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\InteractableBuilding.cpp" />
+    <ClCompile Include="src\InteractableItem.cpp" />
+    <ClCompile Include="src\Inventory.cpp" />
+    <ClCompile Include="src\Item.cpp" />
+    <ClCompile Include="src\KillMission.cpp" />
+    <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\MenuManager.cpp" />
+    <ClCompile Include="src\Mission.cpp" />
+    <ClCompile Include="src\MissionManager.cpp" />
+    <ClCompile Include="src\NonInteractableBuilding.cpp" />
+    <ClCompile Include="src\NonInteractableItem.cpp" />
+    <ClCompile Include="src\NPC.cpp" />
+    <ClCompile Include="src\Obstacle.cpp" />
+    <ClCompile Include="src\ParticleSystem.cpp" />
+    <ClCompile Include="src\Party.cpp" />
+    <ClCompile Include="src\Pathfinding.cpp" />
+    <ClCompile Include="src\PerfTimer.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\PressurePlate.cpp" />
+    <ClCompile Include="src\PushBox.cpp" />
+    <ClCompile Include="src\ReachMission.cpp" />
+    <ClCompile Include="src\RecuitCenter.cpp" />
+    <ClCompile Include="src\ResetButton.cpp" />
+    <ClCompile Include="src\SceneManager.cpp" />
+    <ClCompile Include="src\SequenceButton.cpp" />
+    <ClCompile Include="src\SequencePuzzle.cpp" />
+    <ClCompile Include="src\Shop.cpp" />
+    <ClCompile Include="src\Soldier.cpp" />
+    <ClCompile Include="src\Stat.cpp" />
+    <ClCompile Include="src\StaticEntity.cpp" />
+    <ClCompile Include="src\Stats.cpp" />
+    <ClCompile Include="src\TalkMission.cpp" />
+    <ClCompile Include="src\UIImage.cpp" />
+    <ClCompile Include="src\UISlot.cpp" />
+    <ClCompile Include="src\UnbreakableObstacle.cpp" />
+    <ClCompile Include="src\Weapon.cpp" />
+    <ClCompile Include="src\XMLHandler.cpp" />
+    <ClCompile Include="src\Physics.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Render.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\Textures.cpp" />
+    <ClCompile Include="src\Timer.cpp" />
+    <ClCompile Include="src\UIButton.cpp" />
+    <ClCompile Include="src\UICheckbox.cpp" />
+    <ClCompile Include="src\UILabel.cpp" />
+    <ClCompile Include="src\UIManager.cpp" />
+    <ClCompile Include="src\UISlider.cpp" />
+    <ClCompile Include="src\Vector2D.cpp" />
+    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Zombie.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="src\AICharacter.h" />
+    <ClInclude Include="src\Animal.h" />
+    <ClInclude Include="src\Animation.h" />
+    <ClInclude Include="src\Audio.h" />
+    <ClInclude Include="src\BossNPC.h" />
+    <ClInclude Include="src\BreakableObstacle.h" />
+    <ClInclude Include="src\BringMission.h" />
+    <ClInclude Include="src\Building.h" />
+    <ClInclude Include="src\Character.h" />
+    <ClInclude Include="src\CollectMission.h" />
+    <ClInclude Include="src\Collider.h" />
+    <ClInclude Include="src\Combat.h" />
+    <ClInclude Include="src\Consumable.h" />
+    <ClInclude Include="src\DialogAnswer.h" />
+    <ClInclude Include="src\DialogManager.h" />
+    <ClInclude Include="src\DialogNode.h" />
+    <ClInclude Include="src\DialogTree.h" />
+    <ClInclude Include="src\DungeonExit.h" />
+    <ClInclude Include="src\DungeonGate.h" />
+    <ClInclude Include="src\DungeonLever.h" />
+    <ClInclude Include="src\DynamicEntity.h" />
+    <ClInclude Include="src\Enemy.h" />
+    <ClInclude Include="src\EnemyParty.h" />
+    <ClInclude Include="src\Engine.h" />
+    <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\EntityManager.h" />
+    <ClInclude Include="src\Equipable.h" />
+    <ClInclude Include="src\Gear.h" />
+    <ClInclude Include="src\Input.h" />
+    <ClInclude Include="src\InteractableBuilding.h" />
+    <ClInclude Include="src\InteractableItem.h" />
+    <ClInclude Include="src\Inventory.h" />
+    <ClInclude Include="src\Item.h" />
+    <ClInclude Include="src\KillMission.h" />
+    <ClInclude Include="src\Log.h" />
+    <ClInclude Include="src\Map.h" />
+    <ClInclude Include="src\MenuManager.h" />
+    <ClInclude Include="src\Mission.h" />
+    <ClInclude Include="src\MissionManager.h" />
+    <ClInclude Include="src\Module.h" />
+    <ClInclude Include="src\NonInteractableBuilding.h" />
+    <ClInclude Include="src\NonInteractableItem.h" />
+    <ClInclude Include="src\NPC.h" />
+    <ClInclude Include="src\Obstacle.h" />
+    <ClInclude Include="src\ParticleSystem.h" />
+    <ClInclude Include="src\Party.h" />
+    <ClInclude Include="src\Pathfinding.h" />
+    <ClInclude Include="src\PerfTimer.h" />
+    <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\PressurePlate.h" />
+    <ClInclude Include="src\PushBox.h" />
+    <ClInclude Include="src\ReachMission.h" />
+    <ClInclude Include="src\RecuitCenter.h" />
+    <ClInclude Include="src\ResetButton.h" />
+    <ClInclude Include="src\SceneManager.h" />
+    <ClInclude Include="src\SequenceButton.h" />
+    <ClInclude Include="src\SequencePuzzle.h" />
+    <ClInclude Include="src\Shop.h" />
+    <ClInclude Include="src\Soldier.h" />
+    <ClInclude Include="src\Stat.h" />
+    <ClInclude Include="src\StaticEntity.h" />
+    <ClInclude Include="src\Stats.h" />
+    <ClInclude Include="src\TalkMission.h" />
+    <ClInclude Include="src\UIImage.h" />
+    <ClInclude Include="src\UISlot.h" />
+    <ClInclude Include="src\UnbreakableObstacle.h" />
+    <ClInclude Include="src\Weapon.h" />
+    <ClInclude Include="src\XMLHandler.h" />
+    <ClInclude Include="src\Physics.h" />
+    <ClInclude Include="src\Render.h" />
+    <ClInclude Include="src\Scene.h" />
+    <ClInclude Include="src\Textures.h" />
+    <ClInclude Include="src\Timer.h" />
+    <ClInclude Include="src\UIButton.h" />
+    <ClInclude Include="src\UICheckbox.h" />
+    <ClInclude Include="src\UIElement.h" />
+    <ClInclude Include="src\UILabel.h" />
+    <ClInclude Include="src\UIManager.h" />
+    <ClInclude Include="src\UISlider.h" />
+    <ClInclude Include="src\Vector2D.h" />
+    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\Zombie.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Assets\Audio\audios.xml" />
+    <Xml Include="Assets\Dialogues\dialogues.xml" />
+    <Xml Include="Assets\Dialogues\dialogues_clean.xml" />
+    <Xml Include="Assets\Dialogues\dialogues_session.xml" />
+    <Xml Include="Assets\Dialogues\test.xml" />
+    <Xml Include="Assets\Entities\base_stats.xml" />
+    <Xml Include="Assets\Entities\characters.xml" />
+    <Xml Include="Assets\Entities\characters_clean.xml" />
+    <Xml Include="Assets\Entities\characters_session.xml" />
+    <Xml Include="Assets\Entities\items.xml" />
+    <Xml Include="Assets\Entities\items_clean.xml" />
+    <Xml Include="Assets\Entities\items_def.xml" />
+    <Xml Include="Assets\Entities\spawn_enemy.xml" />
+    <Xml Include="Assets\Missions\missions.xml" />
+    <Xml Include="Assets\Missions\missions_clean.xml" />
+    <Xml Include="Assets\Missions\missions_session.xml" />
+    <Xml Include="config.xml" />
+    <Xml Include="gamesave.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TheGraveyard.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Textures\icon.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

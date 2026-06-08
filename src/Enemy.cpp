@@ -69,8 +69,13 @@ bool Enemy::Update(float dt)
 
 void Enemy::Draw(float dt)
 {
-	if (pathfinding && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
-		pathfinding->DrawPath();
+	if (pathfinding && Engine::GetInstance().input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
+		pathfinding->debug = !pathfinding->debug;  // was just calling DrawPath unconditionally
+	}
+	if (pathfinding) pathfinding->DrawPath();
+
+	//if (pathfinding && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+	//	pathfinding->DrawPath();
 
 	int x, y;
 	colliders[0]->GetPosition(x, y);
@@ -183,12 +188,14 @@ void Enemy::CreateColliders()
 void Enemy::PerformPathfinding()
 {
 	Vector2D pos = GetPosition();
-	Vector2D tilePos = map->WorldToMap((int)pos.getX(), (int)pos.getY() + 8);
+	float centerX = pos.getX() + texW / 2;
+	float centerY = pos.getY() + texH / 2;
+	Vector2D tilePos = map->WorldToMap((int)centerX, (int)centerY);
 	pathfinding->ResetPath(tilePos);
 
 	int ctr = 0;
 
-	while (pathfinding->pathTiles.empty() && ctr < 100) {
+	while (pathfinding->pathTiles.empty() && !pathfinding->frontierAStar.empty() && ctr < 100) {
 		ctr++;
 		pathfinding->PropagateAStar(SQUARED);
 	}
@@ -245,25 +252,31 @@ void Enemy::UpdateState(float dt)
 
 	case EnemyState::CHASING:
 	{
+		if (isTouchingPlayer) //if touching player stop moving
+		{
+			velocity = { 0, 0 };
+			break; 
+		}
 
 		Vector2D playerTile = map->WorldToMap(playerPos.getX(), playerPos.getY());
+		pathTimer += dt;
 		Vector2D enemyTile = map->WorldToMap(position.getX(), position.getY());
-		float pathTimer = 0.0f;
 		float pathInterval = 0.3f;
 
-		if (playerTile != lastPlayerTile) {
-			pathTimer += dt;
-			if (pathTimer >= pathInterval) {
-				lastPlayerTile = playerTile;
-				PerformPathfinding();
-				pathTimer = 0.0f;
-			}
+		// Run immediately on first entry, then every 0.3s or when player moves tile
+		if (!hasPathed || playerTile != lastPlayerTile || pathTimer >= 0.3f) {
+			lastPlayerTile = playerTile;
+			PerformPathfinding();
+			pathTimer = 0.0f;
+			hasPathed = true;
 		}
 
 		Move(currentTarget);
 
-		if (DistanceTo(playerPos) > chaseDistance)
+		if (DistanceTo(playerPos) > chaseDistance) {
 			state = EnemyState::IDLE;
+			hasPathed = false;
+		}
 		break;
 	}
 	}
@@ -287,6 +300,8 @@ float Enemy::DistanceTo(const Vector2D& v) const
 void Enemy::Move(const Vector2D& target) {
 	//LOG("moving");
 	Vector2D currentPos = GetPosition();
+	currentPos.setX(currentPos.getX() + texW / 2.0f);
+	currentPos.setY(currentPos.getY() + texH / 2.0f);
 	auto& tiles = pathfinding->pathTiles;
 
 	if (tiles.size() < 2) {
@@ -295,7 +310,8 @@ void Enemy::Move(const Vector2D& target) {
 	}
 
 	auto it = tiles.begin();
-	std::advance(it, (tiles.size() > 2) ? 2 : 1);
+	//std::advance(it, (tiles.size() > 2) ? 2 : 1);
+	std::advance(it, 1);
 
 	Vector2D nextTile = *it;
 
@@ -309,7 +325,7 @@ void Enemy::Move(const Vector2D& target) {
 	float distanceX = nextWorldPos.getX() - currentPos.getX();
 	float distanceY = nextWorldPos.getY() - currentPos.getY();
 
-	float deadZone = 1.0f;
+	float deadZone = (float)(map->GetTileWidth()) * 0.4f;
 
 	Vector2D dir = nextWorldPos - currentPos;
 
@@ -323,7 +339,9 @@ void Enemy::Move(const Vector2D& target) {
 		velocity.y = dir.getY() * speed;
 	}
 	else {
-		pathfinding->pathTiles.pop_front();
+		currentPos = nextWorldPos;
+		if (!pathfinding->pathTiles.empty())
+			pathfinding->pathTiles.pop_front();
 		velocity = { 0, 0 };
 	}
 
@@ -344,7 +362,23 @@ Vector2D Enemy::GetPosition() {
 	int x, y;
 	enemyBody->GetPosition(x, y);
 	// Adjust for center
-	return Vector2D((float)x - texW / 2, (float)y - texH / 2);
+	return Vector2D((float)x - texW / 2.0f, (float)y - texH / 2.0f);
+}
+
+void Enemy::OnCollision(Collider* physA, Collider* physB)
+{
+	if (physB->etype == EntityType::PLAYER)
+	{
+		isTouchingPlayer = true;
+	}
+}
+
+void Enemy::OnCollisionEnd(Collider* physA, Collider* physB)
+{
+	if (physB->etype == EntityType::PLAYER)
+	{
+		isTouchingPlayer = false;
+	}
 }
 
 

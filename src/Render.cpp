@@ -83,6 +83,7 @@ bool Render::Awake()
 
 	TTF_Init();
 	font = TTF_OpenFont("Assets/Fonts/Leander.ttf", 25);
+	smallFont = TTF_OpenFont("Assets/Fonts/Leander.ttf", 14);
 
 	return true;
 }
@@ -157,6 +158,12 @@ bool Render::CleanUp()
 	{
 		TTF_CloseFont(font);
 		font = nullptr;
+	}
+
+	if (smallFont != nullptr)
+	{
+		TTF_CloseFont(smallFont);
+		smallFont = nullptr;
 	}
 
 	if (gameTarget != nullptr)
@@ -375,8 +382,10 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 	return ret;
 }
 
-bool Render::DrawText(const char* text, int x, int y, int w, int h, SDL_Color color) const
+bool Render::DrawText(const char* text, int x, int y, int w, int h, SDL_Color color, bool smallFont) const
 {
+	TTF_Font* font = smallFont ? this->smallFont : this->font;
+
 	if (!font || !renderer || !text)
 	{
 		LOG("DrawText: invalid font/renderer/text");
@@ -416,7 +425,7 @@ bool Render::DrawText(const char* text, int x, int y, int w, int h, SDL_Color co
 	return true;
 }
 
-bool Render::DrawTextMultiline(const char* text, int x, int y, int w, int h, SDL_Color color, int lineHeight) const
+bool Render::DrawTextMultiline(const char* text, int x, int y, int w, int h, SDL_Color color, int lineHeight, bool smallFont) const
 {
 	std::string full(text);
 	std::istringstream stream(full);
@@ -426,7 +435,7 @@ bool Render::DrawTextMultiline(const char* text, int x, int y, int w, int h, SDL
 	while (std::getline(stream, line, '\n'))
 	{
 		if (!line.empty())
-			DrawText(line.c_str(), x, y + offsetY, w, lineHeight, color);
+			DrawText(line.c_str(), x, y + offsetY, w, lineHeight, color, smallFont);
 		offsetY += lineHeight;
 	}
 	return true;

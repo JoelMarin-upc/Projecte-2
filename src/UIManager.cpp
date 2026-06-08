@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "Textures.h"
 #include "Audio.h"
+#include "SceneManager.h"
 #include <string>
 
 UIManager::UIManager() :Module()
@@ -38,7 +39,7 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 		if (colors.size() > 0) c1 = colors[0];
 		if (colors.size() > 1) c2 = colors[1];
 		
-		uiElement = std::make_shared<UILabel>(id, bounds, params.text, c1, c2);
+		uiElement = std::make_shared<UILabel>(id, bounds, params.text, c1, c2, params.smallText);
 		break;
 
 	case UIElementType::BUTTON:
@@ -53,7 +54,7 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 		if (colors.size() > 3) c4 = colors[3];
 		if (colors.size() > 4) c5 = colors[4];
 		
-		uiElement = std::make_shared<UIButton>(id, bounds, params.text, params.horizotalSpacing, params.verticalSpacing, c1, c2, c3, c4, c5, hoverFxId, clickFxId);
+		uiElement = std::make_shared<UIButton>(id, bounds, params.text, params.horizotalSpacing, params.verticalSpacing, c1, c2, c3, c4, c5, hoverFxId, clickFxId, params.smallText);
 		break;
 
 	case UIElementType::CHECKBOX:
@@ -107,7 +108,7 @@ std::shared_ptr<UIElement> UIManager::CreateUIElement(UIElementType type, int id
 		if (colors.size() > 3) c4 = colors[3];
 		if (colors.size() > 4) c5 = colors[4];
 
-		uiElement = std::make_shared<UISlot>(id, bounds, params.text, params.horizotalSpacing, params.verticalSpacing, c1, c2, c3, c4, c5, hoverFxId, clickFxId, params.item, params.amount);
+		uiElement = std::make_shared<UISlot>(id, bounds, params.text, params.horizotalSpacing, params.verticalSpacing, c1, c2, c3, c4, c5, hoverFxId, clickFxId, params.item, params.amount, false, params.smallText);
 		break;
 	}
 
@@ -159,6 +160,8 @@ bool UIManager::PostUpdate(float dt)
 			if (debug) DrawControlDebug(control);
 		}
 	}
+
+	Engine::GetInstance().sceneManager->currentScene->DrawMenuFadeOverlay();
 
 	return true;
 }

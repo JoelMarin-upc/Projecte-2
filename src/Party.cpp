@@ -17,6 +17,7 @@ void Party::AddMember(std::shared_ptr<NPC> member, bool write)
 	members.push_back(member);
 	allMembers.push_back(member);
 	member->party = this;
+	member->partyIndex = allMembers.size() - 1;
 
 	if (write)
 	{
@@ -44,6 +45,10 @@ void Party::RemoveMember(std::string id, bool write)
 			}),
 		allMembers.end()
 	);
+	for (int i = 0; i < members.size(); i++) {
+		std::shared_ptr<NPC> npc = members[i];
+		npc->partyIndex = i;
+	}
 	if (write)
 	{
 		pugi::xml_document charactersDoc = XMLHandler::LoadFile("Assets/Entities/characters.xml");
@@ -59,4 +64,10 @@ void Party::RemoveMember(std::string id, bool write)
 bool Party::CanAddMember() const
 {
 	return members.size() < maxMembers;
+}
+
+std::shared_ptr<Character> Party::GetMemberToFollow(int index) const
+{
+	if (index == 0) return player;
+	return allMembers[index - 1];
 }

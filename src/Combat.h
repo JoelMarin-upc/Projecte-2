@@ -8,6 +8,7 @@
 #include "MenuManager.h"
 #include "Character.h"
 #include "Timer.h"
+#include "ParticleSystem.h"
 
 enum CombatPhase {
 	DECISION,
@@ -106,7 +107,7 @@ struct TurnAction {
 class Combat : public Module {
 public:
 
-	Combat(Party* _playerParty, EnemyParty* _enemyParty, std::string mapPath, std::string mapName);
+	Combat(Party* _playerParty, EnemyParty* _enemyParty, std::string mapPath, std::string mapName, int clickFxId);
 
 	virtual ~Combat();
 
@@ -122,6 +123,8 @@ public:
 	// Called each loop iteration
 	bool Update(float dt);
 
+	void Draw(float dt);
+
 	// Called before all Updates
 	bool PostUpdate(float dt);
 
@@ -130,6 +133,7 @@ public:
 
 	bool OnUIMouseClickEvent(UIElement* uiElement);
 
+	void ShowSelectionHint(std::shared_ptr<Character> character = nullptr);
 	void ToggleActions(bool show, bool toggleCancel = true);
 	void ToggleStances(bool show);
 	void SelectConsumable(std::string consumableName);
@@ -143,12 +147,16 @@ public:
 
 	void EndTurn();
 
-	void CreateRandomAction(std::shared_ptr<Enemy> enemy);
+	void CreateRandomAction(std::shared_ptr<Character> enemy);
 
 	void DrawHealthBars() const;
 
 	void DisableCombatElements();
 	void EnableCombatElements();
+	
+	void ChangeTarget(TurnAction* turnAction);
+
+	void ChangeImages();
 
 	Party* playerParty;
 	EnemyParty* enemyParty;
@@ -168,10 +176,10 @@ public:
 	std::shared_ptr<NPC> npc1;
 	std::shared_ptr<NPC> npc2;
 	std::shared_ptr<NPC> npc3;
-	std::shared_ptr<Enemy> enemy1;
-	std::shared_ptr<Enemy> enemy2;
-	std::shared_ptr<Enemy> enemy3;
-	std::shared_ptr<Enemy> enemy4;
+	std::shared_ptr<Character> enemy1 = nullptr;
+	std::shared_ptr<Character> enemy2 = nullptr;
+	std::shared_ptr<Character> enemy3 = nullptr;
+	std::shared_ptr<Character> enemy4 = nullptr;
 
 	std::shared_ptr<UIImage> action1 = nullptr;
 	std::shared_ptr<UIImage> action2 = nullptr;
@@ -188,9 +196,15 @@ public:
 	std::shared_ptr<UILabel> log3 = nullptr;
 	std::shared_ptr<UILabel> log4 = nullptr;
 
+	std::shared_ptr<UIImage> selectedPlayer1 = nullptr;
+	std::shared_ptr<UIImage> selectedPlayer2 = nullptr;
+	std::shared_ptr<UIImage> selectedPlayer3 = nullptr;
+	std::shared_ptr<UIImage> selectedPlayer4 = nullptr;
+
 	std::shared_ptr<UILabel> hint = nullptr;
 
 	std::shared_ptr<UIImage> cancelAction = nullptr;
+	std::shared_ptr<UIImage> rollbackAction = nullptr;
 
 	SDL_Texture* combatBg = nullptr;
 
@@ -228,4 +242,11 @@ public:
 	bool wasStance3Active = false;
 	bool wasStance4Active = false;
 	bool wasCancelActive = false;
+	bool wasRollbackActive = false;
+
+	int uiClickFxId = -1;
+
+	ParticleSystem particles;
+
+	bool isBossFight = false;
 };

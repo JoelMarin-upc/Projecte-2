@@ -125,6 +125,8 @@ void UISlider::SetMinMax(float min, float max, float step)
 
 bool UISlider::Update(float dt)
 {
+	if (!active) return true;
+	
 	Engine::GetInstance().render->DrawRectangle(bounds, 0, 0, 0, 255, true, false);
 
 	Vector2D mousePos = Engine::GetInstance().input->GetMousePosition();

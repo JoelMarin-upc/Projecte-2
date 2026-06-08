@@ -16,17 +16,19 @@ class UIParameters {
 
 public:
 
-	static UIParameters Label(const char* text) {
+	static UIParameters Label(const char* text, bool smallText = false) {
 		UIParameters p = UIParameters();
 		p.text = text;
+		p.smallText = smallText;
 		return p;
 	}
 
-	static UIParameters Button(const char* text, int horizotalSpacing = 0, int verticalSpacing = 0) {
+	static UIParameters Button(const char* text, int horizotalSpacing = 0, int verticalSpacing = 0, bool smallText = false) {
 		UIParameters p = UIParameters();
 		p.text = text;
 		p.horizotalSpacing = horizotalSpacing;
 		p.verticalSpacing = verticalSpacing;
+		p.smallText = smallText;
 		return p;
 	}
 
@@ -58,7 +60,7 @@ public:
 		return p;
 	}
 
-	static UIParameters Slot(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, std::shared_ptr<InteractableItem> item, int amount) {
+	static UIParameters Slot(SDL_Texture* disabledTex, SDL_Texture* normalTex, SDL_Texture* focusedTex, SDL_Texture* pressedTex, std::shared_ptr<InteractableItem> item, int amount, bool smallText = false) {
 		UIParameters p = UIParameters();
 		p.disabledTex = disabledTex;
 		p.normalTex = normalTex;
@@ -66,6 +68,7 @@ public:
 		p.pressedTex = pressedTex;
 		p.item = item;
 		p.amount = amount;
+		p.smallText = smallText;
 		return p;
 	}
 
@@ -87,13 +90,14 @@ public:
 		p.amount = 0;
 		p.background = nullptr;
 		p.drawImageOnCenter = false;
+		p.smallText = false;
 		return p;
 	}
 
 	const char* text;
 	float showValue, min, max, step, value;
 	int spacing, horizotalSpacing, verticalSpacing, amount;
-	bool checked, drawImageOnCenter;
+	bool checked, drawImageOnCenter, smallText;
 	std::shared_ptr<InteractableItem> item;
 	SDL_Texture* disabledTex;
 	SDL_Texture* normalTex;

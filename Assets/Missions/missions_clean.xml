@@ -1,39 +1,68 @@
 <?xml version="1.0"?>
 <missions>
-	<mission id="MI-000" type="0" targetId="CH-001" targetName="Gravekeeper" rewardGold="10" rewardItemName="hoe" active="false" completed="false">
+	<mission id="MI-000" type="0" targetId="CH-001" targetName="Gravekeeper" rewardGold="" rewardItemName="hoe" active="false" completed="false">
 		<unlocks>
 			<mission id="MI-001" />
 			<mission id="MI-009" />
+			<mission id="MI-010" />
 		</unlocks>
 	</mission>
 	<mission id="MI-001" type="1" targetId="SC-002" targetName="Grocery Store" rewardGold="" rewardItemName="bandages" active="false" completed="false">
 		<unlocks>
 			<mission id="MI-006" />
-			<mission id="MI-002" />
 			<mission id="MI-003" />
 		</unlocks>
 	</mission>
-	<mission id="MI-002" type="4" targetId="CH-002" targetName="Medic" itemName="bandages" rewardGold="30" rewardItemName="leather armor" active="false" completed="false" />
-	<mission id="MI-003" type="2" targetId="" targetName="enemy" rewardGold="100" rewardItemName="" active="false" completed="false" />
-	<mission id="MI-004" type="0" targetId="CH-012" targetName="Nia" rewardGold="500" rewardItemName="" active="false" completed="false">
+	<mission id="MI-002" type="4" targetId="CH-026" targetName="Attorney" itemName="bandages" rewardGold="" rewardItemName="leather armor" active="false" completed="false" />
+	<mission id="MI-003" type="2" targetId="" targetName="Hands Enemy" rewardGold="20" rewardItemName="bandages" active="false" completed="false">
+		<unlocks>
+			<mission id="MI-012" />
+		</unlocks>
+	</mission>
+	<mission id="MI-004" type="0" targetId="CH-012" targetName="Nia" rewardGold="0" rewardItemName="" active="false" completed="false">
 		<unlocks />
 	</mission>
-	<mission id="MI-005" type="4" targetId="CH-006" targetName="Barbara" itemName="Ball" rewardGold="" rewardItemName="" active="false" completed="false">
+	<mission id="MI-005" type="4" targetId="CH-006" targetName="Barbara" itemName="Ball" rewardGold="2" rewardItemName="" active="false" completed="false">
 		<unlocks>
 			<mission id="MI-008" />
 		</unlocks>
 	</mission>
-	<mission id="MI-006" type="0" targetId="CH-003" targetName="Thief" rewardGold="5" rewardItemName="" active="false" completed="false">
+	<mission id="MI-006" type="0" targetId="CH-003" targetName="Thief" rewardGold="2" rewardItemName="" active="false" completed="false">
 		<unlocks>
 			<mission id="MI-007" />
 		</unlocks>
 	</mission>
-	<mission id="MI-007" type="0" targetId="CH-006" targetName="Barbara" rewardGold="5" rewardItemName="" active="false" completed="false">
+	<mission id="MI-007" type="0" targetId="CH-006" targetName="Barbara" rewardGold="2" rewardItemName="" active="false" completed="false">
 		<unlocks>
 			<mission id="MI-005" />
 		</unlocks>
 	</mission>
-	<mission id="MI-008" type="0" targetId="CH-003" targetName="Thief" rewardGold="5" rewardItemName="" active="false" completed="false">
+	<mission id="MI-008" type="0" targetId="CH-003" targetName="Thief" rewardGold="" rewardItemName="" active="false" completed="false">
 		<unlocks />
+	</mission>
+	<mission id="MI-009" type="0" targetId="CH-026" targetName="Attorney" rewardGold="2" rewardItemName="" active="false" completed="false">
+		<unlocks>
+			<mission id="MI-002" />
+		</unlocks>
+	</mission>
+	<mission id="MI-010" type="0" targetId="CH-002" targetName="Medic" rewardGold="2" rewardItemName="" active="false" completed="false">
+		<unlocks>
+			<mission id="MI-011" />
+		</unlocks>
+	</mission>
+	<mission id="MI-011" type="4" targetId="CH-002" targetName="Medic" itemName="Cure Syringe" rewardGold="" rewardItemName="leather boots" active="false" completed="false" />
+	<mission id="MI-012" type="2" targetId="" targetName="Long Enemy" rewardGold="25" rewardItemName="Cure Syringe" active="false" completed="false">
+		<unlocks>
+			<mission id="MI-013" />
+		</unlocks>
+	</mission>
+	<mission id="MI-013" type="2" targetId="" targetName="Insect Enemy" rewardGold="30" rewardItemName="bandages" active="false" completed="false">
+		<unlocks>
+			<mission id="MI-014" />
+		</unlocks>
+	</mission>
+	<mission id="MI-014" type="2" targetId="" targetName="Knight" rewardGold="25" rewardItemName="Cure Syringe" active="false" completed="false">
+		<unlocks>
+		</unlocks>
 	</mission>
 </missions>
