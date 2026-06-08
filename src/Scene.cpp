@@ -1890,10 +1890,10 @@ void Scene::StartBossCombat(EnemyParty* bossParty)
 	
 	OpenMenuWithFade([this, bossParty]() {
 		combat = new Combat(player->party, bossParty, mapsPath, combatMapName, uiClickFxId);
+		combat->isBossFight = true;
 		combat->Awake();
 		combat->Start();
 		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Nia_Combat.wav", 3000.0f);
-		combat->isBossFight = true;
 		}, false);
 }
 

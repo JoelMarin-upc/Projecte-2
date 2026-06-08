@@ -216,6 +216,11 @@ bool Combat::Start() {
 	action3->active = false;
 	action4->active = false;
 
+	if (isBossFight) {
+		action4->active = false;
+		action4->Disable();
+	}
+
 	endTurn->active = false;
 	cancelAction->active = false;
 	rollbackAction->active = false;
@@ -800,7 +805,7 @@ void Combat::ToggleActions(bool show, bool toggleCancel)
 	action2->active = show && turnAction && turnAction->selected
 		&& turnAction->selected->HasAnyStance();
 	action3->active = show;
-	action4->active = show;
+	action4->active = show && !isBossFight;
 	if (show)
 	{
 		if (toggleCancel) {
