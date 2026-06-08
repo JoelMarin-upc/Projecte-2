@@ -67,11 +67,9 @@ In this release, the following features have been implemented:
 ---
 ## Known Issues
 
-- If the party members can collide with the player, they will push the player out of scenes
-- Animations go faster when there's no UI
-- Sometimes enemy combat textures get replaced by ones from other enemies
-- Mission journal can't be opened from inside the dungeon
-- Sometimes can enter combat with dead enemies
+- Pause menu background doesn't display during combat.
+- Dialogue elements are rendered above the pause background texture.
+- Sometimes, after pausing during a combat, the UI elements are disabled until you pause and resume again the game.
 ---
 
 ## How to Play / Controls
