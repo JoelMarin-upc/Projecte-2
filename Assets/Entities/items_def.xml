@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <items>
-	<item id="" name="hoe" gold="10" description="30 attack" texture="hoe.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
+	<item id="" name="hoe" gold="10" description="10 attack" texture="hoe.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
 		<stats>
-			<stat name="attack" value="30"/>
+			<stat name="attack" value="10"/>
 		</stats>
 	</item>
-	<item id="" name="shovel" gold="10" description="30 attack" texture="shovel.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
+	<item id="" name="shovel" gold="10" description="20 attack" texture="shovel.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
 		<stats>
-			<stat name="attack" value="30"/>
+			<stat name="attack" value="20"/>
 		</stats>
 	</item>
 	<item id="" name="bandages" gold="5" description="20 HP" texture="bandages.png" type="4" itemClass="consumable" interactionType="1" canStack="true">
@@ -15,34 +15,39 @@
 			<stat name="health" value="20" />
 		</stats>
 	</item>
-	<item id="" name="helmet" gold="12" description="20 defense" texture="leatherHelmet.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="0">
-		<stats>
-			<stat name="defense" value="20" />
-		</stats>
-	</item>
-	<item id="" name="leather armor" gold="15" description="30 defense" texture="leatherChestplate.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="1">
-		<stats>
-			<stat name="defense" value="30" />
-		</stats>
-	</item>
-	<item id="" name="leather boots" gold="5" description="5 defense" texture="leatherBoots.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="2">
+	<item id="" name="leather helmet" gold="12" description="5 defense" texture="leatherHelmet.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="0">
 		<stats>
 			<stat name="defense" value="5" />
 		</stats>
 	</item>
-	<item id="" name="padded boots" gold="8" description="10 defense" texture="paddedBoots.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="2">
+	<item id="" name="leather armor" gold="15" description="7 defense" texture="leatherChestplate.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="1">
+		<stats>
+			<stat name="defense" value="7" />
+		</stats>
+	</item>
+	<item id="" name="leather boots" gold="5" description="2 defense" texture="leatherBoots.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="2">
+		<stats>
+			<stat name="defense" value="2" />
+		</stats>
+	</item>
+	<item id="" name="padded helmet" gold="18" description="10 defense" texture="paddedHelmet.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="2">
 		<stats>
 			<stat name="defense" value="10" />
 		</stats>
 	</item>
-	<item id="REWARD-001" name="Iron Sword" gold="10" description="30 attack" texture="sword.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
+	<item id="" name="padded armor" gold="22" description="15 defense" texture="paddedChestplate.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="2">
 		<stats>
-			<stat name="attack" value="50"/>
+			<stat name="defense" value="15" />
 		</stats>
 	</item>
-	<item id="HOE-001" name="Rusty Hoe" gold="2" description="20 attack" texture="hoe.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
+	<item id="" name="padded boots" gold="15" description="7 defense" texture="paddedBoots.png" type="4" itemClass="gear" interactionType="1" canStack="true" slot="2">
 		<stats>
-			<stat name="attack" value="20"/>
+			<stat name="defense" value="7" />
+		</stats>
+	</item>
+	<item id="REWARD-001" name="Iron Sword" gold="20" description="30 attack" texture="sword.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
+		<stats>
+			<stat name="attack" value="30"/>
 		</stats>
 	</item>
 	<item id="" name="Torch" gold="10" description="More visibility" texture="newTorch.png" type="4" itemClass="weapon" interactionType="1" canStack="true">
