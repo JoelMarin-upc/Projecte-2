@@ -1786,6 +1786,7 @@ void Scene::EndCombat(EnemyParty* enemyParty, CombatResult combatResult)
 
 		for (const auto& enemy : enemyParty->members) {
 			if (enemy && enemy->isDead) {
+				CheckCompletedMissions<KillMission>(enemy->id, enemy->name);
 				entityManager->DestroyEntity(enemy);
 			}
 		}
