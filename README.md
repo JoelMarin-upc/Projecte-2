@@ -101,7 +101,7 @@ In this release, the following features have been implemented:
 | Third dungeon scene | 5 |
 | Kill party NPC member | K |
 
-![Controls image](Assets/Textures/controls.png)
+![Controls image](Assets/Textures/Controls.png)
 ---
 
 ## 📦 Installation / Execution
