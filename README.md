@@ -76,19 +76,8 @@ In this release, the following features have been implemented:
 
 ## How to Play / Controls
 
-### Gameplay Controls (Keyboard)
-| Action | Key |
-|:--------|:----|
-| Move Up | W/UP |
-| Move Left | A/LEFT |
-| Move Down | S/DOWN |
-| Move Right | D/RIGHT |
-| Interact | E |
-| Pick dialogue option | Mouse LEFT BT |
-| Open inventory | TAB |
-| Open mission journal | J |
-| Pause game | P/ESC |
-| Cap FPS | F11 |
+### Gameplay Controls 
+![Controls image](Assets/Textures/Controls.png)
 
 ### Debug Controls
 | Action | Key |
@@ -101,7 +90,6 @@ In this release, the following features have been implemented:
 | Third dungeon scene | 5 |
 | Kill party NPC member | K |
 
-![Controls image](Assets/Textures/Controls.png)
 ---
 
 ## 📦 Installation / Execution
